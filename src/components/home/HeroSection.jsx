@@ -117,14 +117,14 @@ export default function HeroSection({ hero, navigate }) {
         <FadeInWhenVisible direction="up" delay={0.2} duration={0.8}>
           <div className="flex flex-col sm:flex-row items-center gap-4.5 justify-center">
             <button 
-              onClick={() => navigate('student-portal')}
+              onClick={() => navigate('auth')}
               className="w-full sm:w-auto flex items-center justify-center gap-2 text-[10px] uppercase tracking-widest font-black bg-fieri-blue border border-transparent text-white px-8 py-3.5 rounded-full hover:bg-fieri-blue/90 shadow-[0_4px_20px_rgba(27,111,216,0.35)] hover:shadow-[0_4px_25px_rgba(27,111,216,0.5)] hover:-translate-y-0.5 transition-all duration-350 cursor-pointer"
             >
               {hero.ctaPrimary}
               <ArrowRight className="w-3.5 h-3.5" />
             </button>
             <button 
-              onClick={() => navigate('auth')}
+              onClick={() => navigate('cite-integration')}
               className="w-full sm:w-auto flex items-center justify-center gap-2 text-[10px] uppercase tracking-widest font-black bg-transparent border border-border-subtle text-text-secondary hover:text-text-primary hover:bg-white/5 px-8 py-3.5 rounded-full hover:-translate-y-0.5 transition-all duration-350 cursor-pointer"
             >
               {hero.ctaSecondary}

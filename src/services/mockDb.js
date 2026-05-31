@@ -289,6 +289,8 @@ const DEFAULT_EVENTS = [
     prizePool: "5,000,000 FCFA",
     desc: "Rejoignez le plus grand événement de R&D étudiante de l'année. Collaborez avec des ingénieurs, designers et développeurs pour prototyper une solution matérielle ou logicielle répondant à un enjeu écologique crucial.",
     registered: false,
+    isLive: true,
+    liveUrl: "https://www.youtube.com/embed/jfKfPfyJRdk",
     timeline: [
       { time: "Vendredi 18h", title: "Cérémonie d'ouverture & Pitch des idées" },
       { time: "Samedi 09h", title: "Début du prototypage & Mentorat expert" },
@@ -305,12 +307,15 @@ const DEFAULT_EVENTS = [
     prizePool: "Accès libre",
     desc: "Un rassemblement de chercheurs et de décideurs industriels pour débattre des axes stratégiques du transfert technologique, du brevetage africain et du financement de la recherche appliquée.",
     registered: false,
+    isLive: false,
+    liveUrl: null,
     timeline: [
       { time: "09h00", title: "Discours d'introduction par le Bureau FIERI" },
       { time: "10h30", title: "Table ronde : Financer la R&D locale" }
     ]
   }
 ];
+
 
 const DEFAULT_RESEARCHERS = [
   {
@@ -562,7 +567,7 @@ export const mockDb = {
     toggleFollow: (projectId) => {
       const list = readLocal('fieri_followed_projects') || [];
       const idx = list.indexOf(projectId);
-      let followed = false;
+      let followed;
       if (idx !== -1) {
         list.splice(idx, 1);
         followed = false;
@@ -637,7 +642,7 @@ export const mockDb = {
       const regIdx = w.registeredUsers.indexOf(userFullName);
       const waitIdx = w.waitlistUsers.indexOf(userFullName);
 
-      let action = '';
+      let action;
       let promotedUser = null;
       let position = 0;
 
@@ -797,7 +802,8 @@ export const mockDb = {
       const list = readLocal(KEYS.NOTIFICATIONS) || DEFAULT_NOTIFICATIONS;
       const idx = list.findIndex(n => n.id === id);
       if (idx !== -1) {
-        list[idx].read = true;
+        const updated = { ...list[idx], read: true };
+        list[idx] = updated;
         writeLocal(KEYS.NOTIFICATIONS, list);
         return true;
       }
@@ -809,11 +815,22 @@ export const mockDb = {
         id: `n-${Date.now()}`,
         text,
         read: false,
-        date: "À l'instant"
+        date: "À l'instant",
+        createdAt: new Date().toISOString()
       };
       list.unshift(newNotif);
       writeLocal(KEYS.NOTIFICATIONS, list);
       return newNotif;
+    },
+    markAllRead: () => {
+      const list = readLocal(KEYS.NOTIFICATIONS) || DEFAULT_NOTIFICATIONS;
+      const updated = list.map(n => ({ ...n, read: true }));
+      writeLocal(KEYS.NOTIFICATIONS, updated);
+      return true;
+    },
+    clear: () => {
+      writeLocal(KEYS.NOTIFICATIONS, []);
+      return true;
     }
   },
 

@@ -8,6 +8,7 @@ import { useAuth } from './context/AuthContext.jsx'
 
 // Import all 14 pages
 import Home from './pages/Home.jsx'
+import CiteIntegration from './pages/CiteIntegration.jsx'
 import StudentPortal from './pages/StudentPortal.jsx'
 import News from './pages/News.jsx'
 import ResearchClubs from './pages/ResearchClubs.jsx'
@@ -138,6 +139,8 @@ function App() {
     switch (currentPage) {
       case 'home':
         return <Home navigate={navigate} />
+      case 'cite-integration':
+        return <CiteIntegration navigate={navigate} />
       case 'student-portal':
         return <StudentPortal navigate={navigate} />
       case 'news':

@@ -1,5 +1,5 @@
 # generated: 2026-05-30T19:17:00+01:00
-# last_updated: 2026-05-31T20:50:00+01:00
+# last_updated: 2026-05-31T22:10:00+01:00
 # project: Fieri
 # project_key: NOKEY
 # tracking_system: file-system
@@ -35,7 +35,7 @@
 # - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended)
 
 generated: 2026-05-30T19:17:00+01:00
-last_updated: 2026-05-31T20:50:00+01:00
+last_updated: 2026-05-31T21:35:47+01:00
 project: Fieri
 project_key: NOKEY
 tracking_system: file-system
@@ -73,7 +73,7 @@ development_status:
 
   epic-5: in-progress
   5-1-scientific-news-hub-peer-review-flow: done
-  5-2-scientific-events-selective-live-streaming: backlog
-  5-3-interactive-personal-dashboard-notifications-center: backlog
+  5-2-scientific-events-selective-live-streaming: review
+  5-3-interactive-personal-dashboard-notifications-center: in-progress
   5-4-private-researcher-profile-editing: backlog
   epic-5-retrospective: optional
