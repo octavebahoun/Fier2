@@ -1,0 +1,271 @@
+{
+  "hero": {
+    "eyebrow": "FRONT INTERNATIONAL DES ÉTUDIANTS ET CHERCHEURS // FIERI",
+    "title": "Propulsez l'avenir de la recherche scientifique & technologique",
+    "description": "Le FIERI rassemble les esprits les plus brillants de la recherche scientifique et de l'ingénierie pour transformer des concepts théoriques ambitieux en innovations industrielles concrètes.",
+    "badge": "Lab-to-Market v3.0 · Pôle d'Excellence Actif",
+    "ctaPrimary": "Nous rejoindre",
+    "ctaSecondary": "Integrer notre Cité"
+  },
+  "decouvrir": {
+    "tag": "01 — NOUS DÉCOUVRIR",
+    "title": "La Cité de l'excellence scientifique et de la R&D appliquée",
+    "description": "Le Front International des Étudiants et Chercheurs (FIERI) est un écosystème d'innovation ouvert aux esprits brillants. Notre ambition est de fédérer les compétences en ingénierie et en recherche pour faire émerger des innovations technologiques, physiques et logicielles de premier plan.",
+    "cta": "Découvrir la Cité"
+  },
+  "organisation": {
+    "tag": "02 — NOTRE ORGANISATION",
+    "title": "Une structure unifiée autour de trois grandes entités complémentaires",
+    "subtitle": "Un écosystème synergique conçu pour maximiser l'impact de nos chercheurs",
+    "entities": [
+      {
+        "id": "CF_01",
+        "name": "La Cité FIERI",
+        "desc": "L'incubateur de terrain déployé au cœur des universités. C'est l'espace d'expérimentation collective, de prototypage rapide et de préparation aux grands concours mondiaux d'innovation."
+      },
+      {
+        "id": "AF_02",
+        "name": "L'Académie FIERI",
+        "desc": "Le pôle d'élite pour le développement des compétences. Nous formons les talents aux exigences réelles de la R&D industrielle : systèmes embarqués, IoT, calcul IA et gestion de projet technique."
+      },
+      {
+        "id": "IF_03",
+        "name": "L'Institut FIERI",
+        "desc": "L'organe de transfert de technologie. L'Institut assure la liaison entre les clubs de recherche et l'économie réelle en structurant, finançant et accélérant l'émergence de startups industrielles."
+      }
+    ]
+  },
+  "mission": {
+    "tag": "03 — NOS MISSIONS",
+    "title": "Les piliers d'action qui orientent nos travaux de recherche",
+    "pillars": [
+      {
+        "title": "Inspiration Scientifique",
+        "desc": "Cultiver l'audace technique et stimuler le raisonnement scientifique de haut niveau par une pratique concrète et rigoureuse."
+      },
+      {
+        "title": "Innovation Pratique",
+        "desc": "Traduire les découvertes théoriques en prototypes et solutions physiques directement adaptées aux besoins de nos communautés."
+      },
+      {
+        "title": "Réseau Collaboratif",
+        "desc": "Bâtir un écosystème intercontinental dynamique reliant étudiants, chercheurs, ingénieurs et industriels."
+      },
+      {
+        "title": "Accompagnement d'Élite",
+        "desc": "Prendre en charge les projets d'excellence à chaque étape de leur maturation, de l'idée brute au déploiement commercial."
+      }
+    ]
+  },
+  "vision": {
+    "tag": "04 — NOTRE VISION",
+    "title": "Bâtir la souveraineté technologique par l'excellence scientifique",
+    "text": "Nous croyons fermement que l'avenir industriel de notre continent repose sur la capacité de ses talents à concevoir et breveter leurs propres solutions technologiques. Le FIERI n'est pas seulement un espace de formation, c'est le catalyseur d'une nouvelle génération de leaders scientifiques prêts à mener la transition industrielle.",
+    "highlights": [
+      {
+        "title": "Souveraineté",
+        "desc": "S'affranchir de la dépendance technique en concevant nos propres infrastructures cyber-physiques."
+      },
+      {
+        "title": "Impact Local",
+        "desc": "Résoudre les défis majeurs de nos communautés par des innovations locales (agriculture, énergie, robotique)."
+      },
+      {
+        "title": "Lab-to-Market",
+        "desc": "Transposer l'excellence académique en succès industriel en accompagnant la création de startups."
+      }
+    ]
+  },
+  "stats": {
+    "tag": "05 — LE FIERI EN CHIFFRES",
+    "title": "Une dynamique d'impact démontrée",
+    "items": [
+      {
+        "label": "Membres actifs engagés",
+        "value": "5000+"
+      },
+      {
+        "label": "Clubs R&D universitaires",
+        "value": "6"
+      },
+      {
+        "label": "Projets technologiques réalisés",
+        "value": "120+"
+      },
+      {
+        "label": "Partenaires industriels",
+        "value": "30+"
+      }
+    ]
+  },
+  "clubs": {
+    "tag": "06 — LES CLUBS DE RECHERCHE",
+    "title": "Six clubs spécialisés, véritables laboratoires d'innovation",
+    "items": [
+      {
+        "kicker": "Robotique et Automatisation",
+        "title": "Systèmes physiques autonomes et IA embarquée",
+        "divisions": [
+          "Mécanique de précision",
+          "IT (ROS / IA)",
+          "Électronique de puissance"
+        ],
+        "desc": "De la robotique mobile industrielle aux manipulateurs autonomes, nos chercheurs collaborent pour concevoir les systèmes d'automatisation de demain.",
+        "projetPhare": "Rover d'exploration intelligent doté d'une navigation SLAM."
+      },
+      {
+        "kicker": "Informatique Industrielle & IoT",
+        "title": "Connectivité avancée & Edge Computing",
+        "divisions": [
+          "Systèmes embarqués",
+          "Sécurité des réseaux IoT",
+          "Traitement du signal"
+        ],
+        "desc": "Concevoir des architectures cyber-physiques robustes capables de remonter des données précises, de les traiter localement et de sécuriser la transmission.",
+        "projetPhare": "Système de monitoring agrotech par capteurs LoRaWAN."
+      },
+      {
+        "kicker": "Éco-Énergie & Climatisation",
+        "title": "Transition énergétique & décarbonation",
+        "divisions": [
+          "Micro-grids intelligents",
+          "Thermodynamique appliquée",
+          "Matériaux de stockage"
+        ],
+        "desc": "Maîtriser les réseaux de distribution d'énergie, simuler des transferts thermiques et concevoir des dispositifs pour optimiser la consommation de carbone.",
+        "projetPhare": "Station solaire intelligente décentralisée avec pilotage intelligent de charge."
+      },
+      {
+        "kicker": "Construction 4.0",
+        "title": "Matériaux innovants & BTP connecté",
+        "divisions": [
+          "Modélisation BIM",
+          "Impression 3D ciment",
+          "Éco-matériaux locaux"
+        ],
+        "desc": "Moderniser les processus constructifs en mariant calcul de structures complexes, modélisation BIM et emploi de matériaux de construction durables.",
+        "projetPhare": "Dôme imprimé en 3D avec isolation composite biosourcée."
+      },
+      {
+        "kicker": "Intelligence Artificielle",
+        "title": "Modèles prédictifs et vision par ordinateur",
+        "divisions": [
+          "Machine Learning",
+          "Deep Learning",
+          "Computer Vision"
+        ],
+        "desc": "Explorer les algorithmes mathématiques avancés pour automatiser les décisions critiques, détecter des anomalies et comprendre l'image en temps réel.",
+        "projetPhare": "Modèle d'IA de diagnostic médical assisté par imagerie."
+      },
+      {
+        "kicker": "Innovation Tech & Entrepreneuriat",
+        "title": "Valorisation de la recherche et incubation",
+        "divisions": [
+          "Design Thinking",
+          "Prototypage rapide",
+          "Modèles d'affaires R&D"
+        ],
+        "desc": "Assurer le transfert technologique en structurant des modèles de rentabilité viables autour des innovations physiques brevetées par nos pôles.",
+        "projetPhare": "Plateforme connectée de gestion intelligente des déchets urbains."
+      }
+    ]
+  },
+  "evenements": {
+    "tag": "07 — APPEL À PARTICIPATION",
+    "title": "Propulsez votre talent scientifique au niveau supérieur",
+    "blocks": [
+      {
+        "title": "Hackathons & Challenges",
+        "description": "Participez à nos compétitions scientifiques intenses et confrontez vos idées à des problématiques industrielles réelles.",
+        "ctaLabel": "S'inscrire au prochain challenge"
+      },
+      {
+        "title": "Ateliers d'Ingénierie",
+        "description": "Apprenez en manipulant directement avec des ingénieurs professionnels au cours de bootcamps thématiques intenses.",
+        "ctaLabel": "Voir les ateliers à venir"
+      },
+      {
+        "title": "Rencontres de l'Innovation",
+        "description": "Rejoignez nos débats académiques, tables rondes et hackathons pour enrichir votre réseau technologique.",
+        "ctaLabel": "Consulter l'agenda"
+      }
+    ]
+  },
+  "paf": {
+    "tag": "08 — LE PROGRAMME PAF",
+    "title": "Le Programme PAF : propulsez votre R&D vers le marché",
+    "description": "Un cursus sélectif conçu pour former les talents de demain et transformer les idées de laboratoire en solutions prêtes pour l'économie réelle.",
+    "features": [
+      {
+        "title": "Mentorat Scientifique",
+        "desc": "Un encadrement technique rigoureux par des chercheurs experts et des ingénieurs en activité."
+      },
+      {
+        "title": "Laboratoires Ouverts",
+        "desc": "L'accès libre à nos bancs de test électronique, fraiseuses CNC, imprimantes 3D et processeurs IA."
+      },
+      {
+        "title": "Bourses de Prototypage",
+        "desc": "Des subventions directes en matériel R&D pour accélérer le développement des projets validés."
+      }
+    ]
+  },
+  "partenaires": {
+    "tag": "09 — NOS PARTENAIRES",
+    "title": "Ils soutiennent l'excellence scientifique du FIERI",
+    "logos": [
+      {
+        "name": "Université d'Abomey-Calavi",
+        "type": "Université partenaire"
+      },
+      {
+        "name": "Valkyrie R&D Labs",
+        "type": "Partenaire technologique"
+      },
+      {
+        "name": "EcoGrid Africa",
+        "type": "Partenaire industriel"
+      },
+      {
+        "name": "Ministère de la Recherche",
+        "type": "Soutien institutionnel"
+      },
+      {
+        "name": "African Tech Fund",
+        "type": "Soutien financier"
+      },
+      {
+        "name": "Soneb Innovation",
+        "type": "Partenaire d'expérimentation"
+      }
+    ]
+  },
+  "faq": {
+    "tag": "10 — FOIRE AUX QUESTIONS",
+    "title": "Questions Fréquentes",
+    "questions": [
+      {
+        "q": "Qui peut rejoindre un club de recherche FIERI ?",
+        "a": "Tout étudiant, chercheur ou passionné d'ingénierie et de sciences, peu importe son origine académique, à condition de faire preuve de rigueur et d'engagement."
+      },
+      {
+        "q": "Les programmes de formation et les clubs sont-ils payants ?",
+        "a": "Non. L'ensemble des cursus technologiques de base, les activités de recherche et l'accès au matériel R&D dans nos clubs sont subventionnés et gratuits pour nos membres."
+      },
+      {
+        "q": "Comment soumettre un projet technologique personnel ?",
+        "a": "Une fois membre d'un club de recherche, vous pouvez proposer vos innovations lors de nos jurys trimestriels pour bénéficier du programme d'accompagnement complet."
+      }
+    ]
+  },
+  "contact": {
+    "tag": "11 — NOUS CONTACTER",
+    "title": "Faisons émerger la recherche de demain",
+    "subtitle": "Vous portez une idée de brevet, souhaitez intégrer nos clubs R&D ou établir un partenariat académique ? Prenez contact avec nous.",
+    "info": {
+      "email": "fieri0024@gmail.com",
+      "tel": "+229 41 64 23 55",
+      "adresse": "Campus Universitaire, Bloc Technologique"
+    }
+  }
+}

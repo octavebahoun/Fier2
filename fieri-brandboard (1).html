@@ -1,0 +1,2784 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FIERI Research — Brand Board & Charte Graphique</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --bg-primary: #080B14;
+      --bg-secondary: #0D1120;
+      --bg-tertiary: #111827;
+      --accent-bleue: #1B4F8A;
+      --accent-amber: #F5A623;
+      --accent-blue-marine: #1B4F8A;
+      --fieri-blue: #1B6FD8;
+      --fieri-bleue: #F5821F;
+      --text-primary: #F0EDE8;
+      --text-secondary: #A0A8B8;
+      --text-muted: #5A6070;
+      --border-subtle: rgba(255, 255, 255, 0.06);
+      --border-glow: rgba(232, 100, 12, 0.3);
+      --grid-line: rgba(255, 255, 255, 0.03);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 14px;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* GRID BLUEPRINT BACKGROUND */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(var(--grid-line) 1px, transparent 1px),
+        linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+      background-size: 60px 60px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* NAVIGATION WRAPPER — centrage au scroll */
+    #nav-wrapper {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: center;
+      padding: 0;
+      transition: padding 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      pointer-events: none;
+    }
+
+    #nav-wrapper.scrolled {
+      padding: 12px 0;
+    }
+
+    nav {
+      width: 100%;
+      max-width: 100%;
+      background: rgba(8, 11, 20, 0.85);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border-subtle);
+      border-radius: 0;
+      padding: 0 48px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      pointer-events: all;
+    }
+
+    /* État rétracté au scroll — pilule centrée */
+    #nav-wrapper.scrolled nav {
+      width: auto;
+      min-width: 180px;
+      max-width: 220px;
+      border-radius: 40px;
+      border: 1px solid var(--border-subtle);
+      padding: 0 20px;
+      height: 48px;
+      justify-content: center;
+      gap: 12px;
+      overflow: hidden;
+    }
+
+    /* État élargi après clic burger */
+    #nav-wrapper.scrolled nav.expanded {
+      max-width: 720px;
+      width: 720px;
+      padding: 0 24px;
+      justify-content: space-between;
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      font-size: 15px;
+      letter-spacing: -0.3px;
+      white-space: nowrap;
+    }
+
+    .nav-logo span.dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--accent-bleue);
+      box-shadow: 0 0 8px var(--accent-bleue);
+      animation: pulse-dot 2s ease-in-out infinite;
+      flex-shrink: 0;
+    }
+
+    @keyframes pulse-dot {
+
+      0%,
+      100% {
+        opacity: 1;
+        transform: scale(1);
+      }
+
+      50% {
+        opacity: 0.6;
+        transform: scale(0.85);
+      }
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 4px;
+      transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+      overflow: hidden;
+    }
+
+    /* Liens cachés dans l'état rétracté */
+    #nav-wrapper.scrolled nav:not(.expanded) .nav-links {
+      width: 0;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    /* Liens visibles quand élargi */
+    #nav-wrapper.scrolled nav.expanded .nav-links {
+      width: auto;
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .nav-links a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 12px;
+      font-weight: 500;
+      padding: 6px 14px;
+      border-radius: 6px;
+      transition: all 0.2s;
+      letter-spacing: 0.3px;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active {
+      color: var(--text-primary);
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    /* BURGER BUTTON */
+    .nav-burger {
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 5px;
+      width: 32px;
+      height: 32px;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      padding: 4px;
+      border-radius: 6px;
+      transition: background 0.2s;
+      flex-shrink: 0;
+    }
+
+    .nav-burger:hover {
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    .nav-burger span {
+      display: block;
+      width: 18px;
+      height: 1.5px;
+      background: var(--text-primary);
+      border-radius: 2px;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      transform-origin: center;
+    }
+
+    /* Burger visible dans état rétracté */
+    #nav-wrapper.scrolled .nav-burger {
+      display: flex;
+    }
+
+    /* Burger X quand élargi */
+    #nav-wrapper.scrolled nav.expanded .nav-burger span:nth-child(1) {
+      transform: translateY(6.5px) rotate(45deg);
+    }
+
+    #nav-wrapper.scrolled nav.expanded .nav-burger span:nth-child(2) {
+      opacity: 0;
+      transform: scaleX(0);
+    }
+
+    #nav-wrapper.scrolled nav.expanded .nav-burger span:nth-child(3) {
+      transform: translateY(-6.5px) rotate(-45deg);
+    }
+
+    /* MOBILE — burger toujours visible + dropdown centré */
+    @media (max-width: 768px) {
+      #nav-wrapper {
+        padding: 0;
+      }
+
+      nav {
+        padding: 0 20px;
+        border-radius: 0;
+        max-width: 100%;
+        width: 100%;
+      }
+
+      .nav-links {
+        display: none;
+      }
+
+      .nav-burger {
+        display: flex !important;
+      }
+
+      nav.mobile-open .nav-links {
+        display: flex;
+        flex-direction: column;
+        position: absolute;
+        top: 60px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: rgba(8, 11, 20, 0.96);
+        backdrop-filter: blur(20px);
+        border: 1px solid var(--border-subtle);
+        border-radius: 16px;
+        padding: 12px;
+        width: 280px;
+        align-items: center;
+        gap: 4px;
+        opacity: 1;
+        pointer-events: all;
+        width: auto;
+      }
+
+      nav.mobile-open .nav-links a {
+        width: 220px;
+        text-align: center;
+        padding: 10px 16px;
+      }
+    }
+
+    /* MAIN LAYOUT */
+    main {
+      position: relative;
+      z-index: 1;
+      padding-top: 60px;
+    }
+
+    /* SECTIONS */
+    .section {
+      min-height: 100vh;
+      padding: 80px 48px;
+      max-width: 1280px;
+      margin: 0 auto;
+    }
+
+    .section-header {
+      margin-bottom: 64px;
+    }
+
+    .section-tag {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--accent-bleue);
+      margin-bottom: 12px;
+      padding: 4px 10px;
+      border: 1px solid rgba(232, 100, 12, 0.3);
+      border-radius: 4px;
+    }
+
+    .section-title {
+      font-size: 42px;
+      font-weight: 800;
+      letter-spacing: -1.5px;
+      line-height: 1.1;
+      color: var(--text-primary);
+    }
+
+    .section-title span {
+      color: var(--accent-bleue);
+    }
+
+    .section-subtitle {
+      font-size: 16px;
+      color: var(--text-secondary);
+      margin-top: 12px;
+      font-weight: 400;
+      max-width: 600px;
+    }
+
+    /* DIVIDER */
+    .divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--border-subtle), transparent);
+      margin: 0;
+    }
+
+    /* ======== PAGE 1: IDENTITÉ ======== */
+    #identite {
+      padding-top: 120px;
+    }
+
+    .identity-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2px;
+      background: var(--border-subtle);
+      border: 1px solid var(--border-subtle);
+      border-radius: 16px;
+      overflow: hidden;
+      margin-bottom: 48px;
+    }
+
+    .identity-cell {
+      background: var(--bg-secondary);
+      padding: 32px;
+    }
+
+    .identity-cell:hover {
+      background: var(--bg-tertiary);
+      transition: background 0.2s;
+    }
+
+    .cell-label {
+      font-size: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
+
+    .cell-value {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--text-primary);
+      letter-spacing: -0.3px;
+    }
+
+    .cell-value.large {
+      font-size: 28px;
+      letter-spacing: -1px;
+    }
+
+    .cell-desc {
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-top: 6px;
+      line-height: 1.5;
+    }
+
+    .adn-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .adn-tag {
+      font-size: 12px;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-weight: 500;
+    }
+
+    .adn-tag.bleue {
+      background: rgba(232, 100, 12, 0.15);
+      color: var(--accent-bleue);
+      border: 1px solid rgba(232, 100, 12, 0.25);
+    }
+
+    .adn-tag.blue {
+      background: rgba(27, 79, 138, 0.2);
+      color: #4A90D9;
+      border: 1px solid rgba(27, 79, 138, 0.35);
+    }
+
+    .adn-tag.amber {
+      background: rgba(245, 166, 35, 0.12);
+      color: var(--accent-amber);
+      border: 1px solid rgba(245, 166, 35, 0.25);
+    }
+
+    .logo-showcase {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 48px;
+      padding: 48px;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 16px;
+      margin-top: 32px;
+    }
+
+    .logo-variant {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo-bg-dark {
+      background: #080B14;
+      padding: 24px 32px;
+      border-radius: 12px;
+      border: 1px solid var(--border-subtle);
+    }
+
+    .logo-bg-light {
+      background: #F5F5F5;
+      padding: 24px 32px;
+      border-radius: 12px;
+    }
+
+    .logo-img {
+      height: 48px;
+      object-fit: contain;
+    }
+
+    .logo-label {
+      font-size: 11px;
+      color: var(--text-muted);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    /* ======== PAGE 2: PALETTE ======== */
+    .palette-section {
+      margin-bottom: 64px;
+    }
+
+    .palette-title {
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+      margin-bottom: 20px;
+    }
+
+    .color-row {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 32px;
+      flex-wrap: wrap;
+    }
+
+    .color-card {
+      flex: 1;
+      min-width: 140px;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid var(--border-subtle);
+      transition: transform 0.2s;
+    }
+
+    .color-card:hover {
+      transform: translateY(-4px);
+    }
+
+    .color-swatch {
+      height: 100px;
+      position: relative;
+      display: flex;
+      align-items: flex-end;
+      padding: 12px;
+    }
+
+    .color-swatch.primary-swatch {
+      height: 140px;
+    }
+
+    .color-name-overlay {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+
+    .color-meta {
+      background: var(--bg-secondary);
+      padding: 12px 14px;
+    }
+
+    .color-hex {
+      font-family: 'Courier New', monospace;
+      font-size: 12px;
+      color: var(--text-primary);
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .color-use {
+      font-size: 11px;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    .ratio-bar {
+      display: flex;
+      height: 48px;
+      border-radius: 10px;
+      overflow: hidden;
+      margin-top: 16px;
+      border: 1px solid var(--border-subtle);
+    }
+
+    .ratio-seg {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+
+    /* ======== PAGE 3: TYPO ======== */
+    .typo-showcase {
+      display: grid;
+      gap: 2px;
+      background: var(--border-subtle);
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1px solid var(--border-subtle);
+      margin-bottom: 40px;
+    }
+
+    .typo-row {
+      background: var(--bg-secondary);
+      padding: 28px 36px;
+      display: grid;
+      grid-template-columns: 180px 1fr;
+      align-items: center;
+      gap: 24px;
+      transition: background 0.2s;
+    }
+
+    .typo-row:hover {
+      background: var(--bg-tertiary);
+    }
+
+    .typo-meta {}
+
+    .typo-meta .tag {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    .typo-meta .spec {
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin-top: 4px;
+      line-height: 1.5;
+    }
+
+    .typo-preview.h1 {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 52px;
+      font-weight: 800;
+      letter-spacing: -2px;
+      line-height: 1;
+      color: var(--text-primary);
+    }
+
+    .typo-preview.h2 {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 36px;
+      font-weight: 700;
+      letter-spacing: -1px;
+      color: var(--text-primary);
+    }
+
+    .typo-preview.h3 {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 24px;
+      font-weight: 600;
+      letter-spacing: -0.5px;
+      color: var(--text-primary);
+    }
+
+    .typo-preview.body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 1.7;
+      color: var(--text-secondary);
+      max-width: 480px;
+    }
+
+    .typo-preview.caption {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    .typo-preview.accent {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--accent-bleue);
+      letter-spacing: 0.5px;
+    }
+
+    /* ======== PAGE 4: COMPOSANTS UI ======== */
+    .components-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-bottom: 40px;
+    }
+
+    .component-block {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 16px;
+      padding: 32px;
+    }
+
+    .component-block-title {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 24px;
+    }
+
+    /* BUTTONS */
+    .btn-row {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s;
+      letter-spacing: 0.2px;
+    }
+
+    .btn-primary {
+      background: var(--accent-bleue);
+      color: #fff;
+    }
+
+    .btn-primary:hover {
+      background: #F5721A;
+      transform: translateY(-1px);
+      box-shadow: 0 8px 24px rgba(232, 100, 12, 0.35);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--text-primary);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.06);
+      border-color: rgba(255, 255, 255, 0.25);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--accent-bleue);
+      border: 1px solid rgba(232, 100, 12, 0.35);
+    }
+
+    .btn-ghost:hover {
+      background: rgba(232, 100, 12, 0.1);
+    }
+
+    .btn-live {
+      background: rgba(27, 79, 138, 0.25);
+      color: #4A90D9;
+      border: 1px solid rgba(27, 79, 138, 0.4);
+      font-size: 12px;
+      padding: 6px 14px;
+    }
+
+    /* BADGES */
+    .badge-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      padding: 4px 10px;
+      border-radius: 20px;
+    }
+
+    .badge-live {
+      background: rgba(27, 79, 138, 0.2);
+      color: #5BA3F0;
+      border: 1px solid rgba(27, 79, 138, 0.4);
+    }
+
+    .badge-live::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #5BA3F0;
+      animation: pulse-dot 1.5s infinite;
+    }
+
+    .badge-ongoing {
+      background: rgba(245, 166, 35, 0.12);
+      color: var(--accent-amber);
+      border: 1px solid rgba(245, 166, 35, 0.25);
+    }
+
+    .badge-done {
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text-secondary);
+      border: 1px solid var(--border-subtle);
+    }
+
+    .badge-innovation {
+      background: rgba(232, 100, 12, 0.15);
+      color: var(--accent-bleue);
+      border: 1px solid rgba(232, 100, 12, 0.3);
+    }
+
+    .badge-innovation::before {
+      content: '✦';
+      font-size: 8px;
+    }
+
+    /* CARDS */
+    .cards-preview {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .card {
+      border-radius: 12px;
+      overflow: hidden;
+      transition: transform 0.2s, box-shadow 0.2s;
+      cursor: pointer;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(232, 100, 12, 0.2);
+    }
+
+    .card-glass {
+      background: rgba(13, 17, 32, 0.6);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .card-glass:hover {
+      border-color: rgba(232, 100, 12, 0.3);
+    }
+
+    .card-image-placeholder {
+      height: 100px;
+      background: linear-gradient(135deg, rgba(27, 79, 138, 0.4), rgba(232, 100, 12, 0.2));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.3);
+      font-weight: 600;
+    }
+
+    .card-body {
+      padding: 16px;
+    }
+
+    .card-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .card-category {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--accent-bleue);
+    }
+
+    .card-date {
+      font-size: 10px;
+      color: var(--text-muted);
+    }
+
+    .card-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text-primary);
+      line-height: 1.3;
+      margin-bottom: 8px;
+      letter-spacing: -0.2px;
+    }
+
+    .card-excerpt {
+      font-size: 12px;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    /* INPUTS */
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+
+    .form-input {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      padding: 10px 14px;
+      color: var(--text-primary);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 14px;
+      transition: all 0.2s;
+      outline: none;
+    }
+
+    .form-input:focus {
+      border-color: var(--accent-bleue);
+      background: rgba(232, 100, 12, 0.05);
+      box-shadow: 0 0 0 3px rgba(232, 100, 12, 0.12);
+    }
+
+    .form-input::placeholder {
+      color: var(--text-muted);
+    }
+
+    /* ======== PAGE 5: MOTIFS ======== */
+    .motifs-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px;
+      background: var(--border-subtle);
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1px solid var(--border-subtle);
+      margin-bottom: 48px;
+    }
+
+    .motif-card {
+      background: var(--bg-secondary);
+      padding: 32px;
+      position: relative;
+      overflow: hidden;
+      min-height: 220px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+    }
+
+    /* Blueprint grid motif */
+    .motif-blueprint::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+      background-size: 30px 30px;
+    }
+
+    /* Dot grid motif */
+    .motif-dotgrid::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(circle, rgba(255, 255, 255, 0.12) 1px, transparent 1px);
+      background-size: 24px 24px;
+    }
+
+    /* Circuit motif */
+    .motif-circuit canvas {
+      position: absolute;
+      inset: 0;
+    }
+
+    /* Halo motif */
+    .motif-halo::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 50% 50%, rgba(232, 100, 12, 0.15) 0%, transparent 70%);
+    }
+
+    /* Energy motif */
+    .motif-energy::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+      background-size: 30px 30px;
+    }
+
+    .energy-line {
+      position: absolute;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(232, 100, 12, 0.6), transparent);
+      animation: energy-flow 3s linear infinite;
+    }
+
+    @keyframes energy-flow {
+      0% {
+        transform: translateX(-100%);
+        opacity: 0;
+      }
+
+      20% {
+        opacity: 1;
+      }
+
+      80% {
+        opacity: 1;
+      }
+
+      100% {
+        transform: translateX(200%);
+        opacity: 0;
+      }
+    }
+
+    .motif-label {
+      position: relative;
+      z-index: 2;
+    }
+
+    .motif-name {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 4px;
+    }
+
+    .motif-desc {
+      font-size: 12px;
+      color: var(--text-secondary);
+      line-height: 1.4;
+    }
+
+    .motif-use {
+      font-size: 10px;
+      color: var(--accent-bleue);
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-top: 8px;
+    }
+
+    /* ======== PAGE 6: ANIMATIONS ======== */
+    .anim-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-bottom: 48px;
+    }
+
+    .anim-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 16px;
+      padding: 32px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .anim-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 6px;
+    }
+
+    .anim-spec {
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin-bottom: 24px;
+    }
+
+    .anim-demo {
+      height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    /* Circuit pulse animation */
+    .circuit-path {
+      stroke-dasharray: 200;
+      stroke-dashoffset: 200;
+      animation: circuit-draw 3s ease-in-out infinite;
+    }
+
+    @keyframes circuit-draw {
+      0% {
+        stroke-dashoffset: 200;
+        opacity: 0;
+      }
+
+      20% {
+        opacity: 1;
+      }
+
+      60% {
+        stroke-dashoffset: 0;
+      }
+
+      80% {
+        stroke-dashoffset: 0;
+        opacity: 1;
+      }
+
+      100% {
+        stroke-dashoffset: -200;
+        opacity: 0;
+      }
+    }
+
+    /* Hover card demo */
+    .demo-card {
+      background: rgba(13, 17, 32, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 10px;
+      padding: 12px 20px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      color: var(--text-primary);
+    }
+
+    .demo-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(232, 100, 12, 0.4);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3), 0 0 20px rgba(232, 100, 12, 0.15);
+    }
+
+    /* Reveal animation demo */
+    .reveal-demo {
+      overflow: hidden;
+      width: 100%;
+    }
+
+    .reveal-item {
+      transform: translateX(-40px);
+      opacity: 0;
+      animation: reveal-left 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    .reveal-item:nth-child(2) {
+      animation-delay: 0.1s;
+      animation-name: reveal-right;
+    }
+
+    .reveal-item:nth-child(3) {
+      animation-delay: 0.2s;
+    }
+
+    @keyframes reveal-left {
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+
+    @keyframes reveal-right {
+      from {
+        transform: translateX(40px);
+        opacity: 0;
+      }
+
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+
+    .reveal-bar {
+      height: 10px;
+      border-radius: 4px;
+      margin-bottom: 8px;
+    }
+
+    /* Modal animation */
+    .modal-demo-wrapper {
+      position: relative;
+      width: 100%;
+      height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-demo-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(8, 11, 20, 0.7);
+      backdrop-filter: blur(4px);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: modal-fade 2s ease-in-out infinite;
+    }
+
+    @keyframes modal-fade {
+
+      0%,
+      100% {
+        opacity: 0;
+      }
+
+      30%,
+      70% {
+        opacity: 1;
+      }
+    }
+
+    .modal-demo-box {
+      background: var(--bg-tertiary);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      padding: 10px 20px;
+      font-size: 12px;
+      font-weight: 600;
+      animation: modal-scale 2s ease-in-out infinite;
+    }
+
+    @keyframes modal-scale {
+
+      0%,
+      100% {
+        transform: scale(0.85);
+        opacity: 0;
+      }
+
+      30%,
+      70% {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
+    /* Sidebar animation */
+    .sidebar-demo {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      width: 100%;
+    }
+
+    .sidebar-trigger {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: rgba(232, 100, 12, 0.15);
+      border: 1px solid rgba(232, 100, 12, 0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      flex-shrink: 0;
+      animation: sidebar-pulse 2s ease-in-out infinite;
+      font-size: 14px;
+      color: var(--accent-bleue);
+      transition: all 0.3s;
+    }
+
+    @keyframes sidebar-pulse {
+
+      0%,
+      100% {
+        box-shadow: 0 0 0 0 rgba(232, 100, 12, 0.4);
+      }
+
+      50% {
+        box-shadow: 0 0 0 6px rgba(232, 100, 12, 0);
+      }
+    }
+
+    .sidebar-panel {
+      background: rgba(13, 17, 32, 0.9);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 10px;
+      padding: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      animation: sidebar-expand 3s ease-in-out infinite;
+      overflow: hidden;
+    }
+
+    @keyframes sidebar-expand {
+
+      0%,
+      100% {
+        width: 40px;
+      }
+
+      40%,
+      60% {
+        width: 160px;
+      }
+    }
+
+    .sidebar-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 8px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      white-space: nowrap;
+      overflow: hidden;
+    }
+
+    .sidebar-item .icon {
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+
+    /* ======== PAGE 7: PAGES & USERS ======== */
+    .users-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      margin-bottom: 48px;
+    }
+
+    .user-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 16px;
+      padding: 28px;
+      transition: all 0.2s;
+    }
+
+    .user-card:hover {
+      border-color: rgba(232, 100, 12, 0.25);
+      transform: translateY(-2px);
+    }
+
+    .user-avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      margin-bottom: 16px;
+    }
+
+    .avatar-visitor {
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    .avatar-student {
+      background: rgba(245, 166, 35, 0.15);
+    }
+
+    .avatar-researcher {
+      background: rgba(27, 79, 138, 0.25);
+    }
+
+    .avatar-admin {
+      background: rgba(232, 100, 12, 0.15);
+    }
+
+    .user-name {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 6px;
+    }
+
+    .user-desc {
+      font-size: 12px;
+      color: var(--text-secondary);
+      line-height: 1.5;
+      margin-bottom: 16px;
+    }
+
+    .user-access {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 8px;
+    }
+
+    .access-tag {
+      display: inline-block;
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 4px;
+      margin: 2px;
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text-secondary);
+      border: 1px solid var(--border-subtle);
+    }
+
+    .access-tag.sidebar {
+      background: rgba(232, 100, 12, 0.12);
+      color: var(--accent-bleue);
+      border-color: rgba(232, 100, 12, 0.25);
+    }
+
+    .pages-list {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-bottom: 48px;
+    }
+
+    .page-item {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 10px;
+      padding: 16px;
+      transition: all 0.2s;
+      cursor: pointer;
+    }
+
+    .page-item:hover {
+      border-color: rgba(232, 100, 12, 0.25);
+      background: var(--bg-tertiary);
+    }
+
+    .page-num {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      color: var(--accent-bleue);
+      margin-bottom: 6px;
+    }
+
+    .page-name {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-primary);
+      line-height: 1.3;
+    }
+
+    /* ======== PAGE 8: STACK ======== */
+    .stack-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0 2px;
+      margin-bottom: 48px;
+    }
+
+    .stack-table tr {
+      background: var(--bg-secondary);
+      transition: background 0.15s;
+    }
+
+    .stack-table tr:first-child td:first-child {
+      border-radius: 12px 0 0 0;
+    }
+
+    .stack-table tr:first-child td:last-child {
+      border-radius: 0 12px 0 0;
+    }
+
+    .stack-table tr:last-child td:first-child {
+      border-radius: 0 0 0 12px;
+    }
+
+    .stack-table tr:last-child td:last-child {
+      border-radius: 0 0 12px 0;
+    }
+
+    .stack-table tr:hover {
+      background: var(--bg-tertiary);
+    }
+
+    .stack-table td {
+      padding: 18px 24px;
+      border-top: 1px solid var(--border-subtle);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .stack-table td:first-child {
+      border-left: 1px solid var(--border-subtle);
+    }
+
+    .stack-table td:last-child {
+      border-right: 1px solid var(--border-subtle);
+    }
+
+    .stack-category {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      width: 180px;
+    }
+
+    .stack-tool {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .stack-detail {
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin-top: 2px;
+    }
+
+    .stack-badge {
+      font-size: 11px;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-weight: 600;
+      background: rgba(232, 100, 12, 0.12);
+      color: var(--accent-bleue);
+      border: 1px solid rgba(232, 100, 12, 0.25);
+      float: right;
+    }
+
+    /* SPACING SCALE */
+    .spacing-demo {
+      display: flex;
+      align-items: flex-end;
+      gap: 16px;
+      padding: 24px;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      margin-bottom: 24px;
+    }
+
+    .space-block {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .space-visual {
+      background: rgba(232, 100, 12, 0.3);
+      border: 1px solid rgba(232, 100, 12, 0.5);
+      border-radius: 3px;
+      width: 24px;
+    }
+
+    .space-label {
+      font-size: 10px;
+      color: var(--text-muted);
+      font-weight: 600;
+      font-family: monospace;
+    }
+
+    /* HERO PREVIEW */
+    .hero-preview {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 16px;
+      overflow: hidden;
+      position: relative;
+      min-height: 280px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 48px;
+      margin-bottom: 48px;
+    }
+
+    .hero-preview::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+      background-size: 40px 40px;
+    }
+
+    .hero-preview::after {
+      content: '';
+      position: absolute;
+      top: -80px;
+      left: 40%;
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(ellipse, rgba(232, 100, 12, 0.12) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-preview .tag-line {
+      position: relative;
+      z-index: 1;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--accent-bleue);
+      margin-bottom: 16px;
+    }
+
+    .hero-preview h1 {
+      position: relative;
+      z-index: 1;
+      font-size: 48px;
+      font-weight: 800;
+      letter-spacing: -2px;
+      line-height: 1.05;
+      color: var(--text-primary);
+      margin-bottom: 20px;
+      max-width: 600px;
+    }
+
+    .hero-preview h1 em {
+      font-style: normal;
+      color: var(--accent-bleue);
+    }
+
+    .hero-preview p {
+      position: relative;
+      z-index: 1;
+      font-size: 16px;
+      color: var(--text-secondary);
+      max-width: 480px;
+      line-height: 1.7;
+      margin-bottom: 32px;
+    }
+
+    .hero-ctas {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      gap: 12px;
+    }
+
+    /* SCROLL REVEAL */
+    [data-reveal] {
+      opacity: 0;
+      transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    [data-reveal="left"] {
+      transform: translateX(-32px);
+    }
+
+    [data-reveal="right"] {
+      transform: translateX(32px);
+    }
+
+    [data-reveal="up"] {
+      transform: translateY(24px);
+    }
+
+    [data-reveal].revealed {
+      opacity: 1;
+      transform: none;
+    }
+
+    /* SCROLLBAR */
+    ::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: var(--bg-primary);
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(232, 100, 12, 0.4);
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id="nav-wrapper">
+    <nav id="main-nav">
+      <div class="nav-logo">
+        <span class="dot"></span>
+        FIERI — Brand Board
+      </div>
+      <div class="nav-links">
+        <a href="#identite" class="active">Identité</a>
+        <a href="#palette">Palette</a>
+        <a href="#typo">Typo</a>
+        <a href="#composants">Composants</a>
+        <a href="#motifs">Motifs</a>
+        <a href="#animations">Animations</a>
+        <a href="#pages">Pages</a>
+        <a href="#stack">Stack</a>
+      </div>
+      <button class="nav-burger" id="nav-burger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </nav>
+  </div>
+
+  <main>
+
+    <!-- ==================== PAGE 1 : IDENTITÉ ==================== -->
+    <section class="section" id="identite">
+      <div class="section-header" data-reveal="left">
+        <div class="section-tag">01 — Identité de Marque</div>
+        <h2 class="section-title">FIERI <span>Research</span></h2>
+        <p class="section-subtitle">Plateforme scientifique nationale — Universités, Clubs, Chercheurs</p>
+      </div>
+
+      <div class="identity-grid" data-reveal="up">
+        <div class="identity-cell">
+          <div class="cell-label">Nom</div>
+          <div class="cell-value large">FIERI Research</div>
+          <div class="cell-desc">Plateforme web scientifique nationale multi-universités</div>
+        </div>
+        <div class="identity-cell">
+          <div class="cell-label">Tagline</div>
+          <div class="cell-value">La recherche, ensemble.</div>
+          <div class="cell-desc">Valoriser la science, connecter les acteurs, accélérer l'innovation</div>
+        </div>
+        <div class="identity-cell">
+          <div class="cell-label">Secteur</div>
+          <div class="cell-value">Recherche Scientifique</div>
+          <div class="cell-desc">Enseignement supérieur · Innovation · Clubs étudiants</div>
+        </div>
+        <div class="identity-cell">
+          <div class="cell-label">Public Cible</div>
+          <div class="cell-value">Chercheurs · Étudiants · Institutions</div>
+          <div class="cell-desc">Communauté académique nationale, portée multi-universités</div>
+        </div>
+        <div class="identity-cell" style="grid-column: 1 / -1;">
+          <div class="cell-label">ADN de Marque</div>
+          <div class="adn-list">
+            <span class="adn-tag bleue">Crédibilité Scientifique</span>
+            <span class="adn-tag blue">Communauté Tech</span>
+            <span class="adn-tag amber">Innovation Premium</span>
+            <span class="adn-tag bleue">Waouh Effect</span>
+            <span class="adn-tag blue">Ouverture Nationale</span>
+            <span class="adn-tag amber">Éditorial Sérieux</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="logo-showcase" data-reveal="up">
+        <div class="logo-variant">
+          <div class="logo-bg-dark">
+            <svg height="40" viewBox="0 0 180 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <text x="0" y="32" font-family="'Plus Jakarta Sans', sans-serif" font-weight="800" font-size="34"
+                letter-spacing="-2">
+                <tspan fill="#1B6FD8">FI</tspan>
+                <tspan fill="#F5821F">E</tspan>
+                <tspan fill="#1B6FD8">R</tspan>
+                <tspan fill="#F5821F">I</tspan>
+              </text>
+            </svg>
+          </div>
+          <div class="logo-label">Dark — Principal</div>
+        </div>
+        <div class="logo-variant">
+          <div class="logo-bg-light">
+            <svg height="40" viewBox="0 0 180 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <text x="0" y="32" font-family="'Plus Jakarta Sans', sans-serif" font-weight="800" font-size="34"
+                letter-spacing="-2">
+                <tspan fill="#1B6FD8">FI</tspan>
+                <tspan fill="#F5821F">E</tspan>
+                <tspan fill="#1B6FD8">R</tspan>
+                <tspan fill="#F5821F">I</tspan>
+              </text>
+            </svg>
+          </div>
+          <div class="logo-label">Light — Alternatif</div>
+        </div>
+        <div class="logo-variant">
+          <div class="logo-bg-dark" style="background: transparent; border: 1px solid rgba(255,255,255,0.05);">
+            <div style="font-size: 11px; color: var(--text-muted); text-align: center; line-height: 1.5;">
+              Logo client<br>conservé intact<br><span
+                style="color: var(--accent-bleue); font-weight: 600;">FIERI.png</span>
+            </div>
+          </div>
+          <div class="logo-label">Logo Existant</div>
+        </div>
+      </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- ==================== PAGE 2 : PALETTE ==================== -->
+    <section class="section" id="palette">
+      <div class="section-header" data-reveal="right">
+        <div class="section-tag">02 — Palette Colorimétrique</div>
+        <h2 class="section-title">Dark <span>Cosmique</span></h2>
+        <p class="section-subtitle">Noir bleuté profond · Accents chauds · Bleu marin — Un laboratoire dans le cosmos
+        </p>
+      </div>
+
+      <div class="palette-section">
+        <div class="palette-title">Fonds — Couche de profondeur</div>
+        <div class="color-row" data-reveal="up">
+          <div class="color-card">
+            <div class="color-swatch primary-swatch" style="background:#080B14;">
+              <span class="color-name-overlay" style="color:rgba(255,255,255,0.3)">Abyssal</span>
+            </div>
+            <div class="color-meta">
+              <div class="color-hex">#080B14</div>
+              <div class="color-use">Fond principal — bg-primary</div>
+            </div>
+          </div>
+          <div class="color-card">
+            <div class="color-swatch primary-swatch" style="background:#0D1120;">
+              <span class="color-name-overlay" style="color:rgba(255,255,255,0.25)">Cosmos</span>
+            </div>
+            <div class="color-meta">
+              <div class="color-hex">#0D1120</div>
+              <div class="color-use">Fond secondaire — surfaces</div>
+            </div>
+          </div>
+          <div class="color-card">
+            <div class="color-swatch primary-swatch" style="background:#111827;">
+              <span class="color-name-overlay" style="color:rgba(255,255,255,0.2)">Nébuleuse</span>
+            </div>
+            <div class="color-meta">
+              <div class="color-hex">#111827</div>
+              <div class="color-use">Fond tertiaire — hover states</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="palette-section">
+        <div class="palette-title">Accents — Énergie & Action</div>
+        <div class="color-row" data-reveal="up">
+          <div class="color-card">
+            <div class="color-swatch" style="background:#E8640C; height: 120px;">
+              <span class="color-name-overlay" style="color:rgba(255,255,255,0.8); font-weight:700;">bleue Brûlé</span>
+            </div>
+            <div class="color-meta">
+              <div class="color-hex">#E8640C</div>
+              <div class="color-use">Accent principal · CTA · Hover · Focus · Titres accent</div>
+            </div>
+          </div>
+          <div class="color-card">
+            <div class="color-swatch" style="background:#F5A623; height: 120px;">
+              <span class="color-name-overlay" style="color:rgba(0,0,0,0.5); font-weight:700;">Ambre</span>
+            </div>
+            <div class="color-meta">
+              <div class="color-hex">#F5A623</div>
+              <div class="color-use">Accent secondaire · Badges · Énergie circuit</div>
+            </div>
+          </div>
+          <div class="color-card">
+            <div class="color-swatch" style="background:#1B4F8A; height: 120px;">
+              <span class="color-name-overlay" style="color:rgba(255,255,255,0.6); font-weight:700;">Bleu Marin</span>
+            </div>
+            <div class="color-meta">
+              <div class="color-hex">#1B4F8A</div>
+              <div class="color-use">Accent tertiaire · Infos · États live · Liens</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="palette-section">
+        <div class="palette-title">Texte & Logo</div>
+        <div class="color-row" data-reveal="up">
+          <div class="color-card">
+            <div class="color-swatch" style="background:#F0EDE8;">
+              <span class="color-name-overlay" style="color:rgba(0,0,0,0.4); font-weight:700;">Blanc Chaud</span>
+            </div>
+            <div class="color-meta">
+              <div class="color-hex">#F0EDE8</div>
+              <div class="color-use">Texte principal</div>
+            </div>
+          </div>
+          <div class="color-card">
+            <div class="color-swatch" style="background:#A0A8B8;">
+              <span class="color-name-overlay" style="color:rgba(0,0,0,0.3); font-weight:700;">Gris Stellaire</span>
+            </div>
+            <div class="color-meta">
+              <div class="color-hex">#A0A8B8</div>
+              <div class="color-use">Texte secondaire</div>
+            </div>
+          </div>
+          <div class="color-card">
+            <div class="color-swatch" style="background:#1B6FD8;">
+              <span class="color-name-overlay" style="color:rgba(255,255,255,0.8); font-weight:700;">FIERI Blue</span>
+            </div>
+            <div class="color-meta">
+              <div class="color-hex">#1B6FD8</div>
+              <div class="color-use">Logo FIERI — existant</div>
+            </div>
+          </div>
+          <div class="color-card">
+            <div class="color-swatch" style="background:#F5821F;">
+              <span class="color-name-overlay" style="color:rgba(255,255,255,0.8); font-weight:700;">FIERI bleue</span>
+            </div>
+            <div class="color-meta">
+              <div class="color-hex">#F5821F</div>
+              <div class="color-use">Logo FIERI — existant</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div data-reveal="up">
+        <div class="palette-title">Ratio d'utilisation</div>
+        <div class="ratio-bar">
+          <div class="ratio-seg"
+            style="flex:7; background:#080B14; color:rgba(255,255,255,0.2); font-size:11px; font-weight:700;">70% Fonds
+          </div>
+          <div class="ratio-seg" style="flex:2; background:#0D1120; color:rgba(255,255,255,0.2); font-size:10px;">20%
+            Surfaces</div>
+          <div class="ratio-seg" style="flex:0.5; background:#E8640C; color:rgba(255,255,255,0.9); font-size:10px;">5%
+            bleue</div>
+          <div class="ratio-seg" style="flex:0.3; background:#1B4F8A; color:rgba(255,255,255,0.9); font-size:9px;">3%
+          </div>
+          <div class="ratio-seg" style="flex:0.2; background:#F5A623; color:rgba(0,0,0,0.6); font-size:9px;">2%</div>
+        </div>
+        <p style="font-size:11px; color:var(--text-muted); margin-top:8px;">70% fonds sombres · 20% surfaces tonales ·
+          10% accents (bleue dominant, bleu et ambre subtils)</p>
+      </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- ==================== PAGE 3 : TYPOGRAPHIE ==================== -->
+    <section class="section" id="typo">
+      <div class="section-header" data-reveal="left">
+        <div class="section-tag">03 — Typographie</div>
+        <h2 class="section-title">Plus Jakarta <span>Sans</span></h2>
+        <p class="section-subtitle">Une seule famille, maîtrisée par la graisse. Clean, tech, autorité scientifique.</p>
+      </div>
+
+      <div class="typo-showcase" data-reveal="up">
+        <div class="typo-row">
+          <div class="typo-meta">
+            <div class="tag">H1 — Hero</div>
+            <div class="spec">52px · 800 · –2px tracking<br>Titres de page & hero</div>
+          </div>
+          <div class="typo-preview h1">Innovation.</div>
+        </div>
+        <div class="typo-row">
+          <div class="typo-meta">
+            <div class="tag">H2 — Section</div>
+            <div class="spec">36px · 700 · –1px tracking<br>Titres de sections</div>
+          </div>
+          <div class="typo-preview h2">Projets & Recherche</div>
+        </div>
+        <div class="typo-row">
+          <div class="typo-meta">
+            <div class="tag">H3 — Carte</div>
+            <div class="spec">24px · 600 · –0.5px tracking<br>Titres de cartes</div>
+          </div>
+          <div class="typo-preview h3">Biomécanique Appliquée</div>
+        </div>
+        <div class="typo-row">
+          <div class="typo-meta">
+            <div class="tag">Body — Contenu</div>
+            <div class="spec">16px · 400 · 1.7 line-height<br>Paragraphes, descriptions</div>
+          </div>
+          <div class="typo-preview body">FIERI Research est une plateforme dédiée à la valorisation de la recherche
+            scientifique au sein des universités nationales.</div>
+        </div>
+        <div class="typo-row">
+          <div class="typo-meta">
+            <div class="tag">Caption</div>
+            <div class="spec">12px · 500 · +1.5px tracking<br>Labels, catégories, dates</div>
+          </div>
+          <div class="typo-preview caption">Sciences Appliquées · 2025</div>
+        </div>
+        <div class="typo-row">
+          <div class="typo-meta">
+            <div class="tag">Accent</div>
+            <div class="spec">14px · 600 · +0.5px tracking<br>Tags, CTA texte, liens</div>
+          </div>
+          <div class="typo-preview accent">→ Découvrir les projets phares</div>
+        </div>
+      </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- ==================== PAGE 4 : COMPOSANTS ==================== -->
+    <section class="section" id="composants">
+      <div class="section-header" data-reveal="right">
+        <div class="section-tag">04 — Composants UI</div>
+        <h2 class="section-title">Design <span>System</span></h2>
+        <p class="section-subtitle">Boutons · Badges · Cartes Glassmorphism · Formulaires · États visuels</p>
+      </div>
+
+      <div class="components-grid">
+        <!-- BUTTONS -->
+        <div class="component-block" data-reveal="left">
+          <div class="component-block-title">Boutons</div>
+          <div class="btn-row">
+            <button class="btn btn-primary">Rejoindre FIERI →</button>
+            <button class="btn btn-secondary">Découvrir les projets</button>
+            <button class="btn btn-ghost">Voir les publications</button>
+            <div style="display:flex; gap:8px; flex-wrap:wrap;">
+              <button class="btn btn-live">⬤ Live maintenant</button>
+              <button class="btn btn-primary" style="padding:8px 16px; font-size:12px;">S'inscrire</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- BADGES -->
+        <div class="component-block" data-reveal="right">
+          <div class="component-block-title">Badges & Statuts</div>
+          <div style="margin-bottom:16px;">
+            <div
+              style="font-size:11px; color:var(--text-muted); margin-bottom:8px; letter-spacing:1px; text-transform:uppercase;">
+              États Live & Actifs</div>
+            <div class="badge-row">
+              <span class="badge badge-live">En direct</span>
+              <span class="badge badge-ongoing">En cours</span>
+              <span class="badge badge-innovation">Innovation</span>
+              <span class="badge badge-done">Terminé</span>
+            </div>
+          </div>
+          <div>
+            <div
+              style="font-size:11px; color:var(--text-muted); margin-bottom:8px; letter-spacing:1px; text-transform:uppercase;">
+              Disciplines</div>
+            <div class="badge-row">
+              <span class="adn-tag blue">Biologie</span>
+              <span class="adn-tag bleue">Ingénierie</span>
+              <span class="adn-tag amber">Physique</span>
+              <span class="adn-tag blue">IA & Data</span>
+              <span class="adn-tag bleue">Chimie</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- CARDS -->
+        <div class="component-block" data-reveal="left" style="grid-column: 1 / -1;">
+          <div class="component-block-title">Cartes — Glassmorphism + Bordure Lumineuse</div>
+          <div class="cards-preview">
+            <div class="card card-glass">
+              <div class="card-image-placeholder">Illustration · Projet</div>
+              <div class="card-body">
+                <div class="card-meta">
+                  <span class="card-category">Biomécanique</span>
+                  <span class="badge badge-ongoing" style="font-size:10px; padding:2px 8px;">En cours</span>
+                </div>
+                <div class="card-title">Optimisation des prothèses par simulation numérique</div>
+                <div class="card-excerpt">Modélisation 3D et tests biomécaniques pour améliorer la performance des
+                  prothèses actives.</div>
+              </div>
+            </div>
+            <div class="card card-glass">
+              <div class="card-image-placeholder">Photo · Événement</div>
+              <div class="card-body">
+                <div class="card-meta">
+                  <span class="card-category">Conférence</span>
+                  <span class="badge badge-live" style="font-size:10px; padding:2px 8px;">Live</span>
+                </div>
+                <div class="card-title">Summit IA & Santé 2025 — Dakar</div>
+                <div class="card-excerpt">Rencontre internationale des chercheurs africains en intelligence artificielle
+                  appliquée.</div>
+              </div>
+            </div>
+            <div class="card card-glass">
+              <div class="card-image-placeholder">Photo · Actualité</div>
+              <div class="card-body">
+                <div class="card-meta">
+                  <span class="card-category">Publication</span>
+                  <span class="card-date">15 Jan 2025</span>
+                </div>
+                <div class="card-title">Nouveau brevet déposé en nanomatériaux</div>
+                <div class="card-excerpt">L'équipe de recherche du Club NanoTech obtient son premier brevet officiel.
+                </div>
+              </div>
+            </div>
+            <div class="card card-glass">
+              <div class="card-image-placeholder">Photo · Formation</div>
+              <div class="card-body">
+                <div class="card-meta">
+                  <span class="card-category">Atelier</span>
+                  <span class="badge badge-innovation" style="font-size:10px; padding:2px 8px;">Innovation</span>
+                </div>
+                <div class="card-title">Machine Learning pour chercheurs non-data</div>
+                <div class="card-excerpt">Formation pratique d'initiation aux outils ML appliqués à la recherche
+                  scientifique.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- INPUTS -->
+        <div class="component-block" data-reveal="left">
+          <div class="component-block-title">Formulaires</div>
+          <div class="form-group">
+            <label class="form-label">Email universitaire</label>
+            <input type="text" class="form-input" placeholder="prenom.nom@universite.edu" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Discipline de recherche</label>
+            <input type="text" class="form-input" placeholder="ex: Ingénierie biomédicale" />
+          </div>
+          <button class="btn btn-primary" style="width:100%; margin-top:8px;">Rejoindre FIERI</button>
+        </div>
+
+        <!-- LAYOUT RULES -->
+        <div class="component-block" data-reveal="right">
+          <div class="component-block-title">Layout & Espacements</div>
+          <div style="display:grid; gap:12px;">
+            <div
+              style="display:flex; justify-content:space-between; align-items:center; padding:10px; background:rgba(255,255,255,0.03); border-radius:8px; border:1px solid var(--border-subtle);">
+              <span style="font-size:12px; color:var(--text-secondary);">Container max</span>
+              <span style="font-family:monospace; font-size:12px; color:var(--accent-bleue);">1280px</span>
+            </div>
+            <div
+              style="display:flex; justify-content:space-between; align-items:center; padding:10px; background:rgba(255,255,255,0.03); border-radius:8px; border:1px solid var(--border-subtle);">
+              <span style="font-size:12px; color:var(--text-secondary);">Grille</span>
+              <span style="font-family:monospace; font-size:12px; color:var(--accent-bleue);">12 cols · 24px
+                gutter</span>
+            </div>
+            <div
+              style="display:flex; justify-content:space-between; align-items:center; padding:10px; background:rgba(255,255,255,0.03); border-radius:8px; border:1px solid var(--border-subtle);">
+              <span style="font-size:12px; color:var(--text-secondary);">Section padding</span>
+              <span style="font-family:monospace; font-size:12px; color:var(--accent-bleue);">96px / 48px mobile</span>
+            </div>
+            <div
+              style="display:flex; justify-content:space-between; align-items:center; padding:10px; background:rgba(255,255,255,0.03); border-radius:8px; border:1px solid var(--border-subtle);">
+              <span style="font-size:12px; color:var(--text-secondary);">Border radius</span>
+              <span style="font-family:monospace; font-size:12px; color:var(--accent-bleue);">8 / 12 / 16px</span>
+            </div>
+            <div
+              style="display:flex; justify-content:space-between; align-items:center; padding:10px; background:rgba(255,255,255,0.03); border-radius:8px; border:1px solid var(--border-subtle);">
+              <span style="font-size:12px; color:var(--text-secondary);">Spacing base</span>
+              <span style="font-family:monospace; font-size:12px; color:var(--accent-bleue);">4px · 8 · 16 · 24 · 32 ·
+                48 · 64 · 96</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- ==================== PAGE 5 : MOTIFS ==================== -->
+    <section class="section" id="motifs">
+      <div class="section-header" data-reveal="left">
+        <div class="section-tag">05 — Motifs & Éléments Graphiques</div>
+        <h2 class="section-title">Laboratoire <span>Cosmique</span></h2>
+        <p class="section-subtitle">5 motifs qui composent l'atmosphère visuelle — jamais seuls, toujours en couches</p>
+      </div>
+
+      <div class="motifs-grid" data-reveal="up">
+        <div class="motif-card motif-blueprint">
+          <div class="motif-label">
+            <div class="motif-name">Blueprint Grid</div>
+            <div class="motif-desc">Lignes de grille fines, quasi-invisibles. Structure scientifique en fond.</div>
+            <div class="motif-use">Hero · Footer — Statique</div>
+          </div>
+        </div>
+
+        <div class="motif-card motif-dotgrid">
+          <div class="motif-label">
+            <div class="motif-name">Dot Grid</div>
+            <div class="motif-desc">Points lumineux en grille régulière, opacité 8%. Profondeur et structure.</div>
+            <div class="motif-use">Sections intermédiaires</div>
+          </div>
+        </div>
+
+        <div class="motif-card" style="background: var(--bg-secondary); position:relative; overflow:hidden;">
+          <div style="position:absolute; inset:0; overflow:hidden;">
+            <svg width="100%" height="100%" style="position:absolute; inset:0; opacity:0.15;">
+              <path
+                d="M20,20 L80,20 L80,60 L120,60 L120,100 M160,20 L200,20 L200,80 L240,80 M20,120 L60,120 L60,80 L100,80 L100,40 M200,120 L240,120 L240,80"
+                stroke="rgba(232,100,12,0.8)" stroke-width="1.5" fill="none" />
+              <circle cx="80" cy="20" r="3" fill="rgba(232,100,12,0.8)" />
+              <circle cx="120" cy="60" r="3" fill="rgba(232,100,12,0.8)" />
+              <circle cx="200" cy="20" r="3" fill="rgba(232,100,12,0.8)" />
+              <circle cx="60" cy="120" r="3" fill="rgba(245,166,35,0.8)" />
+            </svg>
+            <svg class="circuit-anim" width="100%" height="100%" style="position:absolute; inset:0; opacity:0.4;">
+              <defs>
+                <style>
+                  .cp1 {
+                    stroke-dasharray: 200;
+                    stroke-dashoffset: 200;
+                    animation: cdraw 4s ease-in-out infinite;
+                  }
+
+                  .cp2 {
+                    stroke-dasharray: 150;
+                    stroke-dashoffset: 150;
+                    animation: cdraw 4s ease-in-out infinite 1s;
+                  }
+
+                  @keyframes cdraw {
+                    0% {
+                      stroke-dashoffset: 200;
+                      opacity: 0
+                    }
+
+                    20% {
+                      opacity: 1
+                    }
+
+                    70% {
+                      stroke-dashoffset: 0
+                    }
+
+                    85% {
+                      stroke-dashoffset: 0;
+                      opacity: 1
+                    }
+
+                    100% {
+                      stroke-dashoffset: -200;
+                      opacity: 0
+                    }
+                  }
+                </style>
+              </defs>
+              <path class="cp1" d="M20,20 L80,20 L80,60 L120,60 L120,100" stroke="#E8640C" stroke-width="1.5"
+                fill="none" />
+              <path class="cp2" d="M200,120 L240,120 L240,80 L200,80" stroke="#F5A623" stroke-width="1" fill="none" />
+            </svg>
+          </div>
+          <div class="motif-label" style="position:relative; z-index:2;">
+            <div class="motif-name">Circuit Organique</div>
+            <div class="motif-desc">Traces de circuit avec nœuds lumineux. Connectivité scientifique.</div>
+            <div class="motif-use">Hero · Footer — Animé</div>
+          </div>
+        </div>
+
+        <div class="motif-card motif-halo">
+          <div
+            style="position:absolute; inset:0; background:radial-gradient(ellipse at 50% 40%, rgba(232,100,12,0.2) 0%, transparent 65%);">
+          </div>
+          <div class="motif-label" style="position:relative; z-index:2;">
+            <div class="motif-name">Halo Chaud</div>
+            <div class="motif-desc">Gradient radial ambre/bleue très diffus. Chaleur et énergie concentrée.</div>
+            <div class="motif-use">Derrière les hero sections</div>
+          </div>
+        </div>
+
+        <div class="motif-card motif-energy" style="grid-column: 2;">
+          <div class="energy-line" style="top:30%; width:70%; left:0;"></div>
+          <div class="energy-line" style="top:50%; width:60%; left:0; animation-delay:1s;"></div>
+          <div class="energy-line" style="top:70%; width:80%; left:0; animation-delay:2s;"></div>
+          <div class="motif-label" style="position:relative; z-index:2;">
+            <div class="motif-name">Énergie Circulante</div>
+            <div class="motif-desc">Flux lumineux traversant la grille blueprint. Opacité 5%. Vie subtile.</div>
+            <div class="motif-use">Hero · Footer — 3-4s pulse</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- ==================== PAGE 6 : ANIMATIONS ==================== -->
+    <section class="section" id="animations">
+      <div class="section-header" data-reveal="right">
+        <div class="section-tag">06 — Motion Design</div>
+        <h2 class="section-title">Animations <span>& Transitions</span></h2>
+        <p class="section-subtitle">Fluides, intentionnelles, jamais décoratives — chaque mouvement a un sens</p>
+      </div>
+
+      <div class="anim-grid">
+        <div class="anim-card" data-reveal="left">
+          <div class="anim-title">Énergie Circuit</div>
+          <div class="anim-spec">Pulse qui se propage · 3-4s · Loop infini</div>
+          <div class="anim-demo">
+            <svg width="100%" height="60" viewBox="0 0 300 60">
+              <path d="M10,30 L60,30 L60,10 L130,10 L130,50 L200,50 L200,30 L280,30" stroke="rgba(255,255,255,0.1)"
+                stroke-width="1.5" fill="none" />
+              <path class="circuit-path" d="M10,30 L60,30 L60,10 L130,10 L130,50 L200,50 L200,30 L280,30"
+                stroke="#E8640C" stroke-width="1.5" fill="none" />
+              <circle cx="60" cy="30" r="3" fill="#E8640C" opacity="0.6" />
+              <circle cx="130" cy="30" r="3" fill="#F5A623" opacity="0.6" />
+              <circle cx="200" cy="30" r="3" fill="#E8640C" opacity="0.6" />
+            </svg>
+          </div>
+        </div>
+
+        <div class="anim-card" data-reveal="right">
+          <div class="anim-title">Hover Carte</div>
+          <div class="anim-spec">Élévation + glow ambre · 200ms · ease-out</div>
+          <div class="anim-demo">
+            <div class="demo-card">Passer la souris → effet hover</div>
+          </div>
+        </div>
+
+        <div class="anim-card" data-reveal="left">
+          <div class="anim-title">Reveal Sections</div>
+          <div class="anim-spec">Left/Right alternés au scroll · 400ms · cubic-bezier(0.16, 1, 0.3, 1)</div>
+          <div class="anim-demo">
+            <div class="reveal-demo" style="width:100%;">
+              <div class="reveal-item">
+                <div class="reveal-bar" style="background:rgba(232,100,12,0.4); width:70%;"></div>
+              </div>
+              <div class="reveal-item">
+                <div class="reveal-bar" style="background:rgba(27,79,138,0.5); width:85%;"></div>
+              </div>
+              <div class="reveal-item">
+                <div class="reveal-bar" style="background:rgba(245,166,35,0.35); width:55%;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="anim-card" data-reveal="right">
+          <div class="anim-title">Modal / Overlay</div>
+          <div class="anim-spec">Fade + scale-up depuis centre · 250ms · backdrop blur</div>
+          <div class="anim-demo">
+            <div class="modal-demo-wrapper">
+              <div style="font-size:12px; color:var(--text-muted); text-align:center;">Fond</div>
+              <div class="modal-demo-overlay">
+                <div class="modal-demo-box">Fenêtre modale</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="anim-card" data-reveal="left" style="grid-column: 1 / -1;">
+          <div class="anim-title">Sidebar Chercheur / Admin</div>
+          <div class="anim-spec">Cercle pulsant haut gauche → expansion horizontale · Icônes + texte déployés</div>
+          <div class="anim-demo" style="height:auto; padding:16px 0;">
+            <div class="sidebar-demo">
+              <div class="sidebar-trigger">⬡</div>
+              <div class="sidebar-panel">
+                <div class="sidebar-item"><span class="icon">⬛</span><span>Tableau de bord</span></div>
+                <div class="sidebar-item"><span class="icon">◈</span><span>Mes projets</span></div>
+                <div class="sidebar-item"><span class="icon">◉</span><span>Publications</span></div>
+                <div class="sidebar-item"><span class="icon">◎</span><span>Contributions</span></div>
+              </div>
+            </div>
+          </div>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:16px;">
+            <div
+              style="padding:12px; background:rgba(255,255,255,0.03); border-radius:8px; border:1px solid var(--border-subtle);">
+              <div
+                style="font-size:11px; color:var(--text-muted); margin-bottom:4px; text-transform:uppercase; letter-spacing:1px;">
+                État contracté</div>
+              <div style="font-size:13px; color:var(--text-secondary);">Cercle pulsant seul · Icônes uniquement · 40px
+              </div>
+            </div>
+            <div
+              style="padding:12px; background:rgba(255,255,255,0.03); border-radius:8px; border:1px solid var(--border-subtle);">
+              <div
+                style="font-size:11px; color:var(--text-muted); margin-bottom:4px; text-transform:uppercase; letter-spacing:1px;">
+                État déployé</div>
+              <div style="font-size:13px; color:var(--text-secondary);">Expansion fluide · Icône + Texte · 240px · 300ms
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- MOTION TABLE -->
+      <div data-reveal="up"
+        style="background:var(--bg-secondary); border:1px solid var(--border-subtle); border-radius:16px; overflow:hidden; margin-bottom:40px;">
+        <table style="width:100%; border-collapse:collapse;">
+          <thead>
+            <tr style="border-bottom:1px solid var(--border-subtle);">
+              <th
+                style="padding:16px 24px; text-align:left; font-size:11px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:var(--text-muted);">
+                Élément</th>
+              <th
+                style="padding:16px 24px; text-align:left; font-size:11px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:var(--text-muted);">
+                Animation</th>
+              <th
+                style="padding:16px 24px; text-align:left; font-size:11px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:var(--text-muted);">
+                Durée</th>
+              <th
+                style="padding:16px 24px; text-align:left; font-size:11px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:var(--text-muted);">
+                Easing</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border-bottom:1px solid var(--border-subtle);">
+              <td style="padding:14px 24px; font-size:13px; color:var(--text-primary); font-weight:600;">Hero Titre
+                (entrée)</td>
+              <td style="padding:14px 24px; font-size:13px; color:var(--text-secondary);">Reveal-left · opacity 0→1</td>
+              <td style="padding:14px 24px; font-family:monospace; font-size:12px; color:var(--accent-bleue);">600ms
+              </td>
+              <td style="padding:14px 24px; font-family:monospace; font-size:11px; color:var(--text-muted);">
+                cubic-bezier(0.16,1,0.3,1)</td>
+            </tr>
+            <tr style="border-bottom:1px solid var(--border-subtle);">
+              <td style="padding:14px 24px; font-size:13px; color:var(--text-primary); font-weight:600;">Sections au
+                scroll</td>
+              <td style="padding:14px 24px; font-size:13px; color:var(--text-secondary);">Left/Right alternés · stagger
+                100ms</td>
+              <td style="padding:14px 24px; font-family:monospace; font-size:12px; color:var(--accent-bleue);">400ms
+              </td>
+              <td style="padding:14px 24px; font-family:monospace; font-size:11px; color:var(--text-muted);">ease-out
+              </td>
+            </tr>
+            <tr style="border-bottom:1px solid var(--border-subtle);">
+              <td style="padding:14px 24px; font-size:13px; color:var(--text-primary); font-weight:600;">Hover Carte
+              </td>
+              <td style="padding:14px 24px; font-size:13px; color:var(--text-secondary);">translateY(-4px) + glow border
+                ambre</td>
+              <td style="padding:14px 24px; font-family:monospace; font-size:12px; color:var(--accent-bleue);">200ms
+              </td>
+              <td style="padding:14px 24px; font-family:monospace; font-size:11px; color:var(--text-muted);">ease-out
+              </td>
+            </tr>
+            <tr style="border-bottom:1px solid var(--border-subtle);">
+              <td style="padding:14px 24px; font-size:13px; color:var(--text-primary); font-weight:600;">Modal / Overlay
+              </td>
+              <td style="padding:14px 24px; font-size:13px; color:var(--text-secondary);">fade + scale(0.95→1) +
+                backdrop blur</td>
+              <td style="padding:14px 24px; font-family:monospace; font-size:12px; color:var(--accent-bleue);">250ms
+              </td>
+              <td style="padding:14px 24px; font-family:monospace; font-size:11px; color:var(--text-muted);">ease-out
+              </td>
+            </tr>
+            <tr style="border-bottom:1px solid var(--border-subtle);">
+              <td style="padding:14px 24px; font-size:13px; color:var(--text-primary); font-weight:600;">Navigation
+                transitions</td>
+              <td style="padding:14px 24px; font-size:13px; color:var(--text-secondary);">Page fade + slide subtle</td>
+              <td style="padding:14px 24px; font-family:monospace; font-size:12px; color:var(--accent-bleue);">300ms
+              </td>
+              <td style="padding:14px 24px; font-family:monospace; font-size:11px; color:var(--text-muted);">ease</td>
+            </tr>
+            <tr style="border-bottom:1px solid var(--border-subtle);">
+              <td style="padding:14px 24px; font-size:13px; color:var(--text-primary); font-weight:600;">Circuit Énergie
+              </td>
+              <td style="padding:14px 24px; font-size:13px; color:var(--text-secondary);">stroke-dashoffset pulse ·
+                opacité 5%</td>
+              <td style="padding:14px 24px; font-family:monospace; font-size:12px; color:var(--accent-bleue);">3-4s · ∞
+              </td>
+              <td style="padding:14px 24px; font-family:monospace; font-size:11px; color:var(--text-muted);">ease-in-out
+              </td>
+            </tr>
+            <tr>
+              <td style="padding:14px 24px; font-size:13px; color:var(--text-primary); font-weight:600;">Sidebar expand
+              </td>
+              <td style="padding:14px 24px; font-size:13px; color:var(--text-secondary);">width 40→240px + texte fade-in
+              </td>
+              <td style="padding:14px 24px; font-family:monospace; font-size:12px; color:var(--accent-bleue);">300ms
+              </td>
+              <td style="padding:14px 24px; font-family:monospace; font-size:11px; color:var(--text-muted);">
+                cubic-bezier(0.16,1,0.3,1)</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- ==================== PAGE 7 : PAGES & USERS ==================== -->
+    <section class="section" id="pages">
+      <div class="section-header" data-reveal="left">
+        <div class="section-tag">07 — Pages & Profils Utilisateurs</div>
+        <h2 class="section-title">12 Pages, <span>4 Profils</span></h2>
+        <p class="section-subtitle">Architecture d'accès · Navigation adaptée · Sidebar pour Chercheur & Admin</p>
+      </div>
+
+      <div class="users-grid" data-reveal="up">
+        <div class="user-card">
+          <div class="user-avatar avatar-visitor">👁</div>
+          <div class="user-name">Visiteur</div>
+          <div class="user-desc">Navigation publique, consulte les projets, actualités, événements et formations sans
+            connexion.</div>
+          <div class="user-access">Accès</div>
+          <div>
+            <span class="access-tag">Accueil</span>
+            <span class="access-tag">Projets</span>
+            <span class="access-tag">Actualités</span>
+            <span class="access-tag">Événements</span>
+            <span class="access-tag">Contact</span>
+          </div>
+        </div>
+
+        <div class="user-card">
+          <div class="user-avatar avatar-student">🎓</div>
+          <div class="user-name">Étudiant / Membre Club</div>
+          <div class="user-desc">Accès formations, clubs, inscription aux événements. Dashboard simplifié avec suivi
+            personnel.</div>
+          <div class="user-access">Accès</div>
+          <div>
+            <span class="access-tag">Accueil Étudiant</span>
+            <span class="access-tag">Clubs</span>
+            <span class="access-tag">Formations</span>
+            <span class="access-tag">Espace Membres</span>
+            <span class="access-tag">Dashboard</span>
+          </div>
+        </div>
+
+        <div class="user-card" style="border-color:rgba(232,100,12,0.2);">
+          <div class="user-avatar avatar-researcher">🔬</div>
+          <div class="user-name">Chercheur</div>
+          <div class="user-desc">Profil complet, publications, projets. Sidebar activée avec accès outils de recherche
+            avancés.</div>
+          <div class="user-access">Accès</div>
+          <div>
+            <span class="access-tag">Profil Chercheur</span>
+            <span class="access-tag">Projets</span>
+            <span class="access-tag">Publications</span>
+            <span class="access-tag sidebar">⬡ Sidebar</span>
+            <span class="access-tag">Dashboard</span>
+          </div>
+        </div>
+
+        <div class="user-card"
+          style="border-color:rgba(232,100,12,0.2); grid-column: 1 / -1; display:grid; grid-template-columns:auto 1fr; gap:20px;">
+          <div class="user-avatar avatar-admin"
+            style="width:64px; height:64px; font-size:28px; align-self:start; margin-bottom:0;">⚡</div>
+          <div>
+            <div class="user-name">Admin / Gestionnaire</div>
+            <div class="user-desc">Accès complet à toutes les pages. Sidebar complète avec gestion des contenus,
+              membres, événements, contributions et statistiques de l'association.</div>
+            <div class="user-access">Accès Complet</div>
+            <div>
+              <span class="access-tag">Toutes pages</span>
+              <span class="access-tag sidebar">⬡ Sidebar Complète</span>
+              <span class="access-tag">Gestion Membres</span>
+              <span class="access-tag">Statistiques</span>
+              <span class="access-tag">Contenu CMS</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-header" style="margin-top:64px; margin-bottom:32px;" data-reveal="right">
+        <h3 style="font-size:24px; font-weight:700; color:var(--text-primary); letter-spacing:-0.5px;">12 Pages
+          Principales</h3>
+      </div>
+
+      <div class="pages-list" data-reveal="up">
+        <div class="page-item">
+          <div class="page-num">P01</div>
+          <div class="page-name">Accueil Principal FIERI</div>
+        </div>
+        <div class="page-item">
+          <div class="page-num">P02</div>
+          <div class="page-name">Accueil Étudiant / Clubs</div>
+        </div>
+        <div class="page-item">
+          <div class="page-num">P03</div>
+          <div class="page-name">Actualités Scientifiques</div>
+        </div>
+        <div class="page-item">
+          <div class="page-num">P04</div>
+          <div class="page-name">Clubs de Recherche</div>
+        </div>
+        <div class="page-item">
+          <div class="page-num">P05</div>
+          <div class="page-name">Projets & Innovations</div>
+        </div>
+        <div class="page-item">
+          <div class="page-num">P06</div>
+          <div class="page-name">Détail d'un Projet</div>
+        </div>
+        <div class="page-item">
+          <div class="page-num">P07</div>
+          <div class="page-name">Formations & Ateliers</div>
+        </div>
+        <div class="page-item">
+          <div class="page-num">P08</div>
+          <div class="page-name">Événements & Conférences</div>
+        </div>
+        <div class="page-item">
+          <div class="page-num">P09</div>
+          <div class="page-name">Espace Membres</div>
+        </div>
+        <div class="page-item">
+          <div class="page-num">P10</div>
+          <div class="page-name">Tableau de Bord Membre</div>
+        </div>
+        <div class="page-item">
+          <div class="page-num">P11</div>
+          <div class="page-name">Profil Chercheur</div>
+        </div>
+        <div class="page-item">
+          <div class="page-num">P12</div>
+          <div class="page-name">Aide / Contact</div>
+        </div>
+      </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- ==================== PAGE 8 : HERO PREVIEW ==================== -->
+    <section class="section" id="stack">
+      <div class="section-header" data-reveal="left">
+        <div class="section-tag">08 — Stack Technique & Exemples</div>
+        <h2 class="section-title">Stack <span>& Rendu</span></h2>
+        <p class="section-subtitle">Outils, librairies et aperçu de rendu hero section</p>
+      </div>
+
+      <!-- HERO PREVIEW -->
+      <div class="hero-preview" data-reveal="up">
+        <div class="tag-line">⬡ FIERI Research — Plateforme Nationale</div>
+        <h1>La <em>Recherche</em><br>au cœur de<br>l'Innovation.</h1>
+        <p>Rejoignez le réseau scientifique national. Universités, clubs, chercheurs — une plateforme pour valoriser,
+          connecter et accélérer.</p>
+        <div class="hero-ctas">
+          <button class="btn btn-primary">Rejoindre FIERI →</button>
+          <button class="btn btn-secondary">Découvrir les projets</button>
+        </div>
+      </div>
+
+      <!-- STACK TABLE -->
+      <table class="stack-table" data-reveal="up">
+        <tr>
+          <td class="stack-category">UI Framework</td>
+          <td>
+            <div class="stack-tool">Tailwind CSS v4</div>
+            <div class="stack-detail">Utility-first · Design tokens · Mobile-first</div>
+          </td>
+          <td><span class="stack-badge">P1</span></td>
+        </tr>
+        <tr>
+          <td class="stack-category">Animation</td>
+          <td>
+            <div class="stack-tool">CSS Animations + GSAP / Framer Motion</div>
+            <div class="stack-detail">Scroll reveal · Circuit pulse · Sidebar expand · Modal</div>
+          </td>
+          <td><span class="stack-badge">P1</span></td>
+        </tr>
+        <tr>
+          <td class="stack-category">Icônes</td>
+          <td>
+            <div class="stack-tool">Lucide Icons</div>
+            <div class="stack-detail">Outline · 20px standard · 24px actions · Ambre sur actif</div>
+          </td>
+          <td><span class="stack-badge">P1</span></td>
+        </tr>
+        <tr>
+          <td class="stack-category">Design</td>
+          <td>
+            <div class="stack-tool">Figma</div>
+            <div class="stack-detail">Composants · Design tokens · Handoff développeur</div>
+          </td>
+          <td><span class="stack-badge">P1</span></td>
+        </tr>
+        <tr>
+          <td class="stack-category">Typographie</td>
+          <td>
+            <div class="stack-tool">Plus Jakarta Sans</div>
+            <div class="stack-detail">Google Fonts · Variable font · 300 à 800</div>
+          </td>
+          <td><span class="stack-badge">P1</span></td>
+        </tr>
+        <tr>
+          <td class="stack-category">Photos / Médias</td>
+          <td>
+            <div class="stack-tool">Editorial Stylisé</div>
+            <div class="stack-detail">Overlay teinté · Contrastes forts · WebP optimisé · Lazy loading</div>
+          </td>
+          <td><span class="stack-badge">P2</span></td>
+        </tr>
+        <tr>
+          <td class="stack-category">Accessibilité</td>
+          <td>
+            <div class="stack-tool">WCAG AA</div>
+            <div class="stack-detail">Contrastes conformes · Focus visibles · Alt texts · 14px minimum</div>
+          </td>
+          <td><span class="stack-badge">P1</span></td>
+        </tr>
+      </table>
+
+      <!-- ADN VISUEL: FAIRE / ÉVITER -->
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-bottom:40px;" data-reveal="up">
+        <div
+          style="background:rgba(27,79,138,0.08); border:1px solid rgba(27,79,138,0.2); border-radius:16px; padding:28px;">
+          <div style="font-size:13px; font-weight:700; color:#5BA3F0; margin-bottom:16px; letter-spacing:0.5px;">✓ CE
+            QUE FIERI DOIT TRANSMETTRE</div>
+          <ul style="list-style:none; display:flex; flex-direction:column; gap:10px;">
+            <li style="font-size:13px; color:var(--text-secondary); display:flex; gap:10px;"><span
+                style="color:#5BA3F0; flex-shrink:0;">→</span>Crédibilité scientifique et institutionnelle</li>
+            <li style="font-size:13px; color:var(--text-secondary); display:flex; gap:10px;"><span
+                style="color:#5BA3F0; flex-shrink:0;">→</span>Waouh effect dès l'arrivée sur le site</li>
+            <li style="font-size:13px; color:var(--text-secondary); display:flex; gap:10px;"><span
+                style="color:#5BA3F0; flex-shrink:0;">→</span>Communauté tech & universitaire nationale</li>
+            <li style="font-size:13px; color:var(--text-secondary); display:flex; gap:10px;"><span
+                style="color:#5BA3F0; flex-shrink:0;">→</span>Premium sans être inaccessible</li>
+            <li style="font-size:13px; color:var(--text-secondary); display:flex; gap:10px;"><span
+                style="color:#5BA3F0; flex-shrink:0;">→</span>Énergie scientifique vivante et en mouvement</li>
+          </ul>
+        </div>
+        <div
+          style="background:rgba(232,100,12,0.06); border:1px solid rgba(232,100,12,0.2); border-radius:16px; padding:28px;">
+          <div
+            style="font-size:13px; font-weight:700; color:var(--accent-bleue); margin-bottom:16px; letter-spacing:0.5px;">
+            ✗ CE QU'IL FAUT ÉVITER</div>
+          <ul style="list-style:none; display:flex; flex-direction:column; gap:10px;">
+            <li style="font-size:13px; color:var(--text-secondary); display:flex; gap:10px;"><span
+                style="color:var(--accent-bleue); flex-shrink:0;">×</span>Design plat générique "AI slop"</li>
+            <li style="font-size:13px; color:var(--text-secondary); display:flex; gap:10px;"><span
+                style="color:var(--accent-bleue); flex-shrink:0;">×</span>Bleu cyan froid (palette ancienne CDC)</li>
+            <li style="font-size:13px; color:var(--text-secondary); display:flex; gap:10px;"><span
+                style="color:var(--accent-bleue); flex-shrink:0;">×</span>Arrondis excessifs / séparateurs lourds</li>
+            <li style="font-size:13px; color:var(--text-secondary); display:flex; gap:10px;"><span
+                style="color:var(--accent-bleue); flex-shrink:0;">×</span>Animations décoratives sans sens</li>
+            <li style="font-size:13px; color:var(--text-secondary); display:flex; gap:10px;"><span
+                style="color:var(--accent-bleue); flex-shrink:0;">×</span>Fond blanc ou très clair sur les pages</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- FOOTER BRAND BOARD -->
+      <div style="text-align:center; padding:48px 0; border-top:1px solid var(--border-subtle); margin-top:40px;">
+        <div
+          style="font-size:11px; letter-spacing:3px; text-transform:uppercase; color:var(--text-muted); margin-bottom:12px;">
+          FIERI Research</div>
+        <div style="font-size:28px; font-weight:800; letter-spacing:-1px; color:var(--text-primary);">Brand Board <span
+            style="color:var(--accent-bleue)">v1.0</span></div>
+        <div style="font-size:13px; color:var(--text-muted); margin-top:8px;">2025 · Dark Cosmique · Plus Jakarta Sans ·
+          Glassmorphism</div>
+      </div>
+
+    </section>
+
+    <script>
+      // Scroll reveal
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('revealed');
+          }
+        });
+      }, { threshold: 0.1, rootMargin: '0px 0px -60px 0px' });
+
+      document.querySelectorAll('[data-reveal]').forEach(el => observer.observe(el));
+
+      // NAV — scroll retract + burger expand
+      const navWrapper = document.getElementById('nav-wrapper');
+      const mainNav = document.getElementById('main-nav');
+      const burger = document.getElementById('nav-burger');
+      const sections = document.querySelectorAll('section[id]');
+      const navLinks = document.querySelectorAll('.nav-links a');
+
+      // Scroll : rétraction en pilule
+      window.addEventListener('scroll', () => {
+        if (window.scrollY > 60) {
+          navWrapper.classList.add('scrolled');
+        } else {
+          navWrapper.classList.remove('scrolled');
+          mainNav.classList.remove('expanded');
+        }
+
+        // Active link
+        let current = '';
+        sections.forEach(section => {
+          if (window.scrollY >= section.offsetTop - 120) {
+            current = section.getAttribute('id');
+          }
+        });
+        navLinks.forEach(link => {
+          link.classList.remove('active');
+          if (link.getAttribute('href') === '#' + current) link.classList.add('active');
+        });
+      });
+
+      // Burger — élargissement horizontal / dropdown mobile
+      burger.addEventListener('click', () => {
+        const isMobile = window.innerWidth <= 768;
+        if (isMobile) {
+          mainNav.classList.toggle('mobile-open');
+        } else {
+          mainNav.classList.toggle('expanded');
+        }
+      });
+
+      // Fermer au clic sur un lien
+      navLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+          e.preventDefault();
+          mainNav.classList.remove('expanded');
+          mainNav.classList.remove('mobile-open');
+          const target = document.querySelector(link.getAttribute('href'));
+          if (target) target.scrollIntoView({ behavior: 'smooth' });
+        });
+      });
+
+      // Fermer si clic dehors
+      document.addEventListener('click', (e) => {
+        if (!mainNav.contains(e.target)) {
+          mainNav.classList.remove('expanded');
+          mainNav.classList.remove('mobile-open');
+        }
+      });
+    </script>
+</body>
+
+</html>

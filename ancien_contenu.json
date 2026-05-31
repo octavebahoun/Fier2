@@ -1,0 +1,544 @@
+{
+    "meta": {
+        "title": "FIERI | Innovation Technologique",
+        "language": "fr"
+    },
+    "navbar": {
+        "logo": "FIERI",
+        "items": [
+            {
+                "label": "Accueil",
+                "href": "/",
+                "active": true
+            },
+            {
+                "label": "Nous découvrir",
+                "href": "/#decouvrir",
+                "active": false
+            },
+            {
+                "label": "Nos pôles",
+                "href": "/clubs",
+                "active": false
+            },
+            {
+                "label": "Concours",
+                "href": "/#evenements",
+                "active": false
+            },
+            {
+                "label": "Blog",
+                "href": "/blog",
+                "active": false
+            },
+            {
+                "label": "Connexion",
+                "href": "/connexion",
+                "active": false
+            },
+            {
+                "label": "Devenir ambassadeur",
+                "href": "/devenir-ambassadeur",
+                "active": false
+            }
+        ],
+        "cta": {
+            "label": "Intégrez un club"
+        }
+    },
+    "hero": {
+        "eyebrow": {
+            "prefix": "Front International des Étudiants et Chercheurs //",
+            "highlight": "FIERI"
+        },
+        "title": {
+            "beforeHighlight": "Rejoignez le front des",
+            "highlight": "étudiants et chercheurs"
+        },
+        "description": "Nous formons, nous connectons et nous propulsons la nouvelle génération de chercheurs et innovateurs.",
+        "buttons": [
+            {
+                "label": "Intégrez un club de recherche",
+                "variant": "primary"
+            },
+            {
+                "label": "Nos clubs",
+                "variant": "outline"
+            }
+        ],
+        "image": {
+            "alt": "Étudiants FIERI en laboratoire"
+        },
+        "badge": {
+            "label": "Lab-to-Market v3.0 · Actif"
+        }
+    },
+    "decouvrir": {
+        "label": "Nous découvrir",
+        "title": "TROIS ENTITÉS",
+        "subtitle": "UNE VISION",
+        "description": "La FIERI est une organisation internationale engagée dans la promotion de la recherche scientifique, de l'innovation technologique et du développement des compétences des jeunes. À travers des formations, des projets collaboratifs et des initiatives entrepreneuriales, elle favorise la créativité, l'excellence académique et l'insertion professionnelle. Elle s'appuie sur ses clubs de recherche déployés à travers les universités des pays membres, ainsi que dans les centres de formation, de recherche et laboratoires, afin de stimuler l'innovation et de rapprocher la théorie de la pratique.",
+        "vision": "Construire une génération de jeunes leaders capables d'apporter des solutions innovantes aux défis de leur environnement et du monde.",
+        "entities": [
+            {
+                "id": "CF_01",
+                "title": "La Cité FIERI",
+                "description": "Espace dédié aux clubs de recherche implantés dans les universités, centres de formation et instituts. Elle rassemble étudiants et jeunes chercheurs autour de projets scientifiques, technologiques et entrepreneuriaux, en favorisant l'expérimentation et le prototypage. La Cité FIERI prépare aux concours d'innovation, hackathons et accompagne l'émergence d'idées de startups."
+            },
+            {
+                "id": "AF_02",
+                "title": "L'Académie FIERI",
+                "description": "Pôle de développement des compétences, elle forme les talents aux exigences de la recherche, de l'innovation et du monde professionnel. Elle propose des programmes certifiant en ligne et en présentiel, avec une approche pratique orientée vers l'action et l'employabilité."
+            },
+            {
+                "id": "IF_03",
+                "title": "L'Institut FIERI",
+                "description": "Structure dédiée à la recherche appliquée, à l'innovation et à la valorisation des projets. L'Institut FIERI conçoit et développe des solutions adaptées aux besoins des entreprises, tout en accompagnant la structuration et la croissance de startups. Il constitue le lien stratégique entre les talents, la recherche et le monde économique."
+            }
+        ]
+    },
+    "mission": {
+        "pillars": [
+            {
+                "title": "Inspiration Scientifique",
+                "description": "Développer une culture scientifique forte en stimulant la curiosité, l'expérimentation et l'esprit critique chez les jeunes talents."
+            },
+            {
+                "title": "Innovation Pratique",
+                "description": "Transformer les idées en solutions concrètes à travers des projets innovants adaptés aux réalités locales et globales."
+            },
+            {
+                "title": "Réseau Collaboratif",
+                "description": "Construire un écosystème dynamique reliant étudiants, chercheurs et professionnels pour favoriser le partage de connaissances et les collaborations."
+            },
+            {
+                "title": "Accompagnement",
+                "description": "Encadrer et soutenir les porteurs de projets innovants à chaque étape, de l'idée à la mise en oeuvre."
+            }
+        ]
+    },
+    "stats": {
+        "counters": [
+            {
+                "label": "Membres actifs",
+                "value": 5000,
+                "suffix": "+",
+                "color": "var(--orange)"
+            },
+            {
+                "label": "Clubs de recherche",
+                "value": 6,
+                "suffix": "",
+                "color": "var(--blue)"
+            },
+            {
+                "label": "Projets réalisés",
+                "value": 120,
+                "suffix": "+",
+                "color": "var(--green)"
+            },
+            {
+                "label": "Partenaires",
+                "value": 30,
+                "suffix": "+",
+                "color": "var(--orange)"
+            }
+        ]
+    },
+    "clubs": {
+        "heading": {
+            "label": "Nos Pôles de Recherche",
+            "title": "Six clubs spécialisés, véritables laboratoires d'innovation."
+        },
+        "club": [
+            {
+                "kicker": "Robotique et Automatisation",
+                "title": "Concevoir des systèmes intelligents révolutionnaires",
+                "division": [
+                    "Division mécanique",
+                    "Division IT (ROS / IA)",
+                    "Electronique"
+                ],
+                "activites": "Robotique mobile, IA embarquée, automatisation industrielle.",
+                "projetPhare": "Robot autonome pour logistique intelligente.",
+                "description": "De la robotique mobile à l'IA embarquée, chaque projet repousse les frontières du possible.",
+                "accent": "var(--orange)"
+            },
+            {
+                "kicker": "Informatique Industrielle et IoT",
+                "title": "Connecter le monde physique et numérique",
+                "division": [
+                    "Développement web",
+                    "IA et Cybersécurité"
+                ],
+                "activites": "IoT industriel, edge computing, systèmes cyber-physiques.",
+                "projetPhare": "Smart farming avec drones et capteurs connectés.",
+                "description": "Concevez des solutions IoT qui transforment les usages du quotidien.",
+                "accent": "var(--blue)"
+            },
+            {
+                "kicker": "Eco-énergie et Climatisation",
+                "title": "Développer des solutions énergétiques durables",
+                "division": [
+                    "Smart grids",
+                    "Énergies renouvelables",
+                    "Efficacité énergétique"
+                ],
+                "activites": "Smart grids, énergies renouvelables, efficacité énergétique.",
+                "projetPhare": "Micro-réseau solaire pour communautés isolées.",
+                "description": "Maîtrisez les énergies de demain pour construire un futur durable.",
+                "accent": "var(--green)"
+            },
+            {
+                "kicker": "Construction 4.0",
+                "title": "Réinventer le BTP avec le numérique",
+                "division": [
+                    "BIM avancé",
+                    "Impression 3D",
+                    "Matériaux innovants"
+                ],
+                "activites": "BIM avancé, impression 3D, matériaux innovants.",
+                "projetPhare": "Modélisation numérique de villes durables.",
+                "description": "Révolutionnez le secteur du BTP grâce aux technologies de pointe.",
+                "accent": "var(--orange)"
+            },
+            {
+                "kicker": "Intelligence Artificielle",
+                "title": "Explorer les frontières de l'intelligence artificielle",
+                "division": [
+                    "Machine learning",
+                    "Deep learning",
+                    "Computer vision"
+                ],
+                "activites": "Machine learning, deep learning, computer vision.",
+                "projetPhare": "Systèmes de recommandation intelligents.",
+                "description": "Plongez dans les algorithmes qui redéfinissent notre monde.",
+                "accent": "var(--blue)"
+            },
+            {
+                "kicker": "Innovation Technologique et Entrepreneurial",
+                "title": "Transformer les idées en solutions concrètes",
+                "division": [
+                    "Design thinking",
+                    "Prototypage rapide",
+                    "Incubation"
+                ],
+                "activites": "Design thinking, prototypage rapide, incubation.",
+                "projetPhare": "Plateforme de gestion intelligente des déchets.",
+                "description": "De l'idée à l'impact — concevez, testez et lancez vos projets.",
+                "accent": "var(--green)"
+            }
+        ]
+    },
+    "evenements": {
+        "label": "Concours & Événements",
+        "title": "Participez à nos concours",
+        "blocks": [
+            {
+                "title": "Concours",
+                "description": "Rejoignez des compétitions captivantes et exprimez votre talent dans un esprit d'innovation et de partage.",
+                "cta": {
+                    "label": "Voir les concours",
+                    "href": "#"
+                }
+            },
+            {
+                "title": "Ateliers techniques",
+                "description": "Apprenez avec des professionnels du domaine tech, en travaillant sur des projets concrets et collaboratifs.",
+                "cta": {
+                    "label": "Découvrir les ateliers",
+                    "href": "#"
+                }
+            },
+            {
+                "title": "Nos événements",
+                "description": "Découvrez nos événements en cours — hackathons, conférences et rencontres professionnelles.",
+                "cta": {
+                    "label": "Découvrir",
+                    "href": "#"
+                }
+            }
+        ]
+    },
+    "partenaires": {
+        "label": "Devenez Partenaire FIERI",
+        "title": "Ensemble, créons plus d'impact",
+        "avantages": [
+            "Accès à des talents innovants et projets prometteurs",
+            "Visibilité auprès de la jeune génération d'innovateurs",
+            "Opportunités de co-développement et recherche collaborative",
+            "Impact social et technologique mesurable"
+        ],
+        "cta": {
+            "label": "Discuter sur WhatsApp",
+            "href": "https://wa.me/+22941642355?text=Bonjour,%20FIERI"
+        }
+    },
+    "ambassadeur": {
+        "metaTitle": "FIERI | Devenir Ambassadeur",
+        "hero": {
+            "title": "Devenez Ambassadeur FIERI",
+            "subtitle": "Votre localite, votre terrain d'impact",
+            "lead": "Cher membre de la grande famille FIERI, avez-vous deja imagine transformer votre environnement immediat en un veritable laboratoire d'innovation ? Aujourd'hui, nous vous donnons les cles pour devenir le catalyseur du changement dans votre communaute.",
+            "cta": {
+                "label": "Postuler maintenant",
+                "href": "https://fieri.pythonanywhere.com/devenir-ambassadeur"
+            }
+        },
+        "why": {
+            "title": "Pourquoi devenir ambassadeur FIERI ?",
+            "items": [
+                {
+                    "title": "Leadership et visibilite",
+                    "description": "Devenez un leader reconnu dans l'ecosysteme technologique de votre region."
+                },
+                {
+                    "title": "Reseau d'exception",
+                    "description": "Accedez a un reseau international de chercheurs, innovateurs et partenaires."
+                },
+                {
+                    "title": "Projets concrets",
+                    "description": "Lancez et managez des projets innovants avec le soutien du front."
+                },
+                {
+                    "title": "Developpement personnel",
+                    "description": "Acquerez des competences en management, communication et diplomatie."
+                }
+            ]
+        },
+        "mission": {
+            "title": "Ta mission d'ambassadeur",
+            "lead": "En tant qu'ambassadeur FIERI, vous incarnez l'excellence, l'innovation et la cooperation internationale. Votre mission est de faire rayonner les valeurs du FIERI et de creer des ponts entre les talents de votre region et les opportunites mondiales.",
+            "blocks": [
+                {
+                    "title": "Role de representation",
+                    "items": [
+                        "Representer officiellement le FIERI dans les evenements locaux et regionaux.",
+                        "Porter la voix de l'innovation scientifique africaine sur la scene internationale.",
+                        "Creer des partenariats strategiques avec les institutions locales.",
+                        "Animer des conferences et ateliers de sensibilisation aux technologies emergentes."
+                    ]
+                },
+                {
+                    "title": "Role d'animation scientifique",
+                    "items": [
+                        "Organiser des hackathons, competitions et challenges innovants.",
+                        "Detecter et accompagner les talents emergents de votre region.",
+                        "Creer des cellules locales de recherche et developpement.",
+                        "Faciliter l'acces aux ressources et formations FIERI."
+                    ]
+                }
+            ]
+        },
+        "offer": {
+            "title": "Ce que nous t'offrons",
+            "items": [
+                {
+                    "title": "Accreditation officielle",
+                    "description": "Certificat d'ambassadeur, carte de membre prestige, kit de representation complet."
+                },
+                {
+                    "title": "Ressources operationnelles",
+                    "description": "Acces a notre plateforme digitale, templates professionnels, supports de communication."
+                },
+                {
+                    "title": "Formation continue",
+                    "description": "Programme de mentorat, webinaires exclusifs, modules de leadership et diplomatie."
+                },
+                {
+                    "title": "Reseau privilegie",
+                    "description": "Acces au cercle ferme des ambassadeurs, rencontres avec les decideurs, invitations VIP."
+                }
+            ]
+        },
+        "apply": {
+            "title": "Le moment d'agir est maintenant",
+            "lead": "La revolution technologique se construit aujourd'hui. Rejoignez le cercle des ambassadeurs FIERI et ecrivez avec nous les prochains chapitres de l'innovation scientifique.",
+            "steps": [
+                {
+                    "title": "Manifeste ton interet",
+                    "description": "Remplis le formulaire de candidature en ligne."
+                },
+                {
+                    "title": "Entretien de motivation",
+                    "description": "Echange avec notre comite des ambassadeurs."
+                },
+                {
+                    "title": "Plan d'action local",
+                    "description": "Presente ta vision pour developper FIERI dans ta region."
+                },
+                {
+                    "title": "Intronisation",
+                    "description": "Recois ton accreditation et demarre ta mission."
+                }
+            ],
+            "cta": {
+                "label": "Postuler maintenant",
+                "href": "https://fieri.pythonanywhere.com/devenir-ambassadeur"
+            }
+        }
+    },
+    "connexion": {
+        "metaTitle": "FIERI | Connexion"
+    },
+    "footer": {
+        "logo": "FIERI",
+        "links": [
+            {
+                "label": "Accueil",
+                "href": "/"
+            },
+            {
+                "label": "Blog",
+                "href": "/blog"
+            },
+            {
+                "label": "Nos pôles",
+                "href": "/clubs"
+            },
+            {
+                "label": "Devenir ambassadeur",
+                "href": "/devenir-ambassadeur"
+            },
+            {
+                "label": "Concours",
+                "href": "/#evenements"
+            }
+        ],
+        "contact": {
+            "email": "fieri0024@gmail.com",
+            "whatsapp": "https://wa.me/+22941642355?text=Bonjour,%20FIERI"
+        },
+        "copyright": "© 2023 FIERI · Tous droits réservés."
+    },
+    "actualites": {
+        "label": "Le Journal",
+        "title": "Nos dernières actualités",
+        "items": [
+            {
+                "date": "15 OCT 2023",
+                "titre": "Lancement officiel de la nouvelle saison des clubs de recherche",
+                "extrait": "Découvrez les nouveaux projets qui seront au cœur de cette année d’innovation technique."
+            },
+            {
+                "date": "02 NOV 2023",
+                "titre": "Hackathon National : Plus de 200 étudiants engagés",
+                "extrait": "Retour sur 48h de compétition intense pour résoudre des défis environnementaux."
+            },
+            {
+                "date": "20 NOV 2023",
+                "titre": "Partenariat stratégique avec les industries locales",
+                "extrait": "La FIERI signe un accord de transfert technologique pour propulser l’industrie."
+            }
+        ]
+    },
+    "hiblog": {
+        "label": "HiBlog",
+        "title": "Inspirations & Tech Insights",
+        "articles": [
+            {
+                "categorie": "Intelligence Artificielle",
+                "titre": "Comment l’IA redessine l’avenir de l’agriculture en Afrique",
+                "tempsLecture": "5 min"
+            },
+            {
+                "categorie": "Robotique",
+                "titre": "La révolution des drones autonomes pour la logistique",
+                "tempsLecture": "8 min"
+            },
+            {
+                "categorie": "Éco-énergie",
+                "titre": "Micro-grids intelligents : l’indépendance énergétique locale",
+                "tempsLecture": "6 min"
+            }
+        ]
+    },
+    "paf": {
+        "label": "Accompagnement",
+        "title": "Programme d’Accompagnement et Formations (PAF)",
+        "description": "Un cursus conçu pour transformer les étudiants curieux en experts de l’innovation.",
+        "features": [
+            {
+                "title": "Mentorat Expert",
+                "desc": "Bénéficiez du suivi de chercheurs et professionnels de haut niveau."
+            },
+            {
+                "title": "Accès aux Laboratoires",
+                "desc": "Utilisez nos infrastructures pour vos prototypages et tests."
+            },
+            {
+                "title": "Financement de Projets",
+                "desc": "Les meilleurs projets reçoivent des bourses et du matériel de R&D."
+            }
+        ]
+    },
+    "faq": {
+        "label": "F.A.Q",
+        "title": "Questions Fréquentes",
+        "questions": [
+            {
+                "q": "Qui peut rejoindre un club FIERI ?",
+                "a": "Tout étudiant passionné par la technologie, peu importe sa filière ou son université d’origine, tant qu’il démontre une volonté d’apprendre et d’innover."
+            },
+            {
+                "q": "Les formations sont-elles payantes ?",
+                "a": "La majorité de nos formations de base et l’accès aux clubs sont entièrement gratuits ou subventionnés par nos partenaires."
+            },
+            {
+                "q": "Comment proposer un nouveau projet ?",
+                "a": "Une fois membre d’un pôle, vous pouvez soumettre une proposition lors de nos sessions de pitch trimestrielles."
+            }
+        ]
+    },
+    "contact": {
+        "label": "Contact",
+        "title": "Prêt à faire la différence ?",
+        "subtitle": "Laissez-nous un message, notre équipe vous répondra dans les plus brefs délais.",
+        "info": {
+            "email": "fieri0024@gmail.com",
+            "tel": "+229 41 64 23 55",
+            "adresse": "Campus Universitaire, Bloc Technologique"
+        }
+    },
+    "blogPage": {
+        "hero": {
+            "label": "Notre Blog",
+            "title": "Explorations & Découvertes",
+            "description": "Lisez nos derniers articles sur la technologie, la recherche et l'innovation en Afrique."
+        },
+        "articles": [
+            {
+                "categorie": "Intelligence Artificielle",
+                "titre": "L'IA générative : Opportunités et défis pour les startups africaines",
+                "date": "10 Mai 2026",
+                "auteur": "Dr. Amadou Kane",
+                "image": "/fieri.webp",
+                "extrait": "Comment les nouvelles IA transforment-elles l'écosystème entrepreneurial sur le continent ?"
+            },
+            {
+                "categorie": "Robotique",
+                "titre": "Automatisation agricole : le rôle des drones intelligents",
+                "date": "24 Avril 2026",
+                "auteur": "Equipe R&D",
+                "image": "/fieri.webp",
+                "extrait": "Retour sur nos tests de drones cartographes dans les champs expérimentaux."
+            },
+            {
+                "categorie": "Éco-énergie",
+                "titre": "Optimisation des micro-grids solaires par l'IoT",
+                "date": "15 Mars 2026",
+                "auteur": "Pôle Éco-énergie",
+                "image": "/fieri.webp",
+                "extrait": "Une approche pratique pour stabiliser la distribution électrique en zone rurale."
+            },
+            {
+                "categorie": "Vie du club",
+                "titre": "Retour sur le Hackathon GreenTech 2026",
+                "date": "02 Février 2026",
+                "auteur": "Bureau Fieri",
+                "image": "/fieri.webp",
+                "extrait": "Les meilleurs projets de cette édition exceptionnelle qui a réuni 200 participants."
+            }
+        ]
+    }
+}

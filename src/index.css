@@ -1,0 +1,195 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --color-bg-primary: #080B14;
+  --color-bg-secondary: #0D1120;
+  --color-bg-tertiary: #111827;
+  
+  --color-accent-primary: #1B4F8A;
+  --color-accent-secondary: #F5A623;
+  --color-accent-tertiary: #E8640C;
+  
+  --color-accent-bleue: #1B4F8A;
+  --color-accent-amber: #F5A623;
+  --color-accent-blue-marine: #1B4F8A;
+  --color-fieri-blue: #1B6FD8;
+  --color-fieri-bleue: #F5821F;
+  
+  --color-text-primary: #F0EDE8;
+  --color-text-secondary: #A0A8B8;
+  --color-text-muted: #5A6070;
+  
+  --color-border-subtle: rgba(255, 255, 255, 0.06);
+  --color-border-glow: rgba(27, 79, 138, 0.4);
+  --color-grid-line: rgba(255, 255, 255, 0.03);
+  
+  --font-sans: 'Plus Jakarta Sans', sans-serif;
+  
+  /* Custom Animations and Keyframes */
+  --animate-pulse-dot: pulse-dot 2s ease-in-out infinite;
+  --animate-pulse-glow: pulse-glow 3s ease-in-out infinite;
+  
+  @keyframes pulse-dot {
+    0%, 100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 0.6;
+      transform: scale(0.85);
+    }
+  }
+  @keyframes pulse-glow {
+    0%, 100% {
+      box-shadow: 0 0 15px rgba(27, 79, 138, 0.2);
+    }
+    50% {
+      box-shadow: 0 0 25px rgba(27, 79, 138, 0.4);
+    }
+  }
+}
+
+/* Light mode theme overrides */
+body.light-theme {
+  --color-bg-primary: #F8FAFC;
+  --color-bg-secondary: #FFFFFF;
+  --color-bg-tertiary: #F1F5F9;
+  --color-text-primary: #0F172A;
+  --color-text-secondary: #475569;
+  --color-text-muted: #64748B;
+  --color-border-subtle: rgba(0, 0, 0, 0.08);
+  --color-border-glow: rgba(27, 111, 216, 0.2);
+  --color-grid-line: rgba(15, 23, 42, 0.04);
+}
+
+/* Global resets and layouts */
+body {
+  background-color: var(--color-bg-primary);
+  color: var(--color-text-primary);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.6;
+  overflow-x: hidden;
+  position: relative;
+  min-height: 100vh;
+}
+
+/* Blueprint Grid Overlay (Applied to specific containers like Hero & Footer) */
+.blueprint-grid {
+  position: relative;
+}
+.blueprint-grid::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(var(--color-grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--color-grid-line) 1px, transparent 1px);
+  background-size: 60px 60px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+
+/* Custom scrollbars */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-bg-primary);
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* Utility animations and custom glass effects */
+.glass-panel {
+  background: rgba(13, 17, 32, 0.7);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.glass-panel:hover {
+  border-color: rgba(27, 111, 216, 0.35);
+  background: rgba(15, 22, 42, 0.85);
+  box-shadow: 0 12px 40px rgba(27, 111, 216, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  transform: translateY(-3px);
+}
+
+.text-gradient-blue {
+  background: linear-gradient(135deg, #00F2FE 0%, #4FACFE 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.text-gradient-orange {
+  background: linear-gradient(135deg, #FF7E40 0%, #FFB800 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.halo-radial {
+  background: radial-gradient(circle, rgba(27, 79, 138, 0.12) 0%, transparent 70%);
+}
+
+.dot-grid {
+  position: relative;
+}
+.dot-grid::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+  background-size: 24px 24px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+@keyframes circuit-draw {
+  0% {
+    stroke-dashoffset: 200;
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+  }
+  70% {
+    stroke-dashoffset: 0;
+  }
+  85% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+  100% {
+    stroke-dashoffset: -200;
+    opacity: 0;
+  }
+}
+
+.circuit-trace-1 {
+  stroke-dasharray: 200;
+  stroke-dashoffset: 200;
+  animation: circuit-draw 4.5s ease-in-out infinite;
+  filter: drop-shadow(0 0 6px rgba(27, 111, 216, 0.85));
+}
+
+.circuit-trace-2 {
+  stroke-dasharray: 150;
+  stroke-dashoffset: 150;
+  animation: circuit-draw 4.5s ease-in-out infinite 1.8s;
+  filter: drop-shadow(0 0 5px rgba(232, 100, 12, 0.85));
+}
+
+.text-gradient-cosmic {
+  background: linear-gradient(135deg, #00F2FE 0%, #0072FF 50%, #FFB800 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
