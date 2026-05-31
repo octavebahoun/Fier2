@@ -1,7 +1,8 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Menu, X, ChevronDown, Sun, Moon, LogOut } from 'lucide-react'
 import Logo from '../Logo.jsx'
+import api from '../../services/api.js'
 
 export default function Navbar({
   currentPage,
@@ -16,6 +17,46 @@ export default function Navbar({
   mobileMenuOpen,
   setMobileMenuOpen
 }) {
+  const [unreadCount, setUnreadCount] = useState(0)
+
+  useEffect(() => {
+    let mounted = true
+    const loadUnread = async () => {
+      try {
+        if (!user) { setUnreadCount(0); return }
+        const res = await api.dashboard.getNotifications()
+        if (mounted && res && res.success) {
+          const count = (res.data || []).filter(n => !n.read).length
+          setUnreadCount(count)
+        }
+      } catch (e) {
+        // ignore
+      }
+    }
+    const handleUpdate = () => { void loadUnread() }
+    const handleStorage = (ev) => {
+      try {
+        if (!ev || !ev.key) return
+        if (ev.key.includes('fieri_db_notifications') || ev.key.includes('fieri_db')) {
+          void loadUnread()
+        }
+      } catch {}
+    }
+
+    loadUnread()
+    if (typeof window !== 'undefined' && typeof window.addEventListener === 'function') {
+      window.addEventListener('fieri:notifications:updated', handleUpdate)
+      window.addEventListener('storage', handleStorage)
+    }
+
+    return () => {
+      mounted = false
+      if (typeof window !== 'undefined' && typeof window.removeEventListener === 'function') {
+        window.removeEventListener('fieri:notifications:updated', handleUpdate)
+        window.removeEventListener('storage', handleStorage)
+      }
+    }
+  }, [user])
   return (
     <header className="fixed top-3 left-0 right-0 z-50 pointer-events-none flex justify-center w-full px-4 md:px-6">
       {/* ====== DESKTOP NAVIGATION ====== */}
@@ -132,16 +173,22 @@ export default function Navbar({
                 <div className="flex items-center gap-2">
                   <button
                     onClick={() => { navigate(user ? 'dashboard' : 'auth'); setIsNavExpanded(false); }}
-                    className={`text-[9.5px] uppercase tracking-widest font-black px-4.5 py-2 rounded-full transition-all duration-300 border cursor-pointer ${
+                    className={`relative text-[9.5px] uppercase tracking-widest font-black px-4.5 py-2 rounded-full transition-all duration-300 border cursor-pointer ${
                       user
                         ? 'bg-accent-primary/10 border-accent-primary/40 text-text-primary hover:bg-accent-primary/25'
                         : 'bg-transparent border-border-subtle text-text-secondary hover:text-text-primary hover:bg-white/5'
                     }`}
                   >
                     {user ? 'Dashboard' : 'Connexion'}
+                    {/** Notification badge */}
+                    {user && typeof window !== 'undefined' && (
+                      <span className="absolute -top-2 -right-2 inline-flex items-center justify-center w-5 h-5 rounded-full bg-accent-secondary text-white text-[10px] font-black">
+                        {unreadCount > 0 ? (unreadCount > 99 ? '99+' : unreadCount) : <span className="w-2.5 h-2.5 rounded-full bg-white/80" />}
+                      </span>
+                    )}
                   </button>
                   {user && (
-                    <span className={`text-[8.5px] uppercase tracking-wider font-extrabold px-2.5 py-1 rounded-full border shrink-0 ${
+                    <span className={`text-[8.5px] uppercase tracking-wider font-extrabold px-2.5 py-0.5 rounded-full border shrink-0 ${
                       user.role === 'ADMIN'
                         ? 'bg-red-500/10 border-red-500/30 text-red-400'
                         : user.role === 'CHERCHEUR'

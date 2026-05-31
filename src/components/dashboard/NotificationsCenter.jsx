@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { notifications } from '../../services/notifications.js'
 import NotificationItem from './NotificationItem.jsx'
 
@@ -13,21 +13,24 @@ export default function NotificationsCenter({ navigate }) {
     try {
       const data = await notifications.getNotifications()
       setList(data || [])
-    } catch (e) {
-      console.error('Failed loading notifications', e)
+    } catch {
+      console.error('Failed loading notifications')
     } finally {
       setLoading(false)
     }
   }
 
-  useEffect(() => { load() }, [])
+  useEffect(() => {
+    const t = setTimeout(() => { void load() }, 0)
+    return () => clearTimeout(t)
+  }, [])
 
   const markRead = async (id) => {
     // optimistic
     setList(l => l.map(n => n.id === id ? { ...n, read: true } : n))
     try {
       await notifications.markAsRead(id)
-    } catch (e) {
+    } catch {
       // rollback on error
       setList(l => l.map(n => n.id === id ? { ...n, read: false } : n))
     }
@@ -46,8 +49,8 @@ export default function NotificationsCenter({ navigate }) {
     try {
       await notifications.markAllRead()
       setList(l => l.map(n => ({ ...n, read: true })))
-    } catch (e) {
-      console.error('markAllRead failed', e)
+    } catch {
+      console.error('markAllRead failed')
     }
   }
 
@@ -56,8 +59,8 @@ export default function NotificationsCenter({ navigate }) {
     try {
       await notifications.clearNotifications()
       setList([])
-    } catch (e) {
-      console.error('clearNotifications failed', e)
+    } catch {
+      console.error('clearNotifications failed')
     }
   }
 
