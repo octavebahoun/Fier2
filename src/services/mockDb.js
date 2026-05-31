@@ -17,6 +17,7 @@ const KEYS = {
   RESEARCHERS: 'fieri_db_researchers',
   NEWS: 'fieri_db_news',
   NOTIFICATIONS: 'fieri_db_notifications',
+  OPPORTUNITIES: 'fieri_db_opportunities',
   CONTACT_MESSAGES: 'fieri_contact_messages'
 };
 
@@ -229,11 +230,12 @@ const DEFAULT_WORKSHOPS = [
     instructor: "Marie-Claire Ousmane",
     date: "15 Juin 2026",
     duration: "4 jours (Intensif)",
-    placesLeft: 8,
     totalPlaces: 25,
     level: "Avancé",
+    clubId: "club-1",
     desc: "Maîtrisez l'architecture interne de Robot Operating System 2 (ROS2), la création de nœuds de contrôle, l'implémentation de la navigation SLAM et le déploiement sur cibles matérielles réelles.",
-    registered: false
+    registeredUsers: ["Jean-Pierre L.", "Sarah M.", "Dr. Amadou K.", "Fatoumata S.", "Loïc D.", "Elena R.", "Omar B.", "Chloé G."],
+    waitlistUsers: []
   },
   {
     id: 'work-2',
@@ -241,11 +243,12 @@ const DEFAULT_WORKSHOPS = [
     instructor: "Yasmine Bamba",
     date: "02 Juillet 2026",
     duration: "6 sessions (Soirs & Weekends)",
-    placesLeft: 14,
     totalPlaces: 30,
-    level: "Intermédiaire",
+    level: "Avancé",
+    clubId: "club-5",
     desc: "De la théorie des réseaux de neurones artificiels à l'entraînement de CNN complexes sur GPU pour la reconnaissance d'objets, le traitement d'images médicales et la classification en temps réel.",
-    registered: false
+    registeredUsers: ["Alice P.", "Bastien F.", "Koffi A.", "Zineb H.", "Thomas N.", "Mélissa W."],
+    waitlistUsers: []
   },
   {
     id: 'work-3',
@@ -253,11 +256,25 @@ const DEFAULT_WORKSHOPS = [
     instructor: "Dr. Alexis V.",
     date: "28 Juillet 2026",
     duration: "2 jours",
-    placesLeft: 5,
     totalPlaces: 15,
-    level: "Débutant/Intermédiaire",
+    level: "Débutant",
+    clubId: "club-2",
     desc: "Configurez une passerelle LoRaWAN autonome, développez des capteurs à ultrabasse consommation d'énergie avec ESP32 et configurez The Things Network (TTN) pour acheminer vos données.",
-    registered: false
+    registeredUsers: ["Dimitri S.", "Nour E.", "Félix M.", "Awa D.", "Rémi G.", "Sofia C.", "Hugo V.", "Clément J.", "Isabelle T.", "Marc A."],
+    waitlistUsers: []
+  },
+  {
+    id: 'work-4',
+    title: "Atelier Éco-Conception & Smart Grid",
+    instructor: "Dr. Jean-François M.",
+    date: "10 Juin 2026",
+    duration: "3 sessions (Interactif)",
+    totalPlaces: 5,
+    level: "Débutant",
+    clubId: "club-3",
+    desc: "Découvrez les bases des Smart Grids et apprenez à optimiser la consommation énergétique locale de vos capteurs IoT en utilisant des algorithmes d'éco-conception.",
+    registeredUsers: ["Thomas Bernard", "Sylvie Martin", "Alice Dubois", "Yassine Kacem", "Christophe Roux"],
+    waitlistUsers: ["Marc Lambert", "Sophie Morel", "Pierre Bertrand"]
   }
 ];
 
@@ -351,7 +368,8 @@ const DEFAULT_NEWS = [
     date: "28 Mai 2026",
     author: "Dr. Amadou Kane",
     image: "https://images.unsplash.com/photo-1615811361523-6bd03d7748e7?w=800&auto=format&fit=crop&q=80",
-    excerpt: "Découvrez comment nos modèles d'analyse foliaire basés sur l'IA aident concrètement les petits producteurs à identifier les pathologies en zone rurale sans connexion internet."
+    excerpt: "Découvrez comment nos modèles d'analyse foliaire basés sur l'IA aident concrètement les petits producteurs à identifier les pathologies en zone rurale sans connexion internet.",
+    status: "APPROVED"
   },
   {
     id: 'art-2',
@@ -360,7 +378,8 @@ const DEFAULT_NEWS = [
     date: "10 Mai 2026",
     author: "Bureau Fieri",
     image: "https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?w=800&auto=format&fit=crop&q=80",
-    excerpt: "La FIERI déploie ses nouveaux équipements de R&D au sein des universités membres. Découvrez les axes clés sur la robotique et les smart grids."
+    excerpt: "La FIERI déploie ses nouveaux équipements de R&D au sein des universités membres. Découvrez les axes clés sur la robotique et les smart grids.",
+    status: "APPROVED"
   },
   {
     id: 'art-3',
@@ -369,7 +388,8 @@ const DEFAULT_NEWS = [
     date: "15 Avril 2026",
     author: "Pôle Éco-énergie",
     image: "https://images.unsplash.com/photo-1508514177221-188b1cf16e9d?w=800&auto=format&fit=crop&q=80",
-    excerpt: "Une étude concrète de notre pôle sur l'implémentation de batteries LiFePO4 couplées à des algorithmes d'équilibrage prédictifs."
+    excerpt: "Une étude concrète de notre pôle sur l'implémentation de batteries LiFePO4 couplées à des algorithmes d'équilibrage prédictifs.",
+    status: "APPROVED"
   }
 ];
 
@@ -377,6 +397,45 @@ const DEFAULT_NOTIFICATIONS = [
   { id: 'n-1', text: "Votre inscription au club 'Intelligence Artificielle' a été approuvée !", read: false, date: "Hier" },
   { id: 'n-2', text: "Le projet 'Rover SLAM' recherche un nouveau contributeur ROS2.", read: false, date: "Il y a 3 jours" },
   { id: 'n-3', text: "Un nouvel atelier sur LoRaWAN a été planifié pour fin Juillet.", read: true, date: "Il y a 1 semaine" }
+];
+
+const DEFAULT_OPPORTUNITIES = [
+  {
+    id: 'opt-1',
+    title: "Post-Doc en Vision par Ordinateur pour Smart Farming",
+    type: "CDD R&D",
+    discipline: "Agronomie & Vision",
+    salary: 3200,
+    description: "Recherche sur l'imagerie multispectrale par drone pour détecter le stress hydrique précoce dans les cultures du Sahel. Vous rejoindrez une équipe interdisciplinaire de premier plan.",
+    requirements: "Doctorat en Informatique, Vision par Ordinateur ou domaine connexe. Expérience pratique avec Python, PyTorch/TensorFlow et traitement de données géospatiales.",
+    status: "Actif",
+    dateAdded: "2026-05-28",
+    author: "Dr. Alexis V."
+  },
+  {
+    id: 'opt-2',
+    title: "Doctorat en Intégration SLAM ROS2 et IA Embarquée",
+    type: "Doctorat",
+    discipline: "Robotique & IA",
+    salary: 2600,
+    description: "Recherche de pointe sur l'optimisation des trajectoires d'évitement d'obstacles en environnement inconnu à faible luminosité à l'aide de ROS2. Ce poste offre une opportunité de collaboration industrielle internationale.",
+    requirements: "Master en Robotique, Automatique ou Informatique. Excellentes compétences en C++, Python, ROS2 et solides bases en mathématiques appliquées.",
+    status: "Actif",
+    dateAdded: "2026-05-25",
+    author: "Marie-Claire Ousmane"
+  },
+  {
+    id: 'opt-3',
+    title: "Stage R&D en Optimisation de Micro-Grids Solaires",
+    type: "Stage de Recherche",
+    discipline: "Énergies Renouvelables",
+    salary: 1200,
+    description: "Développement d'un algorithme de prédiction de charge dynamique à l'aide de modèles légers de Machine Learning embarqués. Vous travaillerez en étroite collaboration avec le pôle Éco-énergie.",
+    requirements: "Étudiant de niveau Master (M1/M2) ou école d'ingénieur en Électricité, Génie Énergétique ou Informatique. Notions en Python et modélisation énergétique.",
+    status: "Actif",
+    dateAdded: "2026-05-20",
+    author: "Dr. Amadou Kane"
+  }
 ];
 
 // --- LOGIQUE D'INITIALISATION ET DE SYNC LOCAL STORAGE ---
@@ -444,6 +503,7 @@ export const initializeMockDb = () => {
   if (!readLocal(KEYS.RESEARCHERS)) writeLocal(KEYS.RESEARCHERS, DEFAULT_RESEARCHERS);
   if (!readLocal(KEYS.NEWS)) writeLocal(KEYS.NEWS, DEFAULT_NEWS);
   if (!readLocal(KEYS.NOTIFICATIONS)) writeLocal(KEYS.NOTIFICATIONS, DEFAULT_NOTIFICATIONS);
+  if (!readLocal(KEYS.OPPORTUNITIES)) writeLocal(KEYS.OPPORTUNITIES, DEFAULT_OPPORTUNITIES);
 };
 
 // Assurer l'auto-initialisation au chargement du module
@@ -465,6 +525,17 @@ export const mockDb = {
         return true;
       }
       return false;
+    },
+    toggleJoin: (clubId) => {
+      const list = readLocal(KEYS.CLUBS) || DEFAULT_CLUBS;
+      const idx = list.findIndex(c => c.id === clubId);
+      if (idx !== -1) {
+        const updated = { ...list[idx], joined: !list[idx].joined };
+        list[idx] = updated;
+        writeLocal(KEYS.CLUBS, list);
+        return updated;
+      }
+      return null;
     }
   },
 
@@ -487,13 +558,63 @@ export const mockDb = {
       list.push(newProj);
       writeLocal(KEYS.PROJECTS, list);
       return newProj;
+    },
+    toggleFollow: (projectId) => {
+      const list = readLocal('fieri_followed_projects') || [];
+      const idx = list.indexOf(projectId);
+      let followed = false;
+      if (idx !== -1) {
+        list.splice(idx, 1);
+        followed = false;
+      } else {
+        list.push(projectId);
+        followed = true;
+      }
+      writeLocal('fieri_followed_projects', list);
+      return followed;
+    },
+    isFollowed: (projectId) => {
+      const list = readLocal('fieri_followed_projects') || [];
+      return list.includes(projectId);
     }
   },
 
   // WORKSHOPS
   workshops: {
-    getAll: () => readLocal(KEYS.WORKSHOPS) || DEFAULT_WORKSHOPS,
-    getById: (id) => (readLocal(KEYS.WORKSHOPS) || DEFAULT_WORKSHOPS).find(w => w.id === id),
+    getAll: () => {
+      const list = readLocal(KEYS.WORKSHOPS) || DEFAULT_WORKSHOPS;
+      const storedUser = localStorage.getItem('fieri_user');
+      const user = storedUser ? JSON.parse(storedUser) : null;
+      const userFullName = user ? `${user.firstName} ${user.lastName}` : null;
+      return list.map(w => {
+        const registeredUsers = w.registeredUsers || [];
+        const waitlistUsers = w.waitlistUsers || [];
+        return {
+          ...w,
+          placesLeft: Math.max(0, w.totalPlaces - registeredUsers.length),
+          registered: userFullName ? registeredUsers.includes(userFullName) : false,
+          inWaitlist: userFullName ? waitlistUsers.includes(userFullName) : false,
+          waitlistPosition: userFullName && waitlistUsers.includes(userFullName) ? waitlistUsers.indexOf(userFullName) + 1 : 0
+        };
+      });
+    },
+    getById: (id) => {
+      const list = readLocal(KEYS.WORKSHOPS) || DEFAULT_WORKSHOPS;
+      const w = list.find(item => item.id === id);
+      if (!w) return null;
+      const storedUser = localStorage.getItem('fieri_user');
+      const user = storedUser ? JSON.parse(storedUser) : null;
+      const userFullName = user ? `${user.firstName} ${user.lastName}` : null;
+      const registeredUsers = w.registeredUsers || [];
+      const waitlistUsers = w.waitlistUsers || [];
+      return {
+        ...w,
+        placesLeft: Math.max(0, w.totalPlaces - registeredUsers.length),
+        registered: userFullName ? registeredUsers.includes(userFullName) : false,
+        inWaitlist: userFullName ? waitlistUsers.includes(userFullName) : false,
+        waitlistPosition: userFullName && waitlistUsers.includes(userFullName) ? waitlistUsers.indexOf(userFullName) + 1 : 0
+      };
+    },
     update: (updatedWork) => {
       const list = readLocal(KEYS.WORKSHOPS) || DEFAULT_WORKSHOPS;
       const idx = list.findIndex(w => w.id === updatedWork.id);
@@ -503,6 +624,73 @@ export const mockDb = {
         return true;
       }
       return false;
+    },
+    toggleRegister: (workshopId, userFullName) => {
+      const list = readLocal(KEYS.WORKSHOPS) || DEFAULT_WORKSHOPS;
+      const idx = list.findIndex(w => w.id === workshopId);
+      if (idx === -1) return null;
+
+      const w = { ...list[idx] };
+      if (!w.registeredUsers) w.registeredUsers = [];
+      if (!w.waitlistUsers) w.waitlistUsers = [];
+
+      const regIdx = w.registeredUsers.indexOf(userFullName);
+      const waitIdx = w.waitlistUsers.indexOf(userFullName);
+
+      let action = '';
+      let promotedUser = null;
+      let position = 0;
+
+      if (regIdx !== -1) {
+        // Déjà inscrit -> se désinscrire
+        w.registeredUsers.splice(regIdx, 1);
+        action = 'deregistered';
+
+        // Si quelqu'un est en file d'attente (FIFO)
+        if (w.waitlistUsers.length > 0) {
+          promotedUser = w.waitlistUsers.shift();
+          w.registeredUsers.push(promotedUser);
+          
+          // Ajouter une notification système pour le membre promu
+          const notifs = readLocal(KEYS.NOTIFICATIONS) || [];
+          const newNotif = {
+            id: `n-${Date.now()}`,
+            text: `Félicitations ! Vous avez été coopté automatiquement de la liste d'attente à l'atelier '${w.title}'.`,
+            read: false,
+            date: "À l'instant"
+          };
+          notifs.unshift(newNotif);
+          writeLocal(KEYS.NOTIFICATIONS, notifs);
+        }
+      } else if (waitIdx !== -1) {
+        // Déjà en liste d'attente -> en sortir
+        w.waitlistUsers.splice(waitIdx, 1);
+        action = 'removed_from_waitlist';
+      } else {
+        // Tenter de s'inscrire
+        if (w.registeredUsers.length < w.totalPlaces) {
+          w.registeredUsers.push(userFullName);
+          action = 'registered';
+        } else {
+          w.waitlistUsers.push(userFullName);
+          action = 'waitlisted';
+          position = w.waitlistUsers.length;
+        }
+      }
+
+      list[idx] = w;
+      writeLocal(KEYS.WORKSHOPS, list);
+
+      return {
+        success: true,
+        action,
+        promotedUser,
+        position,
+        workshop: {
+          ...w,
+          placesLeft: Math.max(0, w.totalPlaces - w.registeredUsers.length)
+        }
+      };
     }
   },
 
@@ -555,7 +743,51 @@ export const mockDb = {
 
   // NEWS
   news: {
-    getAll: () => readLocal(KEYS.NEWS) || DEFAULT_NEWS
+    getAll: (includePending = false) => {
+      const list = (readLocal(KEYS.NEWS) || DEFAULT_NEWS).map(item => ({
+        status: 'APPROVED', // Default fallback for legacy entries
+        ...item
+      }));
+      if (includePending) {
+        return list;
+      }
+      return list.filter(item => item.status === 'APPROVED');
+    },
+    getById: (id) => {
+      const list = (readLocal(KEYS.NEWS) || DEFAULT_NEWS).map(item => ({
+        status: 'APPROVED',
+        ...item
+      }));
+      return list.find(item => item.id === id);
+    },
+    add: (articleData) => {
+      const list = readLocal(KEYS.NEWS) || DEFAULT_NEWS;
+      const newArticle = {
+        id: `art-${Date.now()}`,
+        status: 'PENDING',
+        date: new Date().toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' }),
+        ...articleData
+      };
+      list.unshift(newArticle);
+      writeLocal(KEYS.NEWS, list);
+      return newArticle;
+    },
+    approve: (id) => {
+      const list = readLocal(KEYS.NEWS) || DEFAULT_NEWS;
+      const idx = list.findIndex(item => item.id === id);
+      if (idx !== -1) {
+        list[idx].status = 'APPROVED';
+        writeLocal(KEYS.NEWS, list);
+        return list[idx];
+      }
+      return null;
+    },
+    delete: (id) => {
+      const list = readLocal(KEYS.NEWS) || DEFAULT_NEWS;
+      const filtered = list.filter(item => item.id !== id);
+      writeLocal(KEYS.NEWS, filtered);
+      return true;
+    }
   },
 
   // NOTIFICATIONS
@@ -600,6 +832,23 @@ export const mockDb = {
       return newMsg;
     },
     clear: () => writeLocal(KEYS.CONTACT_MESSAGES, [])
+  },
+
+  // OPPORTUNITÉS DE RECHERCHE SCIENTIFIQUE
+  opportunities: {
+    getAll: () => readLocal(KEYS.OPPORTUNITIES) || DEFAULT_OPPORTUNITIES,
+    add: (optData) => {
+      const list = readLocal(KEYS.OPPORTUNITIES) || DEFAULT_OPPORTUNITIES;
+      const newOpt = {
+        id: `opt-${Date.now()}`,
+        ...optData,
+        status: 'Actif',
+        dateAdded: new Date().toISOString().split('T')[0]
+      };
+      list.unshift(newOpt);
+      writeLocal(KEYS.OPPORTUNITIES, list);
+      return newOpt;
+    }
   }
 };
 

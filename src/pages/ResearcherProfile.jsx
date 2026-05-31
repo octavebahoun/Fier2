@@ -114,7 +114,11 @@ const MOCK_PUBLICATIONS = {
 // ─────────────────────────── Skeleton Loading Component ───────────────────────────
 function ProfileSkeleton() {
   return (
-    <div className="max-w-[88rem] mx-auto w-full py-24 px-6 md:px-12 lg:px-24 flex flex-col gap-12 animate-pulse">
+    <motion.div
+      animate={{ opacity: [0.3, 0.7, 0.3] }}
+      transition={{ repeat: Infinity, duration: 1.5, ease: "easeInOut" }}
+      className="max-w-[88rem] mx-auto w-full py-24 px-6 md:px-12 lg:px-24 flex flex-col gap-12"
+    >
       {/* Back button */}
       <div className="h-10 bg-white/5 rounded-xl w-36" />
       
@@ -158,7 +162,7 @@ function ProfileSkeleton() {
           </div>
         </div>
       </div>
-    </div>
+    </motion.div>
   )
 }
 
@@ -254,35 +258,8 @@ export default function ResearcherProfile({ navigate, researcherId }) {
     }
   }
 
-  if (isLoading) {
-    return <ProfileSkeleton />
-  }
-
-  if (error || !researcher) {
-    return (
-      <div className="max-w-2xl mx-auto w-full py-32 px-6 flex flex-col items-center justify-center text-center gap-8">
-        <div className="w-20 h-20 rounded-full bg-rose-500/10 border border-rose-500/25 flex items-center justify-center text-rose-400 animate-pulse">
-          <Lock className="w-8 h-8" />
-        </div>
-        <div className="space-y-3">
-          <h2 className="text-2xl font-black tracking-tight text-text-primary">Profil Inaccessible</h2>
-          <p className="text-sm text-text-secondary max-w-md">
-            {error || "Ce chercheur n'est pas ou plus référencé dans l'annuaire de recherche FIERI."}
-          </p>
-        </div>
-        <button
-          onClick={() => navigate('members')}
-          className="px-6 py-3 rounded-2xl text-xs font-bold text-white bg-fieri-blue hover:bg-fieri-blue/90 shadow-lg shadow-fieri-blue/20 transition-all cursor-pointer flex items-center gap-2"
-        >
-          <ArrowLeft className="w-4 h-4" />
-          Retourner à l'annuaire
-        </button>
-      </div>
-    )
-  }
-
   // Get custom mock publications list
-  const publications = MOCK_PUBLICATIONS[researcher.id] || []
+  const publications = MOCK_PUBLICATIONS[researcher?.id] || []
 
   return (
     <div className="max-w-[88rem] mx-auto w-full py-24 px-6 md:px-12 lg:px-24 relative min-h-screen">
@@ -291,13 +268,53 @@ export default function ResearcherProfile({ navigate, researcherId }) {
         {toast && <Toast message={toast} onClose={() => setToast(null)} />}
       </AnimatePresence>
 
-      {/* Page wrapper with smooth motion entry */}
-      <motion.div
-        initial={{ opacity: 0, y: 15 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-        className="flex flex-col gap-10"
-      >
+      <AnimatePresence mode="wait">
+        {isLoading ? (
+          <motion.div
+            key="profile-skeleton"
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -12 }}
+            transition={{ duration: 0.2, ease: "easeInOut" }}
+          >
+            <ProfileSkeleton />
+          </motion.div>
+        ) : error || !researcher ? (
+          <motion.div
+            key="profile-error"
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -12 }}
+            transition={{ duration: 0.2, ease: "easeInOut" }}
+            className="max-w-2xl mx-auto w-full py-32 px-6 flex flex-col items-center justify-center text-center gap-8"
+          >
+            <div className="w-20 h-20 rounded-full bg-rose-500/10 border border-rose-500/25 flex items-center justify-center text-rose-400 animate-pulse">
+              <Lock className="w-8 h-8" />
+            </div>
+            <div className="space-y-3">
+              <h2 className="text-2xl font-black tracking-tight text-text-primary">Profil Inaccessible</h2>
+              <p className="text-sm text-text-secondary max-w-md">
+                {error || "Ce chercheur n'est pas ou plus référencé dans l'annuaire de recherche FIERI."}
+              </p>
+            </div>
+            <button
+              onClick={() => navigate('members')}
+              className="px-6 py-3 rounded-2xl text-xs font-bold text-white bg-fieri-blue hover:bg-fieri-blue/90 shadow-lg shadow-fieri-blue/20 transition-all cursor-pointer flex items-center gap-2"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              Retourner à l'annuaire
+            </button>
+          </motion.div>
+        ) : (
+          /* Page wrapper with smooth motion entry */
+          <motion.div
+            key="profile-content"
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -12 }}
+            transition={{ duration: 0.2, ease: "easeInOut" }}
+            className="flex flex-col gap-10"
+          >
         {/* Navigation & Kicker */}
         <div className="flex flex-col gap-3">
           <button
@@ -570,8 +587,9 @@ export default function ResearcherProfile({ navigate, researcherId }) {
             </div>
           </div>
         )}
-
-      </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   )
 }

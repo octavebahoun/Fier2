@@ -1,78 +1,78 @@
 # generated: 2026-05-30T19:17:00+01:00
-# last_updated: 2026-05-30T19:17:00+01:00
+# last_updated: 2026-05-31T20:50:00+01:00
 # project: Fieri
 # project_key: NOKEY
 # tracking_system: file-system
 # story_location: _bmad-output/implementation-artifacts
 
-# DÉFINITIONS DES STATUTS (STATUS DEFINITIONS) :
-# ============================================
-# Statut de l'Epic (Epic Status) :
-#   - backlog : L'Epic n'a pas encore commencé
-#   - in-progress : L'Epic est activement en cours de développement
-#   - done : Toutes les stories de l'Epic sont terminées
+# STATUS DEFINITIONS:
+# ==================
+# Epic Status:
+#   - backlog: Epic not yet started
+#   - in-progress: Epic actively being worked on
+#   - done: All stories in epic completed
 #
-# Transitions de statut d'Epic (Epic Status Transitions) :
-#   - backlog → in-progress : Automatiquement lors de la création de la première story (via create-story)
-#   - in-progress → done : Manuellement quand toutes les stories atteignent le statut 'done'
+# Epic Status Transitions:
+#   - backlog → in-progress: Automatically when first story is created (via create-story)
+#   - in-progress → done: Manually when all stories reach 'done' status
 #
-# Statut de la Story (Story Status) :
-#   - backlog : La story existe uniquement dans le fichier des epics
-#   - ready-for-dev : Le fichier de la story a été créé dans le dossier des stories (stories folder)
-#   - in-progress : Le développeur travaille activement sur l'implémentation
-#   - review : Prêt pour la revue de code (via le workflow code-review du développeur)
-#   - done : Story terminée
+# Story Status:
+#   - backlog: Story only exists in epic file
+#   - ready-for-dev: Story file created in stories folder
+#   - in-progress: Developer actively working on implementation
+#   - review: Ready for code review (via Dev's code-review workflow)
+#   - done: Story completed
 #
-# Statut de la Rétrospective (Retrospective Status) :
-#   - optional : Peut être réalisée mais n'est pas requise
-#   - done : La rétrospective a été complétée
+# Retrospective Status:
+#   - optional: Can be completed but not required
+#   - done: Retrospective has been completed
 #
-# NOTES DE WORKFLOW (WORKFLOW NOTES) :
-# ===================================
-# - Un Epic passe à 'in-progress' automatiquement lorsque sa première story est créée.
-# - Les stories peuvent être traitées en parallèle selon la capacité de l'équipe.
-# - Le développeur crée généralement la story suivante après que la précédente soit 'done' pour intégrer les apprentissages.
-# - Le développeur passe la story à 'review', puis lance le workflow code-review.
- 
+# WORKFLOW NOTES:
+# ===============
+# - Epic transitions to 'in-progress' automatically when first story is created
+# - Stories can be worked in parallel if team capacity allows
+# - Developer typically creates next story after previous one is 'done' to incorporate learnings
+# - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended)
+
 generated: 2026-05-30T19:17:00+01:00
-last_updated: 2026-05-31T20:10:00Z
+last_updated: 2026-05-31T20:50:00+01:00
 project: Fieri
 project_key: NOKEY
 tracking_system: file-system
 story_location: _bmad-output/implementation-artifacts
- 
-  development_status:
-    epic-1: in-progress
-    1-1-core-shell-dual-theme-design-system-setup: done
-    1-2-hybrid-api-engine-local-mock-database: done
-    1-3-university-authentication-gating-engine-authcontext: done
-    1-4-universal-command-palette-k: done
-    1-5-intelligent-contact-support-panel: done
+
+development_status:
+  epic-1: done
+  1-1-core-shell-dual-theme-design-system-setup: done
+  1-2-hybrid-api-engine-local-mock-database: done
+  1-3-university-authentication-gating-engine-authcontext: done
+  1-4-universal-command-palette-k: done
+  1-5-intelligent-contact-support-panel: done
   epic-1-retrospective: optional
 
-  epic-2: in-progress
+  epic-2: review
   2-1-community-directory-interactive-filters: review
   2-2-researcher-profiles-subscriber-statistics: review
   2-3-scientific-carousel-micro-animations: review
-  2-4-progressive-skeleton-loading: backlog
+  2-4-progressive-skeleton-loading: review
   epic-2-retrospective: optional
 
-  epic-3: backlog
-  3-1-bento-grid-research-projects-hub: backlog
-  3-2-project-details-interactive-follow: backlog
-  3-3-interactive-financial-pledge-modale: backlog
-  3-4-scientific-opportunities-hub-applications: backlog
+  epic-3: done
+  3-1-bento-grid-research-projects-hub: done
+  3-2-project-details-interactive-follow: done
+  3-3-interactive-financial-pledge-modale: done
+  3-4-scientific-opportunities-hub-applications: done
   epic-3-retrospective: optional
 
-  epic-4: backlog
-  4-1-specialized-clubs-hub-accent-themes: backlog
-  4-2-academic-workshops-catalogue-filters: backlog
-  4-3-interactive-workshop-registration-waitlist-engine: backlog
-  4-4-automatic-waiting-list-reallocation: backlog
+  epic-4: review
+  4-1-specialized-clubs-hub-accent-themes: review
+  4-2-academic-workshops-catalogue-filters: review
+  4-3-interactive-workshop-registration-waitlist-engine: review
+  4-4-automatic-waiting-list-reallocation: review
   epic-4-retrospective: optional
 
-  epic-5: backlog
-  5-1-scientific-news-hub-peer-review-flow: backlog
+  epic-5: in-progress
+  5-1-scientific-news-hub-peer-review-flow: done
   5-2-scientific-events-selective-live-streaming: backlog
   5-3-interactive-personal-dashboard-notifications-center: backlog
   5-4-private-researcher-profile-editing: backlog

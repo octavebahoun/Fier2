@@ -372,21 +372,59 @@ export const api = {
       return { success: true, data: mockDb.workshops.getAll() };
     },
 
-    register: async (id) => {
-      await delay(180);
-      const work = mockDb.workshops.getById(id);
-      if (!work) return { success: false, message: "Atelier introuvable." };
-      if (work.registered) return { success: true, message: "Vous êtes déjà inscrit à cette session." };
-      if (work.placesLeft <= 0) return { success: false, message: "Désolé, toutes les places ont déjà été réservées." };
-
-      work.registered = true;
-      work.placesLeft -= 1;
-      mockDb.workshops.update(work);
+    toggleRegister: async (id, userFullName) => {
+      await delay(200);
+      const res = mockDb.workshops.toggleRegister(id, userFullName);
+      if (!res || !res.success) {
+        return { success: false, message: "Impossible de modifier votre inscription." };
+      }
+      
+      let message = "";
+      if (res.action === 'registered') {
+        message = `Inscription validée pour l'atelier '${res.workshop.title}'.`;
+      } else if (res.action === 'waitlisted') {
+        message = `Placé sur la file d'attente (Position #${res.position}) pour l'atelier '${res.workshop.title}'.`;
+      } else if (res.action === 'deregistered') {
+        message = `Vous êtes désinscrit de l'atelier '${res.workshop.title}'.`;
+        if (res.promotedUser) {
+          message += ` La place libérée a été réattribuée automatiquement à ${res.promotedUser} (premier de la file d'attente).`;
+        }
+      } else if (res.action === 'removed_from_waitlist') {
+        message = `Vous avez quitté la file d'attente de l'atelier '${res.workshop.title}'.`;
+      }
 
       return {
         success: true,
-        data: work,
-        message: `Inscription réussie au '${work.title}'. Un email de confirmation contenant les détails vous a été envoyé.`
+        data: res.workshop,
+        action: res.action,
+        promotedUser: res.promotedUser,
+        position: res.position,
+        message
+      };
+    },
+
+    register: async (id) => {
+      // Version de secours compatible
+      await delay(180);
+      const user = mockDb.auth.getLocalUser();
+      const userFullName = user ? `${user.firstName} ${user.lastName}` : "Étudiant FIERI";
+      
+      const res = mockDb.workshops.toggleRegister(id, userFullName);
+      if (!res || !res.success) {
+        return { success: false, message: "Impossible de procéder à l'inscription." };
+      }
+      
+      if (res.action === 'deregistered') {
+        // Si la fonction s'est désinscrite accidentellement (on re-clique), on rétablit l'état inscrit
+        mockDb.workshops.toggleRegister(id, userFullName);
+      }
+
+      return {
+        success: true,
+        data: res.workshop,
+        message: res.action === 'waitlisted' 
+          ? `Placé sur la file d'attente (Position #${res.position}) pour '${res.workshop.title}'.`
+          : `Inscription réussie au '${res.workshop.title}'.`
       };
     }
   },
@@ -446,9 +484,35 @@ export const api = {
   // MODULE ACTUALITÉS & JOURNAL (Mock persisté)
   // ------------------------------------------------------------
   news: {
-    getAll: async () => {
+    getAll: async (includePending = false) => {
       await delay(120);
-      return { success: true, data: mockDb.news.getAll() };
+      return { success: true, data: mockDb.news.getAll(includePending) };
+    },
+    getById: async (id) => {
+      await delay(120);
+      const article = mockDb.news.getById(id);
+      if (article) {
+        return { success: true, data: article };
+      }
+      return { success: false, error: "Article introuvable" };
+    },
+    submit: async (articleData) => {
+      await delay(200);
+      const newArticle = mockDb.news.add(articleData);
+      return { success: true, data: newArticle };
+    },
+    approve: async (id) => {
+      await delay(200);
+      const approved = mockDb.news.approve(id);
+      if (approved) {
+        return { success: true, data: approved };
+      }
+      return { success: false, error: "Impossible d'approuver l'article" };
+    },
+    reject: async (id) => {
+      await delay(200);
+      const success = mockDb.news.delete(id);
+      return { success: true, data: success };
     }
   },
 

@@ -19,10 +19,14 @@ import ResearchersCarousel from '../components/ResearchersCarousel.jsx'
 // ─────────────────────────── Skeleton Loader Component ───────────────────────────
 function MemberCardSkeleton() {
   return (
-    <div className="glass-panel rounded-3xl p-6 flex flex-col gap-6 animate-pulse border border-white/5">
+    <motion.div
+      animate={{ opacity: [0.3, 0.7, 0.3] }}
+      transition={{ repeat: Infinity, duration: 1.5, ease: "easeInOut" }}
+      className="glass-panel rounded-3xl p-6 flex flex-col gap-6 border border-white/5"
+    >
       <div className="flex gap-4 items-start">
         <div className="w-16 h-16 rounded-2xl bg-white/10 shrink-0" />
-        <div className="flex flex-col gap-2 flex-1">
+        <div className="flex flex-col gap-2 flex-grow">
           <div className="h-5 bg-white/10 rounded-md w-3/4" />
           <div className="h-4 bg-white/5 rounded-md w-1/2" />
         </div>
@@ -40,7 +44,7 @@ function MemberCardSkeleton() {
         <div className="h-8 bg-white/10 rounded-xl w-24" />
         <div className="h-8 bg-white/5 rounded-lg w-20" />
       </div>
-    </div>
+    </motion.div>
   )
 }
 
@@ -279,9 +283,10 @@ export default function Members({ navigate }) {
             /* LOADING SKELETON GRID */
             <motion.div
               key="skeletons"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -12 }}
+              transition={{ duration: 0.2, ease: "easeInOut" }}
               className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
             >
               <MemberCardSkeleton />
@@ -292,9 +297,26 @@ export default function Members({ navigate }) {
             /* MEMBERS CARDS GRID */
             <motion.div
               key="results"
-              variants={containerVariants}
+              variants={{
+                hidden: { opacity: 0, y: 12 },
+                visible: {
+                  opacity: 1,
+                  y: 0,
+                  transition: {
+                    duration: 0.2,
+                    ease: "easeInOut",
+                    staggerChildren: 0.05
+                  }
+                },
+                exit: {
+                  opacity: 0,
+                  y: -12,
+                  transition: { duration: 0.2, ease: "easeInOut" }
+                }
+              }}
               initial="hidden"
               animate="visible"
+              exit="exit"
               className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
             >
               {filteredResearchers.map((r) => {
