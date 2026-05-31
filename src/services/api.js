@@ -432,6 +432,13 @@ export const api = {
       const res = mockDb.researchers.getById(id);
       if (!res) return { success: false, message: "Profil introuvable." };
       return { success: true, data: res };
+    },
+
+    toggleFollow: async (researcherId, userId) => {
+      await delay(150);
+      const res = mockDb.researchers.toggleFollow(researcherId, userId);
+      if (!res) return { success: false, message: "Profil introuvable." };
+      return { success: true, data: res };
     }
   },
 
@@ -476,6 +483,21 @@ export const api = {
     markNotificationAsRead: async (id) => {
       mockDb.notifications.markAsRead(id);
       return { success: true };
+    }
+  },
+
+  // ------------------------------------------------------------
+  // MODULE CONTACT & SUPPORT (Persisté localement)
+  // ------------------------------------------------------------
+  contact: {
+    sendMessage: async ({ name, email, subject, message }) => {
+      await delay(400);
+      const saved = mockDb.contactMessages.add({ name, email, subject, message });
+      return {
+        success: true,
+        data: saved,
+        message: 'Message envoyé avec succès. Notre équipe vous répondra sous 48h.'
+      };
     }
   }
 };

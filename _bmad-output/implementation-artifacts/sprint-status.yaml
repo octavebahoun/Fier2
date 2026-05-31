@@ -35,7 +35,7 @@
 # - Le développeur passe la story à 'review', puis lance le workflow code-review.
  
 generated: 2026-05-30T19:17:00+01:00
-last_updated: 2026-05-30T19:17:00+01:00
+last_updated: 2026-05-31T20:10:00Z
 project: Fieri
 project_key: NOKEY
 tracking_system: file-system
@@ -46,14 +46,14 @@ story_location: _bmad-output/implementation-artifacts
     1-1-core-shell-dual-theme-design-system-setup: done
     1-2-hybrid-api-engine-local-mock-database: done
     1-3-university-authentication-gating-engine-authcontext: done
-    1-4-universal-command-palette-k: ready-for-dev
-    1-5-intelligent-contact-support-panel: backlog
+    1-4-universal-command-palette-k: done
+    1-5-intelligent-contact-support-panel: done
   epic-1-retrospective: optional
 
-  epic-2: backlog
-  2-1-community-directory-interactive-filters: backlog
-  2-2-researcher-profiles-subscriber-statistics: backlog
-  2-3-scientific-carousel-micro-animations: backlog
+  epic-2: in-progress
+  2-1-community-directory-interactive-filters: review
+  2-2-researcher-profiles-subscriber-statistics: review
+  2-3-scientific-carousel-micro-animations: review
   2-4-progressive-skeleton-loading: backlog
   epic-2-retrospective: optional
 

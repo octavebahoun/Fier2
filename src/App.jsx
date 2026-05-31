@@ -75,7 +75,7 @@ function App() {
   // Gating privé silencieux et immédiat si non authentifié
   useEffect(() => {
     if (!loading) {
-      const protectedPages = ['dashboard', 'profile', 'admin'];
+      const protectedPages = ['dashboard', 'admin'];
       if (protectedPages.includes(currentPage) && !user) {
         navigate('auth');
       }
@@ -130,7 +130,7 @@ function App() {
   // Handle Dynamic Component Rendering
   const renderPage = () => {
     // Redirection/gating préventive pour éviter les flashs visuels
-    const protectedPages = ['dashboard', 'profile', 'admin'];
+    const protectedPages = ['dashboard', 'admin'];
     if (protectedPages.includes(currentPage) && !user) {
       return null;
     }

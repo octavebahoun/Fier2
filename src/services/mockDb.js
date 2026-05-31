@@ -16,7 +16,8 @@ const KEYS = {
   EVENTS: 'fieri_db_events',
   RESEARCHERS: 'fieri_db_researchers',
   NEWS: 'fieri_db_news',
-  NOTIFICATIONS: 'fieri_db_notifications'
+  NOTIFICATIONS: 'fieri_db_notifications',
+  CONTACT_MESSAGES: 'fieri_contact_messages'
 };
 
 // --- DONNÉES STATIQUES PAR DÉFAUT (FALLBACK DE SEEDING) ---
@@ -302,9 +303,13 @@ const DEFAULT_RESEARCHERS = [
     avatar: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80",
     bio: "Passionnée par la navigation autonome, Marie-Claire travaille sur l'optimisation des cartes de profondeur (SLAM) en environnements texturés complexes.",
     pole: "Robotique",
+    university: "Université Polytechnique de Fieri",
+    specialties: ["SLAM", "ROS", "Navigation Autonome"],
     publicationsCount: 6,
     projectsCount: 3,
-    stars: 124
+    stars: 124,
+    followers: [],
+    followersCount: 124
   },
   {
     id: 'r2',
@@ -313,9 +318,13 @@ const DEFAULT_RESEARCHERS = [
     avatar: "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=150&auto=format&fit=crop&q=80",
     bio: "Spécialiste de la communication LoRaWAN, ses travaux se concentrent sur la résilience des réseaux de capteurs auto-alimentés en climat tropical.",
     pole: "IoT & Systèmes cyber-physiques",
+    university: "Institut Supérieur de Technologie",
+    specialties: ["IoT", "LoRaWAN", "Systèmes Embarqués"],
     publicationsCount: 18,
     projectsCount: 5,
-    stars: 312
+    stars: 312,
+    followers: [],
+    followersCount: 312
   },
   {
     id: 'r3',
@@ -324,9 +333,13 @@ const DEFAULT_RESEARCHERS = [
     avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80",
     bio: "Ingénieure IA d'élite, Yasmine conçoit des modèles de deep learning compressés pour l'analyse d'images satellitaires et foliaires à la périphérie (Edge AI).",
     pole: "Intelligence Artificielle",
+    university: "Université Virtuelle de Fieri",
+    specialties: ["Deep Learning", "Vision par Ordinateur", "Edge AI"],
     publicationsCount: 4,
     projectsCount: 2,
-    stars: 96
+    stars: 96,
+    followers: [],
+    followersCount: 96
   }
 ];
 
@@ -512,7 +525,32 @@ export const mockDb = {
   // RESEARCHERS
   researchers: {
     getAll: () => readLocal(KEYS.RESEARCHERS) || DEFAULT_RESEARCHERS,
-    getById: (id) => (readLocal(KEYS.RESEARCHERS) || DEFAULT_RESEARCHERS).find(r => r.id === id)
+    getById: (id) => (readLocal(KEYS.RESEARCHERS) || DEFAULT_RESEARCHERS).find(r => r.id === id),
+    toggleFollow: (researcherId, userId) => {
+      const list = readLocal(KEYS.RESEARCHERS) || DEFAULT_RESEARCHERS;
+      const idx = list.findIndex(r => r.id === researcherId);
+      if (idx !== -1) {
+        const researcher = { ...list[idx] };
+        if (!researcher.followers) researcher.followers = [];
+        if (researcher.followersCount === undefined) researcher.followersCount = researcher.stars || 0;
+        
+        const userIdx = researcher.followers.indexOf(userId);
+        if (userIdx !== -1) {
+          // Unfollow
+          researcher.followers.splice(userIdx, 1);
+          researcher.followersCount = Math.max(0, researcher.followersCount - 1);
+        } else {
+          // Follow
+          researcher.followers.push(userId);
+          researcher.followersCount += 1;
+        }
+        
+        list[idx] = researcher;
+        writeLocal(KEYS.RESEARCHERS, list);
+        return researcher;
+      }
+      return null;
+    }
   },
 
   // NEWS
@@ -545,6 +583,23 @@ export const mockDb = {
       writeLocal(KEYS.NOTIFICATIONS, list);
       return newNotif;
     }
+  },
+
+  // MESSAGES DE CONTACT & SUPPORT
+  contactMessages: {
+    getAll: () => readLocal(KEYS.CONTACT_MESSAGES) || [],
+    add: (msgData) => {
+      const list = readLocal(KEYS.CONTACT_MESSAGES) || [];
+      const newMsg = {
+        id: `msg-${Date.now()}`,
+        ...msgData,
+        sentAt: new Date().toISOString()
+      };
+      list.unshift(newMsg);
+      writeLocal(KEYS.CONTACT_MESSAGES, list);
+      return newMsg;
+    },
+    clear: () => writeLocal(KEYS.CONTACT_MESSAGES, [])
   }
 };
 

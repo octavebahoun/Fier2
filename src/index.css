@@ -52,16 +52,41 @@
 
 /* Light mode theme overrides */
 body.light-theme {
-  --color-bg-primary: #F8FAFC;
+  --color-bg-primary: #FAFBFF;
   --color-bg-secondary: #FFFFFF;
-  --color-bg-tertiary: #F1F5F9;
-  --color-text-primary: #0F172A;
-  --color-text-secondary: #475569;
-  --color-text-muted: #64748B;
-  --color-border-subtle: rgba(0, 0, 0, 0.08);
+  --color-bg-tertiary: #EAF0FF;
+  --color-text-primary: #111827;
+  --color-text-secondary: #6B7280;
+  --color-text-muted: #9CA3AF;
+  --color-border-subtle: rgba(17, 24, 39, 0.08);
   --color-border-glow: rgba(27, 111, 216, 0.2);
-  --color-grid-line: rgba(15, 23, 42, 0.04);
+  --color-grid-line: rgba(17, 24, 39, 0.04);
 }
+
+body.light-theme .glass-panel {
+  background: rgba(255, 255, 255, 0.75);
+  border: 1px solid rgba(17, 24, 39, 0.06);
+  box-shadow: 0 4px 30px rgba(17, 24, 39, 0.04), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+}
+
+body.light-theme .glass-panel:hover {
+  border-color: rgba(27, 111, 216, 0.25);
+  background: rgba(255, 255, 255, 0.85);
+  box-shadow: 0 12px 40px rgba(27, 111, 216, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+body.light-theme .dot-grid::before {
+  background-image: radial-gradient(rgba(17, 24, 39, 0.05) 1px, transparent 1px);
+}
+
+body.light-theme ::-webkit-scrollbar-thumb {
+  background: rgba(17, 24, 39, 0.1);
+}
+
+body.light-theme ::-webkit-scrollbar-thumb:hover {
+  background: rgba(17, 24, 39, 0.2);
+}
+
 
 /* Global resets and layouts */
 body {
