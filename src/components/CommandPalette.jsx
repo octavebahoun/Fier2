@@ -23,6 +23,12 @@ export default function CommandPalette({ navigate, theme, toggleTheme }) {
   const inputRef = useRef(null)
   const listRef = useRef(null)
 
+  // Expose open function globally for navbar button
+  useEffect(() => {
+    window.__openPalette = () => { setSearch(''); setIsOpen(true) }
+    return () => { delete window.__openPalette }
+  }, [])
+
   // Listen for Cmd+K / Ctrl+K and Esc keys
   useEffect(() => {
     const handleKeyDown = (e) => {

@@ -20,6 +20,7 @@ import {
   Users,
   Vote
 } from 'lucide-react';
+import citeImage from '../assets/fieri_student_hub.webp';
 
 const citeData = {
   globalGovernance: {
@@ -218,7 +219,7 @@ const getInitialJoinForm = () => ({
   motivation: ''
 });
 
-export default function StudentPortal({ navigate }) {
+export default function CiteIntegration({ navigate }) {
   const [view, setView] = useState('countries');
   const [selectedCountryId, setSelectedCountryId] = useState(null);
   const [selectedUniversityId, setSelectedUniversityId] = useState(null);
@@ -298,8 +299,8 @@ export default function StudentPortal({ navigate }) {
 
       <section className="relative z-10 max-w-[92rem] mx-auto w-full px-6 md:px-12 lg:px-24 py-10 md:py-14">
         <div className="flex flex-col gap-8">
-          <header className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
-            <div className="max-w-3xl">
+          <header className="flex flex-col gap-8 lg:flex-row lg:items-start lg:justify-between">
+            <div className="max-w-2xl lg:max-w-[45%]">
               <button
                 onClick={() => navigate('home')}
                 className="inline-flex items-center gap-2 text-[10px] uppercase tracking-widest font-black text-text-secondary hover:text-text-primary transition-colors cursor-pointer mb-5"
@@ -319,6 +320,19 @@ export default function StudentPortal({ navigate }) {
               </p>
             </div>
 
+            <div className="lg:max-w-[48%] relative">
+              <div className="rounded-2xl overflow-hidden border border-border-subtle shadow-2xl shadow-black/30">
+                <img
+                  src={citeImage}
+                  alt="Étudiants FIERI"
+                  className="w-full h-auto object-cover aspect-[16/10]"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-bg-primary/60 via-transparent to-transparent pointer-events-none" />
+              </div>
+              <div className="absolute -bottom-3 -right-3 w-32 h-32 rounded-full bg-radial from-accent-primary/20 to-transparent blur-[40px] pointer-events-none" />
+            </div>
+          </header>
+
             <div className="glass-panel rounded-2xl p-4 min-w-0 lg:min-w-[320px]">
               <div className="text-[10px] uppercase tracking-widest font-black text-text-muted mb-3">Position actuelle</div>
               <div className="flex flex-wrap items-center gap-2 text-xs text-text-secondary">
@@ -328,7 +342,6 @@ export default function StudentPortal({ navigate }) {
                 {selectedClub && <Crumb label={selectedClub.name} active={view === 'club' || view === 'club-chief' || view === 'join'} onClick={() => goClub()} />}
               </div>
             </div>
-          </header>
 
           <motion.div
             key={view}

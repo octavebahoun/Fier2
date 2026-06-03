@@ -1,10 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Cpu, Zap, Flame, Layers, Binary, Atom, Award, ChevronRight, ArrowRight } from 'lucide-react';
+import { Cpu, Zap, Flame, Layers, Binary, Atom, Award, ChevronLeft, ChevronRight, ArrowRight } from 'lucide-react';
 import FadeInWhenVisible from './FadeInWhenVisible.jsx';
 import ClubBackgroundMotif from './ClubBackgroundMotif.jsx';
 
-// Maps club kicker to direct styling accent or icon
 const getClubIcon = (kicker) => {
   switch (kicker) {
     case 'Robotique et Automatisation':
@@ -24,18 +23,55 @@ const getClubIcon = (kicker) => {
   }
 };
 
+const slideVariants = {
+  enter: (direction) => ({ x: direction > 0 ? 300 : -300, opacity: 0 }),
+  center: { x: 0, opacity: 1 },
+  exit: (direction) => ({ x: direction > 0 ? -300 : 300, opacity: 0 })
+};
+
 export default function ResearchClubsSection({ clubs, navigate }) {
-  const [activeClubIndex, setActiveClubIndex] = useState(0);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [direction, setDirection] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
+  const intervalRef = useRef(null);
+  const total = clubs.items.length;
+
+  const goTo = useCallback((index) => {
+    setDirection(index > activeIndex ? 1 : -1);
+    setActiveIndex(index);
+  }, [activeIndex]);
+
+  const next = useCallback(() => {
+    setDirection(1);
+    setActiveIndex((prev) => (prev + 1) % total);
+  }, [total]);
+
+  const prev = useCallback(() => {
+    setDirection(-1);
+    setActiveIndex((prev) => (prev - 1 + total) % total);
+  }, [total]);
+
+  useEffect(() => {
+    if (isPaused || total <= 1) return;
+    intervalRef.current = setInterval(next, 1000);
+    return () => clearInterval(intervalRef.current);
+  }, [isPaused, next, total]);
+
+  const club = clubs.items[activeIndex];
 
   return (
-    <section id="clubs" className="py-24 px-6 md:px-12 lg:px-24 border-b border-border-subtle bg-bg-secondary/10 relative">
-      {/* Glow Spots */}
+    <section
+      id="clubs"
+      onMouseEnter={() => setIsPaused(true)}
+      onMouseLeave={() => setIsPaused(false)}
+      className="py-24 px-6 md:px-12 lg:px-24 border-b border-border-subtle bg-bg-secondary/10 relative"
+    >
       <div className="absolute top-1/3 right-10 w-[400px] h-[400px] rounded-full bg-radial from-accent-primary/24 to-transparent blur-[120px] pointer-events-none" />
       <div className="absolute top-[15%] left-[10%] w-[45vw] h-[45vw] max-w-[550px] rounded-full bg-radial from-fieri-blue/28 to-transparent blur-[120px] pointer-events-none z-0" />
       <div className="absolute bottom-[15%] right-[10%] w-[45vw] h-[45vw] max-w-[550px] rounded-full bg-radial from-accent-secondary/22 to-transparent blur-[120px] pointer-events-none z-0" />
-      
+
       <div className="max-w-[92rem] mx-auto w-full relative z-10">
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-16">
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-12">
           <FadeInWhenVisible direction="left">
             <span className="text-xs font-bold tracking-[0.2em] text-accent-primary uppercase">{clubs.tag}</span>
             <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight mt-3">
@@ -44,75 +80,52 @@ export default function ResearchClubsSection({ clubs, navigate }) {
           </FadeInWhenVisible>
         </div>
 
-        {/* Desktop Layout: Split Navigation and Panel */}
-        <div className="hidden lg:grid grid-cols-12 gap-8 items-stretch">
-          
-          {/* Left menu selection */}
-          <div className="col-span-4 flex flex-col gap-3">
-            {clubs.items.map((club, index) => (
-              <button
-                key={index}
-                onClick={() => setActiveClubIndex(index)}
-                className={`w-full text-left p-5 rounded-xl border transition-all duration-300 cursor-pointer ${
-                  activeClubIndex === index 
-                    ? 'bg-bg-secondary border-accent-primary shadow-lg shadow-black/25 text-text-primary' 
-                    : 'bg-transparent border-border-subtle text-text-secondary hover:border-accent-primary/30 hover:bg-bg-secondary/30'
-                }`}
-              >
-                <div className="flex items-center gap-3">
-                  <div className={`p-2 rounded-lg ${activeClubIndex === index ? 'bg-accent-primary/20 text-accent-primary' : 'bg-bg-secondary text-text-secondary'}`}>
-                    {getClubIcon(club.kicker)}
-                  </div>
-                  <div>
-                    <div className="text-[10px] font-bold uppercase tracking-wider text-accent-secondary">{club.kicker}</div>
-                    <div className="text-sm font-bold truncate max-w-[200px]">{club.title}</div>
-                  </div>
-                </div>
-              </button>
-            ))}
-          </div>
-
-          {/* Right showcase panel */}
-          <div className="col-span-8">
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={activeClubIndex}
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -20 }}
-                transition={{ duration: 0.35, ease: 'easeOut' }}
-                className="h-full bg-bg-secondary/60 backdrop-blur-md border border-border-subtle p-8 rounded-2xl relative overflow-hidden flex flex-col justify-between"
-              >
+          {/* Carousel */}
+          <div className="relative max-w-5xl mx-auto">
+            {/* Slide area */}
+            <div className="overflow-hidden rounded-2xl border border-border-subtle/80 shadow-xl shadow-black/20">
+              <AnimatePresence mode="wait" custom={direction}>
+                <motion.div
+                  key={activeIndex}
+                  custom={direction}
+                  variants={slideVariants}
+                  initial="enter"
+                  animate="center"
+                  exit="exit"
+                  transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+                  className="bg-bg-secondary/90 backdrop-blur-xl border border-white/5 p-6 md:p-10 rounded-2xl relative overflow-hidden"
+                >
                 <div className="absolute top-0 right-0 w-64 h-64 rounded-full bg-radial from-accent-primary/26 to-transparent blur-[50px] pointer-events-none" />
-                
-                {/* Background scientific motif */}
-                <ClubBackgroundMotif kicker={clubs.items[activeClubIndex].kicker} />
 
-                <div>
+                <ClubBackgroundMotif kicker={club.kicker} />
+
+                <div className="relative z-10">
                   <div className="flex items-center gap-2 mb-4">
+                    <div className="p-2 rounded-lg bg-bg-primary border border-border-subtle">
+                      {getClubIcon(club.kicker)}
+                    </div>
                     <span className="text-[10px] font-bold tracking-widest text-accent-secondary uppercase">
-                      LAB_RECHERCHE_0{activeClubIndex + 1}
+                      LAB_RECHERCHE_{String(activeIndex + 1).padStart(2, '0')}
                     </span>
                     <span className="w-1.5 h-1.5 rounded-full bg-accent-primary" />
                     <span className="text-[10px] font-bold tracking-widest text-text-muted uppercase">
-                      {clubs.items[activeClubIndex].kicker}
+                      {club.kicker}
                     </span>
                   </div>
 
-                  <h3 className="text-2xl font-extrabold text-text-primary mb-6">
-                    {clubs.items[activeClubIndex].title}
+                  <h3 className="text-xl md:text-2xl font-extrabold text-text-primary mb-4">
+                    {club.title}
                   </h3>
 
-                  <p className="text-base text-text-secondary font-light leading-relaxed mb-8">
-                    {clubs.items[activeClubIndex].desc}
+                  <p className="text-sm md:text-base text-text-secondary font-light leading-relaxed mb-6 max-w-3xl">
+                    {club.desc}
                   </p>
 
-                  {/* Divisions & Activities */}
-                  <div className="grid grid-cols-2 gap-6 mb-8 border-t border-b border-border-subtle/50 py-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6 border-t border-b border-border-subtle/50 py-6">
                     <div>
                       <div className="text-[10px] font-bold uppercase tracking-wider text-accent-primary mb-3">Divisions de Recherche</div>
                       <ul className="space-y-2">
-                        {clubs.items[activeClubIndex].divisions.map((div, i) => (
+                        {club.divisions.map((div, i) => (
                           <li key={i} className="text-xs text-text-secondary flex items-center gap-2">
                             <span className="w-1 h-1 rounded-full bg-accent-secondary" />
                             {div}
@@ -125,91 +138,64 @@ export default function ResearchClubsSection({ clubs, navigate }) {
                       <div className="p-3.5 rounded-lg bg-bg-primary/60 border border-border-subtle/55 flex items-start gap-2.5">
                         <Award className="w-4 h-4 text-accent-secondary shrink-0 mt-0.5" />
                         <div className="text-xs text-text-primary font-medium leading-relaxed">
-                          {clubs.items[activeClubIndex].projetPhare}
+                          {club.projetPhare}
                         </div>
                       </div>
                     </div>
                   </div>
-                </div>
 
-                <div className="flex items-center justify-between mt-4">
-                  <button
-                    onClick={() => navigate('clubs')}
-                    className="inline-flex items-center gap-2 px-6 py-2.5 rounded-lg bg-accent-primary text-text-primary text-xs font-bold hover:bg-accent-primary/95 transition-all shadow-md cursor-pointer"
-                  >
-                    Consulter les Projets R&D
-                    <ChevronRight className="w-4 h-4" />
-                  </button>
-                  <span className="text-[10px] text-text-muted font-mono uppercase">
-                    fieri // internal_rd_division
-                  </span>
+                  <div className="flex items-center justify-between">
+                    <button
+                      onClick={() => navigate('clubs')}
+                      className="inline-flex items-center gap-2 px-6 py-2.5 rounded-lg bg-accent-primary text-text-primary text-xs font-bold hover:bg-accent-primary/95 transition-all shadow-md cursor-pointer"
+                    >
+                      Consulter les Projets R&D
+                      <ChevronRight className="w-4 h-4" />
+                    </button>
+                    <span className="text-[10px] text-text-muted font-mono uppercase">
+                      fieri // internal_rd_division
+                    </span>
+                  </div>
                 </div>
               </motion.div>
             </AnimatePresence>
           </div>
-        </div>
 
-        {/* Mobile Layout: Expandable Card Accordion Stack */}
-        <div className="lg:hidden space-y-4">
-          {clubs.items.map((club, index) => (
-            <div 
-              key={index}
-              className={`rounded-xl border transition-all duration-300 overflow-hidden ${
-                activeClubIndex === index 
-                  ? 'bg-bg-secondary border-accent-primary' 
-                  : 'bg-bg-secondary/40 border-border-subtle'
-              }`}
-            >
+          {/* Navigation arrows */}
+          {total > 1 && (
+            <>
               <button
-                onClick={() => setActiveClubIndex(index)}
-                className="w-full text-left p-5 flex items-center justify-between cursor-pointer"
+                onClick={prev}
+                className="absolute left-3 top-1/2 -translate-y-1/2 z-20 p-2.5 rounded-full bg-bg-secondary/80 border border-border-subtle text-text-secondary hover:text-text-primary hover:bg-bg-secondary backdrop-blur-md transition-all cursor-pointer"
               >
-                <div className="flex items-center gap-3">
-                  <div className="p-2 rounded-lg bg-bg-primary text-accent-primary">
-                    {getClubIcon(club.kicker)}
-                  </div>
-                  <div>
-                    <div className="text-[9px] font-bold uppercase tracking-wider text-accent-secondary">{club.kicker}</div>
-                    <div className="text-sm font-bold text-text-primary">{club.title}</div>
-                  </div>
-                </div>
-                <ChevronRight className={`w-4 h-4 text-text-secondary transition-transform ${activeClubIndex === index ? 'rotate-90' : ''}`} />
+                <ChevronLeft className="w-4 h-4" />
               </button>
-
-              {activeClubIndex === index && (
-                <div className="px-5 pb-5 border-t border-border-subtle/50 pt-4 bg-bg-secondary/20 relative overflow-hidden">
-                  {/* Background scientific motif */}
-                  <div className="absolute -bottom-16 -right-16 w-52 h-52 opacity-[0.08] pointer-events-none z-0">
-                    <ClubBackgroundMotif kicker={club.kicker} />
-                  </div>
-                  <p className="text-xs text-text-secondary font-light leading-relaxed mb-4">{club.desc}</p>
-                  
-                  <div className="text-[9px] font-bold uppercase tracking-wider text-accent-primary mb-2">Divisions</div>
-                  <div className="flex flex-wrap gap-2 mb-4">
-                    {club.divisions.map((div, i) => (
-                      <span key={i} className="text-[10px] bg-bg-primary border border-border-subtle px-2 py-1 rounded">
-                        {div}
-                      </span>
-                    ))}
-                  </div>
-
-                  <div className="text-[9px] font-bold uppercase tracking-wider text-accent-primary mb-2">Projet Phare</div>
-                  <div className="text-xs text-text-primary font-medium bg-bg-primary/80 border border-border-subtle p-3 rounded-lg leading-relaxed mb-4">
-                    {club.projetPhare}
-                  </div>
-
-                  <button
-                    onClick={() => navigate('clubs')}
-                    className="w-full py-2.5 rounded-lg bg-accent-primary text-text-primary text-xs font-bold flex items-center justify-center gap-2 cursor-pointer"
-                  >
-                    Consulter les Projets R&D
-                    <ArrowRight className="w-3.5 h-3.5" />
-                  </button>
-                </div>
-              )}
-            </div>
-          ))}
+              <button
+                onClick={next}
+                className="absolute right-3 top-1/2 -translate-y-1/2 z-20 p-2.5 rounded-full bg-bg-secondary/80 border border-border-subtle text-text-secondary hover:text-text-primary hover:bg-bg-secondary backdrop-blur-md transition-all cursor-pointer"
+              >
+                <ChevronRight className="w-4 h-4" />
+              </button>
+            </>
+          )}
         </div>
+
+        {/* Dots */}
+        {total > 1 && (
+          <div className="flex items-center justify-center gap-2 mt-8">
+            {clubs.items.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => goTo(index)}
+                className={`rounded-full transition-all duration-300 cursor-pointer ${
+                  index === activeIndex
+                    ? 'w-8 h-2 bg-accent-primary'
+                    : 'w-2 h-2 bg-border-subtle hover:bg-text-muted'
+                }`}
+              />
+            ))}
+          </div>
+        )}
       </div>
     </section>
   );

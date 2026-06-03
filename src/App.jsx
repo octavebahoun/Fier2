@@ -24,6 +24,7 @@ import Contact from './pages/Contact.jsx'
 import Auth from './pages/Auth.jsx'
 import Opportunities from './pages/Opportunities.jsx'
 import Admin from './pages/Admin.jsx'
+import PAF from './pages/PAF.jsx'
 import Logo from './components/Logo.jsx'
 import PerspectiveGrid from './components/PerspectiveGrid.jsx'
 
@@ -142,6 +143,7 @@ function App() {
     switch (currentPage) {
       case 'home':
         return <Home navigate={navigate} />
+      case 'cite':
       case 'cite-integration':
         return <CiteIntegration navigate={navigate} />
       case 'student-portal':
@@ -180,6 +182,8 @@ function App() {
         )
       case 'opportunities':
         return <Opportunities navigate={navigate} />
+      case 'paf':
+        return <PAF navigate={navigate} />
       default:
         return <Home navigate={navigate} />
     }

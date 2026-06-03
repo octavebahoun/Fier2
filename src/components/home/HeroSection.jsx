@@ -2,6 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { ArrowRight, ChevronRight } from 'lucide-react';
 import FadeInWhenVisible from './FadeInWhenVisible.jsx';
+import heroBg from '../../assets/hero.webp';
 
 export default function HeroSection({ hero, navigate }) {
   return (
@@ -10,10 +11,10 @@ export default function HeroSection({ hero, navigate }) {
       <div className="absolute inset-0 bg-gradient-to-t from-bg-primary via-bg-primary/75 to-bg-primary/35 z-0" />
       <div className="absolute inset-0 bg-radial from-transparent via-bg-primary/10 to-bg-primary/90 z-0" />
 
-      {/* Background Image of collaborating Black students/researchers with increased visibility */}
+      {/* Background Image */}
       <div 
         className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat opacity-[0.55] mix-blend-screen"
-        style={{ backgroundImage: 'url("/students_community_lab.png")' }}
+        style={{ backgroundImage: `url(${heroBg})` }}
       />
       
       {/* Glow Halos representing Laboratory Atmosphere */}

@@ -2,8 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   BookOpen, Calendar, User, Search, PlusCircle, X,
-  Clock, ArrowRight, BookMarked, Layers, FileText, CheckCircle, Image
+  Clock, ArrowRight, BookMarked, Layers, FileText, CheckCircle, Image,
+  Newspaper, CalendarDays
 } from 'lucide-react';
+import Events from './Events.jsx';
 import { api } from '../services/api';
 import { useAuth } from '../context/AuthContext.jsx';
 import FadeInWhenVisible from '../components/home/FadeInWhenVisible.jsx';
@@ -69,8 +71,9 @@ const IMAGE_PRESETS = [
   }
 ];
 
-export default function News() {
+export default function News({ navigate }) {
   const { user } = useAuth();
+  const [activeTab, setActiveTab] = useState('actualites');
   const [news, setNews] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
@@ -171,6 +174,36 @@ export default function News() {
       <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[500px] h-[500px] bg-indigo-500/10 rounded-full blur-[120px] pointer-events-none" />
       <div className="absolute bottom-10 left-10 w-[300px] h-[300px] bg-pink-500/5 rounded-full blur-[100px] pointer-events-none" />
 
+      {/* Tab Filter: Actualités / Événements */}
+      <div className="max-w-7xl mx-auto mb-10">
+        <div className="inline-flex items-center gap-1 p-1 rounded-2xl bg-bg-secondary/60 border border-border-subtle backdrop-blur-md">
+          <button
+            onClick={() => setActiveTab('actualites')}
+            className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+              activeTab === 'actualites'
+                ? 'bg-accent-primary/20 border border-accent-primary/30 text-accent-primary shadow-sm'
+                : 'text-text-secondary hover:text-text-primary border border-transparent'
+            }`}
+          >
+            <Newspaper className="w-4 h-4" />
+            Actualités & Publications
+          </button>
+          <button
+            onClick={() => setActiveTab('evenements')}
+            className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+              activeTab === 'evenements'
+                ? 'bg-accent-primary/20 border border-accent-primary/30 text-accent-primary shadow-sm'
+                : 'text-text-secondary hover:text-text-primary border border-transparent'
+            }`}
+          >
+            <CalendarDays className="w-4 h-4" />
+            Événements
+          </button>
+        </div>
+      </div>
+
+      {activeTab === 'actualites' ? (
+      <>
       {/* Hero Header */}
       <FadeInWhenVisible>
         <div className="max-w-7xl mx-auto mb-12 text-center md:text-left flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-border-subtle pb-8">
@@ -599,6 +632,11 @@ export default function News() {
           </motion.div>
         )}
       </AnimatePresence>
+
+      </>
+      ) : (
+        <Events navigate={navigate} />
+      )}
 
       {/* Toast popup */}
       <AnimatePresence>

@@ -35,7 +35,7 @@
 # - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended)
 
 generated: 2026-05-30T19:17:00+01:00
-last_updated: 2026-06-01T11:48:06+01:00
+last_updated: 2026-06-03T12:30:00+01:00
 project: Fieri
 project_key: NOKEY
 tracking_system: file-system
@@ -50,11 +50,11 @@ development_status:
   1-5-intelligent-contact-support-panel: done
   epic-1-retrospective: optional
 
-  epic-2: review
-  2-1-community-directory-interactive-filters: review
-  2-2-researcher-profiles-subscriber-statistics: review
-  2-3-scientific-carousel-micro-animations: review
-  2-4-progressive-skeleton-loading: review
+  epic-2: done
+  2-1-community-directory-interactive-filters: done
+  2-2-researcher-profiles-subscriber-statistics: done
+  2-3-scientific-carousel-micro-animations: done
+  2-4-progressive-skeleton-loading: done
   epic-2-retrospective: optional
 
   epic-3: done
@@ -64,16 +64,16 @@ development_status:
   3-4-scientific-opportunities-hub-applications: done
   epic-3-retrospective: optional
 
-  epic-4: review
-  4-1-specialized-clubs-hub-accent-themes: review
-  4-2-academic-workshops-catalogue-filters: review
-  4-3-interactive-workshop-registration-waitlist-engine: review
-  4-4-automatic-waiting-list-reallocation: review
+  epic-4: done
+  4-1-specialized-clubs-hub-accent-themes: done
+  4-2-academic-workshops-catalogue-filters: done
+  4-3-interactive-workshop-registration-waitlist-engine: done
+  4-4-automatic-waiting-list-reallocation: done
   epic-4-retrospective: optional
 
-  epic-5: in-progress
+  epic-5: done
   5-1-scientific-news-hub-peer-review-flow: done
-  5-2-scientific-events-selective-live-streaming: review
-  5-3-interactive-personal-dashboard-notifications-center: in-progress
-  5-4-private-researcher-profile-editing: in-progress
-  epic-5-retrospective: optional
+  5-2-scientific-events-selective-live-streaming: done
+  5-3-interactive-personal-dashboard-notifications-center: done
+  5-4-private-researcher-profile-editing: done
+  epic-5-retrospective: done

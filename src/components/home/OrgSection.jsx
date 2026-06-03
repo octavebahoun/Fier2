@@ -1,5 +1,5 @@
 import React from 'react';
-import { Compass, GraduationCap, LayoutDashboard, Sparkles } from 'lucide-react';
+import { Compass, GraduationCap, LayoutDashboard, Sparkles, ArrowRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 import FadeInWhenVisible from './FadeInWhenVisible.jsx';
 
@@ -68,7 +68,12 @@ export default function OrgSection({ organisation, navigate }) {
             const config = getEntityConfig(index);
             return (
               <FadeInWhenVisible key={entity.id} delay={index * 0.1} direction="up">
-                <div className={`glass-panel h-full p-8 rounded-2xl relative overflow-hidden group transition-all duration-350 border border-border-subtle hover:bg-bg-secondary/40 ${config.accentClass} hover:-translate-y-1.5 cursor-pointer`}>
+                <div
+                  onClick={() => {
+                    const routes = ['cite', 'workshops', 'projects'];
+                    navigate(routes[index]);
+                  }}
+                  className={`glass-panel h-full p-8 rounded-2xl relative overflow-hidden group transition-all duration-350 border border-border-subtle hover:bg-bg-secondary/40 ${config.accentClass} hover:-translate-y-1.5 cursor-pointer`}>
                   
                   {/* Cyber glow ambient element inside card */}
                   <div className={`absolute -top-16 -right-16 w-36 h-36 rounded-full bg-radial ${config.glowClass} blur-[35px] group-hover:blur-[25px] transition-all duration-300 pointer-events-none`} />
@@ -93,6 +98,18 @@ export default function OrgSection({ organisation, navigate }) {
                     {entity.desc}
                   </p>
                   
+                  {/* CTA link */}
+                  <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-all duration-300 mb-4 cursor-pointer border ${
+                    index === 0
+                      ? 'bg-[#E8640C]/15 border-[#E8640C]/30 text-[#E8640C] hover:bg-[#E8640C]/25'
+                      : index === 1
+                      ? 'bg-[#1B6FD8]/15 border-[#1B6FD8]/30 text-[#1B6FD8] hover:bg-[#1B6FD8]/25'
+                      : 'bg-[#FFB800]/15 border-[#FFB800]/30 text-[#FFB800] hover:bg-[#FFB800]/25'
+                  }`}>
+                    <span>Explorer</span>
+                    <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
+                  </div>
+
                   {/* Bottom active circuit path detail */}
                   <div className="w-full h-[1px] bg-border-subtle group-hover:bg-accent-primary/20 relative mt-auto">
                     <div className="absolute top-0 left-0 w-0 h-full bg-accent-primary group-hover:w-full transition-all duration-700 ease-out" />

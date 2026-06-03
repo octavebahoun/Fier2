@@ -51,6 +51,7 @@ export default function DiscoverSection({ decouvrir, navigate }) {
               </motion.span>
             </button>
           </FadeInWhenVisible>
+
         </div>
 
         {/* Right Side: High-End Premium Tech Schematic / Glassmorphic Globe */}

@@ -7,6 +7,10 @@
  */
 
 import initialContent from '../../ancien_contenu.json';
+import roverImg from '../assets/project_slam_rover.png';
+import smartFarmingImg from '../assets/project_smart_farming.png';
+import solarMicrogridImg from '../assets/project_solar_microgrid.png';
+import plantDiseaseImg from '../assets/project_plant_disease_ai.png';
 
 // Clés d'accès au stockage local avec préfixe fieri_
 const KEYS = {
@@ -101,6 +105,7 @@ const DEFAULT_PROJECTS = [
     status: "Actif",
     clubId: "club-1",
     clubName: "Robotique et Automatisation",
+    image: roverImg,
     stars: 48,
     starred: false,
     supportersCount: 12,
@@ -134,6 +139,7 @@ const DEFAULT_PROJECTS = [
     status: "Actif",
     clubId: "club-2",
     clubName: "Informatique Industrielle et IoT",
+    image: smartFarmingImg,
     stars: 35,
     starred: false,
     supportersCount: 8,
@@ -166,6 +172,7 @@ const DEFAULT_PROJECTS = [
     status: "En Phase de R&D",
     clubId: "club-3",
     clubName: "Eco-énergie et Climatisation",
+    image: solarMicrogridImg,
     stars: 56,
     starred: false,
     supportersCount: 19,
@@ -197,6 +204,7 @@ const DEFAULT_PROJECTS = [
     status: "Terminé",
     clubId: "club-5",
     clubName: "Intelligence Artificielle",
+    image: plantDiseaseImg,
     stars: 72,
     starred: false,
     supportersCount: 31,
@@ -502,7 +510,20 @@ export const initializeMockDb = () => {
   }
 
   // 2. Initialisation des autres collections si absentes
-  if (!readLocal(KEYS.PROJECTS)) writeLocal(KEYS.PROJECTS, DEFAULT_PROJECTS);
+  const existingProjects = readLocal(KEYS.PROJECTS);
+  if (!existingProjects) {
+    writeLocal(KEYS.PROJECTS, DEFAULT_PROJECTS);
+  } else {
+    // S'assurer que tous les projets ont leurs images configurées
+    const updated = existingProjects.map(proj => {
+      const defaultProj = DEFAULT_PROJECTS.find(p => p.id === proj.id);
+      if (defaultProj && defaultProj.image) {
+        return { ...proj, image: defaultProj.image };
+      }
+      return proj;
+    });
+    writeLocal(KEYS.PROJECTS, updated);
+  }
   if (!readLocal(KEYS.WORKSHOPS)) writeLocal(KEYS.WORKSHOPS, DEFAULT_WORKSHOPS);
   if (!readLocal(KEYS.EVENTS)) writeLocal(KEYS.EVENTS, DEFAULT_EVENTS);
   if (!readLocal(KEYS.RESEARCHERS)) writeLocal(KEYS.RESEARCHERS, DEFAULT_RESEARCHERS);

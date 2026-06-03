@@ -99,8 +99,8 @@
     ]
   },
   "clubs": {
-    "tag": "06 — LES CLUBS DE RECHERCHE",
-    "title": "Six clubs spécialisés, véritables laboratoires d'innovation",
+    "tag": "— CLUBS EN VEDETTE —",
+    "title": "Nos clubs en vedette",
     "items": [
       {
         "kicker": "Robotique et Automatisation",
@@ -192,23 +192,10 @@
     ]
   },
   "paf": {
-    "tag": "08 — LE PROGRAMME PAF",
-    "title": "Le Programme PAF : propulsez votre R&D vers le marché",
-    "description": "Un cursus sélectif conçu pour former les talents de demain et transformer les idées de laboratoire en solutions prêtes pour l'économie réelle.",
-    "features": [
-      {
-        "title": "Mentorat Scientifique",
-        "desc": "Un encadrement technique rigoureux par des chercheurs experts et des ingénieurs en activité."
-      },
-      {
-        "title": "Laboratoires Ouverts",
-        "desc": "L'accès libre à nos bancs de test électronique, fraiseuses CNC, imprimantes 3D et processeurs IA."
-      },
-      {
-        "title": "Bourses de Prototypage",
-        "desc": "Des subventions directes en matériel R&D pour accélérer le développement des projets validés."
-      }
-    ]
+    "tag": "— PROGRAMME AMBASSADEUR FIERI —",
+    "title": "Devenez Ambassadeur FIERI",
+    "description": "Un programme d'élite pour porter les valeurs de l'excellence scientifique et représenter la Cité FIERI au sein des universités et des écosystèmes d'innovation.",
+    "cta": "Rejoindre le Programme"
   },
   "partenaires": {
     "tag": "09 — NOS PARTENAIRES",

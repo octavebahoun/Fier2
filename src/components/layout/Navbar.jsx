@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Menu, X, ChevronDown, Sun, Moon, LogOut } from 'lucide-react'
+import { Menu, X, ChevronDown, Sun, Moon, LogOut, Search } from 'lucide-react'
 import Logo from '../Logo.jsx'
 import api from '../../services/api.js'
 
@@ -123,14 +123,16 @@ export default function Navbar({
               <div className="flex items-center gap-1">
                 {[
                   { id: 'home', label: 'Accueil' },
-                  { id: 'projects', label: 'Recherche' },
-                  { id: 'student-portal', label: 'Étudiant & Clubs' },
+                  { id: 'cite', label: 'Cité' },
+                  { id: 'projects', label: 'Institut' },
+                  { id: 'workshops', label: 'Académie' },
+                  { id: 'clubs', label: 'Clubs' },
                   { id: 'opportunities', label: 'Opportunités' },
-                  { id: 'news', label: 'Actualités' }
+                  { id: 'news', label: 'Actualités & Événements' }
                 ].map((link) => {
                   const isActive = currentPage === link.id ||
                     (link.id === 'projects' && currentPage === 'project-detail') ||
-                    (link.id === 'student-portal' && currentPage === 'clubs');
+                    (link.id === 'cite' && currentPage === 'cite-integration');
                   return (
                     <button
                       key={link.id}
@@ -149,6 +151,14 @@ export default function Navbar({
 
               {/* Right hand details: Theme Toggle, Login/CTA */}
               <div className="flex items-center gap-4">
+                {/* Command Palette Toggle */}
+                <button
+                  onClick={() => window.__openPalette?.()}
+                  className="p-2 rounded-full hover:bg-white/5 border border-transparent hover:border-border-subtle text-text-secondary hover:text-text-primary transition-all cursor-pointer"
+                  title="Commandes (⌘K)"
+                >
+                  <Search className="w-3.5 h-3.5" />
+                </button>
                 {/* Theme Toggle */}
                 <button
                   onClick={toggleTheme}
@@ -173,11 +183,7 @@ export default function Navbar({
                 <div className="flex items-center gap-2">
                   <button
                     onClick={() => { navigate(user ? 'dashboard' : 'auth'); setIsNavExpanded(false); }}
-                    className={`relative text-[9.5px] uppercase tracking-widest font-black px-4.5 py-2 rounded-full transition-all duration-300 border cursor-pointer ${
-                      user
-                        ? 'bg-accent-primary/10 border-accent-primary/40 text-text-primary hover:bg-accent-primary/25'
-                        : 'bg-transparent border-border-subtle text-text-secondary hover:text-text-primary hover:bg-white/5'
-                    }`}
+                    className="relative text-[9.5px] uppercase tracking-widest font-black px-4.5 py-2 rounded-full transition-all duration-300 border cursor-pointer bg-fieri-blue border-transparent text-white hover:bg-fieri-blue/90 shadow-[0_4px_12px_rgba(27,111,216,0.25)]"
                   >
                     {user ? 'Dashboard' : 'Connexion'}
                     {/** Notification badge */}
@@ -199,14 +205,6 @@ export default function Navbar({
                     </span>
                   )}
                 </div>
-
-                {/* CTA Button */}
-                <button
-                  onClick={() => { navigate('student-portal'); setIsNavExpanded(false); }}
-                  className="text-[9.5px] uppercase tracking-widest font-black bg-fieri-blue border border-transparent text-white px-4.5 py-2 rounded-full hover:bg-fieri-blue/90 shadow-[0_4px_12px_rgba(27,111,216,0.25)] transition-all cursor-pointer"
-                >
-                  Espace Fieri
-                </button>
 
                 {/* Close 'X' button inside scrolled expanded capsule */}
                 {isScrolled && (
@@ -298,14 +296,16 @@ export default function Navbar({
               <div className="flex flex-col gap-1.5 relative z-10">
                 {[
                   { id: 'home', label: 'Accueil', desc: 'Page principale' },
-                  { id: 'projects', label: 'Recherche & Brevets', desc: 'Nos projets scientifiques' },
-                  { id: 'student-portal', label: 'Portail Étudiants', desc: 'Clubs et communauté' },
+                  { id: 'cite', label: 'Cité', desc: 'Notre campus' },
+                  { id: 'projects', label: 'Institut', desc: 'Nos projets scientifiques' },
+                  { id: 'workshops', label: 'Académie', desc: 'Formations et cours' },
+                  { id: 'clubs', label: 'Clubs', desc: 'Clubs de recherche' },
                   { id: 'opportunities', label: 'Opportunités', desc: 'Offres & Recrutement' },
-                  { id: 'news', label: 'Flux Actualités', desc: 'Dernières publications' }
+                  { id: 'news', label: 'Actualités & Événements', desc: 'Publications et concours' }
                 ].map((link) => {
                   const isActive = currentPage === link.id ||
                     (link.id === 'projects' && currentPage === 'project-detail') ||
-                    (link.id === 'student-portal' && currentPage === 'clubs');
+                    (link.id === 'cite' && currentPage === 'cite-integration');
                   return (
                     <button
                       key={link.id}
@@ -330,8 +330,6 @@ export default function Navbar({
 
               <div className="grid grid-cols-2 gap-1.5 relative z-10">
                 {[
-                  { id: 'workshops', label: 'Ateliers' },
-                  { id: 'events', label: 'Événements' },
                   { id: 'members', label: 'Annuaire' },
                   { id: 'contact', label: 'Contact' }
                 ].map((item) => (
@@ -362,12 +360,6 @@ export default function Navbar({
                       {user.role === 'ADMIN' ? 'Admin' : user.role === 'CHERCHEUR' ? 'Chercheur' : 'Membre'}
                     </span>
                   )}
-                </button>
-                <button
-                  onClick={() => { navigate('student-portal'); setMobileMenuOpen(false); }}
-                  className="w-full py-2.5 rounded-xl bg-fieri-blue text-white font-black text-xs uppercase tracking-widest shadow-lg shadow-fieri-blue/20 hover:bg-fieri-blue/95 transition-all text-center cursor-pointer"
-                >
-                  Espace Fieri
                 </button>
               </div>
             </motion.div>
