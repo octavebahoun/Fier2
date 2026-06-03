@@ -36,7 +36,7 @@ function Toast({ message, type = 'success', onClose }) {
 }
 
 export default function Admin({ navigate }) {
-  const { user } = useAuth();
+  const { user, hasMinRole } = useAuth();
   const [pendingArticles, setPendingArticles] = useState([]);
   const [approvedCount, setApprovedCount] = useState(42); // Default fallback stats
   const [loading, setLoading] = useState(true);
@@ -64,7 +64,7 @@ export default function Admin({ navigate }) {
   };
 
   useEffect(() => {
-    if (user && user.role === 'ADMIN') {
+    if (hasMinRole('ADMIN')) {
       loadData();
     }
   }, [user]);
@@ -117,7 +117,7 @@ export default function Admin({ navigate }) {
   };
 
   // component protection
-  if (!user || user.role !== 'ADMIN') {
+  if (!hasMinRole('ADMIN')) {
     return (
       <div className="min-h-[60vh] flex flex-col items-center justify-center text-center p-6">
         <AlertTriangle className="w-16 h-16 text-red-500 mb-4 animate-bounce" />

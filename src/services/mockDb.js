@@ -15,6 +15,7 @@ import plantDiseaseImg from '../assets/project_plant_disease_ai.png';
 // Clés d'accès au stockage local avec préfixe fieri_
 const KEYS = {
   CLUBS: 'fieri_db_clubs',
+  CLUB_MEMBERSHIPS: 'fieri_db_club_memberships', // map userId → clubId[]
   PROJECTS: 'fieri_db_projects',
   WORKSHOPS: 'fieri_db_workshops',
   EVENTS: 'fieri_db_events',
@@ -540,8 +541,30 @@ initializeMockDb();
 export const mockDb = {
   // CLUBS
   clubs: {
-    getAll: () => readLocal(KEYS.CLUBS) || DEFAULT_CLUBS,
-    getById: (id) => (readLocal(KEYS.CLUBS) || DEFAULT_CLUBS).find(c => c.id === id),
+    // Retourne tous les clubs, avec le flag `joined` calculé dynamiquement pour le userId donné
+    getAll: (userId = null) => {
+      const list = readLocal(KEYS.CLUBS) || DEFAULT_CLUBS;
+      if (!userId) return list.map(c => ({ ...c, joined: false }));
+      const memberships = readLocal(KEYS.CLUB_MEMBERSHIPS) || {};
+      const userClubs = new Set(memberships[userId] || []);
+      return list.map(c => ({ ...c, joined: userClubs.has(c.id) }));
+    },
+    getById: (id, userId = null) => {
+      const list = readLocal(KEYS.CLUBS) || DEFAULT_CLUBS;
+      const club = list.find(c => c.id === id);
+      if (!club) return null;
+      if (!userId) return { ...club, joined: false };
+      const memberships = readLocal(KEYS.CLUB_MEMBERSHIPS) || {};
+      const userClubs = new Set(memberships[userId] || []);
+      return { ...club, joined: userClubs.has(id) };
+    },
+    getJoinedByUser: (userId) => {
+      if (!userId) return [];
+      const memberships = readLocal(KEYS.CLUB_MEMBERSHIPS) || {};
+      const userClubs = new Set(memberships[userId] || []);
+      const list = readLocal(KEYS.CLUBS) || DEFAULT_CLUBS;
+      return list.filter(c => userClubs.has(c.id)).map(c => ({ ...c, joined: true }));
+    },
     update: (updatedClub) => {
       const list = readLocal(KEYS.CLUBS) || DEFAULT_CLUBS;
       const idx = list.findIndex(c => c.id === updatedClub.id);
@@ -552,16 +575,35 @@ export const mockDb = {
       }
       return false;
     },
-    toggleJoin: (clubId) => {
+    // toggleJoin(clubId, userId) — cloisonné par utilisateur + mise à jour membersCount
+    toggleJoin: (clubId, userId) => {
+      if (!userId) return null;
       const list = readLocal(KEYS.CLUBS) || DEFAULT_CLUBS;
       const idx = list.findIndex(c => c.id === clubId);
-      if (idx !== -1) {
-        const updated = { ...list[idx], joined: !list[idx].joined };
-        list[idx] = updated;
-        writeLocal(KEYS.CLUBS, list);
-        return updated;
+      if (idx === -1) return null;
+
+      // Gérer la map des adhésions utilisateur
+      const memberships = readLocal(KEYS.CLUB_MEMBERSHIPS) || {};
+      if (!memberships[userId]) memberships[userId] = [];
+      const userClubs = memberships[userId];
+      const memberIdx = userClubs.indexOf(clubId);
+      const wasJoined = memberIdx !== -1;
+
+      if (wasJoined) {
+        // Quitter le club
+        userClubs.splice(memberIdx, 1);
+        list[idx] = { ...list[idx], membersCount: Math.max(0, (list[idx].membersCount || 0) - 1) };
+      } else {
+        // Rejoindre le club
+        userClubs.push(clubId);
+        list[idx] = { ...list[idx], membersCount: (list[idx].membersCount || 0) + 1 };
       }
-      return null;
+
+      memberships[userId] = userClubs;
+      writeLocal(KEYS.CLUB_MEMBERSHIPS, memberships);
+      writeLocal(KEYS.CLUBS, list);
+
+      return { ...list[idx], joined: !wasJoined };
     }
   },
 

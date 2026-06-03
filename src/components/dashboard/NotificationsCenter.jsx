@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import { notifications } from '../../services/notifications.js'
 import NotificationItem from './NotificationItem.jsx'
 
@@ -81,7 +81,7 @@ export default function NotificationsCenter({ navigate }) {
       ) : (
         <div>
           {list.map(item => (
-            <NotificationItem key={item.id} item={item} onMarkRead={markRead} onOpen={handleOpen} />
+            <NotificationItem key={item.id} notification={item} onMarkRead={markRead} onClick={handleOpen} />
           ))}
         </div>
       )}

@@ -231,11 +231,11 @@ function EventCard({ event, user, onRegister, onLiveAccess, isRegistering }) {
           <button
             id={`register-btn-${event.id}`}
             onClick={() => onRegister(event.id)}
-            disabled={!user || isRegistering === event.id}
+            disabled={user && isRegistering === event.id}
             className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold
               transition-all duration-200 cursor-pointer
               ${!user
-                ? 'bg-white/5 border border-border-subtle text-text-secondary cursor-not-allowed opacity-60'
+                ? 'bg-white/5 border border-border-subtle text-text-primary hover:bg-white/10 hover:border-accent-primary/50'
                 : 'bg-accent-primary text-white hover:bg-accent-primary/90 active:scale-95 shadow-lg shadow-accent-primary/20'
               }`}
           >
@@ -302,7 +302,7 @@ export default function Events({ navigate }) {
   // Handle event registration
   const handleRegister = async (eventId) => {
     if (!user) {
-      showToast('Connectez-vous pour vous inscrire à un événement.', 'warning');
+      navigate?.('auth');
       return;
     }
     setIsRegistering(eventId);
@@ -324,7 +324,7 @@ export default function Events({ navigate }) {
   // Handle live streaming access gating
   const handleLiveAccess = (event) => {
     if (!user) {
-      showToast('Connectez-vous pour accéder au Live.', 'warning');
+      navigate?.('auth');
       return;
     }
     if (!event.registered) {

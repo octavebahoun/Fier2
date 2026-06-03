@@ -69,7 +69,7 @@ function Toast({ message, type = 'success', onClose }) {
 }
 
 export default function ResearcherProfileEdit({ navigate }) {
-  const { user, isResearcher } = useAuth()
+  const { user, hasMinRole } = useAuth()
 
   const [isLoading, setIsLoading] = useState(true)
   const [isSaving, setIsSaving] = useState(false)
@@ -89,9 +89,9 @@ export default function ResearcherProfileEdit({ navigate }) {
 
   const canEdit = useMemo(() => {
     if (!user) return false
-    if (typeof isResearcher === 'function') return !!isResearcher()
+    if (typeof hasMinRole === 'function') return hasMinRole('CHERCHEUR')
     return true
-  }, [user, isResearcher])
+  }, [user, hasMinRole])
 
   useEffect(() => {
     if (!user) {

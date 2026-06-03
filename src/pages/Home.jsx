@@ -1,4 +1,6 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { ArrowUp } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 import landingData from '../content/landing.json';
 
 // Modular Home Sections
@@ -15,6 +17,33 @@ import PAFSection from '../components/home/PAFSection.jsx';
 import PartnersSection from '../components/home/PartnersSection.jsx';
 import FAQSection from '../components/home/FAQSection.jsx';
 import ContactSection from '../components/home/ContactSection.jsx';
+
+function ScrollToTop() {
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setVisible(window.scrollY > 800);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
+  return (
+    <AnimatePresence>
+      {visible && (
+        <motion.button
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.8 }}
+          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+          className="fixed bottom-6 right-6 z-40 w-10 h-10 rounded-full bg-accent-primary/90 border border-accent-primary/40 text-white flex items-center justify-center shadow-lg backdrop-blur-md hover:bg-accent-primary transition-all cursor-pointer"
+          aria-label="Retour en haut"
+        >
+          <ArrowUp className="w-4 h-4" />
+        </motion.button>
+      )}
+    </AnimatePresence>
+  );
+}
 
 export default function Home({ navigate }) {
   const { 
@@ -72,6 +101,8 @@ export default function Home({ navigate }) {
 
       {/* SECTION 13 : CONTACT DIRECT & FORMULAIRE */}
       <ContactSection contact={contact} />
+
+      <ScrollToTop />
     </div>
   );
 }

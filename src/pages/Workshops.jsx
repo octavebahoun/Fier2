@@ -39,7 +39,7 @@ function Toast({ message, type = 'success', onClose }) {
 }
 
 // ─────────────────────────── Card Component ───────────────────────────
-function WorkshopCard({ workshop, club, user, onToggleRegister, isToggling }) {
+function WorkshopCard({ workshop, club, user, onToggleRegister, isToggling, navigate }) {
   const isFull = workshop.placesLeft === 0;
   
   // Dynamic styling based on club accent color
@@ -279,7 +279,7 @@ function WorkshopCard({ workshop, club, user, onToggleRegister, isToggling }) {
           )
         ) : (
           <motion.button
-            onClick={() => window.fieriNavigate ? window.fieriNavigate('auth') : null}
+            onClick={() => navigate?.('auth')}
             whileTap={{ scale: 0.97 }}
             className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl text-sm font-bold text-text-secondary bg-white/5 border border-white/10 hover:bg-white/8 hover:text-text-primary transition-all duration-200 cursor-pointer focus:outline-none"
             aria-label="Connexion requise pour réserver"
@@ -295,12 +295,6 @@ function WorkshopCard({ workshop, club, user, onToggleRegister, isToggling }) {
 
 // ─────────────────────────── Workshops Page ───────────────────────────
 export default function Workshops({ navigate }) {
-  // Share navigate callback in window for subcomponents
-  useEffect(() => {
-    window.fieriNavigate = navigate;
-    return () => { delete window.fieriNavigate; };
-  }, [navigate]);
-
   const { user } = useAuth();
   
   // Data lists loaded dynamically
@@ -611,6 +605,7 @@ export default function Workshops({ navigate }) {
                     user={user}
                     onToggleRegister={handleToggleRegister}
                     isToggling={togglingId === w.id}
+                    navigate={navigate}
                   />
                 </FadeInWhenVisible>
               );

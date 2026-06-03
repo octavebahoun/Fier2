@@ -255,6 +255,18 @@ export default function ProjectDetail({ navigate, projectId }) {
           {/* Left Column - 2/3 Width */}
           <div className="lg:col-span-2 flex flex-col gap-8">
             
+            {/* Project Cover Image */}
+            {project.image && (
+              <div className="relative h-64 md:h-80 rounded-3xl overflow-hidden border border-white/5 bg-[#0d1120]/60 backdrop-blur-xl shadow-2xl">
+                <img 
+                  src={project.image} 
+                  alt={project.title} 
+                  className="absolute inset-0 w-full h-full object-cover" 
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#090d1a] via-transparent to-transparent opacity-80" />
+              </div>
+            )}
+
             {/* Header info */}
             <div className="glass-panel border border-white/5 rounded-3xl p-8 flex flex-col gap-6 bg-[#0d1120]/60 backdrop-blur-xl">
               <div className="flex justify-between items-start gap-4">

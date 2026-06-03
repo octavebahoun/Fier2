@@ -2,23 +2,35 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Users, CheckCircle, Lock, Cpu, Leaf, Building2,
-  Brain, Rocket, Zap, ChevronRight, Star
+  Brain, Rocket, Zap, ChevronRight, Star, AlertCircle, X
 } from 'lucide-react';
 import { mockDb } from '../services/mockDb';
 import { useAuth } from '../context/AuthContext.jsx';
 import FadeInWhenVisible from '../components/home/FadeInWhenVisible.jsx';
 
-// ─────────────────────────── Toast Component ───────────────────────────
+// ───────────────────────────── Toast Component ───────────────────────────────
 function Toast({ message, type = 'success', onClose }) {
   React.useEffect(() => {
     const timer = setTimeout(onClose, 4000);
     return () => clearTimeout(timer);
   }, [onClose]);
 
-  const bgClass =
-    type === 'success'
-      ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'
-      : 'bg-rose-500/10 border-rose-500/30 text-rose-400';
+  const styles = {
+    success: 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400',
+    error:   'bg-rose-500/10 border-rose-500/30 text-rose-400',
+    info:    'bg-fieri-blue/10 border-fieri-blue/30 text-fieri-blue',
+    warning: 'bg-amber-500/10 border-amber-500/30 text-amber-400',
+  };
+
+  const icons = {
+    success: CheckCircle,
+    error: AlertCircle,
+    info: AlertCircle,
+    warning: AlertCircle,
+  };
+
+  const Icon = icons[type] || CheckCircle;
+  const bgClass = styles[type] || styles.success;
 
   return (
     <motion.div
@@ -30,8 +42,92 @@ function Toast({ message, type = 'success', onClose }) {
       role="alert"
       aria-live="polite"
     >
-      <CheckCircle className="w-5 h-5 shrink-0" />
+      <Icon className="w-5 h-5 shrink-0" />
       <span className="text-xs font-bold">{message}</span>
+      <button onClick={onClose} className="ml-2 opacity-60 hover:opacity-100 transition-opacity">
+        <X className="w-3.5 h-3.5" />
+      </button>
+    </motion.div>
+  );
+}
+
+// ────────────────────────────── Join Confirm Modal ────────────────────────────
+function JoinConfirmModal({ club, onConfirm, onCancel }) {
+  const Icon = CLUB_ICONS[club?.id] || Star;
+  if (!club) return null;
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+      onClick={onCancel}
+    >
+      <motion.div
+        initial={{ opacity: 0, scale: 0.92, y: 20 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        exit={{ opacity: 0, scale: 0.92, y: 20 }}
+        transition={{ type: 'spring', stiffness: 380, damping: 28 }}
+        onClick={(e) => e.stopPropagation()}
+        className="relative w-full max-w-md rounded-3xl border p-8 shadow-2xl backdrop-blur-xl"
+        style={{
+          background: 'rgba(13, 17, 32, 0.95)',
+          borderColor: `${club.accent}40`,
+          boxShadow: `0 0 60px ${club.accent}20`,
+        }}
+      >
+        {/* Glow accent */}
+        <div
+          className="absolute inset-0 rounded-3xl pointer-events-none"
+          style={{ background: `radial-gradient(ellipse at 50% 0%, ${club.accent}12 0%, transparent 65%)` }}
+        />
+
+        {/* Icone + titre */}
+        <div className="flex items-center gap-4 mb-6 relative z-10">
+          <div
+            className="w-14 h-14 rounded-2xl flex items-center justify-center shrink-0"
+            style={{ background: `${club.accent}1A`, border: `1.5px solid ${club.accent}50` }}
+          >
+            <Icon className="w-7 h-7" style={{ color: club.accent }} />
+          </div>
+          <div>
+            <p className="text-[10px] font-bold uppercase tracking-widest" style={{ color: club.accent }}>
+              Rejoindre
+            </p>
+            <h2 className="text-lg font-extrabold text-text-primary leading-snug">{club.kicker}</h2>
+          </div>
+        </div>
+
+        {/* Charte */}
+        <div
+          className="p-4 rounded-xl text-xs text-text-secondary leading-relaxed mb-6 relative z-10"
+          style={{ background: `${club.accent}0D`, border: `1px solid ${club.accent}20` }}
+        >
+          <p className="font-bold text-text-primary mb-1.5">En rejoignant ce club, vous vous engagez à :</p>
+          <ul className="list-disc pl-4 space-y-1">
+            <li>Participer activement aux activités et réunions du club.</li>
+            <li>Respecter les membres et le règlement intérieur.</li>
+            <li>Contribuer à au moins un projet ou atelier par trimestre.</li>
+          </ul>
+        </div>
+
+        {/* Boutons */}
+        <div className="flex gap-3 relative z-10">
+          <button
+            onClick={onCancel}
+            className="flex-1 py-3 rounded-xl text-xs font-bold text-text-secondary bg-white/5 border border-white/10 hover:bg-white/10 transition-all"
+          >
+            Annuler
+          </button>
+          <button
+            onClick={onConfirm}
+            className="flex-1 py-3 rounded-xl text-xs font-bold text-white transition-all hover:opacity-90"
+            style={{ background: club.accent }}
+          >
+            Confirmer l’adhésion
+          </button>
+        </div>
+      </motion.div>
     </motion.div>
   );
 }
@@ -194,24 +290,40 @@ function ClubCard({ club, user, onJoin, joiningId }) {
   );
 }
 
-// ─────────────────────────── ResearchClubs Page ───────────────────────────
+// ─────────────────────────── ResearchClubs Page ───────────────────────────────
 export default function ResearchClubs({ navigate }) {
   const { user } = useAuth();
-  const [clubs, setClubs] = useState(() => mockDb.clubs.getAll());
+  const userId = user?.id ?? null;
+  const [clubs, setClubs] = useState(() => mockDb.clubs.getAll(userId));
   const [toast, setToast] = useState(null);
   const [joiningId, setJoiningId] = useState(null);
+  const [confirmClub, setConfirmClub] = useState(null); // Club en attente de confirmation
 
   const joinedCount = clubs.filter((c) => c.joined).length;
   const totalMembers = clubs.reduce((acc, c) => acc + c.membersCount, 0);
 
-  const handleJoin = (clubId) => {
+  // Ouvrir la modale de confirmation
+  const handleJoinClick = (clubId) => {
     if (!user || joiningId) return;
+    const club = clubs.find(c => c.id === clubId);
+    if (!club) return;
+    // Si déjà membre : quitter directement sans confirmation
+    if (club.joined) {
+      handleJoinConfirm(clubId);
+    } else {
+      setConfirmClub(club);
+    }
+  };
 
+  // Exécuter l'adhésion après confirmation
+  const handleJoinConfirm = (clubIdOverride = null) => {
+    const clubId = clubIdOverride ?? confirmClub?.id;
+    if (!clubId || !user || joiningId) return;
+    setConfirmClub(null);
     setJoiningId(clubId);
 
-    // Simulation d'une légère latence pour l'effet haptique visuel
     setTimeout(() => {
-      const updated = mockDb.clubs.toggleJoin(clubId);
+      const updated = mockDb.clubs.toggleJoin(clubId, userId);
       if (updated) {
         setClubs((prev) =>
           prev.map((c) => (c.id === clubId ? updated : c))
@@ -219,9 +331,9 @@ export default function ResearchClubs({ navigate }) {
 
         if (updated.joined) {
           mockDb.notifications.add(
-            `Vous avez rejoint le club "${updated.kicker}" avec succès !`
+            `Vous avez rejoint le club « ${updated.kicker} » avec succès !`
           );
-          setToast({ message: `Bienvenue dans le club ${updated.kicker} !`, type: 'success' });
+          setToast({ message: `Bienvenue dans le club ${updated.kicker} !`, type: 'success' });
         } else {
           setToast({ message: `Vous avez quitté le club ${updated.kicker}.`, type: 'info' });
         }
@@ -326,7 +438,7 @@ export default function ResearchClubs({ navigate }) {
               <ClubCard
                 club={club}
                 user={user}
-                onJoin={handleJoin}
+                onJoin={handleJoinClick}
                 joiningId={joiningId}
               />
             </FadeInWhenVisible>
@@ -366,6 +478,17 @@ export default function ResearchClubs({ navigate }) {
             message={toast.message}
             type={toast.type}
             onClose={() => setToast(null)}
+          />
+        )}
+      </AnimatePresence>
+
+      {/* ── Modale de confirmation d'adhésion ── */}
+      <AnimatePresence>
+        {confirmClub && (
+          <JoinConfirmModal
+            club={confirmClub}
+            onConfirm={() => handleJoinConfirm()}
+            onCancel={() => setConfirmClub(null)}
           />
         )}
       </AnimatePresence>

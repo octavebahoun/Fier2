@@ -7,23 +7,40 @@ import FadeInWhenVisible from './FadeInWhenVisible.jsx';
 export default function WorkshopsSection({ navigate }) {
   const [workshops, setWorkshops] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  const fetchWorkshops = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const res = await api.workshops.getAll();
+      if (res.success) {
+        setWorkshops(res.data.slice(0, 3));
+      }
+    } catch (err) {
+      setError("Impossible de charger les ateliers pour le moment.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     let active = true;
-    const fetchWorkshops = async () => {
+    const fetch = async () => {
+      setLoading(true);
+      setError(null);
       try {
         const res = await api.workshops.getAll();
         if (res.success && active) {
-          // Take the top 3 workshops to show on landing page
           setWorkshops(res.data.slice(0, 3));
         }
       } catch (err) {
-        console.error("Failed to load workshops in landing section", err);
+        if (active) setError("Impossible de charger les ateliers pour le moment.");
       } finally {
         if (active) setLoading(false);
       }
     };
-    fetchWorkshops();
+    fetch();
     return () => { active = false; };
   }, []);
 
@@ -66,6 +83,23 @@ export default function WorkshopsSection({ navigate }) {
             {[1, 2, 3].map((n) => (
               <div key={n} className="glass-panel h-80 rounded-2xl animate-pulse bg-bg-secondary/40 border border-border-subtle/60" />
             ))}
+          </div>
+        ) : error ? (
+          <div className="text-center py-16">
+            <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-red-500/10 border border-red-500/20 mb-4">
+              <span className="text-red-400 text-xl font-black">!</span>
+            </div>
+            <p className="text-text-secondary text-sm font-light mb-4">{error}</p>
+            <button
+              onClick={fetchWorkshops}
+              className="inline-flex items-center gap-2 text-[10px] uppercase tracking-widest font-black bg-accent-primary/10 border border-accent-primary/30 text-accent-primary px-5 py-2.5 rounded-full hover:bg-accent-primary/20 transition-all cursor-pointer"
+            >
+              Réessayer
+            </button>
+          </div>
+        ) : workshops.length === 0 ? (
+          <div className="text-center py-16">
+            <p className="text-text-secondary text-sm font-light">Aucun atelier programmé pour le moment.</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6.5">

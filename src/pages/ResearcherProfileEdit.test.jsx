@@ -2,7 +2,7 @@
 
 import React from 'react'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { render, screen, waitFor } from '@testing-library/react'
+import { render, screen, waitFor, cleanup } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import '@testing-library/jest-dom/vitest'
 
@@ -10,17 +10,25 @@ import ResearcherProfileEdit from './ResearcherProfileEdit.jsx'
 
 const mockNavigate = vi.fn()
 
+const mockUser = {
+  id: 101,
+  email: 'chercheur@fieri.dev',
+  firstName: 'Chercheur',
+  lastName: 'FIERI',
+  role: 'CHERCHEUR'
+}
+const mockIsResearcher = () => true
+const mockHasMinRole = (role) => {
+  if (role === 'CHERCHEUR' || role === 'ETUDIANT' || role === 'VISITEUR') return true
+  return false
+}
+
 vi.mock('../context/AuthContext.jsx', () => {
   return {
     useAuth: () => ({
-      user: {
-        id: 101,
-        email: 'chercheur@fieri.dev',
-        firstName: 'Chercheur',
-        lastName: 'FIERI',
-        role: 'CHERCHEUR'
-      },
-      isResearcher: () => true
+      user: mockUser,
+      isResearcher: mockIsResearcher,
+      hasMinRole: mockHasMinRole
     })
   }
 })
@@ -40,6 +48,7 @@ vi.mock('../services/api.js', () => {
 })
 
 beforeEach(() => {
+  cleanup()
   mockNavigate.mockReset()
   getMe.mockReset()
   updateMe.mockReset()

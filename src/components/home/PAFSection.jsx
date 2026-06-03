@@ -5,7 +5,7 @@ import FadeInWhenVisible from './FadeInWhenVisible.jsx';
 
 export default function PAFSection({ paf, navigate }) {
   return (
-    <section className="py-24 px-6 md:px-12 lg:px-24 border-b border-border-subtle relative overflow-hidden">
+    <section id="paf" className="py-24 px-6 md:px-12 lg:px-24 border-b border-border-subtle relative overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-br from-accent-primary/5 via-transparent to-accent-secondary/5 pointer-events-none" />
       <div className="absolute top-1/2 left-1/3 w-[500px] h-[500px] rounded-full bg-radial from-accent-primary/10 to-transparent blur-[120px] pointer-events-none" />
 

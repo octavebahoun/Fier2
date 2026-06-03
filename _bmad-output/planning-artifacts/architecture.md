@@ -5,16 +5,17 @@ inputDocuments:
   - '_bmad-output/planning-artifacts/ux-designs/ux-Fieri-2026-05-30/index.md'
   - '_bmad-output/planning-artifacts/ux-designs/ux-Fieri-2026-05-30/DESIGN.md'
   - '_bmad-output/planning-artifacts/ux-designs/ux-Fieri-2026-05-30/EXPERIENCE.md'
+  - '_bmad-output/planning-artifacts/ux-designs/ux-Fieri-2026-05-30/validation-report.md'
   - 'api suite.md'
   - 'doc_api_fieri.http'
   - 'ancien_contenu.json'
 workflowType: 'architecture'
 project_name: 'Fieri'
 user_name: 'Kavt'
-date: '2026-05-30'
+date: '2026-06-03'
 lastStep: 8
 status: 'complete'
-completedAt: '2026-05-30'
+completedAt: '2026-06-03'
 ---
 
 # Architecture Decision Document — FIERI Research
@@ -36,6 +37,8 @@ _Ce document est le contrat de conception d'architecture technique (Solution Des
 **Non-Functional Requirements:**
 - **Sécurité et Authentification :** Injection automatique du jeton JWT via l'en-tête `Authorization: Bearer <token>` pour toutes les requêtes transactionnelles, et garde-barrière (Guard) sur `/dashboard` redirigeant vers `/auth` en cas de session absente.
 - **Charte Esthétique Premium :** Application uniforme du style "SaaS Scientifique" (Glassmorphism, coins carrés nets à 4px-8px, police Plus Jakarta Sans, élévation Bento à `-4px` au survol, et voyant d'événement live pulsant).
+- **Gestion complète des états UI :** Chaque surface dynamique (ateliers, contact, newsletter) implémente 4 états — chargement (skeleton), succès, vide, erreur (avec message explicite et bouton Réessayer). La validation de formulaire est coté client avec retour visuel inline avant appel API.
+- **Accessibilité WCAG 2.2 AA étendue :** Skip-to-content link, focus trapping dans les modales, ARIA accordéon (`aria-expanded`, `aria-controls`, `role="region"`), `prefers-reduced-motion` pour toute animation non essentielle, zones tactiles minimales 44×44px sur mobile, `aria-invalid` et `aria-describedby` sur les erreurs de formulaire.
 - **Performance et Accessibilité :** Transition de page douce en 200ms avec défilement automatique vers le haut, respect scrupuleux des ratios de contraste WCAG 2.2 AA pour le Violet Royal `#6C4CF1` et l'Orange Brûlé `#E76F00` sur fonds clairs/sombres.
 
 **Scale & Complexity:**
@@ -56,6 +59,10 @@ _Ce document est le contrat de conception d'architecture technique (Solution Des
 ### Cross-Cutting Concerns Identified
 - Interception globale des exceptions HTTP sans blocage UI (Toasts d'alerte).
 - Squelettes de chargement unifiés (translucides à pulsation douce).
+- États d'erreur API avec message explicite et bouton Réessayer (WorkshopsSection, ContactSection, Newsletter).
+- Validation formulaire inline avec retour visuel immédiat (Contact, Newsletter).
+- Support `prefers-reduced-motion` sur toutes les animations (ticker, compteurs, hover lift, transitions).
+- Accessibilité clavier complète : skip-to-content, focus trapping modal, navigation Tab, ARIA landmarks.
 - Directives d'écriture microcopy de style scientifique rigoureux et vivant (en français).
 
 ---
@@ -279,6 +286,27 @@ Toutes les règles esthétiques complexes doivent être déclarées au sein du f
 #### 3. Mises à jour d'état React 19
 - **Règle :** Pour permettre au compilateur React 19 d'optimiser le graphe de dépendance et d'éviter les rerendus futiles, les états locaux doivent toujours être mis à jour de manière **strictement immuable** (ex: `setList(prev => [...prev, newItem])`).
 
+#### 4. Gestion des états d'échec API (Error State)
+- **Règle :** Tout appel API dynamique (ateliers, contact, newsletter) doit gérer 3 états : **chargement** (skeleton), **erreur** (message explicite + bouton Réessayer), **succès** (données ou confirmation).
+- **Anti-Pattern :** Silence en cas d'échec (`catch` vide) ou simple `console.error` sans retour utilisateur. L'utilisateur ne doit jamais voir un écran vide ou un état bloqué sans explication.
+
+#### 5. États vides (Empty State)
+- **Règle :** Une liste dynamique vide affiche un message textuel informatif sans illustration ni skeleton. L'état vide est distinct de l'état erreur (API défaillante) et de l'état chargement.
+
+#### 6. Validation de formulaire inline
+- **Règle :** Validation coté client avant tout appel API. Champs requis + format email validé par regex. Erreur affichée sous le champ avec `border-red-500/50`, disparaît à la modification de la valeur.
+- **Accessibilité :** `aria-invalid="true"` sur les champs en erreur, message lié via `aria-describedby`, wrappé dans `role="alert"`.
+
+#### 7. Accessibilité des animations (Mouvement Réduit)
+- **Règle :** Utiliser le hook `useReducedMotion()` de Framer Motion sur toute animation non essentielle : ticker infini, compteurs animés, hover lift des cartes, expansion Sidebar, transitions de page, pulse dots, bouton ScrollToTop.
+- **Standard :** En mode réduit, les animations sont immédiates (valeur finale sans interpolation, ticker immobile).
+
+#### 8. Focus trapping dans les modales
+- **Règle :** Toute modale (inscription, confirmation) piège le focus : Tab cyclique interne au dialogue, Escape ferme et restitue le focus à l'élément déclencheur. Spécifier `role="dialog"`, `aria-modal="true"`, `aria-labelledby` sur le titre.
+
+#### 9. Skip-to-content
+- **Règle :** Le premier élément focusable de chaque page est un lien "Aller au contenu principal" (`href="#main-content"`). Masqué par défaut (`sr-only`), visible au focus avec contour `brand-violet-light`. Le `<main>` de l'application porte `id="main-content"`.
+
 ---
 
 ### Pattern Examples
@@ -445,7 +473,7 @@ graph TD
 Toutes les technologies sélectionnées (React 19.2, Vite 8.0, Tailwind v4.3, Framer Motion 12.4) sont entièrement compatibles. L'usage du compilateur React 19 et de `@tailwindcss/vite` garantit une intégration fluide sans fichiers de configuration legacy (pas de postcss.config.js ni de tailwind.config.js). L'ajustement sur `import.meta.env.DEV` sécurise le build sous Vite 8.
 
 **Pattern Consistency:**
-Les patterns d'implémentation (PascalCase pour les composants, camelCase pour l'API et les attributs, structure de dossiers modulaire) sont standardisés. L'isolation du `localStorage` par le préfixe strict `fieri_` est requise pour tous les agents.
+Les patterns d'implémentation (PascalCase pour les composants, camelCase pour l'API et les attributs, structure de dossiers modulaire) sont standardisés. Les ajouts UX (états d'erreur, vides, validation de formulaire, reduced-motion, focus trap, skip-to-content) suivent les mêmes conventions et s'intègrent sans conflit. L'isolation du `localStorage` par le préfixe strict `fieri_` est requise pour tous les agents.
 
 **Structure Alignment:**
 Le découpage en pages sous `src/pages/` et composants d'encapsulation sous `src/components/layout/` (AppLayout Shell) élimine la duplication de code et garantit la persistance stable de la Sidebar et de la Navbar lors des transitions d'écrans.
@@ -461,6 +489,9 @@ Le gating de sécurité à 4 rôles (Admin, Chercheur, Étudiant, Invité) est n
 **Non-Functional Requirements Coverage:**
 - **Performance :** Optimisée grâce à l'élimination du runtime Tailwind via le compilateur CSS-first v4 et à l'optimisation automatique du rendu par le compilateur React 19.
 - **Sécurité :** JWT Bearer Token sécurisé avec garde de routage réactif centralisé.
+- **Accessibilité :** Skip-to-content, focus trap sur modales, attributs ARIA (aria-expanded, aria-controls, aria-invalid, aria-describedby), touch targets ≥44×44px, et respect de `prefers-reduced-motion`.
+- **Fiabilité des états :** États d'erreur, vides, chargement et validation de formulaire inline documentés comme Process Patterns obligatoires.
+- **Cross-cutting :** ScrollToTop flottant multi-pages, notifications badge conditionnel (caché si 0), ancres de section pour navigation directe.
 
 ### Implementation Readiness Validation ✅
 
@@ -471,7 +502,7 @@ Toutes les décisions techniques cruciales sont consignées avec des numéros de
 L'arborescence complète du dossier `src/` est documentée, incluant les emplacements des contextes globaux, des services résilients, et du layout shell.
 
 **Pattern Completeness:**
-Les règles de gestion des erreurs (Toasts réactifs non-bloquants), les animations d'attente (Pulse loaders), et les conventions d'écriture asynchrones sont accompagnées d'exemples de code concrets.
+Les règles de gestion des erreurs (Toasts réactifs non-bloquants), les animations d'attente (Pulse loaders), et les conventions d'écriture asynchrones sont accompagnées d'exemples de code concrets. Les 6 nouveaux Process Patterns (error state, empty state, form validation, reduced-motion, focus trap, skip-to-content) sont documentés avec leurs comportements, attributs ARIA et conditions de déclenchement.
 
 ### Gap Analysis Results
 

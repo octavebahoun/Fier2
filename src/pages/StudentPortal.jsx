@@ -2,9 +2,10 @@ import React, { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import {
   GraduationCap, Users, Calendar, BookOpen, ArrowRight,
-  Sparkles, Cpu, Zap, Leaf, Building2, Brain, Rocket, ChevronRight
+  Sparkles, Cpu, Zap, Leaf, Building2, Brain, Rocket, ChevronRight, Lock
 } from 'lucide-react'
 import { mockDb } from '../services/mockDb'
+import { useAuth } from '../context/AuthContext.jsx'
 
 const CLUB_ICONS = {
   'club-1': { icon: Cpu, label: 'Robotique' },
@@ -46,16 +47,18 @@ const HUB_SECTIONS = [
 ]
 
 export default function StudentPortal({ navigate }) {
+  const { user } = useAuth();
+  const userId = user?.id ?? null;
   const [clubs, setClubs] = useState([])
 
   useEffect(() => {
     try {
-      const data = mockDb.clubs.getAll()
+      const data = mockDb.clubs.getAll(userId)
       setClubs(Array.isArray(data) ? data.slice(0, 3) : [])
     } catch {
       setClubs([])
     }
-  }, [])
+  }, [userId])
 
   return (
     <div className="max-w-[88rem] mx-auto w-full py-28 px-6 md:px-12 lg:px-24 relative min-h-screen">
@@ -78,6 +81,22 @@ export default function StudentPortal({ navigate }) {
             Explorez les clubs de recherche, inscrivez-vous aux ateliers académiques et
             participez aux événements live. Votre parcours d'innovation commence ici.
           </p>
+
+          {/* Bandeau invitation connexion si non connecté */}
+          {!user && (
+            <div className="flex items-center gap-4 p-4 rounded-2xl bg-fieri-blue/8 border border-fieri-blue/20 text-sm mt-2">
+              <Lock className="w-5 h-5 text-fieri-blue shrink-0" />
+              <p className="text-text-secondary text-xs">
+                <span className="text-text-primary font-semibold">Connectez-vous</span> pour rejoindre des clubs, vous inscrire aux ateliers et accéder à votre tableau de bord.
+              </p>
+              <button
+                onClick={() => navigate('auth')}
+                className="ml-auto shrink-0 px-4 py-1.5 rounded-xl bg-fieri-blue text-white text-xs font-bold hover:bg-fieri-blue/85 transition-colors"
+              >
+                Se connecter
+              </button>
+            </div>
+          )}
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">

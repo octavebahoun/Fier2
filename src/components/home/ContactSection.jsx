@@ -5,21 +5,54 @@ import FadeInWhenVisible from './FadeInWhenVisible.jsx';
 
 export default function ContactSection({ contact }) {
   const [formSubmitted, setFormSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [submitError, setSubmitError] = useState(null);
   const [formState, setFormState] = useState({
     name: '',
     email: '',
     subject: '',
     message: ''
   });
+  const [errors, setErrors] = useState({});
 
-  const handleFormSubmit = (e) => {
+  const validate = () => {
+    const newErrors = {};
+    if (!formState.name.trim()) newErrors.name = 'Le nom est requis';
+    if (!formState.email.trim()) {
+      newErrors.email = "L'email est requis";
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formState.email)) {
+      newErrors.email = 'Format d\'email invalide';
+    }
+    if (!formState.message.trim()) newErrors.message = 'Le message est requis';
+    return newErrors;
+  };
+
+  const handleFormSubmit = async (e) => {
     e.preventDefault();
-    // Simulate API request or integration
-    setFormSubmitted(true);
+    setSubmitError(null);
+    const validationErrors = validate();
+    setErrors(validationErrors);
+    if (Object.keys(validationErrors).length > 0) return;
+
+    setLoading(true);
+    try {
+      // Simulate API request or integration
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      setFormSubmitted(true);
+    } catch (err) {
+      setSubmitError('Une erreur est survenue. Veuillez réessayer.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleChange = (field, value) => {
+    setFormState(prev => ({ ...prev, [field]: value }));
+    if (errors[field]) setErrors(prev => ({ ...prev, [field]: undefined }));
   };
 
   return (
-    <section className="py-24 px-6 md:px-12 lg:px-24 bg-bg-secondary/5 border-b border-border-subtle relative">
+    <section id="contact" className="py-24 px-6 md:px-12 lg:px-24 bg-bg-secondary/5 border-b border-border-subtle relative">
       {/* Glow Spots */}
       <div className="absolute bottom-0 left-1/3 w-[300px] h-[300px] rounded-full bg-radial from-accent-primary/24 to-transparent blur-[100px] pointer-events-none" />
       <div className="absolute top-[20%] right-[10%] w-[35vw] h-[35vw] max-w-[400px] rounded-full bg-radial from-fieri-blue/28 to-transparent blur-[100px] pointer-events-none z-0" />
@@ -110,6 +143,12 @@ export default function ContactSection({ contact }) {
                       onSubmit={handleFormSubmit}
                       className="space-y-5"
                     >
+                      {submitError && (
+                        <div className="p-3 rounded-lg bg-red-500/10 border border-red-500/30 text-red-400 text-xs font-medium">
+                          {submitError}
+                        </div>
+                      )}
+
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
                           <label className="block text-[10px] font-bold tracking-widest text-text-secondary uppercase mb-2">Votre Nom</label>
@@ -117,10 +156,11 @@ export default function ContactSection({ contact }) {
                             type="text"
                             required
                             value={formState.name}
-                            onChange={(e) => setFormState({ ...formState, name: e.target.value })}
+                            onChange={(e) => handleChange('name', e.target.value)}
                             placeholder="Nom complet"
-                            className="w-full px-4 py-3 rounded-lg bg-bg-primary/80 border border-border-subtle focus:border-accent-primary focus:outline-none text-text-primary text-xs sm:text-sm font-medium transition-all"
+                            className={`w-full px-4 py-3 rounded-lg bg-bg-primary/80 border ${errors.name ? 'border-red-500/50' : 'border-border-subtle focus:border-accent-primary'} focus:outline-none text-text-primary text-xs sm:text-sm font-medium transition-all`}
                           />
+                          {errors.name && <span className="text-[10px] text-red-400 mt-1 block">{errors.name}</span>}
                         </div>
                         <div>
                           <label className="block text-[10px] font-bold tracking-widest text-text-secondary uppercase mb-2">Adresse E-mail</label>
@@ -128,10 +168,11 @@ export default function ContactSection({ contact }) {
                             type="email"
                             required
                             value={formState.email}
-                            onChange={(e) => setFormState({ ...formState, email: e.target.value })}
+                            onChange={(e) => handleChange('email', e.target.value)}
                             placeholder="adresse@mail.com"
-                            className="w-full px-4 py-3 rounded-lg bg-bg-primary/80 border border-border-subtle focus:border-accent-primary focus:outline-none text-text-primary text-xs sm:text-sm font-medium transition-all"
+                            className={`w-full px-4 py-3 rounded-lg bg-bg-primary/80 border ${errors.email ? 'border-red-500/50' : 'border-border-subtle focus:border-accent-primary'} focus:outline-none text-text-primary text-xs sm:text-sm font-medium transition-all`}
                           />
+                          {errors.email && <span className="text-[10px] text-red-400 mt-1 block">{errors.email}</span>}
                         </div>
                       </div>
 
@@ -140,7 +181,7 @@ export default function ContactSection({ contact }) {
                         <input
                           type="text"
                           value={formState.subject}
-                          onChange={(e) => setFormState({ ...formState, subject: e.target.value })}
+                          onChange={(e) => handleChange('subject', e.target.value)}
                           placeholder="Ex: Candidature R&D, Partenariat..."
                           className="w-full px-4 py-3 rounded-lg bg-bg-primary/80 border border-border-subtle focus:border-accent-primary focus:outline-none text-text-primary text-xs sm:text-sm font-medium transition-all"
                         />
@@ -152,18 +193,32 @@ export default function ContactSection({ contact }) {
                           required
                           rows="4"
                           value={formState.message}
-                          onChange={(e) => setFormState({ ...formState, message: e.target.value })}
+                          onChange={(e) => handleChange('message', e.target.value)}
                           placeholder="Décrivez votre idée de projet, vos besoins..."
-                          className="w-full px-4 py-3 rounded-lg bg-bg-primary/80 border border-border-subtle focus:border-accent-primary focus:outline-none text-text-primary text-xs sm:text-sm font-medium transition-all resize-none"
+                          className={`w-full px-4 py-3 rounded-lg bg-bg-primary/80 border ${errors.message ? 'border-red-500/50' : 'border-border-subtle focus:border-accent-primary'} focus:outline-none text-text-primary text-xs sm:text-sm font-medium transition-all resize-none`}
                         />
+                        {errors.message && <span className="text-[10px] text-red-400 mt-1 block">{errors.message}</span>}
                       </div>
 
                       <button
                         type="submit"
-                        className="w-full py-3.5 rounded-lg bg-accent-primary hover:bg-accent-primary/95 text-text-primary font-bold text-xs sm:text-sm transition-all duration-300 flex items-center justify-center gap-2 shadow-md cursor-pointer"
+                        disabled={loading}
+                        className="w-full py-3.5 rounded-lg bg-accent-primary hover:bg-accent-primary/95 disabled:opacity-50 disabled:cursor-not-allowed text-text-primary font-bold text-xs sm:text-sm transition-all duration-300 flex items-center justify-center gap-2 shadow-md cursor-pointer"
                       >
-                        <Send className="w-4 h-4" />
-                        Envoyer le message
+                        {loading ? (
+                          <>
+                            <svg className="animate-spin w-4 h-4" viewBox="0 0 24 24" fill="none">
+                              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                            </svg>
+                            Envoi en cours...
+                          </>
+                        ) : (
+                          <>
+                            <Send className="w-4 h-4" />
+                            Envoyer le message
+                          </>
+                        )}
                       </button>
                     </motion.form>
                   ) : (

@@ -3,7 +3,7 @@ title: 'EXPERIENCE - FIERI Research'
 status: 'final'
 sources:
   - {planning_artifacts}/prds/prd-Fieri-2026-05-30/prd.md
-updated: '2026-05-30'
+updated: '2026-06-03'
 ---
 
 # EXPERIENCE.md — FIERI Research Interaction & IA Specifications
@@ -15,9 +15,11 @@ updated: '2026-05-30'
 
 ## Foundation
 
-**FIERI Research** est une application web monopage (SPA) fluide, hautement réactive et immersive. Elle s'appuie sur une architecture hybride de données : en développement, elle appelle l'API réelle et bascule automatiquement sur des données simulées locales (mocks) en cas de code retour `404` (non trouvé) pour garantir une expérience continue sans interruption de flux. En production, elle repose exclusivement sur des appels réels et affiche des toasts d'erreur informatifs en cas de rupture de réseau ou de défaillance de service.
+**FIERI Research** est une application web monopage (SPA) fluide, hautement réactive et immersive. La racine du document déclare `<html lang="fr" dir="ltr">`. L'application s'appuie sur une architecture hybride de données : en développement, elle appelle l'API réelle et bascule automatiquement sur des données simulées locales (mocks) en cas de code retour `404` (non trouvé) pour garantir une expérience continue sans interruption de flux. En production, elle repose exclusivement sur des appels réels et affiche des toasts d'erreur informatifs en cas de rupture de réseau ou de défaillance de service.
 
 Le système de navigation s'adapte dynamiquement selon **quatre profils utilisateurs (rôles)**, protégeant l'accès aux écrans avancés tout en maximisant la fluidité pour le public externe grâce à un découpage Bento Grid intelligent.
+
+La page d'accueil se compose de **13 sections** en séquence verticale, chacune dotée d'un identifiant HTML (`id`) pour le lien d'ancrage direct : `hero`, `decouvrir`, `organisation`, `missions`, `vision`, `stats`, `clubs`, `evenements`, `ateliers`, `paf`, `partenaires`, `faq`, `contact`. Un bouton flottant **ScrollToTop** apparaît après 800px de scroll pour permettre un retour rapide en haut de page.
 
 ---
 
@@ -76,6 +78,22 @@ Présent sur la page d'accueil et le détail des projets pour valoriser l'humain
 ### 4. Carte d'Événement avec "Dot Live"
 *   **Comportement :** Si l'événement ou la conférence se déroule en ce moment même, la carte affiche un badge avec un dot vert/bleu de 6px qui pulse de manière continue (`scale(1 → 1.5 → 1)` en boucle de 2 secondes).
 
+### 5. Bouton de Retour en Haut (ScrollToTop)
+*   **Déclencheur :** Apparaît en `fixed bottom-6 right-6` avec un fond `accent-primary/90` et icône `ArrowUp` lorsque le défilement vertical dépasse 800px.
+*   **Comportement :** Au clic, déclenche `window.scrollTo({ top: 0, behavior: 'smooth' })`. Animé via Framer Motion (fade + scale) à l'apparition et la disparition.
+*   **Accessibilité :** Possède un `aria-label="Retour en haut"`.
+
+### 6. Badge de Notifications (Navbar)
+*   **Comportement :** Affiche le nombre de notifications non lues dans un cercle `bg-accent-secondary` de 20px positionné `absolute -top-2 -right-2` sur le bouton Dashboard.
+*   **Seuil :** Au-delà de 99 notifications, affiche `99+`. Si `unreadCount === 0`, le badge est entièrement masqué (aucun point blanc ou zéro affiché).
+
+### 7. Formulaire Newsletter (Footer)
+*   **Comportement :** Champ email + bouton "OK" en ligne. À la soumission, validation coté client : email requis et format valide.
+*   **États :**
+    *   **Erreur :** Message d'erreur rouge inline sous le champ, bordure du champ passe en `border-red-500/50`.
+    *   **Succès :** Message "✓ Abonnement validé avec succès !" avec fond `accent-secondary/10`, disparaît après 4.5s.
+    *   **Pré-remplissage :** L'erreur se dissipe dès que l'utilisateur modifie le champ.
+
 ---
 
 ## State Patterns
@@ -88,7 +106,27 @@ Présent sur la page d'accueil et le détail des projets pour valoriser l'humain
 *   **État :** L'application récupère les données des projets ou des actualités.
 *   **Traitement :** Remplacement des cartes Bento par des conteneurs "Squelettes" (Skeleton components) translucides qui s'animent en pulsation d'opacité de 30% à 70% toutes les 1.5 seconde. Aucun indicateur de chargement circulaire (spinner) n'est toléré au milieu de l'écran principal.
 
-### 3. Recherche Sans Résultat (Empty Search)
+### 3. Erreur de Chargement API (Error State)
+*   **État :** L'API distante ne répond pas (timeout, panne réseau, erreur serveur).
+*   **Traitement :** Les données en défaut sont remplacées par un message d'erreur explicite, centré, avec une icône d'attention. Le message est rédigé dans le ton de la plateforme (ex. "Impossible de charger les ateliers pour le moment."). Un bouton **"Réessayer"** permet de relancer l'appel API sans recharger la page.
+*   **Applications :** WorkshopsSection (landing page), ContactSection (envoi formulaire), Newsletter (footer).
+*   **Contraste erreur/chargement :** L'état erreur n'apparaît qu'après un échec avéré — le skeleton de chargement s'affiche d'abord.
+
+### 4. Validation de Formulaire Inline (Form Validation)
+*   **État :** L'utilisateur soumet un formulaire avec des champs vides ou mal formatés.
+*   **Traitement :** La validation s'effectue coté client avant tout appel API.
+    *   **Champs requis :** Nom, email, message pour le contact ; email pour la newsletter.
+    *   **Format :** L'email est validé par expression régulière (`/^[^\s@]+@[^\s@]+\.[^\s@]+$/`).
+    *   **Affichage erreur :** Message rouge de 10px sous le champ concerné. Bordure du champ passe en `border-red-500/50`. L'erreur disparaît dès que l'utilisateur modifie la valeur du champ (clean-up automatique).
+    *   **Bannière globale :** En cas d'échec API (ex. envoi Contact), une bannière rouge s'affiche au-dessus du formulaire avec le message d'erreur.
+*   **Bouton de soumission :** Pendant l'appel API, le bouton affiche un spinner (SVG `animate-spin`) et le texte "Envoi en cours...". Le bouton est désactivé (`disabled`, `opacity-50`, `cursor-not-allowed`) pour éviter les doubles soumissions.
+
+### 5. État Vide (Empty State)
+*   **État :** Une section affiche des données dynamiques mais la liste est vide (pas de résultat).
+*   **Traitement :** Un message centré informe l'utilisateur : "Aucun atelier programmé pour le moment." Aucune illustration ou skeleton n'est affiché — uniquement du texte sobre.
+*   **Distinction :** L'état vide est distinct de l'état erreur (API défaillante) et de l'état chargement (skeleton).
+
+### 6. Recherche Sans Résultat (Empty Search)
 *   **État :** L'utilisateur tape un mot-clé qui ne correspond à aucun projet.
 *   **Traitement :** La grille Bento s'estompe et laisse place à une illustration filaire d'un circuit brisé avec le message : *"✦ Aucun tracé scientifique ne correspond à votre recherche. Essayez un autre domaine (ex. IA, Physique, Énergie)."* Un bouton d'action principal invite à réinitialiser les filtres.
 
@@ -110,6 +148,13 @@ Présent sur la page d'accueil et le détail des projets pour valoriser l'humain
 *   **Ratios de Contraste :** Conformes à la norme WCAG 2.2 AA (Violet Royal `#6C4CF1` et Orange Brûlé `#E76F00` à plus de 4.5:1 sur blanc). L'Ambre Premium (`#FF8A3D`) est interdit pour du texte de petite taille.
 *   **Focus Visible :** Tous les boutons et champs de saisie possèdent un contour de focus distinctif `{colors.brand-violet-light}` à 100% d'opacité avec un décalage (offset) de 2px lors de la navigation au clavier (`Tab`).
 *   **Navigation au Clavier :** L'intégralité des modales, formulaires et carrousels est entièrement utilisable sans souris.
+*   **Lien d'Évitement (Skip-to-Content) :** Le premier élément focusable de chaque page est un lien `<a href="#main-content">Aller au contenu principal</a>` masqué par défaut (classe `sr-only`). Il devient visible avec un contour `brand-violet-light` de 2px lors de la réception du focus via `Tab` (`:focus-visible`).
+*   **Piégeage de Focus (Focus Trap) dans les Modales :** Lors de l'ouverture d'une modale (inscription, confirmation), le focus est déplacé vers le premier élément interactif du dialogue. La tabulation cyclique est bloquée à l'intérieur de la modale : Tab depuis le dernier élément ramène au premier. La touche `Escape` ferme la modale et restitue le focus à l'élément déclencheur. Chaque modale possède `role="dialog"`, `aria-modal="true"` et `aria-labelledby` pointant vers son titre.
+*   **Formulaires Accessibles :** Chaque champ de formulaire est associé à un `<label htmlFor="id">` explicite. En cas d'erreur de validation, le champ reçoit `aria-invalid="true"` et le message d'erreur est lié au champ via `aria-describedby`. Le message d'erreur est wrappé dans un conteneur `role="alert"` pour être annoncé par les lecteurs d'écran.
+*   **Zones Tactiles Minimales (Touch Targets) :** Sur mobile, toute cible interactive (bouton, lien, icône cliquable) doit mesurer au minimum `44×44px` (conforme WCAG 2.5.8). Pour les icônes seules (Sidebar contractée, badge de notification), une extension transparente (`::before`/`::after` ou `min-w-[44px] min-h-[44px]`) garantit la zone de clic minimale sans agrandir l'élément visuel.
+*   **Accordéon (FAQ) :** Chaque bouton de l'accordéon FAQ possède `aria-expanded` (booléen synchronisé avec l'état d'ouverture), `aria-controls` pointant vers l'ID du panneau correspondant. Chaque panneau de réponse a `role="region"` et `aria-labelledby` pointant vers l'ID du bouton déclencheur. Les panneaux repliés ont `aria-hidden="true"`. La navigation Tab permet de passer d'un bouton à l'autre ; Enter/Spacetoggle l'ouverture.
+*   **Mouvement Réduit (`prefers-reduced-motion`) :** Toute animation non essentielle (ticker infini des partenaires, compteur animé de statistiques, hover lift des cartes, expansion Sidebar, transition de page, pulse dot, ScrollToTop fade, bouton translate) détecte la préférence utilisateur via `useReducedMotion()` de Framer Motion. En mode réduit : animations immédiates, ticker immobile, compteur affiche la valeur finale sans interpolation.
+*   **Repères de Navigation (Landmarks) :** La barre de navigation principale utilise `<nav aria-label="Navigation principale">`, la Sidebar chercheur utilise `<aside aria-label="Menu chercheur">`. Chaque section de la page d'accueil (identifiée par un `id`) est optionnellement déclarée comme `role="region"` avec `aria-labelledby` pointant vers le titre de la section.
 
 ---
 

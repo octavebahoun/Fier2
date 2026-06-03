@@ -11,6 +11,7 @@ import {
   ChevronRight,
   Shield
 } from 'lucide-react'
+import { useAuth } from '../../context/AuthContext.jsx'
 
 export default function Sidebar({
   currentPage,
@@ -18,6 +19,7 @@ export default function Sidebar({
   user,
   handleLogout
 }) {
+  const { hasMinRole } = useAuth()
   const [isHovered, setIsHovered] = useState(false)
   const [isPinned, setIsPinned] = useState(false)
 
@@ -25,13 +27,13 @@ export default function Sidebar({
 
   const menuItems = [
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
-    ...(user?.role === 'CHERCHEUR' ? [{
+    ...(hasMinRole('CHERCHEUR') ? [{
       id: 'profile',
       label: 'Mon Profil',
       icon: User,
       params: { researcherId: user?.id || 'r1' }
     }] : []),
-    ...(user?.role === 'ADMIN' ? [{
+    ...(hasMinRole('ADMIN') ? [{
       id: 'admin',
       label: 'Administration',
       icon: Shield
@@ -114,7 +116,7 @@ export default function Sidebar({
                   ? 'text-fieri-blue'
                   : 'text-emerald-400'
               }`}>
-                {user.role === 'ADMIN' ? 'Administrateur' : user.role === 'CHERCHEUR' ? 'Chercheur FIERI' : 'Membre'}
+                {user.role === 'ADMIN' ? 'Administrateur' : user.role === 'CHERCHEUR' ? 'Chercheur FIERI' : user.role === 'ETUDIANT' ? 'Étudiant' : 'Membre'}
               </span>
             </div>
           </motion.div>

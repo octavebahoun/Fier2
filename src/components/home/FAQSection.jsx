@@ -7,7 +7,7 @@ export default function FAQSection({ faq }) {
   const [expandedFaqIndex, setExpandedFaqIndex] = useState(null);
 
   return (
-    <section className="py-24 px-6 md:px-12 lg:px-24 border-b border-border-subtle dot-grid relative overflow-hidden">
+    <section id="faq" className="py-24 px-6 md:px-12 lg:px-24 border-b border-border-subtle dot-grid relative overflow-hidden">
       {/* Glow Spots */}
       <div className="absolute top-1/3 right-[5%] w-[40vw] h-[40vw] max-w-[450px] rounded-full bg-radial from-accent-secondary/22 to-transparent blur-[110px] pointer-events-none z-0" />
       <div className="absolute bottom-1/3 left-[5%] w-[40vw] h-[40vw] max-w-[450px] rounded-full bg-radial from-fieri-blue/26 to-transparent blur-[110px] pointer-events-none z-0" />
@@ -45,11 +45,16 @@ export default function FAQSection({ faq }) {
             <div className="space-y-4">
               {faq.questions.map((item, index) => {
                 const isExpanded = expandedFaqIndex === index;
+                const panelId = `faq-panel-${index}`;
+                const triggerId = `faq-trigger-${index}`;
                 return (
                   <FadeInWhenVisible key={index} delay={index * 0.05} direction="up">
                     <div className="bg-bg-secondary/40 backdrop-blur-md rounded-xl border border-border-subtle overflow-hidden hover:border-accent-primary/20 transition-all">
                       <button
+                        id={triggerId}
                         onClick={() => setExpandedFaqIndex(isExpanded ? null : index)}
+                        aria-expanded={isExpanded}
+                        aria-controls={panelId}
                         className="w-full text-left p-5 flex items-center justify-between gap-4 font-bold text-sm sm:text-base text-text-primary hover:text-accent-primary transition-colors cursor-pointer"
                       >
                         <span>{item.q}</span>
@@ -59,6 +64,9 @@ export default function FAQSection({ faq }) {
                       <AnimatePresence initial={false}>
                         {isExpanded && (
                           <motion.div
+                            id={panelId}
+                            role="region"
+                            aria-labelledby={triggerId}
                             initial={{ height: 0, opacity: 0 }}
                             animate={{ height: 'auto', opacity: 1 }}
                             exit={{ height: 0, opacity: 0 }}

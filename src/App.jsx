@@ -41,21 +41,29 @@ function App() {
   const [searchQuery, setSearchQuery] = useState('')
   const [newsletterEmail, setNewsletterEmail] = useState('')
   const [newsletterSubscribed, setNewsletterSubscribed] = useState(false)
+  const [newsletterError, setNewsletterError] = useState(null)
 
-  const handleNewsletterSubmit = (e) => {
+  const handleNewsletterSubmit = async (e) => {
     e.preventDefault();
+    setNewsletterError(null);
     if (!newsletterEmail || !newsletterEmail.includes('@')) {
-      alert("Veuillez entrer une adresse e-mail valide.");
+      setNewsletterError("Veuillez entrer une adresse e-mail valide.");
       return;
     }
-    setNewsletterSubscribed(true);
-    setNewsletterEmail('');
-    setTimeout(() => {
-      setNewsletterSubscribed(false);
-    }, 4500);
+    try {
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 800));
+      setNewsletterSubscribed(true);
+      setNewsletterEmail('');
+      setTimeout(() => {
+        setNewsletterSubscribed(false);
+      }, 4500);
+    } catch {
+      setNewsletterError("Erreur lors de l'inscription. Veuillez réessayer.");
+    }
   };
 
-  const { user, logout, loading } = useAuth()
+  const { user, logout, loading, hasMinRole } = useAuth()
 
   const handleLogout = () => {
     logout();
@@ -79,13 +87,22 @@ function App() {
   // Gating privé silencieux et immédiat si non authentifié
   useEffect(() => {
     if (!loading) {
-      const protectedPages = ['dashboard', 'admin', 'researcher-profile-edit'];
-      if (protectedPages.includes(currentPage) && !user) {
-        setPostAuthRedirect({ pageName: currentPage, params: {} })
-        navigate('auth')
+      const protectedPages = {
+        'dashboard': 'ETUDIANT',
+        'admin': 'ADMIN',
+        'researcher-profile-edit': 'CHERCHEUR',
+      };
+      const minRoleRequired = protectedPages[currentPage];
+      if (minRoleRequired) {
+        if (!user) {
+          setPostAuthRedirect({ pageName: currentPage, params: {} })
+          navigate('auth')
+        } else if (!hasMinRole(minRoleRequired)) {
+          navigate('home')
+        }
       }
     }
-  }, [currentPage, user, loading]);
+  }, [currentPage, user, loading, hasMinRole]);
 
   // Handle scroll detection
   useEffect(() => {
@@ -135,8 +152,13 @@ function App() {
   // Handle Dynamic Component Rendering
   const renderPage = () => {
     // Redirection/gating préventive pour éviter les flashs visuels
-    const protectedPages = ['dashboard', 'admin', 'researcher-profile-edit'];
-    if (protectedPages.includes(currentPage) && !user) {
+    const protectedPages = {
+      'dashboard': 'ETUDIANT',
+      'admin': 'ADMIN',
+      'researcher-profile-edit': 'CHERCHEUR',
+    };
+    const minRoleRequired = protectedPages[currentPage];
+    if (minRoleRequired && (!user || !hasMinRole(minRoleRequired))) {
       return null;
     }
 
@@ -205,6 +227,8 @@ function App() {
       newsletterEmail={newsletterEmail}
       setNewsletterEmail={setNewsletterEmail}
       newsletterSubscribed={newsletterSubscribed}
+      newsletterError={newsletterError}
+      setNewsletterError={setNewsletterError}
       handleNewsletterSubmit={handleNewsletterSubmit}
     >
       {renderPage()}

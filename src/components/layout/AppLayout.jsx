@@ -22,6 +22,8 @@ export default function AppLayout({
   newsletterEmail,
   setNewsletterEmail,
   newsletterSubscribed,
+  newsletterError,
+  setNewsletterError,
   handleNewsletterSubmit
 }) {
   const showSidebar = !!user
@@ -63,6 +65,7 @@ export default function AppLayout({
         }`}
       >
         <main
+          id="main-content"
           className={`flex-grow ${
             currentPage === 'home' || currentPage === 'auth' ? 'pt-0' : 'pt-20'
           } ${currentPage === 'auth' ? 'pb-0' : 'pb-16'} z-10 w-full`}
@@ -110,21 +113,26 @@ export default function AppLayout({
                         ✓ Abonnement validé avec succès !
                       </div>
                     ) : (
-                      <form onSubmit={handleNewsletterSubmit} className="flex gap-2">
-                        <input
-                          type="email"
-                          required
-                          placeholder="Votre e-mail..."
-                          value={newsletterEmail}
-                          onChange={(e) => setNewsletterEmail(e.target.value)}
-                          className="bg-bg-primary/60 border border-border-subtle hover:border-accent-primary/40 focus:border-accent-primary focus:outline-none rounded-lg px-3 py-2 text-xs text-text-primary placeholder:text-text-muted transition-all flex-grow min-w-0"
-                        />
-                        <button
-                          type="submit"
-                          className="bg-accent-primary hover:bg-accent-primary/95 text-text-primary px-3 rounded-lg text-xs font-black transition-all cursor-pointer shadow-md hover:shadow-accent-primary/20 shrink-0"
-                        >
-                          OK
-                        </button>
+                      <form onSubmit={handleNewsletterSubmit} className="flex flex-col gap-2">
+                        <div className="flex gap-2">
+                          <input
+                            type="email"
+                            required
+                            placeholder="Votre e-mail..."
+                            value={newsletterEmail}
+                            onChange={(e) => { setNewsletterEmail(e.target.value); if (newsletterError) setNewsletterError(null); }}
+                            className={`bg-bg-primary/60 border ${newsletterError ? 'border-red-500/50' : 'border-border-subtle hover:border-accent-primary/40'} focus:border-accent-primary focus:outline-none rounded-lg px-3 py-2 text-xs text-text-primary placeholder:text-text-muted transition-all flex-grow min-w-0`}
+                          />
+                          <button
+                            type="submit"
+                            className="bg-accent-primary hover:bg-accent-primary/95 text-text-primary px-3 rounded-lg text-xs font-black transition-all cursor-pointer shadow-md hover:shadow-accent-primary/20 shrink-0"
+                          >
+                            OK
+                          </button>
+                        </div>
+                        {newsletterError && (
+                          <span className="text-[10px] text-red-400">{newsletterError}</span>
+                        )}
                       </form>
                     )}
                   </div>

@@ -72,7 +72,7 @@ const IMAGE_PRESETS = [
 ];
 
 export default function News({ navigate }) {
-  const { user } = useAuth();
+  const { user, hasMinRole } = useAuth();
   const [activeTab, setActiveTab] = useState('actualites');
   const [news, setNews] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -166,7 +166,7 @@ export default function News({ navigate }) {
     return matchesSearch && matchesCategory;
   });
 
-  const canWrite = user && (user.role === 'CHERCHEUR' || user.role === 'ADMIN');
+  const canWrite = hasMinRole('CHERCHEUR');
 
   return (
     <div className="min-h-screen bg-bg-primary text-text-primary pt-24 pb-16 px-4 md:px-8 relative overflow-hidden">

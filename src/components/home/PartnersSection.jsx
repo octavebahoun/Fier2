@@ -1,9 +1,10 @@
 import React from 'react';
 import { Globe2 } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 import FadeInWhenVisible from './FadeInWhenVisible.jsx';
 
 export default function PartnersSection({ partenaires }) {
+  const shouldReduceMotion = useReducedMotion();
   // Duplicate logos array to make a seamless infinite loop scrolling effect
   const duplicatedLogos = [...partenaires.logos, ...partenaires.logos, ...partenaires.logos];
 
@@ -33,7 +34,7 @@ export default function PartnersSection({ partenaires }) {
         <div className="w-full relative py-4 overflow-hidden mask-fade-horizontal">
           <motion.div 
             className="flex items-center gap-6.5 w-max"
-            animate={{ x: [0, -1200] }}
+            animate={shouldReduceMotion ? {} : { x: [0, -1200] }}
             transition={{
               repeat: Infinity,
               duration: 35,

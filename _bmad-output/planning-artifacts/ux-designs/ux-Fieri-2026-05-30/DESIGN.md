@@ -1,6 +1,8 @@
 ---
 name: FIERI Research
 description: Immersive, cosmic digital ecosystem transforming traditional academic platforms into a premium "SaaS Scientifique" or "Innovation Hub".
+status: final
+updated: '2026-06-03'
 colors:
   # Dark Mode (Cosmique)
   bg-primary-dark: '#080B14'
@@ -80,7 +82,7 @@ spacing:
   colossal: 96px
 components:
   btn-primary:
-    background: '{colors.accent-orange}'
+    background: '{colors.fieri-blue}'
     foreground: '#FFFFFF'
     radius: '{rounded.sm}'
   btn-secondary:
@@ -90,7 +92,7 @@ components:
     radius: '{rounded.sm}'
   btn-ghost:
     background: 'transparent'
-    foreground: '{colors.accent-orange}'
+    foreground: '{colors.accent-orange-dark}'
     border: '1px solid rgba(232, 100, 12, 0.35)'
     radius: '{rounded.sm}'
   card-glass:
@@ -212,19 +214,19 @@ Le niveau d'arrondi des angles définit la personnalité "technologique et préc
 ## Components
 
 ### 1. Boutons (Buttons)
-*   **Bouton Principal (CTA) :** Remplissage `{colors.accent-orange}`, texte blanc, arrondi `{rounded.sm}`. Au survol, transition en `{colors.fieri-orange}` avec une lueur active.
+*   **Bouton Principal (CTA) :** Remplissage `{colors.fieri-blue}` (`#1B6FD8`), texte blanc, arrondi `{rounded.sm}`. Au survol, `hover:bg-fieri-blue/90` avec une lueur active `box-shadow: 0 4px 20px rgba(27,111,216,0.35)`. Utilisé pour les actions principales (Connexion, Rejoindre, Envoyer).
 *   **Bouton Secondaire :** Fond transparent, texte `{colors.text-primary-dark}`, bordure subtile `rgba(255, 255, 255, 0.15)`. Au survol, fond `rgba(255, 255, 255, 0.06)`.
-*   **Bouton Ghost :** Fond transparent, texte `{colors.accent-orange}`, bordure `{colors.accent-orange}` à 35% d'opacité.
-*   **Bouton Live / En Direct :** Fond `{colors.accent-blue-marine}` à 25% d'opacité, texte bleu clair `#4A90D9`, bordure bleue à 40% d'opacité, dot pulsant.
+*   **Bouton Ghost :** Fond transparent, texte `{colors.accent-orange-dark}`, bordure `{colors.accent-orange-dark}` à 35% d'opacité.
+*   **Bouton Live / En Direct :** Fond `{colors.accent-blue-marine-dark}` à 25% d'opacité, texte bleu clair `#4A90D9`, bordure bleue à 40% d'opacité, dot pulsant.
 
 ### 2. Badges & Statuts
-*   **Badge En Direct (Live) :** Fond `{colors.accent-blue-marine}` (20%), texte `#5BA3F0`, bordure à 40% d'opacité, dot bleu pulsant de 6px.
-*   **Badge En Cours (Ongoing) :** Fond `{colors.accent-amber}` à 12%, texte `{colors.accent-amber}`, bordure à 25% d'opacité.
-*   **Badge Innovation :** Fond `{colors.accent-orange}` à 15%, texte `{colors.accent-orange}`, bordure à 30% d'opacité, préfixé du glyphe `✦`.
+*   **Badge En Direct (Live) :** Fond `{colors.accent-blue-marine-dark}` (20%), texte `#5BA3F0`, bordure à 40% d'opacité, dot bleu pulsant de 6px.
+*   **Badge En Cours (Ongoing) :** Fond `{colors.accent-amber-dark}` à 12%, texte `{colors.accent-amber-dark}`, bordure à 25% d'opacité.
+*   **Badge Innovation :** Fond `{colors.accent-orange-dark}` à 15%, texte `{colors.accent-orange-dark}`, bordure à 30% d'opacité, préfixé du glyphe `✦`.
 *   **Badge Terminé (Done) :** Fond gris à 5%, texte `{colors.text-secondary-dark}`, bordure subtile.
 
 ### 3. Cartes Glassmorphism (Glassmorphism Cards)
-Les cartes de projets et d'événements suivent le style `{components.card-glass}`. Au survol, elles s'élèvent de `-4px` et leur bordure s'illumine subtilement en `{colors.accent-orange}` (opacité 30%) avec un léger halo arrière.
+Les cartes de projets et d'événements suivent le style `{components.card-glass}`. Au survol, elles s'élèvent de `-4px` et leur bordure s'illumine subtilement en `{colors.accent-orange-dark}` (opacité 30%) avec un léger halo arrière.
 
 ### 4. Sidebar Chercheur / Administrateur
 Composant clé pour les profils connectés de haut niveau. 

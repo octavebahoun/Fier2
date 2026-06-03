@@ -21,6 +21,7 @@ import {
   Vote
 } from 'lucide-react';
 import citeImage from '../assets/fieri_student_hub.webp';
+import { useAuth } from '../context/AuthContext.jsx';
 
 const citeData = {
   globalGovernance: {
@@ -220,6 +221,7 @@ const getInitialJoinForm = () => ({
 });
 
 export default function CiteIntegration({ navigate }) {
+  const { user } = useAuth();
   const [view, setView] = useState('countries');
   const [selectedCountryId, setSelectedCountryId] = useState(null);
   const [selectedUniversityId, setSelectedUniversityId] = useState(null);
@@ -417,7 +419,13 @@ export default function CiteIntegration({ navigate }) {
                 university={selectedUniversity}
                 country={selectedCountry}
                 onChief={() => setView('club-chief')}
-                onJoin={() => setView('join')}
+                onJoin={() => {
+                  if (!user) {
+                    navigate?.('auth');
+                  } else {
+                    setView('join');
+                  }
+                }}
               />
             )}
 
@@ -544,6 +552,9 @@ function CountriesView({ countries, query, setQuery, onCountrySelect, onGlobalGo
 }
 
 function GovernanceView({ title, subtitle, people, board, onBack }) {
+  const { hasMinRole } = useAuth();
+  const canSeeContacts = hasMinRole('ETUDIANT');
+
   return (
     <div className="flex flex-col gap-6">
       <button onClick={onBack} className="inline-flex items-center gap-2 text-xs text-text-secondary hover:text-text-primary cursor-pointer w-fit">
@@ -563,7 +574,9 @@ function GovernanceView({ title, subtitle, people, board, onBack }) {
               </div>
               <h3 className="text-lg font-black">{person.name}</h3>
               <p className="text-xs uppercase tracking-widest text-accent-secondary font-black mt-1">{person.role}</p>
-              <p className="text-sm text-text-secondary mt-4">{person.bio ?? person.contact}</p>
+              <p className="text-sm text-text-secondary mt-4">
+                {person.bio ?? (canSeeContacts ? person.contact : 'Coordonnées masquées (Connexion Étudiant requise)')}
+              </p>
             </article>
           ))}
         </div>
@@ -695,6 +708,9 @@ function ClubView({ club, university, country, onChief, onJoin }) {
 }
 
 function ChiefView({ club, onBack }) {
+  const { hasMinRole } = useAuth();
+  const canSeeContacts = hasMinRole('ETUDIANT');
+
   return (
     <div className="max-w-3xl">
       <button onClick={onBack} className="inline-flex items-center gap-2 text-xs text-text-secondary hover:text-text-primary cursor-pointer mb-6">
@@ -708,8 +724,16 @@ function ChiefView({ club, onBack }) {
         <h2 className="text-3xl font-black">{club.chief.name}</h2>
         <p className="text-xs uppercase tracking-widest font-black text-accent-secondary mt-1">{club.chief.role}</p>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
-          <ContactTile icon={Phone} label="Téléphone" value={club.chief.phone} />
-          <ContactTile icon={Mail} label="Email" value={club.chief.email} />
+          <ContactTile
+            icon={Phone}
+            label="Téléphone"
+            value={canSeeContacts ? club.chief.phone : "Connectez-vous en tant qu'étudiant pour afficher"}
+          />
+          <ContactTile
+            icon={Mail}
+            label="Email"
+            value={canSeeContacts ? club.chief.email : "Connectez-vous en tant qu'étudiant pour afficher"}
+          />
         </div>
       </article>
     </div>

@@ -36,8 +36,8 @@ function Toast({ message, type = 'success', onClose }) {
 }
 
 // ─────────────────────────── Opportunities Page Component ───────────────────────────
-export default function Opportunities() {
-  const { user } = useAuth();
+export default function Opportunities({ navigate }) {
+  const { user, hasMinRole } = useAuth();
   const [opportunities, setOpportunities] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [activeType, setActiveType] = useState('all');
@@ -118,7 +118,7 @@ export default function Opportunities() {
   // --- ACTIONS FOR APPLYING (STUDENT / MEMBER CONNECTED) ---
   const openApplyModal = (opt) => {
     if (!user) {
-      setToast("Veuillez vous connecter pour postuler à cette offre.");
+      navigate?.('auth');
       return;
     }
     applyTriggerRef.current = document.activeElement;
@@ -150,10 +150,10 @@ export default function Opportunities() {
   // --- ACTIONS FOR CREATING (RESEARCHER CONNECTED) ---
   const openPublishModal = () => {
     if (!user) {
-      setToast("Veuillez vous connecter pour publier une offre.");
+      navigate?.('auth');
       return;
     }
-    const isResearcher = user.role === 'CHERCHEUR' || user.role === 'ADMIN';
+    const isResearcher = hasMinRole('CHERCHEUR');
     if (!isResearcher) {
       setToast("Accès refusé. Cette fonctionnalité est réservée aux chercheurs certifiés.");
       return;

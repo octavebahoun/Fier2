@@ -68,22 +68,24 @@ export const api = {
   // MODULE AUTHENTICATION & SESSION
   // ------------------------------------------------------------
   auth: {
-    register: async ({ email, password, firstName, lastName, branchId }) => {
+    register: async ({ email, password, firstName, lastName, branchId, role }) => {
       return request(
         '/auth/register',
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email, password, firstName, lastName, branchId })
+          body: JSON.stringify({ email, password, firstName, lastName, branchId, role })
         },
         async () => {
           await delay(300);
+          // Utiliser le rôle passé par le formulaire d'inscription (ETUDIANT ou CHERCHEUR)
+          const assignedRole = role || 'ETUDIANT';
           const mockMember = {
-            id: Math.floor(Math.random() * 1000) + 1,
+            id: Math.floor(Math.random() * 9000) + 1000,
             email,
-            firstName: firstName || "Chercheur",
-            lastName: lastName || "FIERI",
-            role: 'CHERCHEUR',
+            firstName: firstName || 'Chercheur',
+            lastName:  lastName  || 'FIERI',
+            role: assignedRole,
             avatarUrl: null
           };
           const fakeToken = `mock-token-${Date.now()}`;
@@ -91,7 +93,7 @@ export const api = {
           localStorage.setItem('fieri_user', JSON.stringify(mockMember));
           return {
             success: true,
-            message: "Inscription réussie (Mode Hors-ligne / Fallback). Bienvenue au sein de la communauté !",
+            message: `Inscription réussie (Mode Hors-ligne). Bienvenue, ${assignedRole === 'ETUDIANT' ? 'Étudiant' : 'Chercheur'} !`,
             data: {
               access_token: fakeToken,
               member: mockMember
@@ -111,12 +113,25 @@ export const api = {
         },
         async () => {
           await delay(200);
+
+          // ── Détection du rôle par email en mode fallback (DEV uniquement) ──
+          // Pour tester un profil admin     : admin@fieri.dev
+          // Pour tester un profil étudiant  : etudiant@fieri.dev (ou *@etudiant.*)
+          // Pour tester un profil chercheur : tout autre email
+          const e = (email || '').toLowerCase();
+          let detectedRole = 'CHERCHEUR';
+          if (e.startsWith('admin') || e.includes('@admin.')) {
+            detectedRole = 'ADMIN';
+          } else if (e.startsWith('etudiant') || e.includes('etudiant@') || e.includes('@student.') || e.includes('.etudiant@')) {
+            detectedRole = 'ETUDIANT';
+          }
+
           const mockMember = {
             id: 101,
-            email: email || "chercheur@fieri.dev",
-            firstName: email ? email.split('@')[0] : "Chercheur",
-            lastName: "FIERI",
-            role: 'CHERCHEUR',
+            email: email || 'chercheur@fieri.dev',
+            firstName: email ? email.split('@')[0] : 'Chercheur',
+            lastName: 'FIERI',
+            role: detectedRole,
             avatarUrl: null
           };
           const fakeToken = `mock-token-${Date.now()}`;
@@ -124,7 +139,7 @@ export const api = {
           localStorage.setItem('fieri_user', JSON.stringify(mockMember));
           return {
             success: true,
-            message: "Connexion réussie (Mode Hors-ligne / Fallback). Bienvenue !",
+            message: `Connexion réussie (Mode Hors-ligne). Profil : ${detectedRole}`,
             data: {
               access_token: fakeToken,
               member: mockMember

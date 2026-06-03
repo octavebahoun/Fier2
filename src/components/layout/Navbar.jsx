@@ -187,9 +187,9 @@ export default function Navbar({
                   >
                     {user ? 'Dashboard' : 'Connexion'}
                     {/** Notification badge */}
-                    {user && typeof window !== 'undefined' && (
+                    {user && unreadCount > 0 && typeof window !== 'undefined' && (
                       <span className="absolute -top-2 -right-2 inline-flex items-center justify-center w-5 h-5 rounded-full bg-accent-secondary text-white text-[10px] font-black">
-                        {unreadCount > 0 ? (unreadCount > 99 ? '99+' : unreadCount) : <span className="w-2.5 h-2.5 rounded-full bg-white/80" />}
+                        {unreadCount > 99 ? '99+' : unreadCount}
                       </span>
                     )}
                   </button>
@@ -201,7 +201,7 @@ export default function Navbar({
                         ? 'bg-accent-primary/15 border-accent-primary/30 text-fieri-blue'
                         : 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'
                     }`}>
-                      {user.role === 'ADMIN' ? 'Admin' : user.role === 'CHERCHEUR' ? 'Chercheur' : 'Membre'}
+                      {user.role === 'ADMIN' ? 'Admin' : user.role === 'CHERCHEUR' ? 'Chercheur' : user.role === 'ETUDIANT' ? 'Étudiant' : 'Membre'}
                     </span>
                   )}
                 </div>
@@ -357,7 +357,7 @@ export default function Navbar({
                         ? 'bg-accent-primary/15 border-accent-primary/30 text-fieri-blue'
                         : 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'
                     }`}>
-                      {user.role === 'ADMIN' ? 'Admin' : user.role === 'CHERCHEUR' ? 'Chercheur' : 'Membre'}
+                      {user.role === 'ADMIN' ? 'Admin' : user.role === 'CHERCHEUR' ? 'Chercheur' : user.role === 'ETUDIANT' ? 'Étudiant' : 'Membre'}
                     </span>
                   )}
                 </button>
