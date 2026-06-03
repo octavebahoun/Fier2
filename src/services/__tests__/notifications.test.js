@@ -1,3 +1,5 @@
+/** @vitest-environment jsdom */
+
 import { beforeEach, describe, it, expect } from 'vitest';
 import { initializeMockDb } from '../mockDb.js';
 import { notifications } from '../notifications.js';

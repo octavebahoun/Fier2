@@ -18,7 +18,7 @@ import { api } from '../services/api';
 import { useData } from '../context/DataContext.jsx';
 import { useAuth } from '../context/AuthContext.jsx';
 
-export default function Auth({ navigate }) {
+export default function Auth({ navigate, redirectTo, onAuthComplete }) {
   const { login, register, user } = useAuth();
 
   // Navigation active: 'login' ou 'register'
@@ -63,9 +63,14 @@ export default function Auth({ navigate }) {
   // Rediriger si déjà connecté
   useEffect(() => {
     if (user) {
-      navigate('dashboard');
+      if (redirectTo?.pageName) {
+        navigate(redirectTo.pageName, redirectTo.params || {})
+        onAuthComplete?.()
+      } else {
+        navigate('dashboard');
+      }
     }
-  }, [user, navigate]);
+  }, [user, navigate, redirectTo, onAuthComplete]);
 
   // Gérer le focus lors de la transition à l'étape 2
   useEffect(() => {
@@ -100,7 +105,12 @@ export default function Auth({ navigate }) {
     if (res.success) {
       setSuccessMsg("Connexion réussie ! Redirection...");
       setTimeout(() => {
-        navigate('dashboard');
+        if (redirectTo?.pageName) {
+          navigate(redirectTo.pageName, redirectTo.params || {})
+          onAuthComplete?.()
+        } else {
+          navigate('dashboard');
+        }
       }, 1000);
     } else {
       setErrorMsg(res.message || "Erreur de connexion. Veuillez réessayer.");
@@ -165,7 +175,12 @@ export default function Auth({ navigate }) {
     if (res.success) {
       setSuccessMsg("Votre compte chercheur a été créé et connecté avec succès ! Redirection...");
       setTimeout(() => {
-        navigate('dashboard');
+        if (redirectTo?.pageName) {
+          navigate(redirectTo.pageName, redirectTo.params || {})
+          onAuthComplete?.()
+        } else {
+          navigate('dashboard');
+        }
       }, 1500);
     } else {
       setErrorMsg(res.message || "Impossible de finaliser l'inscription.");

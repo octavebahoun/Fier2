@@ -719,6 +719,98 @@ export const mockDb = {
   researchers: {
     getAll: () => readLocal(KEYS.RESEARCHERS) || DEFAULT_RESEARCHERS,
     getById: (id) => (readLocal(KEYS.RESEARCHERS) || DEFAULT_RESEARCHERS).find(r => r.id === id),
+    getByEmail: (email) => {
+      const normalized = String(email || '').trim().toLowerCase();
+      if (!normalized) return null;
+      return (readLocal(KEYS.RESEARCHERS) || DEFAULT_RESEARCHERS).find(
+        r => String(r.email || '').trim().toLowerCase() === normalized
+      ) || null;
+    },
+
+    upsert: (researcher) => {
+      if (!researcher) return null;
+      const list = readLocal(KEYS.RESEARCHERS) || DEFAULT_RESEARCHERS;
+      const idx = list.findIndex(r => r.id === researcher.id);
+      if (idx !== -1) {
+        list[idx] = { ...list[idx], ...researcher };
+      } else {
+        list.push(researcher);
+      }
+      writeLocal(KEYS.RESEARCHERS, list);
+      return researcher;
+    },
+
+    upsertByEmail: (email, patch = {}) => {
+      const normalized = String(email || '').trim().toLowerCase();
+      if (!normalized) return null;
+      const list = readLocal(KEYS.RESEARCHERS) || DEFAULT_RESEARCHERS;
+      const idx = list.findIndex(r => String(r.email || '').trim().toLowerCase() === normalized);
+      if (idx !== -1) {
+        const updated = { ...list[idx], ...patch, email: list[idx].email || email };
+        list[idx] = updated;
+        writeLocal(KEYS.RESEARCHERS, list);
+        return updated;
+      }
+
+      const base = {
+        id: patch.id || `me-${Date.now()}`,
+        email,
+        followers: [],
+        followersCount: 0
+      };
+      const created = { ...base, ...patch, email };
+      list.push(created);
+      writeLocal(KEYS.RESEARCHERS, list);
+      return created;
+    },
+
+    getMe: () => {
+      if (typeof window === 'undefined') return null;
+      const raw = localStorage.getItem('fieri_user');
+      if (!raw) return null;
+      let u;
+      try {
+        u = JSON.parse(raw);
+      } catch {
+        return null;
+      }
+      const name = u ? `${u.firstName || ''} ${u.lastName || ''}`.trim() : '';
+      if (!u?.email) return null;
+      const existing = mockDb.researchers.getByEmail(u.email);
+      if (existing) {
+        return { ...existing, name: existing.name || name, role: existing.role || u.role };
+      }
+      return mockDb.researchers.upsertByEmail(u.email, {
+        id: u.id ? `me-${u.id}` : undefined,
+        name,
+        role: u.role || 'CHERCHEUR',
+        university: '',
+        bio: '',
+        specialties: [],
+        portfolioUrl: '',
+        cvUrl: ''
+      });
+    },
+
+    updateMe: (patch = {}) => {
+      if (typeof window === 'undefined') return null;
+      const raw = localStorage.getItem('fieri_user');
+      if (!raw) return null;
+      let u;
+      try {
+        u = JSON.parse(raw);
+      } catch {
+        return null;
+      }
+      if (!u?.email) return null;
+      const name = patch.name ?? `${u.firstName || ''} ${u.lastName || ''}`.trim();
+      return mockDb.researchers.upsertByEmail(u.email, {
+        ...patch,
+        name,
+        role: patch.role || u.role || 'CHERCHEUR'
+      });
+    },
+
     toggleFollow: (researcherId, userId) => {
       const list = readLocal(KEYS.RESEARCHERS) || DEFAULT_RESEARCHERS;
       const idx = list.findIndex(r => r.id === researcherId);

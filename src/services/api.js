@@ -460,6 +460,36 @@ export const api = {
   // MODULE ANNUAIRE DES CHERCHEURS (Mock persisté)
   // ------------------------------------------------------------
   researchers: {
+    getMe: async () => {
+      return request(
+        '/researchers/me',
+        { method: 'GET' },
+        async () => {
+          await delay(120);
+          const me = mockDb.researchers.getMe();
+          if (!me) return { success: false, message: 'Session invalide.' };
+          return { success: true, data: me };
+        }
+      );
+    },
+
+    updateMe: async (payload) => {
+      return request(
+        '/researchers/me',
+        {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        },
+        async () => {
+          await delay(180);
+          const updated = mockDb.researchers.updateMe(payload);
+          if (!updated) return { success: false, message: 'Impossible de mettre à jour le profil.' };
+          return { success: true, data: updated, message: 'Profil mis à jour.' };
+        }
+      );
+    },
+
     getAll: async () => {
       await delay(100);
       return { success: true, data: mockDb.researchers.getAll() };

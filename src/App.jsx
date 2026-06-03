@@ -19,6 +19,7 @@ import Events from './pages/Events.jsx'
 import Members from './pages/Members.jsx'
 import Dashboard from './pages/Dashboard.jsx'
 import ResearcherProfile from './pages/ResearcherProfile.jsx'
+import ResearcherProfileEdit from './pages/ResearcherProfileEdit.jsx'
 import Contact from './pages/Contact.jsx'
 import Auth from './pages/Auth.jsx'
 import Opportunities from './pages/Opportunities.jsx'
@@ -28,6 +29,7 @@ import PerspectiveGrid from './components/PerspectiveGrid.jsx'
 
 function App() {
   const [currentPage, setCurrentPage] = useState('home')
+  const [postAuthRedirect, setPostAuthRedirect] = useState(null)
   const [isScrolled, setIsScrolled] = useState(false)
   const [isNavExpanded, setIsNavExpanded] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
@@ -76,9 +78,10 @@ function App() {
   // Gating privé silencieux et immédiat si non authentifié
   useEffect(() => {
     if (!loading) {
-      const protectedPages = ['dashboard', 'admin'];
+      const protectedPages = ['dashboard', 'admin', 'researcher-profile-edit'];
       if (protectedPages.includes(currentPage) && !user) {
-        navigate('auth');
+        setPostAuthRedirect({ pageName: currentPage, params: {} })
+        navigate('auth')
       }
     }
   }, [currentPage, user, loading]);
@@ -131,7 +134,7 @@ function App() {
   // Handle Dynamic Component Rendering
   const renderPage = () => {
     // Redirection/gating préventive pour éviter les flashs visuels
-    const protectedPages = ['dashboard', 'admin'];
+    const protectedPages = ['dashboard', 'admin', 'researcher-profile-edit'];
     if (protectedPages.includes(currentPage) && !user) {
       return null;
     }
@@ -161,12 +164,20 @@ function App() {
         return <Dashboard navigate={navigate} />
       case 'profile':
         return <ResearcherProfile navigate={navigate} researcherId={selectedResearcherId} />
+      case 'researcher-profile-edit':
+        return <ResearcherProfileEdit navigate={navigate} />
       case 'admin':
         return <Admin navigate={navigate} />
       case 'contact':
         return <Contact navigate={navigate} />
       case 'auth':
-        return <Auth navigate={navigate} />
+        return (
+          <Auth
+            navigate={navigate}
+            redirectTo={postAuthRedirect}
+            onAuthComplete={() => setPostAuthRedirect(null)}
+          />
+        )
       case 'opportunities':
         return <Opportunities navigate={navigate} />
       default:
