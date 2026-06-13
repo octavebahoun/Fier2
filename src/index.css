@@ -107,6 +107,15 @@ body {
   min-height: 100vh;
 }
 
+@media (min-width: 768px) {
+
+  body.auth-page-active,
+  html.auth-page-active {
+    overflow: hidden !important;
+    height: 100vh !important;
+  }
+}
+
 /* Blueprint Grid Overlay (Applied to specific containers like Hero & Footer) */
 .blueprint-grid {
   position: relative;

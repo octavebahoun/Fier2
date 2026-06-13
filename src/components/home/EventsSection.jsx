@@ -9,7 +9,7 @@ export default function EventsSection({ evenements, navigate }) {
       {/* Glow Spots */}
       <div className="absolute top-1/2 left-[15%] -translate-y-1/2 w-[35vw] h-[35vw] max-w-[450px] rounded-full bg-radial from-fieri-blue/24 to-transparent blur-[110px] pointer-events-none z-0" />
       <div className="absolute top-1/2 right-[15%] -translate-y-1/2 w-[35vw] h-[35vw] max-w-[450px] rounded-full bg-radial from-accent-tertiary/18 to-transparent blur-[110px] pointer-events-none z-0" />
-      
+
       <div className="max-w-[92rem] mx-auto w-full">
         <div className="text-center max-w-3xl mx-auto mb-16">
           <FadeInWhenVisible direction="down">
@@ -34,9 +34,9 @@ export default function EventsSection({ evenements, navigate }) {
                 <div className="group/card relative h-full rounded-2xl border border-border-subtle bg-bg-secondary/20 backdrop-blur-md p-6 flex flex-col justify-between overflow-hidden shadow-md transition-all duration-300 hover:border-accent-primary/30 hover:bg-bg-secondary/45 hover:shadow-[0_8px_30px_rgb(0,0,0,0.5)]">
                   {/* Glowing radial inside card */}
                   <div className="absolute top-0 right-0 w-44 h-44 rounded-full bg-radial from-accent-primary/18 to-transparent blur-[40px] pointer-events-none group-hover/card:scale-110 transition-transform duration-500" />
-                  
+
                   {/* Flashy corner wireframe element */}
-                  <WireframeSVG type={curAccent.wireframe} accentColor={curAccent.color} />
+                  {/* <WireframeSVG type={curAccent.wireframe} accentColor={curAccent.color} /> */}
 
                   <div>
                     {/* Header line inside card */}

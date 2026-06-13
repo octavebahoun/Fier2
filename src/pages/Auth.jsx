@@ -544,48 +544,6 @@ export default function Auth({ navigate, redirectTo, onAuthComplete }) {
                         </div>
                       </div>
 
-                      {/* ─── Sélecteur de type de compte ─── */}
-                      <div className="flex flex-col gap-2">
-                        <label className="text-[10px] font-black uppercase tracking-wider text-text-secondary">
-                          JE SUIS <span className="text-fieri-blue">*</span>
-                        </label>
-                        <div className="grid grid-cols-2 gap-3">
-                          {[
-                            {
-                              value: 'ETUDIANT',
-                              label: 'Étudiant',
-                              sub: 'Club, ateliers, événements',
-                              icon: <GraduationCap className="w-4 h-4" />
-                            },
-                            {
-                              value: 'CHERCHEUR',
-                              label: 'Chercheur',
-                              sub: 'Projets, opportunités R&D',
-                              icon: <FlaskConical className="w-4 h-4" />
-                            }
-                          ].map((opt) => (
-                            <button
-                              key={opt.value}
-                              type="button"
-                              onClick={() => setRegisterData({ ...registerData, role: opt.value })}
-                              className={`flex flex-col items-start gap-1.5 p-3.5 rounded-xl border-2 text-left transition-all cursor-pointer ${
-                                registerData.role === opt.value
-                                  ? 'border-fieri-blue bg-fieri-blue/10 shadow-[0_0_16px_rgba(27,111,216,0.2)]'
-                                  : 'border-border-subtle bg-[#0D1120]/40 hover:border-fieri-blue/30 hover:bg-fieri-blue/5'
-                              }`}
-                            >
-                              <div className={`flex items-center gap-2 font-black text-xs ${
-                                registerData.role === opt.value ? 'text-fieri-blue' : 'text-text-secondary'
-                              }`}>
-                                {opt.icon}
-                                {opt.label}
-                              </div>
-                              <p className="text-[10px] text-text-muted leading-tight">{opt.sub}</p>
-                            </button>
-                          ))}
-                        </div>
-                      </div>
-
                       {/* Email */}
                       <div className="flex flex-col gap-1.5">
                         <label className="text-[10px] font-black uppercase tracking-wider text-text-secondary">

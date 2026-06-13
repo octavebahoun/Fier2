@@ -4,24 +4,24 @@ import { Cpu, Zap, Flame, Layers, Binary, Atom, Award, ChevronLeft, ChevronRight
 import FadeInWhenVisible from './FadeInWhenVisible.jsx';
 import ClubBackgroundMotif from './ClubBackgroundMotif.jsx';
 
-const getClubIcon = (kicker) => {
-  switch (kicker) {
-    case 'Robotique et Automatisation':
-      return <Cpu className="w-5 h-5 text-accent-primary" />;
-    case 'Informatique Industrielle & IoT':
-      return <Zap className="w-5 h-5 text-accent-secondary" />;
-    case 'Éco-Énergie & Climatisation':
-      return <Flame className="w-5 h-5 text-accent-tertiary" />;
-    case 'Construction 4.0':
-      return <Layers className="w-5 h-5 text-accent-primary" />;
-    case 'Intelligence Artificielle':
-      return <Binary className="w-5 h-5 text-accent-secondary" />;
-    case 'Innovation Tech & Entrepreneuriat':
-      return <Atom className="w-5 h-5 text-accent-tertiary" />;
-    default:
-      return <Cpu className="w-5 h-5 text-accent-primary" />;
-  }
-};
+// const getClubIcon = (kicker) => {
+//   switch (kicker) {
+//     case 'Robotique et Automatisation':
+//       return <Cpu className="w-5 h-5 text-accent-primary" />;
+//     case 'Informatique Industrielle & IoT':
+//       return <Zap className="w-5 h-5 text-accent-secondary" />;
+//     case 'Éco-Énergie & Climatisation':
+//       return <Flame className="w-5 h-5 text-accent-tertiary" />;
+//     case 'Construction 4.0':
+//       return <Layers className="w-5 h-5 text-accent-primary" />;
+//     case 'Intelligence Artificielle':
+//       return <Binary className="w-5 h-5 text-accent-secondary" />;
+//     case 'Innovation Tech & Entrepreneuriat':
+//       return <Atom className="w-5 h-5 text-accent-tertiary" />;
+//     default:
+//       return <Cpu className="w-5 h-5 text-accent-primary" />;
+//   }
+// };
 
 const slideVariants = {
   enter: (direction) => ({ x: direction > 0 ? 300 : -300, opacity: 0 }),
@@ -95,15 +95,15 @@ export default function ResearchClubsSection({ clubs, navigate }) {
                 transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
                 className="bg-bg-secondary/90 backdrop-blur-xl border border-white/5 p-6 md:p-10 rounded-2xl relative overflow-hidden"
               >
-                <div className="absolute top-0 right-0 w-64 h-64 rounded-full bg-radial from-accent-primary/26 to-transparent blur-[50px] pointer-events-none" />
+                {/* <div className="absolute top-0 right-0 w-64 h-64 rounded-full bg-radial from-accent-primary/26 to-transparent blur-[50px] pointer-events-none" /> */}
 
-                <ClubBackgroundMotif kicker={club.kicker} />
+                {/* <ClubBackgroundMotif kicker={club.kicker} /> */}
 
                 <div className="relative z-10">
                   <div className="flex items-center gap-2 mb-4">
-                    <div className="p-2 rounded-lg bg-bg-primary border border-border-subtle">
+                    {/* <div className="p-2 rounded-lg bg-bg-primary border border-border-subtle">
                       {getClubIcon(club.kicker)}
-                    </div>
+                    </div> */}
                     <span className="text-[10px] font-bold tracking-widest text-accent-secondary uppercase">
                       LAB_RECHERCHE_{String(activeIndex + 1).padStart(2, '0')}
                     </span>
@@ -188,8 +188,8 @@ export default function ResearchClubsSection({ clubs, navigate }) {
                 key={index}
                 onClick={() => goTo(index)}
                 className={`rounded-full transition-all duration-300 cursor-pointer ${index === activeIndex
-                    ? 'w-8 h-2 bg-accent-primary'
-                    : 'w-2 h-2 bg-border-subtle hover:bg-text-muted'
+                  ? 'w-8 h-2 bg-accent-primary'
+                  : 'w-2 h-2 bg-border-subtle hover:bg-text-muted'
                   }`}
               />
             ))}

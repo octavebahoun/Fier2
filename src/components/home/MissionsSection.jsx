@@ -66,7 +66,7 @@ export default function MissionsSection({ mission }) {
             return (
               <FadeInWhenVisible key={index} delay={index * 0.08} direction="up">
                 <div className="glass-panel h-full p-8 rounded-2xl relative overflow-hidden group transition-all duration-350 border border-border-subtle hover:border-transparent hover:bg-bg-secondary/40 hover:-translate-y-1.5 shadow-md flex flex-col justify-start">
-                  
+
                   {/* Internal ambient corner glow */}
                   <div className={`absolute -bottom-12 -right-12 w-28 h-28 rounded-full bg-radial ${config.glowClass} blur-[25px] transition-all duration-350 pointer-events-none`} />
 

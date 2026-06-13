@@ -8,6 +8,7 @@ import {
 import { mockDb } from '../services/mockDb';
 import { api } from '../services/api';
 import { useAuth } from '../context/AuthContext.jsx';
+import Offers from './Offers.jsx';
 
 // ─────────────────────────── Toast Notification Component ───────────────────────────
 function Toast({ message, type = 'success', onClose }) {
@@ -41,7 +42,7 @@ export default function Opportunities({ navigate }) {
   const { user, hasMinRole } = useAuth();
   const [opportunities, setOpportunities] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
-  const [activeTab, setActiveTab] = useState('research'); // 'research' or 'partners'
+  const [activeTab, setActiveTab] = useState('partners'); // 'partners' (Offers) by default, or 'research' (R&D)
   const [activeType, setActiveType] = useState('all');
   const [toast, setToast] = useState(null);
   const [appliedOpportunityIds, setAppliedOpportunityIds] = useState(new Set());
@@ -109,7 +110,7 @@ export default function Opportunities({ navigate }) {
     }
   }, [user]);
 
-  // Filter opportunities by text query & type select
+  // Filter opportunities by text query & type select (excluding partners here since they are in Offers.jsx)
   const filteredOpportunities = opportunities.filter(opt => {
     const matchesSearch =
       opt.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -117,14 +118,11 @@ export default function Opportunities({ navigate }) {
       opt.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
       opt.author.toLowerCase().includes(searchQuery.toLowerCase());
 
-    if (activeTab === 'partners') {
-      return opt.type === 'Exclusivités Partenaires' && matchesSearch;
-    } else {
-      const matchesType = activeType === 'all'
-        ? opt.type !== 'Exclusivités Partenaires'
-        : opt.type === activeType;
-      return opt.type !== 'Exclusivités Partenaires' && matchesSearch && matchesType;
-    }
+    const matchesType = activeType === 'all'
+      ? opt.type !== 'Exclusivités Partenaires'
+      : opt.type === activeType;
+
+    return opt.type !== 'Exclusivités Partenaires' && matchesSearch && matchesType;
   });
 
   // Modal keydowns for Escape closing
@@ -188,10 +186,7 @@ export default function Opportunities({ navigate }) {
       });
 
       if (res.success) {
-        const successMessage = selectedOpportunity.type === 'Exclusivités Partenaires'
-          ? "Votre demande d'activation a été transmise au partenaire social avec succès ! Vous recevrez les instructions de l'offre par email."
-          : (res.message || "Votre candidature scientifique a été transmise au laboratoire avec succès !");
-        setToast(successMessage);
+        setToast(res.message || "Votre candidature scientifique a été transmise au laboratoire avec succès !");
         setAppliedOpportunityIds(prev => new Set([...prev, selectedOpportunity.id]));
         closeApplyModal();
       } else {
@@ -218,7 +213,7 @@ export default function Opportunities({ navigate }) {
     setPublishError('');
     setPublishForm({
       title: '',
-      type: activeTab === 'partners' ? 'Exclusivités Partenaires' : 'CDD R&D',
+      type: 'CDD R&D',
       discipline: '',
       salary: '',
       description: '',
@@ -233,18 +228,13 @@ export default function Opportunities({ navigate }) {
 
   const handlePublishSubmit = async (e) => {
     e.preventDefault();
-    const isPartner = publishForm.type === 'Exclusivités Partenaires';
-    const sal = isPartner ? publishForm.salary : parseFloat(publishForm.salary);
+    const sal = parseFloat(publishForm.salary);
     if (!publishForm.title || !publishForm.discipline || !publishForm.description || !publishForm.requirements) {
       setPublishError("Tous les champs sont requis.");
       return;
     }
-    if (!isPartner && (isNaN(sal) || sal <= 0)) {
+    if (isNaN(sal) || sal <= 0) {
       setPublishError("Le salaire mensuel indiqué doit être supérieur à zéro.");
-      return;
-    }
-    if (isPartner && !publishForm.salary) {
-      setPublishError("Veuillez indiquer la valeur de l'avantage (ex. Remise -50%).");
       return;
     }
 
@@ -284,7 +274,6 @@ export default function Opportunities({ navigate }) {
 
   return (
     <div className="max-w-[88rem] mx-auto w-full py-24 px-6 md:px-12 lg:px-24 flex flex-col gap-12 relative min-h-screen">
-
       <AnimatePresence>
         {toast && <Toast message={toast} onClose={() => setToast(null)} />}
       </AnimatePresence>
@@ -293,53 +282,22 @@ export default function Opportunities({ navigate }) {
       <div className="absolute top-1/4 left-1/4 w-[450px] h-[450px] bg-fieri-blue/5 rounded-full blur-[120px] pointer-events-none" />
       <div className="absolute bottom-20 right-10 w-[300px] h-[300px] bg-indigo-500/5 rounded-full blur-[90px] pointer-events-none" />
 
-      {/* Hero Header */}
-      <div className="flex flex-col md:flex-row gap-6 items-start md:items-center justify-between relative z-10">
-        <div className="space-y-4 max-w-2xl">
-          {activeTab === 'research' ? (
-            <>
-              <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-fieri-blue/10 border border-fieri-blue/20 text-fieri-blue text-xs font-bold w-fit">
-                <Briefcase className="w-3.5 h-3.5" />
-                <span>CARRIÈRES & MATCHMAKING R&D</span>
-              </div>
-              <h1 className="text-4xl md:text-5xl font-black tracking-tight bg-gradient-to-r from-white via-text-secondary to-fieri-blue bg-clip-text text-transparent leading-tight">
-                Opportunités de Recherche
-              </h1>
-              <p className="text-text-secondary text-sm leading-relaxed">
-                Rejoignez nos laboratoires et contribuez aux ruptures scientifiques. Postulez à nos offres de Doctorat, CDD R&D, et stages avancés.
-              </p>
-            </>
-          ) : (
-            <>
-              <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs font-bold w-fit">
-                <Sparkles className="w-3.5 h-3.5 text-rose-400" />
-                <span>AVANTAGES SOCIAUX & PARTENARIATS</span>
-              </div>
-              <h1 className="text-4xl md:text-5xl font-black tracking-tight bg-gradient-to-r from-white via-text-secondary to-rose-400 bg-clip-text text-transparent leading-tight">
-                Offres & Exclusivités
-              </h1>
-              <p className="text-text-secondary text-sm leading-relaxed">
-                Profitez des avantages exclusifs, réductions de loyer, bourses d'adhésion et subventions négociés pour les membres de la Cité FIERI auprès de nos partenaires sociaux.
-              </p>
-            </>
-          )}
-        </div>
-
-        <button
-          onClick={openPublishModal}
-          className={`px-5 py-3 rounded-2xl text-xs font-black uppercase tracking-wider text-white transition-all cursor-pointer flex items-center gap-2 shadow-lg ${
-            activeTab === 'partners'
-              ? 'bg-rose-500 hover:bg-rose-500/90 shadow-rose-500/20'
-              : 'bg-fieri-blue hover:bg-fieri-blue/90 shadow-fieri-blue/20'
-          }`}
-        >
-          <Plus className="w-4 h-4" />
-          {activeTab === 'partners' ? 'Proposer une exclusivité' : 'Publier une offre'}
-        </button>
-      </div>
-
       {/* Tab Filter: Research / Social Partners Switcher */}
       <div className="inline-flex items-center gap-1 p-1 rounded-2xl bg-white/3 border border-white/5 backdrop-blur-md w-fit relative z-10">
+        <button
+          onClick={() => {
+            setActiveTab('partners');
+            setActiveType('all');
+          }}
+          className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+            activeTab === 'partners'
+              ? 'bg-rose-500/20 border border-rose-500/30 text-rose-400 shadow-sm shadow-rose-500/10'
+              : 'text-text-secondary hover:text-text-primary border border-transparent'
+          }`}
+        >
+          <Sparkles className="w-4.5 h-4.5" />
+          Offres & Exclusivités
+        </button>
         <button
           onClick={() => {
             setActiveTab('research');
@@ -354,534 +312,474 @@ export default function Opportunities({ navigate }) {
           <Briefcase className="w-4.5 h-4.5" />
           Opportunités R&D
         </button>
-        <button
-          onClick={() => {
-            setActiveTab('partners');
-            setActiveType('Exclusivités Partenaires');
-          }}
-          className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-            activeTab === 'partners'
-              ? 'bg-rose-500/20 border border-rose-500/30 text-rose-400 shadow-sm shadow-rose-500/10'
-              : 'text-text-secondary hover:text-text-primary border border-transparent'
-          }`}
-        >
-          <Sparkles className="w-4.5 h-4.5" />
-          Offres & Exclusivités
-        </button>
       </div>
 
-      {/* Social Partners Directory Section (only when in partners tab) */}
-      {activeTab === 'partners' && (
-        <div className="flex flex-col gap-4 relative z-10">
-          <h3 className="text-xs font-black uppercase tracking-wider text-text-secondary">
-            Nos partenaires sociaux à la Cité FIERI
-          </h3>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {[
-              { name: "MUA", role: "Mutuelle & Santé", desc: "Mutuelle Universitaire d'Afrique", color: "from-emerald-500/10 to-teal-500/5 hover:border-emerald-500/30", textColor: "text-emerald-400" },
-              { name: "COUS", role: "Logement & Social", desc: "Centre des Œuvres Universitaires", color: "from-amber-500/10 to-orange-500/5 hover:border-amber-500/30", textColor: "text-amber-400" },
-              { name: "Trans-Metro", role: "Mobilité Urbaine", desc: "Navettes & mobilités durables", color: "from-cyan-500/10 to-blue-500/5 hover:border-cyan-500/30", textColor: "text-cyan-400" },
-              { name: "Valkyrie R&D Labs", role: "Équipement & Logiciels", desc: "Dotation technologique", color: "from-rose-500/10 to-purple-500/5 hover:border-rose-500/30", textColor: "text-rose-400" }
-            ].map(partner => (
-              <div key={partner.name} className={`p-5 rounded-2xl bg-gradient-to-br ${partner.color} border border-white/5 flex flex-col gap-2 transition-all`}>
-                <div className="flex justify-between items-start">
-                  <span className={`text-base font-black tracking-wider ${partner.textColor}`}>{partner.name}</span>
-                  <span className="text-[8px] uppercase tracking-wider font-extrabold bg-white/5 px-2 py-0.5 rounded text-text-muted">Partenaire Officiel</span>
-                </div>
-                <div>
-                  <h4 className="text-[11px] font-bold text-text-primary">{partner.role}</h4>
-                  <p className="text-[10px] text-text-muted mt-1 leading-normal">{partner.desc}</p>
-                </div>
+      {activeTab === 'partners' ? (
+        <Offers navigate={navigate} />
+      ) : (
+        <>
+          {/* Hero Header */}
+          <div className="flex flex-col md:flex-row gap-6 items-start md:items-center justify-between relative z-10">
+            <div className="space-y-4 max-w-2xl">
+              <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-fieri-blue/10 border border-fieri-blue/20 text-fieri-blue text-xs font-bold w-fit">
+                <Briefcase className="w-3.5 h-3.5" />
+                <span>CARRIÈRES & MATCHMAKING R&D</span>
               </div>
-            ))}
+              <h1 className="text-4xl md:text-5xl font-black tracking-tight bg-gradient-to-r from-white via-text-secondary to-fieri-blue bg-clip-text text-transparent leading-tight">
+                Opportunités de Recherche
+              </h1>
+              <p className="text-text-secondary text-sm leading-relaxed">
+                Rejoignez nos laboratoires et contribuez aux ruptures scientifiques. Postulez à nos offres de Doctorat, CDD R&D, et stages avancés.
+              </p>
+            </div>
+
+            <button
+              onClick={openPublishModal}
+              className="px-5 py-3 rounded-2xl text-xs font-black uppercase tracking-wider text-white transition-all cursor-pointer flex items-center gap-2 shadow-lg bg-fieri-blue hover:bg-fieri-blue/90 shadow-fieri-blue/20"
+            >
+              <Plus className="w-4 h-4" />
+              Publier une offre
+            </button>
           </div>
-        </div>
-      )}
 
-      {/* Search & Selection Filter Header */}
-      <div className="flex flex-col md:flex-row gap-4 items-center justify-between glass-panel border border-white/5 rounded-2xl p-4 relative z-10 bg-[#0d1120]/40">
+          {/* Search & Selection Filter Header */}
+          <div className="flex flex-col md:flex-row gap-4 items-center justify-between glass-panel border border-white/5 rounded-2xl p-4 relative z-10 bg-[#0d1120]/40">
+            {/* Input */}
+            <div className="relative w-full md:max-w-md">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted" />
+              <input
+                type="text"
+                placeholder="Rechercher par discipline, mot clé, superviseur..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full bg-white/3 border border-white/5 focus:border-fieri-blue/30 rounded-xl py-2.5 pl-11 pr-4 text-xs text-text-primary focus:outline-none transition-all"
+              />
+            </div>
 
-        {/* Input */}
-        <div className="relative w-full md:max-w-md">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted" />
-          <input
-            type="text"
-            placeholder={activeTab === 'partners' ? "Rechercher une exclusivité, un partenaire..." : "Rechercher par discipline, mot clé, superviseur..."}
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full bg-white/3 border border-white/5 focus:border-fieri-blue/30 rounded-xl py-2.5 pl-11 pr-4 text-xs text-text-primary focus:outline-none transition-all"
-          />
-        </div>
-
-        {/* Buttons filters */}
-        {activeTab === 'research' ? (
-          <div className="flex gap-2 w-full md:w-auto overflow-x-auto pb-1 md:pb-0 scrollbar-none">
-            {['all', 'CDD R&D', 'Doctorat', 'Stage de Recherche'].map((type) => (
-              <button
-                key={type}
-                onClick={() => setActiveType(type)}
-                className={`px-4 py-2 rounded-xl text-xs font-bold border transition-all shrink-0 cursor-pointer ${activeType === type
-                    ? 'bg-fieri-blue border-fieri-blue text-white shadow-lg shadow-fieri-blue/10'
-                    : 'bg-white/3 border-white/5 text-text-secondary hover:text-text-primary'
-                  }`}
-              >
-                {type === 'all' ? 'Toutes les offres' : type}
-              </button>
-            ))}
-          </div>
-        ) : (
-          <div className="text-[10px] font-extrabold uppercase tracking-wider text-rose-400 bg-rose-500/10 border border-rose-500/20 px-3.5 py-2 rounded-xl flex items-center gap-1.5 shrink-0">
-            <Sparkles className="w-3.5 h-3.5" />
-            <span>Offres Partenaires Socialement Engagés</span>
-          </div>
-        )}
-
-      </div>
-
-      {/* Interactive Opportunities Grid */}
-      <div className="relative z-10">
-        {filteredOpportunities.length > 0 ? (
-          <motion.div
-            variants={gridVariants}
-            initial="hidden"
-            animate="visible"
-            className="grid grid-cols-1 md:grid-cols-2 gap-8"
-          >
-            {filteredOpportunities.map((opt) => {
-              const isPartnerOffer = opt.type === 'Exclusivités Partenaires';
-              return (
-                <motion.div
-                  key={opt.id}
-                  variants={cardVariants}
-                  whileHover={{
-                    y: -4,
-                    borderColor: isPartnerOffer ? "rgba(244, 63, 94, 0.25)" : "rgba(59, 130, 246, 0.25)",
-                    boxShadow: isPartnerOffer ? "0 0 30px rgba(244, 63, 94, 0.1)" : "0 0 30px rgba(59, 130, 246, 0.1)"
-                  }}
-                  className={`glass-panel border bg-[#0d1120]/60 backdrop-blur-xl rounded-3xl p-6 md:p-8 flex flex-col justify-between gap-6 transition-all ${
-                    isPartnerOffer ? 'border-rose-500/15' : 'border-white/5'
-                  }`}
+            {/* Buttons filters */}
+            <div className="flex gap-2 w-full md:w-auto overflow-x-auto pb-1 md:pb-0 scrollbar-none">
+              {['all', 'CDD R&D', 'Doctorat', 'Stage de Recherche'].map((type) => (
+                <button
+                  key={type}
+                  onClick={() => setActiveType(type)}
+                  className={`px-4 py-2 rounded-xl text-xs font-bold border transition-all shrink-0 cursor-pointer ${activeType === type
+                      ? 'bg-fieri-blue border-fieri-blue text-white shadow-lg shadow-fieri-blue/10'
+                      : 'bg-white/3 border-white/5 text-text-secondary hover:text-text-primary'
+                    }`}
                 >
-                  <div className="space-y-4">
-                    {/* Top info row */}
-                    <div className="flex justify-between items-center gap-4">
-                      <span className={`text-[9px] font-black uppercase tracking-wider px-2.5 py-0.5 rounded-md border ${
-                        isPartnerOffer
-                          ? 'text-rose-400 bg-rose-500/10 border-rose-500/10'
-                          : opt.type === 'CDD R&D'
+                  {type === 'all' ? 'Toutes les offres' : type}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Interactive Opportunities Grid */}
+          <div className="relative z-10">
+            {filteredOpportunities.length > 0 ? (
+              <motion.div
+                variants={gridVariants}
+                initial="hidden"
+                animate="visible"
+                className="grid grid-cols-1 md:grid-cols-2 gap-8"
+              >
+                {filteredOpportunities.map((opt) => (
+                  <motion.div
+                    key={opt.id}
+                    variants={cardVariants}
+                    whileHover={{
+                      y: -4,
+                      borderColor: "rgba(59, 130, 246, 0.25)",
+                      boxShadow: "0 0 30px rgba(59, 130, 246, 0.1)"
+                    }}
+                    className="glass-panel border bg-[#0d1120]/60 backdrop-blur-xl rounded-3xl p-6 md:p-8 flex flex-col justify-between gap-6 transition-all border-white/5"
+                  >
+                    <div className="space-y-4">
+                      {/* Top info row */}
+                      <div className="flex justify-between items-center gap-4">
+                        <span className={`text-[9px] font-black uppercase tracking-wider px-2.5 py-0.5 rounded-md border ${
+                          opt.type === 'CDD R&D'
                             ? 'text-cyan-400 bg-cyan-500/10 border-cyan-500/10'
                             : opt.type === 'Doctorat'
                               ? 'text-fieri-blue bg-fieri-blue/10 border-fieri-blue/10'
                               : 'text-amber-400 bg-amber-500/10 border-amber-500/10'
-                      }`}>
-                        {isPartnerOffer ? 'Partenaire Social' : opt.type}
-                      </span>
+                        }`}>
+                          {opt.type}
+                        </span>
 
-                      <span className={`text-[9px] font-black uppercase tracking-wider bg-white/5 px-2 py-0.5 rounded ${
-                        isPartnerOffer ? 'text-rose-300' : 'text-text-muted'
-                      }`}>
-                        {opt.discipline}
-                      </span>
-                    </div>
+                        <span className="text-[9px] font-black uppercase tracking-wider bg-white/5 px-2 py-0.5 rounded text-text-muted">
+                          {opt.discipline}
+                        </span>
+                      </div>
 
-                    {/* Title and author */}
-                    <div className="space-y-2">
-                      <h3 className="text-xl font-black tracking-tight text-text-primary">
-                        {opt.title}
-                      </h3>
-                      <p className="text-[10px] text-text-muted flex items-center gap-1">
-                        {isPartnerOffer ? 'Partenaire :' : 'Proposé par :'} <strong className={`${isPartnerOffer ? 'text-rose-400' : 'text-fieri-blue'} font-bold`}>{opt.author}</strong>
-                      </p>
-                    </div>
-
-                    {/* Body details */}
-                    <div className="space-y-3 pt-3 border-t border-white/5">
-                      <div>
-                        <h4 className="text-[10px] font-black uppercase tracking-wider text-text-secondary mb-1">
-                          {isPartnerOffer ? "Avantage exclusif" : "Mission"}
-                        </h4>
-                        <p className="text-[11px] text-text-secondary leading-relaxed line-clamp-3 font-medium">
-                          {opt.description}
+                      {/* Title and author */}
+                      <div className="space-y-2">
+                        <h3 className="text-xl font-black tracking-tight text-text-primary">
+                          {opt.title}
+                        </h3>
+                        <p className="text-[10px] text-text-muted flex items-center gap-1">
+                          Proposé par : <strong className="text-fieri-blue font-bold">{opt.author}</strong>
                         </p>
                       </div>
 
-                      <div>
-                        <h4 className="text-[10px] font-black uppercase tracking-wider text-text-secondary mb-1">
-                          {isPartnerOffer ? "Conditions d'accès" : "Pré-requis"}
-                        </h4>
-                        <p className="text-[11px] text-text-muted leading-relaxed line-clamp-2">
-                          {opt.requirements}
-                        </p>
+                      {/* Body details */}
+                      <div className="space-y-3 pt-3 border-t border-white/5">
+                        <div>
+                          <h4 className="text-[10px] font-black uppercase tracking-wider text-text-secondary mb-1">
+                            Mission
+                          </h4>
+                          <p className="text-[11px] text-text-secondary leading-relaxed line-clamp-3 font-medium">
+                            {opt.description}
+                          </p>
+                        </div>
+
+                        <div>
+                          <h4 className="text-[10px] font-black uppercase tracking-wider text-text-secondary mb-1">
+                            Pré-requis
+                          </h4>
+                          <p className="text-[11px] text-text-muted leading-relaxed line-clamp-2">
+                            {opt.requirements}
+                          </p>
+                        </div>
                       </div>
                     </div>
-                  </div>
 
-                  {/* Footer Info & Application CTA */}
-                  <div className="flex justify-between items-center pt-4 border-t border-white/5">
-                    {isPartnerOffer ? (
-                      <div className="flex items-center gap-1.5 text-xs text-rose-400 font-black">
-                        <Sparkles className="w-4 h-4 text-rose-400" />
-                        <span>{opt.salary}</span>
-                      </div>
-                    ) : (
+                    {/* Footer Info & Application CTA */}
+                    <div className="flex justify-between items-center pt-4 border-t border-white/5">
                       <div className="flex items-center gap-1.5 text-xs text-emerald-400 font-black">
                         <Coins className="w-4 h-4 text-emerald-400" />
                         <span>{opt.salary} $ / mois</span>
                       </div>
-                    )}
 
-                    {appliedOpportunityIds.has(opt.id) ? (
-                      <span className="px-4 py-2 text-[10px] font-black uppercase tracking-wider text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 rounded-xl flex items-center gap-1.5">
-                        {isPartnerOffer ? 'Offre activée' : 'Candidature transmise'}
-                        <CheckCircle2 className="w-3.5 h-3.5" />
-                      </span>
-                    ) : (
-                      <button
-                        onClick={() => openApplyModal(opt)}
-                        className={`px-4 py-2 text-[10px] font-black uppercase tracking-wider text-white transition-all rounded-xl shadow-lg flex items-center gap-1.5 cursor-pointer ${
-                          isPartnerOffer
-                            ? 'bg-rose-500 hover:bg-rose-500/95 shadow-rose-500/10'
-                            : 'bg-fieri-blue hover:bg-fieri-blue/95 shadow-fieri-blue/10'
-                        }`}
-                      >
-                        {isPartnerOffer ? "En profiter" : "Postuler"}
-                        <ArrowRight className="w-3.5 h-3.5" />
-                      </button>
-                    )}
-                  </div>
-
-                </motion.div>
-              );
-            })}
-          </motion.div>
-        ) : (
-          /* Empty state */
-          <div className="text-center py-20 glass-panel border border-white/5 rounded-3xl flex flex-col items-center justify-center gap-4 max-w-xl mx-auto">
-            <div className="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center text-text-muted">
-              <Briefcase className="w-8 h-8" />
-            </div>
-            <div>
-              <h3 className="text-lg font-black text-text-primary">Aucune offre active</h3>
-              <p className="text-xs text-text-secondary mt-1">Ajustez vos termes de recherche ou sélectionnez une autre catégorie d'offre.</p>
-            </div>
-          </div>
-        )}
-      </div>
-
-      {/* ─────────────────────────── STUDENT APPLICATION MODAL ─────────────────────────── */}
-      <AnimatePresence>
-        {selectedOpportunity && (
-          <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 relative">
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={closeApplyModal}
-              className="absolute inset-0 bg-slate-950/70 backdrop-blur-md"
-            />
-
-            <motion.div
-              ref={applyModalRef}
-              initial={{ opacity: 0, scale: 0.95, y: 15 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95, y: 15 }}
-              className="glass-panel border border-white/10 rounded-3xl p-8 max-w-lg w-full relative bg-[#090d1a]/85 backdrop-blur-2xl shadow-2xl z-10 flex flex-col gap-6"
-              role="dialog"
-              aria-modal="true"
-            >
-              <button
-                onClick={closeApplyModal}
-                className="absolute top-4 right-4 text-text-muted hover:text-text-primary p-2 rounded-xl bg-white/3 border border-white/5 cursor-pointer"
-                aria-label="Fermer"
-              >
-                <X className="w-4 h-4" />
-              </button>
-
-              <div className="space-y-1">
-                <h3 className="text-xl font-black text-text-primary tracking-tight leading-tight">
-                  {selectedOpportunity.type === 'Exclusivités Partenaires' ? "Bénéficier de l'offre partenaire" : "Rejoindre le Laboratoire"}
-                </h3>
-                <p className="text-xs text-text-secondary leading-relaxed">
-                  {selectedOpportunity.type === 'Exclusivités Partenaires'
-                    ? `Demande d'activation pour l'exclusivité : `
-                    : `Candidature scientifique pour : `}
-                  <strong className={`${selectedOpportunity.type === 'Exclusivités Partenaires' ? 'text-rose-400' : 'text-fieri-blue'} font-bold`}>
-                    {selectedOpportunity.title}
-                  </strong>.
-                </p>
+                      {appliedOpportunityIds.has(opt.id) ? (
+                        <span className="px-4 py-2 text-[10px] font-black uppercase tracking-wider text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 rounded-xl flex items-center gap-1.5">
+                          Candidature transmise
+                          <CheckCircle2 className="w-3.5 h-3.5" />
+                        </span>
+                      ) : (
+                        <button
+                          onClick={() => openApplyModal(opt)}
+                          className="px-4 py-2 text-[10px] font-black uppercase tracking-wider text-white transition-all rounded-xl shadow-lg flex items-center gap-1.5 cursor-pointer bg-fieri-blue hover:bg-fieri-blue/95 shadow-fieri-blue/10"
+                        >
+                          Postuler
+                          <ArrowRight className="w-3.5 h-3.5" />
+                        </button>
+                      )}
+                    </div>
+                  </motion.div>
+                ))}
+              </motion.div>
+            ) : (
+              /* Empty state */
+              <div className="text-center py-20 glass-panel border border-white/5 rounded-3xl flex flex-col items-center justify-center gap-4 max-w-xl mx-auto">
+                <div className="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center text-text-muted">
+                  <Briefcase className="w-8 h-8" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-black text-text-primary">Aucune offre active</h3>
+                  <p className="text-xs text-text-secondary mt-1">Ajustez vos termes de recherche ou sélectionnez une autre catégorie d'offre.</p>
+                </div>
               </div>
+            )}
+          </div>
 
-              <form onSubmit={handleApplySubmit} className="flex flex-col gap-4">
-                {applyError && (
-                  <div className="p-3 bg-rose-500/10 border border-rose-500/20 text-rose-400 rounded-xl text-[10px] font-bold flex items-center gap-1.5">
-                    <ShieldAlert className="w-4 h-4 shrink-0" />
-                    {applyError}
-                  </div>
-                )}
+          {/* STUDENT APPLICATION MODAL */}
+          <AnimatePresence>
+            {selectedOpportunity && (
+              <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 relative">
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  onClick={closeApplyModal}
+                  className="absolute inset-0 bg-slate-950/70 backdrop-blur-md"
+                />
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="flex flex-col gap-1.5">
-                    <label htmlFor="student-name" className="text-[9px] font-black uppercase tracking-wider text-text-secondary">Nom Complet</label>
-                    <div className="relative">
-                      <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted" />
-                      <input
-                        ref={applyInputRef}
-                        id="student-name"
-                        type="text"
-                        required
-                        value={applyForm.name}
-                        onChange={(e) => setApplyForm({ ...applyForm, name: e.target.value })}
-                        className="w-full bg-white/3 border border-white/5 rounded-xl py-2.5 pl-10 pr-4 text-xs font-semibold text-text-primary focus:outline-none focus:border-fieri-blue/30"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="flex flex-col gap-1.5">
-                    <label htmlFor="student-email" className="text-[9px] font-black uppercase tracking-wider text-text-secondary">Email de contact</label>
-                    <div className="relative">
-                      <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted" />
-                      <input
-                        id="student-email"
-                        type="email"
-                        required
-                        value={applyForm.email}
-                        onChange={(e) => setApplyForm({ ...applyForm, email: e.target.value })}
-                        className="w-full bg-white/3 border border-white/5 rounded-xl py-2.5 pl-10 pr-4 text-xs font-semibold text-text-primary focus:outline-none focus:border-fieri-blue/30"
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                <div className="flex flex-col gap-1.5">
-                  <label htmlFor="student-achievements" className="text-[9px] font-black uppercase tracking-wider text-text-secondary">
-                    {selectedOpportunity.type === 'Exclusivités Partenaires'
-                      ? "Motivations & Justification de la demande d'avantage"
-                      : "Réalisations Scientifiques Majeures / Motivations"}
-                  </label>
-                  <textarea
-                    id="student-achievements"
-                    rows="3"
-                    required
-                    placeholder={selectedOpportunity.type === 'Exclusivités Partenaires'
-                      ? "Veuillez indiquer vos motivations ou préciser vos besoins par rapport à cet avantage social."
-                      : "Décrivez vos projets académiques, contributions open source ou publications en lien avec cette discipline."}
-                    value={applyForm.achievements}
-                    onChange={(e) => setApplyForm({ ...applyForm, achievements: e.target.value })}
-                    className="w-full bg-white/3 border border-white/5 rounded-xl p-3 text-xs font-semibold text-text-primary focus:outline-none focus:border-fieri-blue/30 placeholder:text-text-muted"
-                  />
-                </div>
-
-                <div className="flex flex-col gap-1.5">
-                  <span className="text-[9px] font-black uppercase tracking-wider text-text-secondary">
-                    {selectedOpportunity.type === 'Exclusivités Partenaires'
-                      ? "Justificatif d'adhésion / Carte d'étudiant"
-                      : "Curriculum Vitae / Portfolio"}
-                  </span>
-                  <div className="border border-dashed border-white/10 rounded-2xl p-4 bg-white/2 text-center flex flex-col items-center justify-center gap-2 hover:border-fieri-blue/30 hover:bg-white/3 transition-colors cursor-pointer relative">
-                    <FileText className={`w-6 h-6 ${selectedOpportunity.type === 'Exclusivités Partenaires' ? 'text-rose-500' : 'text-fieri-blue'}`} />
-                    <div>
-                      <p className="text-[10px] text-text-primary font-bold">
-                        {selectedOpportunity.type === 'Exclusivités Partenaires'
-                          ? "Déposer un justificatif d'adhésion (PDF, JPG...)"
-                          : "Simuler le dépôt d'un fichier PDF"}
-                      </p>
-                      <p className="text-[8px] text-text-muted mt-0.5">Taille max: 10 Mo (Simulation de validation)</p>
-                    </div>
-                    <input
-                      type="file"
-                      accept=".pdf,.zip,.jpg,.png"
-                      className="absolute inset-0 opacity-0 cursor-pointer"
-                      onChange={(e) => setApplyForm({ ...applyForm, cvFile: e.target.files[0]?.name || '' })}
-                    />
-                  </div>
-                  {applyForm.cvFile && (
-                    <span className="text-[10px] text-emerald-400 font-bold mt-1 flex items-center gap-1.5 bg-emerald-500/5 px-3 py-1.5 rounded-xl border border-emerald-500/10 w-fit">
-                      <CheckCircle2 className="w-3.5 h-3.5" />
-                      Fichier lié : {applyForm.cvFile}
-                    </span>
-                  )}
-                </div>
-
-                <div className="flex gap-4 pt-4 border-t border-white/5">
+                <motion.div
+                  ref={applyModalRef}
+                  initial={{ opacity: 0, scale: 0.95, y: 15 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.95, y: 15 }}
+                  className="glass-panel border border-white/10 rounded-3xl p-8 max-w-lg w-full relative bg-[#090d1a]/85 backdrop-blur-2xl shadow-2xl z-10 flex flex-col gap-6"
+                  role="dialog"
+                  aria-modal="true"
+                >
                   <button
-                    type="button"
                     onClick={closeApplyModal}
-                    className="flex-1 py-3 rounded-xl border border-white/5 bg-white/3 hover:bg-white/5 text-xs font-black uppercase text-text-secondary tracking-wider cursor-pointer"
+                    className="absolute top-4 right-4 text-text-muted hover:text-text-primary p-2 rounded-xl bg-white/3 border border-white/5 cursor-pointer"
+                    aria-label="Fermer"
                   >
-                    Annuler
+                    <X className="w-4 h-4" />
                   </button>
-                  <button
-                    type="submit"
-                    className={`flex-1 py-3 rounded-xl text-white text-xs font-black uppercase tracking-wider shadow-lg cursor-pointer ${
-                      selectedOpportunity.type === 'Exclusivités Partenaires'
-                        ? 'bg-rose-500 hover:bg-rose-500/90 shadow-rose-500/20'
-                        : 'bg-fieri-blue hover:bg-fieri-blue/90 shadow-fieri-blue/20'
-                    }`}
-                  >
-                    {selectedOpportunity.type === 'Exclusivités Partenaires' ? "Activer l'offre" : "Transmettre"}
-                  </button>
-                </div>
-              </form>
-            </motion.div>
-          </div>
-        )}
-      </AnimatePresence>
 
-      {/* ─────────────────────────── RESEARCHER PUBLISH OFFER MODAL ─────────────────────────── */}
-      <AnimatePresence>
-        {isPublishModalOpen && (
-          <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 relative">
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={closePublishModal}
-              className="absolute inset-0 bg-slate-950/70 backdrop-blur-md"
-            />
-
-            <motion.div
-              ref={publishModalRef}
-              initial={{ opacity: 0, scale: 0.95, y: 15 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95, y: 15 }}
-              className="glass-panel border border-white/10 rounded-3xl p-8 max-w-xl w-full relative bg-[#090d1a]/85 backdrop-blur-2xl shadow-2xl z-10 flex flex-col gap-6"
-              role="dialog"
-              aria-modal="true"
-            >
-              <button
-                onClick={closePublishModal}
-                className="absolute top-4 right-4 text-text-muted hover:text-text-primary p-2 rounded-xl bg-white/3 border border-white/5 cursor-pointer"
-                aria-label="Fermer"
-              >
-                <X className="w-4 h-4" />
-              </button>
-
-              <div className="space-y-1">
-                <h3 className="text-xl font-black text-text-primary tracking-tight leading-tight">
-                  Publier une opportunité de recherche
-                </h3>
-                <p className="text-xs text-text-secondary leading-relaxed">
-                  Renseignez les critères et les détails scientifiques pour attirer des candidats talentueux.
-                </p>
-              </div>
-
-              <form onSubmit={handlePublishSubmit} className="flex flex-col gap-4">
-                {publishError && (
-                  <div className="p-3 bg-rose-500/10 border border-rose-500/20 text-rose-400 rounded-xl text-[10px] font-bold flex items-center gap-1.5">
-                    <ShieldAlert className="w-4 h-4 shrink-0" />
-                    {publishError}
-                  </div>
-                )}
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="flex flex-col gap-1.5">
-                    <label htmlFor="publish-title" className="text-[9px] font-black uppercase tracking-wider text-text-secondary">Intitulé du Poste</label>
-                    <input
-                      ref={publishInputRef}
-                      id="publish-title"
-                      type="text"
-                      required
-                      placeholder="ex. Doctorat en Edge Computing"
-                      value={publishForm.title}
-                      onChange={(e) => setPublishForm({ ...publishForm, title: e.target.value })}
-                      className="w-full bg-white/3 border border-white/5 rounded-xl py-2.5 px-4 text-xs font-semibold text-text-primary focus:outline-none focus:border-fieri-blue/30"
-                    />
+                  <div className="space-y-1">
+                    <h3 className="text-xl font-black text-text-primary tracking-tight leading-tight">
+                      Rejoindre le Laboratoire
+                    </h3>
+                    <p className="text-xs text-text-secondary leading-relaxed">
+                      Candidature scientifique pour : <strong className="text-fieri-blue font-bold">{selectedOpportunity.title}</strong>.
+                    </p>
                   </div>
 
-                  <div className="flex flex-col gap-1.5">
-                    <label htmlFor="publish-type" className="text-[9px] font-black uppercase tracking-wider text-text-secondary">Type de contrat</label>
-                    <select
-                      id="publish-type"
-                      value={publishForm.type}
-                      onChange={(e) => setPublishForm({ ...publishForm, type: e.target.value })}
-                      className="w-full bg-[#0d1120] border border-white/5 rounded-xl py-2.5 px-4 text-xs font-semibold text-text-primary focus:outline-none focus:border-fieri-blue/30"
-                    >
-                      <option value="CDD R&D">CDD R&D</option>
-                      <option value="Doctorat">Doctorat</option>
-                      <option value="Stage de Recherche">Stage de Recherche</option>
-                      <option value="Exclusivités Partenaires">Exclusivité Partenaire (Sociaux)</option>
-                    </select>
-                  </div>
-                </div>
+                  <form onSubmit={handleApplySubmit} className="flex flex-col gap-4">
+                    {applyError && (
+                      <div className="p-3 bg-rose-500/10 border border-rose-500/20 text-rose-400 rounded-xl text-[10px] font-bold flex items-center gap-1.5">
+                        <ShieldAlert className="w-4 h-4 shrink-0" />
+                        {applyError}
+                      </div>
+                    )}
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="flex flex-col gap-1.5">
-                    <label htmlFor="publish-discipline" className="text-[9px] font-black uppercase tracking-wider text-text-secondary">Discipline</label>
-                    <input
-                      id="publish-discipline"
-                      type="text"
-                      required
-                      placeholder="ex. Vision / Robotique"
-                      value={publishForm.discipline}
-                      onChange={(e) => setPublishForm({ ...publishForm, discipline: e.target.value })}
-                      className="w-full bg-white/3 border border-white/5 rounded-xl py-2.5 px-4 text-xs font-semibold text-text-primary focus:outline-none focus:border-fieri-blue/30"
-                    />
-                  </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="flex flex-col gap-1.5">
+                        <label htmlFor="student-name" className="text-[9px] font-black uppercase tracking-wider text-text-secondary">Nom Complet</label>
+                        <div className="relative">
+                          <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted" />
+                          <input
+                            ref={applyInputRef}
+                            id="student-name"
+                            type="text"
+                            required
+                            value={applyForm.name}
+                            onChange={(e) => setApplyForm({ ...applyForm, name: e.target.value })}
+                            className="w-full bg-white/3 border border-white/5 rounded-xl py-2.5 pl-10 pr-4 text-xs font-semibold text-text-primary focus:outline-none focus:border-fieri-blue/30"
+                          />
+                        </div>
+                      </div>
 
-                  <div className="flex flex-col gap-1.5">
-                    <label htmlFor="publish-salary" className="text-[9px] font-black uppercase tracking-wider text-text-secondary">Salaire indicatif ($ / mois)</label>
-                    <div className="relative">
-                      <span className="absolute left-3 top-1/2 -translate-y-1/2 font-black text-xs text-text-muted">$</span>
-                      <input
-                        id="publish-salary"
-                        type="number"
-                        min="1"
+                      <div className="flex flex-col gap-1.5">
+                        <label htmlFor="student-email" className="text-[9px] font-black uppercase tracking-wider text-text-secondary">Email de contact</label>
+                        <div className="relative">
+                          <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted" />
+                          <input
+                            id="student-email"
+                            type="email"
+                            required
+                            value={applyForm.email}
+                            onChange={(e) => setApplyForm({ ...applyForm, email: e.target.value })}
+                            className="w-full bg-white/3 border border-white/5 rounded-xl py-2.5 pl-10 pr-4 text-xs font-semibold text-text-primary focus:outline-none focus:border-fieri-blue/30"
+                          />
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="flex flex-col gap-1.5">
+                      <label htmlFor="student-achievements" className="text-[9px] font-black uppercase tracking-wider text-text-secondary">
+                        Réalisations Scientifiques Majeures / Motivations
+                      </label>
+                      <textarea
+                        id="student-achievements"
+                        rows="3"
                         required
-                        placeholder="2400"
-                        value={publishForm.salary}
-                        onChange={(e) => setPublishForm({ ...publishForm, salary: e.target.value })}
-                        className="w-full bg-white/3 border border-white/5 rounded-xl py-2.5 pl-8 pr-4 text-xs font-semibold text-text-primary focus:outline-none focus:border-fieri-blue/30"
+                        placeholder="Décrivez vos projets académiques, contributions open source ou publications en lien avec cette discipline."
+                        value={applyForm.achievements}
+                        onChange={(e) => setApplyForm({ ...applyForm, achievements: e.target.value })}
+                        className="w-full bg-white/3 border border-white/5 rounded-xl p-3 text-xs font-semibold text-text-primary focus:outline-none focus:border-fieri-blue/30 placeholder:text-text-muted"
                       />
                     </div>
-                  </div>
-                </div>
 
-                <div className="flex flex-col gap-1.5">
-                  <label htmlFor="publish-desc" className="text-[9px] font-black uppercase tracking-wider text-text-secondary">Description détaillée des missions</label>
-                  <textarea
-                    id="publish-desc"
-                    rows="3"
-                    required
-                    placeholder="Décrivez précisément les problématiques scientifiques que le candidat devra aborder."
-                    value={publishForm.description}
-                    onChange={(e) => setPublishForm({ ...publishForm, description: e.target.value })}
-                    className="w-full bg-white/3 border border-white/5 rounded-xl p-3 text-xs font-semibold text-text-primary focus:outline-none focus:border-fieri-blue/30"
-                  />
-                </div>
+                    <div className="flex flex-col gap-1.5">
+                      <span className="text-[9px] font-black uppercase tracking-wider text-text-secondary">
+                        Curriculum Vitae / Portfolio
+                      </span>
+                      <div className="border border-dashed border-white/10 rounded-2xl p-4 bg-white/2 text-center flex flex-col items-center justify-center gap-2 hover:border-fieri-blue/30 hover:bg-white/3 transition-colors cursor-pointer relative">
+                        <FileText className="w-6 h-6 text-fieri-blue" />
+                        <div>
+                          <p className="text-[10px] text-text-primary font-bold">
+                            Simuler le dépôt d'un fichier PDF
+                          </p>
+                          <p className="text-[8px] text-text-muted mt-0.5">Taille max: 10 Mo (Simulation de validation)</p>
+                        </div>
+                        <input
+                          type="file"
+                          accept=".pdf,.zip,.jpg,.png"
+                          className="absolute inset-0 opacity-0 cursor-pointer"
+                          onChange={(e) => setApplyForm({ ...applyForm, cvFile: e.target.files[0]?.name || '' })}
+                        />
+                      </div>
+                      {applyForm.cvFile && (
+                        <span className="text-[10px] text-emerald-400 font-bold mt-1 flex items-center gap-1.5 bg-emerald-500/5 px-3 py-1.5 rounded-xl border border-emerald-500/10 w-fit">
+                          <CheckCircle2 className="w-3.5 h-3.5" />
+                          Fichier lié : {applyForm.cvFile}
+                        </span>
+                      )}
+                    </div>
 
-                <div className="flex flex-col gap-1.5">
-                  <label htmlFor="publish-req" className="text-[9px] font-black uppercase tracking-wider text-text-secondary">Pré-requis techniques / diplômes requis</label>
-                  <textarea
-                    id="publish-req"
-                    rows="2"
-                    required
-                    placeholder="Compétences recherchées, langages, frameworks et expérience demandée."
-                    value={publishForm.requirements}
-                    onChange={(e) => setPublishForm({ ...publishForm, requirements: e.target.value })}
-                    className="w-full bg-white/3 border border-white/5 rounded-xl p-3 text-xs font-semibold text-text-primary focus:outline-none focus:border-fieri-blue/30"
-                  />
-                </div>
+                    <div className="flex gap-4 pt-4 border-t border-white/5">
+                      <button
+                        type="button"
+                        onClick={closeApplyModal}
+                        className="flex-1 py-3 rounded-xl border border-white/5 bg-white/3 hover:bg-white/5 text-xs font-black uppercase text-text-secondary tracking-wider cursor-pointer"
+                      >
+                        Annuler
+                      </button>
+                      <button
+                        type="submit"
+                        className="flex-1 py-3 rounded-xl text-white text-xs font-black uppercase tracking-wider shadow-lg bg-fieri-blue hover:bg-fieri-blue/90 shadow-fieri-blue/20 cursor-pointer"
+                      >
+                        Transmettre
+                      </button>
+                    </div>
+                  </form>
+                </motion.div>
+              </div>
+            )}
+          </AnimatePresence>
 
-                <div className="flex gap-4 pt-4 border-t border-white/5">
+          {/* RESEARCHER PUBLISH OFFER MODAL */}
+          <AnimatePresence>
+            {isPublishModalOpen && (
+              <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 relative">
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  onClick={closePublishModal}
+                  className="absolute inset-0 bg-slate-950/70 backdrop-blur-md"
+                />
+
+                <motion.div
+                  ref={publishModalRef}
+                  initial={{ opacity: 0, scale: 0.95, y: 15 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.95, y: 15 }}
+                  className="glass-panel border border-white/10 rounded-3xl p-8 max-w-xl w-full relative bg-[#090d1a]/85 backdrop-blur-2xl shadow-2xl z-10 flex flex-col gap-6"
+                  role="dialog"
+                  aria-modal="true"
+                >
                   <button
-                    type="button"
                     onClick={closePublishModal}
-                    className="flex-1 py-3 rounded-xl border border-white/5 bg-white/3 hover:bg-white/5 text-xs font-black uppercase text-text-secondary tracking-wider cursor-pointer"
+                    className="absolute top-4 right-4 text-text-muted hover:text-text-primary p-2 rounded-xl bg-white/3 border border-white/5 cursor-pointer"
+                    aria-label="Fermer"
                   >
-                    Annuler
+                    <X className="w-4 h-4" />
                   </button>
-                  <button
-                    type="submit"
-                    className="flex-1 py-3 rounded-xl bg-fieri-blue hover:bg-fieri-blue/90 text-white text-xs font-black uppercase tracking-wider shadow-lg shadow-fieri-blue/20 cursor-pointer"
-                  >
-                    Créer l'opportunité
-                  </button>
-                </div>
-              </form>
-            </motion.div>
-          </div>
-        )}
-      </AnimatePresence>
+
+                  <div className="space-y-1">
+                    <h3 className="text-xl font-black text-text-primary tracking-tight leading-tight">
+                      Publier une opportunité de recherche
+                    </h3>
+                    <p className="text-xs text-text-secondary leading-relaxed">
+                      Renseignez les critères et les détails scientifiques pour attirer des candidats talentueux.
+                    </p>
+                  </div>
+
+                  <form onSubmit={handlePublishSubmit} className="flex flex-col gap-4">
+                    {publishError && (
+                      <div className="p-3 bg-rose-500/10 border border-rose-500/20 text-rose-400 rounded-xl text-[10px] font-bold flex items-center gap-1.5">
+                        <ShieldAlert className="w-4 h-4 shrink-0" />
+                        {publishError}
+                      </div>
+                    )}
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="flex flex-col gap-1.5">
+                        <label htmlFor="publish-title" className="text-[9px] font-black uppercase tracking-wider text-text-secondary">Intitulé du Poste</label>
+                        <input
+                          ref={publishInputRef}
+                          id="publish-title"
+                          type="text"
+                          required
+                          placeholder="ex. Doctorat en Edge Computing"
+                          value={publishForm.title}
+                          onChange={(e) => setPublishForm({ ...publishForm, title: e.target.value })}
+                          className="w-full bg-white/3 border border-white/5 rounded-xl py-2.5 px-4 text-xs font-semibold text-text-primary focus:outline-none focus:border-fieri-blue/30"
+                        />
+                      </div>
+
+                      <div className="flex flex-col gap-1.5">
+                        <label htmlFor="publish-type" className="text-[9px] font-black uppercase tracking-wider text-text-secondary">Type de contrat</label>
+                        <select
+                          id="publish-type"
+                          value={publishForm.type}
+                          onChange={(e) => setPublishForm({ ...publishForm, type: e.target.value })}
+                          className="w-full bg-[#0d1120] border border-white/5 rounded-xl py-2.5 px-4 text-xs font-semibold text-text-primary focus:outline-none focus:border-fieri-blue/30"
+                        >
+                          <option value="CDD R&D">CDD R&D</option>
+                          <option value="Doctorat">Doctorat</option>
+                          <option value="Stage de Recherche">Stage de Recherche</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="flex flex-col gap-1.5">
+                        <label htmlFor="publish-discipline" className="text-[9px] font-black uppercase tracking-wider text-text-secondary">Discipline</label>
+                        <input
+                          id="publish-discipline"
+                          type="text"
+                          required
+                          placeholder="ex. Vision / Robotique"
+                          value={publishForm.discipline}
+                          onChange={(e) => setPublishForm({ ...publishForm, discipline: e.target.value })}
+                          className="w-full bg-white/3 border border-white/5 rounded-xl py-2.5 px-4 text-xs font-semibold text-text-primary focus:outline-none focus:border-fieri-blue/30"
+                        />
+                      </div>
+
+                      <div className="flex flex-col gap-1.5">
+                        <label htmlFor="publish-salary" className="text-[9px] font-black uppercase tracking-wider text-text-secondary">Salaire indicatif ($ / mois)</label>
+                        <div className="relative">
+                          <span className="absolute left-3 top-1/2 -translate-y-1/2 font-black text-xs text-text-muted">$</span>
+                          <input
+                            id="publish-salary"
+                            type="number"
+                            min="1"
+                            required
+                            placeholder="2400"
+                            value={publishForm.salary}
+                            onChange={(e) => setPublishForm({ ...publishForm, salary: e.target.value })}
+                            className="w-full bg-white/3 border border-white/5 rounded-xl py-2.5 pl-8 pr-4 text-xs font-semibold text-text-primary focus:outline-none focus:border-fieri-blue/30"
+                          />
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="flex flex-col gap-1.5">
+                      <label htmlFor="publish-desc" className="text-[9px] font-black uppercase tracking-wider text-text-secondary">Description détaillée des missions</label>
+                      <textarea
+                        id="publish-desc"
+                        rows="3"
+                        required
+                        placeholder="Décrivez précisément les problématiques scientifiques que le candidat devra aborder."
+                        value={publishForm.description}
+                        onChange={(e) => setPublishForm({ ...publishForm, description: e.target.value })}
+                        className="w-full bg-white/3 border border-white/5 rounded-xl p-3 text-xs font-semibold text-text-primary focus:outline-none focus:border-fieri-blue/30"
+                      />
+                    </div>
+
+                    <div className="flex flex-col gap-1.5">
+                      <label htmlFor="publish-req" className="text-[9px] font-black uppercase tracking-wider text-text-secondary">Pré-requis techniques / diplômes requis</label>
+                      <textarea
+                        id="publish-req"
+                        rows="2"
+                        required
+                        placeholder="Compétences recherchées, langages, frameworks et expérience demandée."
+                        value={publishForm.requirements}
+                        onChange={(e) => setPublishForm({ ...publishForm, requirements: e.target.value })}
+                        className="w-full bg-white/3 border border-white/5 rounded-xl p-3 text-xs font-semibold text-text-primary focus:outline-none focus:border-fieri-blue/30"
+                      />
+                    </div>
+
+                    <div className="flex gap-4 pt-4 border-t border-white/5">
+                      <button
+                        type="button"
+                        onClick={closePublishModal}
+                        className="flex-1 py-3 rounded-xl border border-white/5 bg-white/3 hover:bg-white/5 text-xs font-black uppercase text-text-secondary tracking-wider cursor-pointer"
+                      >
+                        Annuler
+                      </button>
+                      <button
+                        type="submit"
+                        className="flex-1 py-3 rounded-xl bg-fieri-blue hover:bg-fieri-blue/90 text-white text-xs font-black uppercase tracking-wider shadow-lg shadow-fieri-blue/20 cursor-pointer"
+                      >
+                        Créer l'opportunité
+                      </button>
+                    </div>
+                  </form>
+                </motion.div>
+              </div>
+            )}
+          </AnimatePresence>
+        </>
+      )}
 
     </div>
   );
