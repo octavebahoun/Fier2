@@ -23,7 +23,12 @@ const KEYS = {
   NEWS: 'fieri_db_news',
   NOTIFICATIONS: 'fieri_db_notifications',
   OPPORTUNITIES: 'fieri_db_opportunities',
-  CONTACT_MESSAGES: 'fieri_contact_messages'
+  CONTACT_MESSAGES: 'fieri_contact_messages',
+  // Nouveaux modules UC
+  TASKS: 'fieri_db_tasks',                       // Tâches projet (Chef de projet)
+  BADGES: 'fieri_db_badges',                     // Badges utilisateurs (Admin/Responsable)
+  JOIN_REQUESTS: 'fieri_db_join_requests',       // Demandes d'adhésion club (Responsable valide)
+  PROJECT_APPLICATIONS: 'fieri_db_proj_applications', // Candidatures aux opportunités (Membre)
 };
 
 // --- DONNÉES STATIQUES PAR DÉFAUT (FALLBACK DE SEEDING) ---
@@ -449,7 +454,114 @@ const DEFAULT_OPPORTUNITIES = [
     status: "Actif",
     dateAdded: "2026-05-20",
     author: "Dr. Amadou Kane"
+  },
+  {
+    id: 'opt-partner-1',
+    title: "Complémentaire Santé R&D & Mutuelle Étudiante",
+    type: "Exclusivités Partenaires",
+    discipline: "Santé & Bien-être",
+    salary: "Cotisation 5$ / mois",
+    description: "Profitez d'une couverture santé complète spécialement négociée pour les jeunes chercheurs et doctorants de la Cité FIERI. Inclut le remboursement à 100% des frais médicaux courants, optique et dentaire, ainsi qu'une cellule d'assistance psychologique en ligne.",
+    requirements: "Être inscrit en tant que chercheur, étudiant ou membre actif de la Cité FIERI.",
+    status: "Actif",
+    dateAdded: "2026-06-01",
+    author: "MUA (Mutuelle Universitaire d'Afrique)"
+  },
+  {
+    id: 'opt-partner-2',
+    title: "Priorité Logement en Résidence Universitaire Connectée",
+    type: "Exclusivités Partenaires",
+    discipline: "Logement & Co-working",
+    salary: "Jusqu'à -40% sur le loyer",
+    description: "Accédez prioritairement à des logements meublés de standing (studios équipés avec fibre optique) à proximité immédiate des laboratoires R&D. Bénéficiez de tarifs préférentiels négociés avec les résidences universitaires.",
+    requirements: "Justifier d'une affiliation en cours ou d'un contrat de recherche au sein du FIERI.",
+    status: "Actif",
+    dateAdded: "2026-06-02",
+    author: "COUS (Centre des Œuvres Universitaires & Sociales)"
+  },
+  {
+    id: 'opt-partner-3',
+    title: "Abonnement Annuel Transport Subventionné",
+    type: "Exclusivités Partenaires",
+    discipline: "Mobilité Durable",
+    salary: "Réduction de -60%",
+    description: "Facilitez vos déplacements quotidiens entre les pôles d'excellence de la Cité FIERI et vos universités de rattachement. Cette subvention exclusive prend en charge plus de la moitié de votre abonnement annuel aux bus et navettes électriques.",
+    requirements: "Présenter une carte de membre active de la Cité ou de l'Académie FIERI.",
+    status: "Actif",
+    dateAdded: "2026-06-03",
+    author: "Trans-Metro & Mobilités Urbaines"
+  },
+  {
+    id: 'opt-partner-4',
+    title: "Pack Tech Valkyrie : Matériel & Licences Logicielles",
+    type: "Exclusivités Partenaires",
+    discipline: "Équipement & Logiciels",
+    salary: "Économie moyenne de 800$",
+    description: "Bénéficiez d'une dotation technologique exceptionnelle : remises exclusives sur les PC portables hautes performances optimisés pour l'IA (GPU dédiés), et licences professionnelles gratuites pour la suite logicielle R&D (MATLAB, SolidWorks, Altium Designer).",
+    requirements: "Ouvert à tous les membres de la Cité et de l'Académie FIERI porteurs de projets.",
+    status: "Actif",
+    dateAdded: "2026-06-04",
+    author: "Valkyrie R&D Labs"
   }
+];
+
+// ─────────────────────────────────────────────────────────────────────────────
+// DONNÉES PAR DÉFAUT — NOUVEAUX MODULES
+// ─────────────────────────────────────────────────────────────────────────────
+
+const DEFAULT_TASKS = [
+  {
+    id: 'task-1',
+    projectId: 'proj-101',
+    title: 'Calibrer les capteurs LiDAR en environnement texturé',
+    description: 'Effectuer la calibration extrinsèque du LiDAR 2D avec la caméra stéréoscopique.',
+    priority: 'HIGH',    // LOW | MEDIUM | HIGH | CRITICAL
+    status: 'IN_PROGRESS', // TODO | IN_PROGRESS | REVIEW | DONE
+    assignedTo: 'Marie-Claire O.',
+    createdBy: 'Marie-Claire Ousmane',
+    createdAt: '2026-04-10',
+    dueDate: '2026-06-15'
+  },
+  {
+    id: 'task-2',
+    projectId: 'proj-101',
+    title: 'Intégrer le nœud ROS2 de navigation',
+    description: 'Créer le package ROS2 de planification de trajectoire et l\'interfacer avec le SLAM.',
+    priority: 'CRITICAL',
+    status: 'TODO',
+    assignedTo: 'Tisto Dev',
+    createdBy: 'Marie-Claire Ousmane',
+    createdAt: '2026-04-12',
+    dueDate: '2026-06-30'
+  },
+  {
+    id: 'task-3',
+    projectId: 'proj-102',
+    title: 'Déployer les capteurs LoRaWAN sur la parcelle pilote',
+    description: 'Installation physique des 12 nœuds de capteurs sur la ferme test.',
+    priority: 'HIGH',
+    status: 'DONE',
+    assignedTo: 'Amina Diallo',
+    createdBy: 'Dr. Alexis V.',
+    createdAt: '2026-03-01',
+    dueDate: '2026-03-31'
+  }
+];
+
+const DEFAULT_BADGES = [
+  // Badges système — attribués par Admin ou Responsable de club
+  { userId: null, badgeType: null } // placeholder, ne pas supprimer
+];
+
+const DEFAULT_JOIN_REQUESTS = [
+  // Demandes d'adhésion en attente de validation par le Responsable du club
+  // Exemple de structure :
+  // { id, clubId, userId, userName, userEmail, status: 'PENDING'|'APPROVED'|'REJECTED', requestedAt, processedAt }
+];
+
+const DEFAULT_PROJECT_APPLICATIONS = [
+  // Candidatures aux opportunités
+  // { id, opportunityId, userId, userName, userEmail, coverLetter, cvUrl, status: 'PENDING'|'REVIEWED'|'ACCEPTED'|'REJECTED', submittedAt }
 ];
 
 // --- LOGIQUE D'INITIALISATION ET DE SYNC LOCAL STORAGE ---
@@ -530,7 +642,21 @@ export const initializeMockDb = () => {
   if (!readLocal(KEYS.RESEARCHERS)) writeLocal(KEYS.RESEARCHERS, DEFAULT_RESEARCHERS);
   if (!readLocal(KEYS.NEWS)) writeLocal(KEYS.NEWS, DEFAULT_NEWS);
   if (!readLocal(KEYS.NOTIFICATIONS)) writeLocal(KEYS.NOTIFICATIONS, DEFAULT_NOTIFICATIONS);
-  if (!readLocal(KEYS.OPPORTUNITIES)) writeLocal(KEYS.OPPORTUNITIES, DEFAULT_OPPORTUNITIES);
+  const existingOpportunities = readLocal(KEYS.OPPORTUNITIES);
+  if (!existingOpportunities) {
+    writeLocal(KEYS.OPPORTUNITIES, DEFAULT_OPPORTUNITIES);
+  } else {
+    const hasPartnerOffers = existingOpportunities.some(opt => opt.type === "Exclusivités Partenaires");
+    if (!hasPartnerOffers) {
+      const partnerOffers = DEFAULT_OPPORTUNITIES.filter(opt => opt.type === "Exclusivités Partenaires");
+      writeLocal(KEYS.OPPORTUNITIES, [...existingOpportunities, ...partnerOffers]);
+    }
+  }
+  // Nouveaux modules
+  if (!readLocal(KEYS.TASKS)) writeLocal(KEYS.TASKS, DEFAULT_TASKS);
+  if (!readLocal(KEYS.BADGES)) writeLocal(KEYS.BADGES, DEFAULT_BADGES);
+  if (!readLocal(KEYS.JOIN_REQUESTS)) writeLocal(KEYS.JOIN_REQUESTS, DEFAULT_JOIN_REQUESTS);
+  if (!readLocal(KEYS.PROJECT_APPLICATIONS)) writeLocal(KEYS.PROJECT_APPLICATIONS, DEFAULT_PROJECT_APPLICATIONS);
 };
 
 // Assurer l'auto-initialisation au chargement du module
@@ -718,7 +844,7 @@ export const mockDb = {
         if (w.waitlistUsers.length > 0) {
           promotedUser = w.waitlistUsers.shift();
           w.registeredUsers.push(promotedUser);
-          
+
           // Ajouter une notification système pour le membre promu
           const notifs = readLocal(KEYS.NOTIFICATIONS) || [];
           const newNotif = {
@@ -881,7 +1007,7 @@ export const mockDb = {
         const researcher = { ...list[idx] };
         if (!researcher.followers) researcher.followers = [];
         if (researcher.followersCount === undefined) researcher.followersCount = researcher.stars || 0;
-        
+
         const userIdx = researcher.followers.indexOf(userId);
         if (userIdx !== -1) {
           // Unfollow
@@ -892,7 +1018,7 @@ export const mockDb = {
           researcher.followers.push(userId);
           researcher.followersCount += 1;
         }
-        
+
         list[idx] = researcher;
         writeLocal(KEYS.RESEARCHERS, list);
         return researcher;
@@ -1009,6 +1135,7 @@ export const mockDb = {
   // OPPORTUNITÉS DE RECHERCHE SCIENTIFIQUE
   opportunities: {
     getAll: () => readLocal(KEYS.OPPORTUNITIES) || DEFAULT_OPPORTUNITIES,
+    getById: (id) => (readLocal(KEYS.OPPORTUNITIES) || DEFAULT_OPPORTUNITIES).find(o => o.id === id),
     add: (optData) => {
       const list = readLocal(KEYS.OPPORTUNITIES) || DEFAULT_OPPORTUNITIES;
       const newOpt = {
@@ -1020,6 +1147,199 @@ export const mockDb = {
       list.unshift(newOpt);
       writeLocal(KEYS.OPPORTUNITIES, list);
       return newOpt;
+    },
+    update: (updatedOpt) => {
+      const list = readLocal(KEYS.OPPORTUNITIES) || DEFAULT_OPPORTUNITIES;
+      const idx = list.findIndex(o => o.id === updatedOpt.id);
+      if (idx !== -1) { list[idx] = updatedOpt; writeLocal(KEYS.OPPORTUNITIES, list); return list[idx]; }
+      return null;
+    },
+    delete: (id) => {
+      const filtered = (readLocal(KEYS.OPPORTUNITIES) || DEFAULT_OPPORTUNITIES).filter(o => o.id !== id);
+      writeLocal(KEYS.OPPORTUNITIES, filtered);
+      return true;
+    }
+  },
+
+  // ─── TÂCHES PROJET (Chef de projet) ───────────────────────────────────────
+  tasks: {
+    getAll: () => readLocal(KEYS.TASKS) || DEFAULT_TASKS,
+    getByProject: (projectId) =>
+      (readLocal(KEYS.TASKS) || DEFAULT_TASKS).filter(t => t.projectId === projectId),
+    getById: (id) => (readLocal(KEYS.TASKS) || DEFAULT_TASKS).find(t => t.id === id),
+    create: (taskData) => {
+      const list = readLocal(KEYS.TASKS) || DEFAULT_TASKS;
+      const task = {
+        id: `task-${Date.now()}`,
+        status: 'TODO',
+        priority: 'MEDIUM',
+        createdAt: new Date().toISOString().split('T')[0],
+        ...taskData
+      };
+      list.push(task);
+      writeLocal(KEYS.TASKS, list);
+      return task;
+    },
+    update: (updatedTask) => {
+      const list = readLocal(KEYS.TASKS) || DEFAULT_TASKS;
+      const idx = list.findIndex(t => t.id === updatedTask.id);
+      if (idx !== -1) { list[idx] = { ...list[idx], ...updatedTask }; writeLocal(KEYS.TASKS, list); return list[idx]; }
+      return null;
+    },
+    delete: (id) => {
+      const filtered = (readLocal(KEYS.TASKS) || DEFAULT_TASKS).filter(t => t.id !== id);
+      writeLocal(KEYS.TASKS, filtered);
+      return true;
+    },
+    assign: (taskId, assignedTo) => {
+      const list = readLocal(KEYS.TASKS) || DEFAULT_TASKS;
+      const idx = list.findIndex(t => t.id === taskId);
+      if (idx !== -1) { list[idx].assignedTo = assignedTo; writeLocal(KEYS.TASKS, list); return list[idx]; }
+      return null;
+    },
+    setPriority: (taskId, priority) => {
+      const list = readLocal(KEYS.TASKS) || DEFAULT_TASKS;
+      const idx = list.findIndex(t => t.id === taskId);
+      if (idx !== -1) { list[idx].priority = priority; writeLocal(KEYS.TASKS, list); return list[idx]; }
+      return null;
+    }
+  },
+
+  // ─── BADGES UTILISATEUR (Admin / Responsable de club) ─────────────────────
+  badges: {
+    TYPES: ['CHERCHEUR', 'MENTOR', 'FORMATEUR', 'AMBASSADEUR', 'INNOVATEUR'],
+    getAll: () => (readLocal(KEYS.BADGES) || []).filter(b => b.userId),
+    getByUser: (userId) =>
+      (readLocal(KEYS.BADGES) || []).filter(b => b.userId === String(userId)),
+    award: (userId, userName, badgeType, awardedBy) => {
+      const list = (readLocal(KEYS.BADGES) || []).filter(b => b.userId);
+      // Pas de doublon
+      const exists = list.find(b => b.userId === String(userId) && b.badgeType === badgeType);
+      if (exists) return { success: false, message: 'Badge déjà attribué.' };
+      const badge = {
+        id: `badge-${Date.now()}`,
+        userId: String(userId),
+        userName,
+        badgeType,
+        awardedBy,
+        awardedAt: new Date().toISOString()
+      };
+      list.push(badge);
+      writeLocal(KEYS.BADGES, list);
+      // Notification
+      mockDb.notifications.add(`🏅 Félicitations ! Vous avez reçu le badge '${badgeType}'.`);
+      return { success: true, data: badge };
+    },
+    revoke: (badgeId) => {
+      const filtered = (readLocal(KEYS.BADGES) || []).filter(b => b.id !== badgeId);
+      writeLocal(KEYS.BADGES, filtered);
+      return true;
+    }
+  },
+
+  // ─── DEMANDES D'ADHÉSION CLUB (Responsable de club valide) ────────────────
+  joinRequests: {
+    getAll: () => readLocal(KEYS.JOIN_REQUESTS) || [],
+    getByClub: (clubId) =>
+      (readLocal(KEYS.JOIN_REQUESTS) || []).filter(r => r.clubId === clubId),
+    getByUser: (userId) =>
+      (readLocal(KEYS.JOIN_REQUESTS) || []).filter(r => r.userId === String(userId)),
+    getPending: (clubId) =>
+      (readLocal(KEYS.JOIN_REQUESTS) || []).filter(r => r.clubId === clubId && r.status === 'PENDING'),
+    create: (clubId, userId, userName, userEmail) => {
+      const list = readLocal(KEYS.JOIN_REQUESTS) || [];
+      // Éviter les doublons PENDING
+      const existing = list.find(
+        r => r.clubId === clubId && r.userId === String(userId) && r.status === 'PENDING'
+      );
+      if (existing) return { success: false, message: 'Demande déjà en attente pour ce club.' };
+      const req = {
+        id: `jr-${Date.now()}`,
+        clubId,
+        userId: String(userId),
+        userName,
+        userEmail,
+        status: 'PENDING',
+        requestedAt: new Date().toISOString(),
+        processedAt: null
+      };
+      list.push(req);
+      writeLocal(KEYS.JOIN_REQUESTS, list);
+      return { success: true, data: req };
+    },
+    approve: (requestId) => {
+      const list = readLocal(KEYS.JOIN_REQUESTS) || [];
+      const idx = list.findIndex(r => r.id === requestId);
+      if (idx === -1) return { success: false, message: 'Demande introuvable.' };
+      list[idx].status = 'APPROVED';
+      list[idx].processedAt = new Date().toISOString();
+      writeLocal(KEYS.JOIN_REQUESTS, list);
+      const req = list[idx];
+      // Effectuer le join réel dans les memberships
+      const memberships = readLocal(KEYS.CLUB_MEMBERSHIPS) || {};
+      if (!memberships[req.userId]) memberships[req.userId] = [];
+      if (!memberships[req.userId].includes(req.clubId)) {
+        memberships[req.userId].push(req.clubId);
+        writeLocal(KEYS.CLUB_MEMBERSHIPS, memberships);
+        // Mettre à jour le compteur du club
+        const clubs = readLocal(KEYS.CLUBS) || DEFAULT_CLUBS;
+        const ci = clubs.findIndex(c => c.id === req.clubId);
+        if (ci !== -1) { clubs[ci].membersCount = (clubs[ci].membersCount || 0) + 1; writeLocal(KEYS.CLUBS, clubs); }
+      }
+      mockDb.notifications.add(`✅ Votre demande d'adhésion au club a été approuvée !`);
+      return { success: true, data: req };
+    },
+    reject: (requestId, reason = '') => {
+      const list = readLocal(KEYS.JOIN_REQUESTS) || [];
+      const idx = list.findIndex(r => r.id === requestId);
+      if (idx === -1) return { success: false, message: 'Demande introuvable.' };
+      list[idx].status = 'REJECTED';
+      list[idx].rejectionReason = reason;
+      list[idx].processedAt = new Date().toISOString();
+      writeLocal(KEYS.JOIN_REQUESTS, list);
+      mockDb.notifications.add(`❌ Votre demande d'adhésion a été refusée.${reason ? ' Motif : ' + reason : ''}`);
+      return { success: true, data: list[idx] };
+    }
+  },
+
+  // ─── CANDIDATURES AUX OPPORTUNITÉS (Membre) ───────────────────────────────
+  projectApplications: {
+    getAll: () => readLocal(KEYS.PROJECT_APPLICATIONS) || [],
+    getByOpportunity: (opportunityId) =>
+      (readLocal(KEYS.PROJECT_APPLICATIONS) || []).filter(a => a.opportunityId === opportunityId),
+    getByUser: (userId) =>
+      (readLocal(KEYS.PROJECT_APPLICATIONS) || []).filter(a => a.userId === String(userId)),
+    hasApplied: (opportunityId, userId) =>
+      (readLocal(KEYS.PROJECT_APPLICATIONS) || []).some(
+        a => a.opportunityId === opportunityId && a.userId === String(userId)
+      ),
+    submit: ({ opportunityId, userId, userName, userEmail, coverLetter, cvUrl }) => {
+      const list = readLocal(KEYS.PROJECT_APPLICATIONS) || [];
+      // Pas de double candidature
+      if (mockDb.projectApplications.hasApplied(opportunityId, userId)) {
+        return { success: false, message: 'Vous avez déjà candidaté pour cette opportunité.' };
+      }
+      const application = {
+        id: `app-${Date.now()}`,
+        opportunityId,
+        userId: String(userId),
+        userName,
+        userEmail,
+        coverLetter,
+        cvUrl: cvUrl || null,
+        status: 'PENDING', // PENDING | REVIEWED | ACCEPTED | REJECTED
+        submittedAt: new Date().toISOString()
+      };
+      list.push(application);
+      writeLocal(KEYS.PROJECT_APPLICATIONS, list);
+      mockDb.notifications.add(`📩 Votre candidature a été soumise avec succès. Nous vous répondrons sous 72h.`);
+      return { success: true, data: application };
+    },
+    updateStatus: (applicationId, status) => {
+      const list = readLocal(KEYS.PROJECT_APPLICATIONS) || [];
+      const idx = list.findIndex(a => a.id === applicationId);
+      if (idx !== -1) { list[idx].status = status; list[idx].reviewedAt = new Date().toISOString(); writeLocal(KEYS.PROJECT_APPLICATIONS, list); return list[idx]; }
+      return null;
     }
   }
 };

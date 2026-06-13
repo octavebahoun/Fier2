@@ -1,16 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Users, CheckCircle, Lock, Cpu, Leaf, Building2,
-  Brain, Rocket, Zap, ChevronRight, Star, AlertCircle, X
+  Brain, Rocket, Zap, ChevronRight, Star, AlertCircle, X,
+  Clock, ShieldCheck, Check, Ban
 } from 'lucide-react';
-import { mockDb } from '../services/mockDb';
+import api from '../services/api.js';
 import { useAuth } from '../context/AuthContext.jsx';
 import FadeInWhenVisible from '../components/home/FadeInWhenVisible.jsx';
 
 // ───────────────────────────── Toast Component ───────────────────────────────
 function Toast({ message, type = 'success', onClose }) {
-  React.useEffect(() => {
+  useEffect(() => {
     const timer = setTimeout(onClose, 4000);
     return () => clearTimeout(timer);
   }, [onClose]);
@@ -103,11 +104,11 @@ function JoinConfirmModal({ club, onConfirm, onCancel }) {
           className="p-4 rounded-xl text-xs text-text-secondary leading-relaxed mb-6 relative z-10"
           style={{ background: `${club.accent}0D`, border: `1px solid ${club.accent}20` }}
         >
-          <p className="font-bold text-text-primary mb-1.5">En rejoignant ce club, vous vous engagez à :</p>
+          <p className="font-bold text-text-primary mb-1.5">En demandant votre adhésion, vous vous engagez à :</p>
           <ul className="list-disc pl-4 space-y-1">
             <li>Participer activement aux activités et réunions du club.</li>
             <li>Respecter les membres et le règlement intérieur.</li>
-            <li>Contribuer à au moins un projet ou atelier par trimestre.</li>
+            <li>Votre demande sera validée sous 48h par le Responsable.</li>
           </ul>
         </div>
 
@@ -124,7 +125,7 @@ function JoinConfirmModal({ club, onConfirm, onCancel }) {
             className="flex-1 py-3 rounded-xl text-xs font-bold text-white transition-all hover:opacity-90"
             style={{ background: club.accent }}
           >
-            Confirmer l’adhésion
+            Soumettre la demande
           </button>
         </div>
       </motion.div>
@@ -143,9 +144,10 @@ const CLUB_ICONS = {
 };
 
 // ─────────────────────────── Club Card Component ───────────────────────────
-function ClubCard({ club, user, onJoin, joiningId }) {
+function ClubCard({ club, user, onJoin, onLeave, isPending, joiningId, isManager, pendingMembers = [], onApproveRequest, onRejectRequest }) {
   const Icon = CLUB_ICONS[club.id] || Star;
   const isJoining = joiningId === club.id;
+  const [showManage, setShowManage] = useState(false);
 
   return (
     <motion.div
@@ -236,23 +238,37 @@ function ClubCard({ club, user, onJoin, joiningId }) {
           </div>
         )}
 
-        {/* Bouton d'adhésion */}
+        {/* Bouton d'adhésion ou statut */}
         {club.joined ? (
-          <motion.div
-            initial={{ scale: 0.95 }}
-            animate={{ scale: 1 }}
-            className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl text-sm font-bold text-white"
+          <motion.button
+            whileTap={{ scale: 0.97 }}
+            onClick={() => onLeave(club.id)}
+            disabled={isJoining}
+            className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl text-sm font-bold text-white transition-all focus:outline-none focus-visible:ring-2 cursor-pointer"
             style={{ background: club.accent }}
+            title="Cliquez pour quitter le club"
           >
             <CheckCircle className="w-4 h-4" />
-            Membre actif
-          </motion.div>
+            Membre actif (Quitter)
+          </motion.button>
+        ) : isPending ? (
+          <div
+            className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl text-sm font-bold border cursor-default"
+            style={{
+              background: `${club.accent}0A`,
+              color: '#f5a623',
+              borderColor: '#f5a62340',
+            }}
+          >
+            <Clock className="w-4 h-4 animate-pulse" />
+            Demande en attente
+          </div>
         ) : user ? (
           <motion.button
             onClick={() => onJoin(club.id)}
             disabled={isJoining}
             whileTap={{ scale: 0.97 }}
-            className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl text-sm font-bold transition-all duration-200 focus:outline-none focus-visible:ring-2"
+            className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl text-sm font-bold transition-all duration-200 focus:outline-none focus-visible:ring-2 cursor-pointer"
             style={{
               background: `${club.accent}1C`,
               color: club.accent,
@@ -273,7 +289,7 @@ function ClubCard({ club, user, onJoin, joiningId }) {
             ) : (
               <Users className="w-4 h-4" />
             )}
-            {isJoining ? 'Adhésion…' : 'Rejoindre le Club'}
+            {isJoining ? 'Traitement…' : 'Rejoindre le Club'}
           </motion.button>
         ) : (
           <button
@@ -285,6 +301,71 @@ function ClubCard({ club, user, onJoin, joiningId }) {
             Connexion requise
           </button>
         )}
+
+        {/* Section Administration du Club pour Mentors et Admins */}
+        {isManager && (
+          <div className="pt-4 border-t border-white/5 space-y-2">
+            <button
+              onClick={() => setShowManage(!showManage)}
+              className="flex items-center justify-between w-full px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-xs font-bold text-text-secondary hover:text-text-primary hover:bg-white/10 transition-all"
+            >
+              <div className="flex items-center gap-1.5">
+                <ShieldCheck className="w-4 h-4 text-emerald-400" />
+                <span>Gérer les adhésions</span>
+              </div>
+              <span className="px-2 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-[10px] text-emerald-400">
+                {pendingMembers.length} en attente
+              </span>
+            </button>
+
+            <AnimatePresence>
+              {showManage && (
+                <motion.div
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: 'auto', opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  className="overflow-hidden space-y-2 pt-1"
+                >
+                  {pendingMembers.length === 0 ? (
+                    <p className="text-[11px] text-emerald-400/80 italic text-center py-1">
+                      Aucune demande d'adhésion en attente.
+                    </p>
+                  ) : (
+                    <div className="space-y-1.5 max-h-40 overflow-y-auto pr-1">
+                      {pendingMembers.map((req) => (
+                        <div
+                          key={req.id}
+                          className="flex items-center justify-between p-2 rounded-lg bg-white/[0.02] border border-white/5 text-[11px]"
+                        >
+                          <div className="min-w-0 flex-1 pr-2">
+                            <p className="font-bold text-text-primary truncate">{req.userName}</p>
+                            <p className="text-[10px] text-text-secondary truncate">{req.userEmail}</p>
+                          </div>
+                          <div className="flex gap-1 shrink-0">
+                            <button
+                              onClick={() => onApproveRequest(req.id)}
+                              className="p-1 rounded bg-emerald-500/20 text-emerald-400 hover:bg-emerald-500 hover:text-white transition-all"
+                              title="Approuver"
+                            >
+                              <Check className="w-3.5 h-3.5" />
+                            </button>
+                            <button
+                              onClick={() => onRejectRequest(req.id)}
+                              className="p-1 rounded bg-rose-500/20 text-rose-400 hover:bg-rose-500 hover:text-white transition-all"
+                              title="Rejeter"
+                            >
+                              <Ban className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+        )}
       </div>
     </motion.div>
   );
@@ -292,9 +373,11 @@ function ClubCard({ club, user, onJoin, joiningId }) {
 
 // ─────────────────────────── ResearchClubs Page ───────────────────────────────
 export default function ResearchClubs({ navigate }) {
-  const { user } = useAuth();
+  const { user, isAdmin, isMentor } = useAuth();
   const userId = user?.id ?? null;
-  const [clubs, setClubs] = useState(() => mockDb.clubs.getAll(userId));
+  const [clubs, setClubs] = useState([]);
+  const [myRequests, setMyRequests] = useState([]);
+  const [pendingRequests, setPendingRequests] = useState({});
   const [toast, setToast] = useState(null);
   const [joiningId, setJoiningId] = useState(null);
   const [confirmClub, setConfirmClub] = useState(null); // Club en attente de confirmation
@@ -302,44 +385,98 @@ export default function ResearchClubs({ navigate }) {
   const joinedCount = clubs.filter((c) => c.joined).length;
   const totalMembers = clubs.reduce((acc, c) => acc + c.membersCount, 0);
 
-  // Ouvrir la modale de confirmation
+  // Charger toutes les données (clubs, demandes de l'utilisateur connecté, et demandes en attente pour les managers)
+  const loadData = async () => {
+    const clubsRes = await api.clubs.getAll();
+    const allClubs = clubsRes.success ? clubsRes.data : [];
+    setClubs(allClubs);
+
+    if (userId) {
+      const res = await api.memberships.getUserRequests(userId);
+      if (res.success) {
+        setMyRequests(res.data);
+      }
+    } else {
+      setMyRequests([]);
+    }
+
+    if (user && (isAdmin() || isMentor())) {
+      const pendingMap = {};
+      for (const club of allClubs) {
+        const res = await api.memberships.getPendingRequests(club.id);
+        if (res.success) {
+          pendingMap[club.id] = res.data;
+        }
+      }
+      setPendingRequests(pendingMap);
+    } else {
+      setPendingRequests({});
+    }
+  };
+
+  useEffect(() => {
+    loadData();
+  }, [userId, user]);
+
+  // Déclencher la demande d'adhésion (rejoindre)
   const handleJoinClick = (clubId) => {
     if (!user || joiningId) return;
     const club = clubs.find(c => c.id === clubId);
     if (!club) return;
-    // Si déjà membre : quitter directement sans confirmation
-    if (club.joined) {
-      handleJoinConfirm(clubId);
-    } else {
-      setConfirmClub(club);
-    }
+    setConfirmClub(club);
   };
 
-  // Exécuter l'adhésion après confirmation
-  const handleJoinConfirm = (clubIdOverride = null) => {
-    const clubId = clubIdOverride ?? confirmClub?.id;
+  // Quitter le club (direct)
+  const handleLeaveClick = async (clubId) => {
+    if (!user || !userId || joiningId) return;
+    setJoiningId(clubId);
+    const res = await api.memberships.leave(clubId, userId);
+    if (res.success) {
+      setToast({ message: res.message, type: 'info' });
+      loadData();
+    } else {
+      setToast({ message: res.message, type: 'error' });
+    }
+    setJoiningId(null);
+  };
+
+  // Exécuter l'adhésion (création demande) après confirmation
+  const handleJoinConfirm = async () => {
+    const clubId = confirmClub?.id;
     if (!clubId || !user || joiningId) return;
     setConfirmClub(null);
     setJoiningId(clubId);
 
-    setTimeout(() => {
-      const updated = mockDb.clubs.toggleJoin(clubId, userId);
-      if (updated) {
-        setClubs((prev) =>
-          prev.map((c) => (c.id === clubId ? updated : c))
-        );
+    const res = await api.memberships.requestJoin(clubId, user);
+    if (res.success) {
+      setToast({ message: res.message, type: 'success' });
+      loadData();
+    } else {
+      setToast({ message: res.message, type: 'error' });
+    }
+    setJoiningId(null);
+  };
 
-        if (updated.joined) {
-          mockDb.notifications.add(
-            `Vous avez rejoint le club « ${updated.kicker} » avec succès !`
-          );
-          setToast({ message: `Bienvenue dans le club ${updated.kicker} !`, type: 'success' });
-        } else {
-          setToast({ message: `Vous avez quitté le club ${updated.kicker}.`, type: 'info' });
-        }
-      }
-      setJoiningId(null);
-    }, 320);
+  // Approuver une demande (Manager / Admin / Mentor)
+  const handleApproveRequest = async (requestId) => {
+    const res = await api.memberships.approve(requestId);
+    if (res.success) {
+      setToast({ message: 'Adhésion approuvée avec succès !', type: 'success' });
+      loadData();
+    } else {
+      setToast({ message: res.message, type: 'error' });
+    }
+  };
+
+  // Rejeter une demande (Manager / Admin / Mentor)
+  const handleRejectRequest = async (requestId) => {
+    const res = await api.memberships.reject(requestId, 'Demande rejetée par le Responsable.');
+    if (res.success) {
+      setToast({ message: 'Demande d\'adhésion refusée.', type: 'info' });
+      loadData();
+    } else {
+      setToast({ message: res.message, type: 'error' });
+    }
   };
 
   return (
@@ -433,16 +570,28 @@ export default function ResearchClubs({ navigate }) {
 
         {/* ── Grille des clubs ── */}
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-          {clubs.map((club, index) => (
-            <FadeInWhenVisible key={club.id} direction="up" delay={0.08 * index}>
-              <ClubCard
-                club={club}
-                user={user}
-                onJoin={handleJoinClick}
-                joiningId={joiningId}
-              />
-            </FadeInWhenVisible>
-          ))}
+          {clubs.map((club, index) => {
+            const isPending = myRequests.some(r => r.clubId === club.id && r.status === 'PENDING');
+            const isManager = user && (isAdmin() || isMentor());
+            const pendingMembers = pendingRequests[club.id] || [];
+
+            return (
+              <FadeInWhenVisible key={club.id} direction="up" delay={0.08 * index}>
+                <ClubCard
+                  club={club}
+                  user={user}
+                  onJoin={handleJoinClick}
+                  onLeave={handleLeaveClick}
+                  isPending={isPending}
+                  joiningId={joiningId}
+                  isManager={isManager}
+                  pendingMembers={pendingMembers}
+                  onApproveRequest={handleApproveRequest}
+                  onRejectRequest={handleRejectRequest}
+                />
+              </FadeInWhenVisible>
+            );
+          })}
         </div>
 
         {/* ── Section CTA bas de page ── */}
@@ -453,14 +602,14 @@ export default function ResearchClubs({ navigate }) {
               Explorez les{' '}
               <button
                 onClick={() => navigate && navigate('projects')}
-                className="text-fieri-blue font-semibold hover:underline underline-offset-2 transition-all"
+                className="text-fieri-blue font-semibold hover:underline underline-offset-2 transition-all cursor-pointer"
               >
                 projets R&D
               </button>{' '}
               ou les{' '}
               <button
                 onClick={() => navigate && navigate('student-portal')}
-                className="text-fieri-orange font-semibold hover:underline underline-offset-2 transition-all"
+                className="text-fieri-orange font-semibold hover:underline underline-offset-2 transition-all cursor-pointer"
               >
                 ateliers pratiques
               </button>{' '}
@@ -495,3 +644,4 @@ export default function ResearchClubs({ navigate }) {
     </main>
   );
 }
+

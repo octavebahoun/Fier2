@@ -4,7 +4,7 @@ import {
   GraduationCap, Users, Calendar, BookOpen, ArrowRight,
   Sparkles, Cpu, Zap, Leaf, Building2, Brain, Rocket, ChevronRight, Lock
 } from 'lucide-react'
-import { mockDb } from '../services/mockDb'
+import { api } from '../services/api'
 import { useAuth } from '../context/AuthContext.jsx'
 
 const CLUB_ICONS = {
@@ -52,12 +52,17 @@ export default function StudentPortal({ navigate }) {
   const [clubs, setClubs] = useState([])
 
   useEffect(() => {
-    try {
-      const data = mockDb.clubs.getAll(userId)
-      setClubs(Array.isArray(data) ? data.slice(0, 3) : [])
-    } catch {
-      setClubs([])
-    }
+    const loadClubs = async () => {
+      try {
+        const res = await api.clubs.getAll();
+        if (res.success) {
+          setClubs(Array.isArray(res.data) ? res.data.slice(0, 3) : []);
+        }
+      } catch (err) {
+        setClubs([]);
+      }
+    };
+    loadClubs();
   }, [userId])
 
   return (

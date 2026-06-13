@@ -6,6 +6,7 @@ import {
   Layers, Lightbulb, Compass, Award
 } from 'lucide-react';
 import { mockDb } from '../services/mockDb';
+import { api } from '../services/api';
 
 export default function Projects({ navigate }) {
   const [projects, setProjects] = useState([]);
@@ -14,7 +15,17 @@ export default function Projects({ navigate }) {
 
   useEffect(() => {
     // Load initial list from database
-    setProjects(mockDb.projects.getAll());
+    const loadProjects = async () => {
+      try {
+        const res = await api.projects.getAll();
+        if (res.success) {
+          setProjects(res.data);
+        }
+      } catch (err) {
+        console.error("Erreur de chargement des projets:", err);
+      }
+    };
+    loadProjects();
   }, []);
 
   // Filter projects by both text query and status

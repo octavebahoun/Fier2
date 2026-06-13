@@ -84,7 +84,7 @@ export const api = {
             id: Math.floor(Math.random() * 9000) + 1000,
             email,
             firstName: firstName || 'Chercheur',
-            lastName:  lastName  || 'FIERI',
+            lastName: lastName || 'FIERI',
             role: assignedRole,
             avatarUrl: null
           };
@@ -319,8 +319,19 @@ export const api = {
       return {
         success: true,
         data: proj,
-        message: `Félicitations ! Votre contribution de ${amount} € a été prise en compte avec succès pour propulser ce projet.`
+        message: `Félicitations ! Votre contribution de ${amount} $ a été prise en compte avec succès pour propulser ce projet.`
       };
+    },
+
+    isFollowed: async (id) => {
+      await delay(100);
+      return { success: true, data: mockDb.projects.isFollowed(id) };
+    },
+
+    toggleFollow: async (id) => {
+      await delay(150);
+      const state = mockDb.projects.toggleFollow(id);
+      return { success: true, data: state, message: state ? "Projet suivi avec succès !" : "Abonnement au projet retiré." };
     }
   },
 
@@ -330,7 +341,9 @@ export const api = {
   clubs: {
     getAll: async () => {
       await delay(150);
-      return { success: true, data: mockDb.clubs.getAll() };
+      const user = mockDb.auth.getLocalUser();
+      const userId = user?.id || null;
+      return { success: true, data: mockDb.clubs.getAll(userId) };
     },
 
     getById: async (id) => {
@@ -393,7 +406,7 @@ export const api = {
       if (!res || !res.success) {
         return { success: false, message: "Impossible de modifier votre inscription." };
       }
-      
+
       let message = "";
       if (res.action === 'registered') {
         message = `Inscription validée pour l'atelier '${res.workshop.title}'.`;
@@ -423,12 +436,12 @@ export const api = {
       await delay(180);
       const user = mockDb.auth.getLocalUser();
       const userFullName = user ? `${user.firstName} ${user.lastName}` : "Étudiant FIERI";
-      
+
       const res = mockDb.workshops.toggleRegister(id, userFullName);
       if (!res || !res.success) {
         return { success: false, message: "Impossible de procéder à l'inscription." };
       }
-      
+
       if (res.action === 'deregistered') {
         // Si la fonction s'est désinscrite accidentellement (on re-clique), on rétablit l'état inscrit
         mockDb.workshops.toggleRegister(id, userFullName);
@@ -437,7 +450,7 @@ export const api = {
       return {
         success: true,
         data: res.workshop,
-        message: res.action === 'waitlisted' 
+        message: res.action === 'waitlisted'
           ? `Placé sur la file d'attente (Position #${res.position}) pour '${res.workshop.title}'.`
           : `Inscription réussie au '${res.workshop.title}'.`
       };
@@ -608,7 +621,263 @@ export const api = {
         message: 'Message envoyé avec succès. Notre équipe vous répondra sous 48h.'
       };
     }
+  },
+
+  // ------------------------------------------------------------
+  // MODULE TÂCHES PROJET (Chef de projet) — Mock persisté
+  // ------------------------------------------------------------
+  tasks: {
+    getByProject: async (projectId) => {
+      await delay(120);
+      return { success: true, data: mockDb.tasks.getByProject(projectId) };
+    },
+
+    create: async (taskData) => {
+      await delay(200);
+      const task = mockDb.tasks.create(taskData);
+      return { success: true, data: task, message: 'Tâche créée avec succès.' };
+    },
+
+    update: async (taskId, patch) => {
+      await delay(150);
+      const updated = mockDb.tasks.update({ id: taskId, ...patch });
+      if (!updated) return { success: false, message: 'Tâche introuvable.' };
+      return { success: true, data: updated, message: 'Tâche mise à jour.' };
+    },
+
+    assign: async (taskId, assignedTo) => {
+      await delay(150);
+      const updated = mockDb.tasks.assign(taskId, assignedTo);
+      if (!updated) return { success: false, message: 'Tâche introuvable.' };
+      return { success: true, data: updated, message: `Tâche assignée à ${assignedTo}.` };
+    },
+
+    setPriority: async (taskId, priority) => {
+      await delay(100);
+      const updated = mockDb.tasks.setPriority(taskId, priority);
+      if (!updated) return { success: false, message: 'Tâche introuvable.' };
+      return { success: true, data: updated, message: `Priorité définie à ${priority}.` };
+    },
+
+    delete: async (taskId) => {
+      await delay(120);
+      mockDb.tasks.delete(taskId);
+      return { success: true, message: 'Tâche supprimée.' };
+    }
+  },
+
+  // ------------------------------------------------------------
+  // MODULE BADGES (Admin / Responsable de club)
+  // ------------------------------------------------------------
+  badges: {
+    getByUser: async (userId) => {
+      await delay(80);
+      return { success: true, data: mockDb.badges.getByUser(userId) };
+    },
+
+    award: async (userId, userName, badgeType, awardedBy) => {
+      await delay(200);
+      const res = mockDb.badges.award(userId, userName, badgeType, awardedBy);
+      return res;
+    },
+
+    revoke: async (badgeId) => {
+      await delay(150);
+      mockDb.badges.revoke(badgeId);
+      return { success: true, message: 'Badge retiré.' };
+    },
+
+    getTypes: () => mockDb.badges.TYPES
+  },
+
+  // ------------------------------------------------------------
+  // MODULE ADHÉSIONS CLUBS avec VALIDATION (Responsable de club)
+  // ------------------------------------------------------------
+  memberships: {
+    /**
+     * Soumet une DEMANDE d'adhésion — ne rejoint pas directement le club.
+     * Le Responsable de club devra approuver ou rejeter.
+     */
+    requestJoin: async (clubId, user) => {
+      await delay(200);
+      const res = mockDb.joinRequests.create(
+        clubId,
+        user.id,
+        `${user.firstName} ${user.lastName}`,
+        user.email
+      );
+      if (!res.success) return res;
+      return {
+        success: true,
+        data: res.data,
+        message: 'Demande d\'adhésion soumise. En attente de validation par le Responsable du club.'
+      };
+    },
+
+    getPendingRequests: async (clubId) => {
+      await delay(150);
+      return { success: true, data: mockDb.joinRequests.getPending(clubId) };
+    },
+
+    getAllRequests: async (clubId) => {
+      await delay(150);
+      return { success: true, data: mockDb.joinRequests.getByClub(clubId) };
+    },
+
+    getUserRequests: async (userId) => {
+      await delay(100);
+      return { success: true, data: mockDb.joinRequests.getByUser(userId) };
+    },
+
+    approve: async (requestId) => {
+      await delay(200);
+      const res = mockDb.joinRequests.approve(requestId);
+      return res;
+    },
+
+    reject: async (requestId, reason = '') => {
+      await delay(200);
+      const res = mockDb.joinRequests.reject(requestId, reason);
+      return res;
+    },
+
+    /** Quitter un club (toujours direct, pas de validation) */
+    leave: async (clubId, userId) => {
+      await delay(150);
+      const club = mockDb.clubs.getById(clubId);
+      if (!club) return { success: false, message: 'Club introuvable.' };
+      const result = mockDb.clubs.toggleJoin(clubId, userId);
+      if (result && result.joined === false) {
+        return { success: true, data: result, message: `Vous avez quitté le club '${club.kicker}'.` };
+      }
+      return { success: false, message: 'Vous n\'étiez pas membre de ce club.' };
+    }
+  },
+
+  // ------------------------------------------------------------
+  // MODULE OPPORTUNITÉS DE RECHERCHE (Chercheur / Membre)
+  // ------------------------------------------------------------
+  opportunities: {
+    getAll: async () => {
+      return request(
+        '/opportunities',
+        { method: 'GET' },
+        async () => {
+          await delay(150);
+          return { success: true, data: mockDb.opportunities.getAll() };
+        }
+      );
+    },
+
+    getById: async (id) => {
+      return request(
+        `/opportunities/${id}`,
+        { method: 'GET' },
+        async () => {
+          await delay(120);
+          const opt = mockDb.opportunities.getById(id);
+          if (!opt) return { success: false, message: "Opportunité introuvable." };
+          return { success: true, data: opt };
+        }
+      );
+    },
+
+    create: async (optData) => {
+      return request(
+        '/opportunities',
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(optData)
+        },
+        async () => {
+          await delay(200);
+          const opt = mockDb.opportunities.add(optData);
+          return { success: true, data: opt, message: 'Nouvelle opportunité publiée avec succès !' };
+        }
+      );
+    },
+
+    update: async (id, updatedData) => {
+      return request(
+        `/opportunities/${id}`,
+        {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(updatedData)
+        },
+        async () => {
+          await delay(150);
+          const opt = mockDb.opportunities.update({ id, ...updatedData });
+          if (!opt) return { success: false, message: 'Opportunité introuvable.' };
+          return { success: true, data: opt, message: 'Opportunité mise à jour.' };
+        }
+      );
+    },
+
+    delete: async (id) => {
+      return request(
+        `/opportunities/${id}`,
+        { method: 'DELETE' },
+        async () => {
+          await delay(120);
+          mockDb.opportunities.delete(id);
+          return { success: true, message: 'Opportunité supprimée.' };
+        }
+      );
+    }
+  },
+
+  // ------------------------------------------------------------
+  // MODULE CANDIDATURES AUX OPPORTUNITÉS (Membre)
+  // ------------------------------------------------------------
+  applications: {
+    submit: async ({ opportunityId, coverLetter, cvUrl }) => {
+      await delay(400);
+      const raw = localStorage.getItem('fieri_user');
+      const user = raw ? JSON.parse(raw) : null;
+      if (!user) return { success: false, message: 'Vous devez être connecté pour candidater.' };
+
+      const res = mockDb.projectApplications.submit({
+        opportunityId,
+        userId: user.id,
+        userName: `${user.firstName} ${user.lastName}`,
+        userEmail: user.email,
+        coverLetter,
+        cvUrl
+      });
+      return res;
+    },
+
+    getMyApplications: async () => {
+      await delay(150);
+      const raw = localStorage.getItem('fieri_user');
+      const user = raw ? JSON.parse(raw) : null;
+      if (!user) return { success: false, data: [] };
+      return { success: true, data: mockDb.projectApplications.getByUser(user.id) };
+    },
+
+    hasApplied: async (opportunityId) => {
+      await delay(80);
+      const raw = localStorage.getItem('fieri_user');
+      const user = raw ? JSON.parse(raw) : null;
+      if (!user) return { success: true, data: false };
+      return { success: true, data: mockDb.projectApplications.hasApplied(opportunityId, user.id) };
+    },
+
+    getByOpportunity: async (opportunityId) => {
+      await delay(150);
+      return { success: true, data: mockDb.projectApplications.getByOpportunity(opportunityId) };
+    },
+
+    updateStatus: async (applicationId, status) => {
+      await delay(200);
+      const updated = mockDb.projectApplications.updateStatus(applicationId, status);
+      if (!updated) return { success: false, message: 'Candidature introuvable.' };
+      return { success: true, data: updated, message: `Statut mis à jour : ${status}.` };
+    }
   }
 };
 
 export default api;
+

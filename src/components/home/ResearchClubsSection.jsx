@@ -53,7 +53,7 @@ export default function ResearchClubsSection({ clubs, navigate }) {
 
   useEffect(() => {
     if (isPaused || total <= 1) return;
-    intervalRef.current = setInterval(next, 1000);
+    intervalRef.current = setInterval(next, 2000);
     return () => clearInterval(intervalRef.current);
   }, [isPaused, next, total]);
 
@@ -80,21 +80,21 @@ export default function ResearchClubsSection({ clubs, navigate }) {
           </FadeInWhenVisible>
         </div>
 
-          {/* Carousel */}
-          <div className="relative max-w-5xl mx-auto">
-            {/* Slide area */}
-            <div className="overflow-hidden rounded-2xl border border-border-subtle/80 shadow-xl shadow-black/20">
-              <AnimatePresence mode="wait" custom={direction}>
-                <motion.div
-                  key={activeIndex}
-                  custom={direction}
-                  variants={slideVariants}
-                  initial="enter"
-                  animate="center"
-                  exit="exit"
-                  transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-                  className="bg-bg-secondary/90 backdrop-blur-xl border border-white/5 p-6 md:p-10 rounded-2xl relative overflow-hidden"
-                >
+        {/* Carousel */}
+        <div className="relative max-w-5xl mx-auto">
+          {/* Slide area */}
+          <div className="overflow-hidden rounded-2xl border border-border-subtle/80 shadow-xl shadow-black/20">
+            <AnimatePresence mode="wait" custom={direction}>
+              <motion.div
+                key={activeIndex}
+                custom={direction}
+                variants={slideVariants}
+                initial="enter"
+                animate="center"
+                exit="exit"
+                transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+                className="bg-bg-secondary/90 backdrop-blur-xl border border-white/5 p-6 md:p-10 rounded-2xl relative overflow-hidden"
+              >
                 <div className="absolute top-0 right-0 w-64 h-64 rounded-full bg-radial from-accent-primary/26 to-transparent blur-[50px] pointer-events-none" />
 
                 <ClubBackgroundMotif kicker={club.kicker} />
@@ -187,11 +187,10 @@ export default function ResearchClubsSection({ clubs, navigate }) {
               <button
                 key={index}
                 onClick={() => goTo(index)}
-                className={`rounded-full transition-all duration-300 cursor-pointer ${
-                  index === activeIndex
+                className={`rounded-full transition-all duration-300 cursor-pointer ${index === activeIndex
                     ? 'w-8 h-2 bg-accent-primary'
                     : 'w-2 h-2 bg-border-subtle hover:bg-text-muted'
-                }`}
+                  }`}
               />
             ))}
           </div>

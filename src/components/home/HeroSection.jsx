@@ -12,71 +12,28 @@ export default function HeroSection({ hero, navigate }) {
       <div className="absolute inset-0 bg-radial from-transparent via-bg-primary/10 to-bg-primary/90 z-0" />
 
       {/* Background Image */}
-      <div 
+      <div
         className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat opacity-[0.55] mix-blend-screen"
         style={{ backgroundImage: `url(${heroBg})` }}
       />
-      
+
       {/* Glow Halos representing Laboratory Atmosphere */}
       <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[70vw] h-[70vw] max-w-[800px] max-h-[800px] rounded-full bg-radial from-accent-primary/30 to-transparent blur-[120px] pointer-events-none z-0" />
       <div className="absolute bottom-10 right-10 w-[30vw] h-[30vw] rounded-full bg-radial from-accent-tertiary/18 to-transparent blur-[80px] pointer-events-none z-0" />
       <div className="absolute top-[40%] left-[20%] w-[35vw] h-[35vw] rounded-full bg-radial from-fieri-blue/24 to-transparent blur-[90px] pointer-events-none z-0" />
 
-      {/* --- MINI ORB GLOBES IN BACKGROUND --- */}
-      {/* Orb 1: Upper Left floating sphere */}
-      <motion.div
-        className="absolute top-[18%] left-[8%] w-24 h-24 rounded-full border border-accent-primary/20 bg-bg-secondary/40 backdrop-blur-[4px] shadow-[0_0_25px_rgba(27,111,216,0.18)] flex items-center justify-center pointer-events-none z-0"
-        animate={{ y: [0, -12, 0], rotate: 360 }}
-        transition={{ repeat: Infinity, duration: 15, ease: "linear" }}
-      >
-        <div className="absolute inset-0 rounded-full bg-radial from-fieri-blue/32 to-transparent opacity-60" />
-        <svg viewBox="0 0 100 100" className="w-full h-full opacity-60 p-2 text-fieri-blue">
-          <circle cx="50" cy="50" r="45" stroke="currentColor" strokeWidth="0.6" fill="none" strokeDasharray="2,2" />
-          <ellipse cx="50" cy="50" rx="45" ry="15" stroke="currentColor" strokeWidth="0.6" fill="none" />
-          <ellipse cx="50" cy="50" rx="15" ry="45" stroke="currentColor" strokeWidth="0.6" fill="none" />
-        </svg>
-      </motion.div>
-
-      {/* Orb 2: Lower Right floating sphere */}
-      <motion.div
-        className="absolute bottom-[22%] right-[12%] w-20 h-20 rounded-full border border-accent-tertiary/20 bg-bg-secondary/40 backdrop-blur-[3px] shadow-[0_0_20px_rgba(245,166,35,0.12)] flex items-center justify-center pointer-events-none z-0"
-        animate={{ y: [0, 15, 0], x: [0, -10, 0] }}
-        transition={{ repeat: Infinity, duration: 8, ease: "easeInOut" }}
-      >
-        <div className="absolute inset-0 rounded-full bg-radial from-accent-secondary/28 to-transparent opacity-60" />
-        <svg viewBox="0 0 100 100" className="w-full h-full opacity-50 p-2 text-accent-secondary animate-[spin_20s_linear_infinite_reverse]">
-          <circle cx="50" cy="50" r="45" stroke="currentColor" strokeWidth="0.6" fill="none" />
-          <ellipse cx="50" cy="50" rx="45" ry="20" stroke="currentColor" strokeWidth="0.6" fill="none" strokeDasharray="3,3" />
-          <ellipse cx="50" cy="50" rx="20" ry="45" stroke="currentColor" strokeWidth="0.6" fill="none" />
-        </svg>
-      </motion.div>
-
-      {/* Orb 3: Middle Right smaller sphere */}
-      <motion.div
-        className="absolute top-[45%] right-[6%] w-14 h-14 rounded-full border border-fieri-blue/30 bg-bg-secondary/50 backdrop-blur-[2px] shadow-[0_0_15px_rgba(27,111,216,0.12)] flex items-center justify-center pointer-events-none z-0"
-        animate={{ y: [0, -8, 0], x: [0, 8, 0] }}
-        transition={{ repeat: Infinity, duration: 10, ease: "easeInOut", delay: 1 }}
-      >
-        <div className="absolute inset-0 rounded-full bg-radial from-fieri-blue/26 to-transparent opacity-50" />
-        <svg viewBox="0 0 100 100" className="w-full h-full opacity-40 p-1.5 text-fieri-blue animate-[spin_25s_linear_infinite]">
-          <circle cx="50" cy="50" r="45" stroke="currentColor" strokeWidth="0.6" fill="none" />
-          <ellipse cx="50" cy="50" rx="45" ry="12" stroke="currentColor" strokeWidth="0.6" fill="none" />
-          <line x1="50" y1="5" x2="50" y2="95" stroke="currentColor" strokeWidth="0.6" />
-        </svg>
-      </motion.div>
-      
       {/* Circulating Energy Lines (Parametric Circuit Motifs in Background) */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-60 z-0">
         <svg width="100%" height="100%" className="absolute inset-0">
           {/* Pulsating Glowing Circuit Paths */}
           <path className="circuit-trace-1" d="M -50 150 L 200 150 L 250 200 L 400 200 L 450 150 L 700 150" stroke="#1B6FD8" strokeWidth="1.2" fill="none" style={{ filter: 'drop-shadow(0 0 4px #1B6FD8)' }} />
           <path className="circuit-trace-2" d="M 1200 600 L 1000 600 L 950 550 L 700 550" stroke="#E8640C" strokeWidth="1.0" fill="none" style={{ filter: 'drop-shadow(0 0 4px #E8640C)' }} />
-          
+
           {/* Added circuit path 3 (Upper Right) */}
           <path className="circuit-trace-1" d="M 1100 80 L 1250 80 L 1300 130 L 1450 130" stroke="#1B6FD8" strokeWidth="1.0" fill="none" style={{ filter: 'drop-shadow(0 0 3px #1B6FD8)' }} />
           {/* Added circuit path 4 (Middle Left) */}
           <path className="circuit-trace-2" d="M -20 500 L 150 500 L 200 450 L 350 450" stroke="#E8640C" strokeWidth="1.1" fill="none" style={{ filter: 'drop-shadow(0 0 3px #E8640C)' }} />
-          
+
           {/* Expanded terminal node junctions with neon shadows */}
           <circle cx="200" cy="150" r="3" fill="#1B6FD8" className="animate-pulse" style={{ filter: 'drop-shadow(0 0 6px #1B6FD8)' }} />
           <circle cx="450" cy="150" r="3" fill="#1B6FD8" className="animate-pulse" style={{ filter: 'drop-shadow(0 0 6px #1B6FD8)' }} />
@@ -117,14 +74,14 @@ export default function HeroSection({ hero, navigate }) {
         {/* Dual Actions CTA */}
         <FadeInWhenVisible direction="up" delay={0.2} duration={0.8}>
           <div className="flex flex-col sm:flex-row items-center gap-4.5 justify-center">
-            <button 
+            <button
               onClick={() => navigate('auth')}
               className="w-full sm:w-auto flex items-center justify-center gap-2 text-[10px] uppercase tracking-widest font-black bg-fieri-blue border border-transparent text-white px-8 py-3.5 rounded-full hover:bg-fieri-blue/90 shadow-[0_4px_20px_rgba(27,111,216,0.35)] hover:shadow-[0_4px_25px_rgba(27,111,216,0.5)] hover:-translate-y-0.5 transition-all duration-350 cursor-pointer"
             >
               {hero.ctaPrimary}
               <ArrowRight className="w-3.5 h-3.5" />
             </button>
-            <button 
+            <button
               onClick={() => navigate('cite-integration')}
               className="w-full sm:w-auto flex items-center justify-center gap-2 text-[10px] uppercase tracking-widest font-black bg-transparent border border-border-subtle text-text-secondary hover:text-text-primary hover:bg-white/5 px-8 py-3.5 rounded-full hover:-translate-y-0.5 transition-all duration-350 cursor-pointer"
             >

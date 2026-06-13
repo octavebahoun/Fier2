@@ -6,7 +6,7 @@ import {
   MessageSquare, Star, Trophy, Users, X, 
   Sparkles, ShieldAlert, Check 
 } from 'lucide-react';
-import { mockDb } from '../services/mockDb';
+import { api } from '../services/api';
 import { useAuth } from '../context/AuthContext.jsx';
 
 // ─────────────────────────── Toast Notification Component ───────────────────────────
@@ -88,31 +88,45 @@ export default function ProjectDetail({ navigate, projectId }) {
   };
 
   useEffect(() => {
-    // Premium simulated delay to let the user admire the skeleton transition
-    const timer = setTimeout(() => {
-      const p = mockDb.projects.getById(projectId);
-      if (p) {
-        setProject(p);
-        setIsFollowed(mockDb.projects.isFollowed(p.id));
-      } else {
-        setError("Ce projet R&D n'est pas répertorié ou a été archivé.");
+    const loadProjectDetails = async () => {
+      try {
+        const projectRes = await api.projects.getById(projectId);
+        if (projectRes.success) {
+          setProject(projectRes.data);
+          const followRes = await api.projects.isFollowed(projectRes.data.id);
+          if (followRes.success) {
+            setIsFollowed(followRes.data);
+          }
+        } else {
+          setError(projectRes.message || "Ce projet R&D n'est pas répertorié ou a été archivé.");
+        }
+      } catch (err) {
+        setError("Erreur réseau ou serveur lors du chargement du projet.");
+      } finally {
+        setIsLoading(false);
       }
-      setIsLoading(false);
-    }, 450);
-
-    return () => clearTimeout(timer);
+    };
+    loadProjectDetails();
   }, [projectId]);
 
   // Handle follow / unfollow toggle with localStorage
-  const handleFollowToggle = () => {
+  const handleFollowToggle = async () => {
     if (!user) {
       setToast("Veuillez vous connecter pour suivre ce projet.");
       return;
     }
 
-    const state = mockDb.projects.toggleFollow(project.id);
-    setIsFollowed(state);
-    setToast(state ? "Projet suivi avec succès !" : "Abonnement au projet retiré.");
+    try {
+      const res = await api.projects.toggleFollow(project.id);
+      if (res.success) {
+        setIsFollowed(res.data);
+        setToast(res.message);
+      } else {
+        setToast(res.message || "Impossible de modifier le statut de suivi.");
+      }
+    } catch (err) {
+      setToast("Erreur lors de la modification de votre abonnement au projet.");
+    }
   };
 
   // Open modal and set focus inside
@@ -157,7 +171,7 @@ export default function ProjectDetail({ navigate, projectId }) {
   }, [isPledgeModalOpen]);
 
   // Handle donation / pledge submit
-  const handlePledgeSubmit = (e) => {
+  const handlePledgeSubmit = async (e) => {
     e.preventDefault();
     const amount = parseFloat(pledgeAmount);
     
@@ -166,20 +180,17 @@ export default function ProjectDetail({ navigate, projectId }) {
       return;
     }
 
-    // Update locally in mock database
-    const updated = {
-      ...project,
-      budgetRaised: project.budgetRaised + amount,
-      supportersCount: project.supportersCount + 1
-    };
-
-    const success = mockDb.projects.update(updated);
-    if (success) {
-      setProject(updated);
-      setToast(`Merci ! Votre promesse de soutient de ${amount} $ a été enregistrée.`);
-      closePledgeModal();
-    } else {
-      setPledgeError("Erreur interne lors de la transaction fictive.");
+    try {
+      const res = await api.projects.support(project.id, amount);
+      if (res.success) {
+        setProject(res.data);
+        setToast(res.message || `Merci ! Votre promesse de soutien de ${amount} $ a été enregistrée.`);
+        closePledgeModal();
+      } else {
+        setPledgeError(res.message || "Erreur lors de la transaction fictive.");
+      }
+    } catch (err) {
+      setPledgeError("Erreur réseau ou serveur lors de la validation du soutien.");
     }
   };
 

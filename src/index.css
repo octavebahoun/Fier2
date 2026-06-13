@@ -5,45 +5,52 @@
   --color-bg-primary: #080B14;
   --color-bg-secondary: #0D1120;
   --color-bg-tertiary: #111827;
-  
+
   --color-accent-primary: #1B4F8A;
   --color-accent-secondary: #F5A623;
   --color-accent-tertiary: #E8640C;
-  
+
   --color-accent-bleue: #1B4F8A;
   --color-accent-amber: #F5A623;
   --color-accent-blue-marine: #1B4F8A;
   --color-fieri-blue: #1B6FD8;
   --color-fieri-bleue: #F5821F;
-  
+
   --color-text-primary: #F0EDE8;
-  --color-text-secondary: #A0A8B8;
+  --color-text-secondary: white;
   --color-text-muted: #5A6070;
-  
+
   --color-border-subtle: rgba(255, 255, 255, 0.06);
   --color-border-glow: rgba(27, 79, 138, 0.4);
   --color-grid-line: rgba(255, 255, 255, 0.03);
-  
+
   --font-sans: 'Plus Jakarta Sans', sans-serif;
-  
+
   /* Custom Animations and Keyframes */
   --animate-pulse-dot: pulse-dot 2s ease-in-out infinite;
   --animate-pulse-glow: pulse-glow 3s ease-in-out infinite;
-  
+
   @keyframes pulse-dot {
-    0%, 100% {
+
+    0%,
+    100% {
       opacity: 1;
       transform: scale(1);
     }
+
     50% {
       opacity: 0.6;
       transform: scale(0.85);
     }
   }
+
   @keyframes pulse-glow {
-    0%, 100% {
+
+    0%,
+    100% {
       box-shadow: 0 0 15px rgba(27, 79, 138, 0.2);
     }
+
     50% {
       box-shadow: 0 0 25px rgba(27, 79, 138, 0.4);
     }
@@ -104,6 +111,7 @@ body {
 .blueprint-grid {
   position: relative;
 }
+
 .blueprint-grid::before {
   content: '';
   position: absolute;
@@ -122,13 +130,16 @@ body {
   width: 8px;
   height: 8px;
 }
+
 ::-webkit-scrollbar-track {
   background: var(--color-bg-primary);
 }
+
 ::-webkit-scrollbar-thumb {
   background: rgba(255, 255, 255, 0.1);
   border-radius: 4px;
 }
+
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(255, 255, 255, 0.2);
 }
@@ -168,6 +179,7 @@ body {
 .dot-grid {
   position: relative;
 }
+
 .dot-grid::before {
   content: '';
   position: absolute;
@@ -183,16 +195,20 @@ body {
     stroke-dashoffset: 200;
     opacity: 0;
   }
+
   20% {
     opacity: 1;
   }
+
   70% {
     stroke-dashoffset: 0;
   }
+
   85% {
     stroke-dashoffset: 0;
     opacity: 1;
   }
+
   100% {
     stroke-dashoffset: -200;
     opacity: 0;
@@ -221,18 +237,36 @@ body {
 
 /* === LIVE STREAMING BADGE ANIMATION === */
 @keyframes pulse-live {
-  0%, 100% { transform: scale(1); opacity: 1; }
-  50%       { transform: scale(1.5); opacity: 0.7; }
+
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+
+  50% {
+    transform: scale(1.5);
+    opacity: 0.7;
+  }
 }
+
 .animate-pulse-live {
   animation: pulse-live 2s ease-in-out infinite;
 }
 
 /* === EVENTS TIMELINE ITEM GLOW === */
 @keyframes timeline-glow {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(108, 76, 241, 0.4); }
-  50%       { box-shadow: 0 0 0 6px rgba(108, 76, 241, 0); }
+
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(108, 76, 241, 0.4);
+  }
+
+  50% {
+    box-shadow: 0 0 0 6px rgba(108, 76, 241, 0);
+  }
 }
+
 .animate-timeline-glow {
   animation: timeline-glow 2.5s ease-out infinite;
 }

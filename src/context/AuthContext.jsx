@@ -5,11 +5,12 @@ const AuthContext = createContext(null);
 
 // ─── Hiérarchie des rôles ───────────────────────────────────────────────────
 // Chaque rôle englobe tous les rôles de niveau inférieur.
-// VISITEUR < ETUDIANT < CHERCHEUR < ADMIN
+// VISITEUR < ETUDIANT < CHERCHEUR ≈ MENTOR < ADMIN
 export const ROLE_LEVELS = {
   VISITEUR:  0,
   ETUDIANT:  1,
   CHERCHEUR: 2,
+  MENTOR:    2, // Même niveau que CHERCHEUR, distingué par badge
   ADMIN:     3,
 };
 
@@ -18,8 +19,12 @@ export const ROLES = {
   VISITEUR:  'VISITEUR',
   ETUDIANT:  'ETUDIANT',
   CHERCHEUR: 'CHERCHEUR',
+  MENTOR:    'MENTOR',
   ADMIN:     'ADMIN',
 };
+
+// Types de badges disponibles (attribués par Admin ou Responsable de club)
+export const BADGE_TYPES = ['CHERCHEUR', 'MENTOR', 'FORMATEUR', 'AMBASSADEUR', 'INNOVATEUR'];
 
 export function AuthProvider({ children }) {
   const [user, setUser]       = useState(null);
@@ -140,6 +145,27 @@ export function AuthProvider({ children }) {
   const isResearcher = useCallback(() => hasMinRole('CHERCHEUR'), [hasMinRole]);
   const isStudent    = useCallback(() => hasMinRole('ETUDIANT'), [hasMinRole]);
   const isEtudiant   = isStudent; // alias francophone
+  const isMentor     = useCallback(() => {
+    // Un MENTOR est soit un user avec role='MENTOR', soit un CHERCHEUR/ADMIN avec le badge MENTOR
+    if (!user) return false;
+    if (user.role?.toUpperCase() === 'MENTOR') return true;
+    // Vérifier les badges dans mockDb (disponible côté client uniquement)
+    try {
+      const badges = JSON.parse(localStorage.getItem('fieri_db_badges') || '[]');
+      return badges.some(b => b.userId === String(user.id) && b.badgeType === 'MENTOR');
+    } catch { return false; }
+  }, [user]);
+
+  /**
+   * hasBadge(badgeType) — vérifie si l'utilisateur possède un badge spécifique.
+   */
+  const hasBadge = useCallback((badgeType) => {
+    if (!user) return false;
+    try {
+      const badges = JSON.parse(localStorage.getItem('fieri_db_badges') || '[]');
+      return badges.some(b => b.userId === String(user.id) && b.badgeType === badgeType?.toUpperCase());
+    } catch { return false; }
+  }, [user]);
 
   const value = useMemo(() => ({
     user,
@@ -155,8 +181,11 @@ export function AuthProvider({ children }) {
     isResearcher,
     isStudent,
     isEtudiant,
+    isMentor,
+    hasBadge,
     ROLES,
     ROLE_LEVELS,
+    BADGE_TYPES,
   }), [
     user,
     token,
@@ -169,7 +198,9 @@ export function AuthProvider({ children }) {
     isAdmin,
     isResearcher,
     isStudent,
-    isEtudiant
+    isEtudiant,
+    isMentor,
+    hasBadge,
   ]);
 
   return (

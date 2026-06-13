@@ -4,7 +4,7 @@ import {
   Calendar, User, Clock, CheckCircle, Info, Lock, BookOpen,
   GraduationCap, Zap, Filter, Search, Award, AlertCircle, Users
 } from 'lucide-react';
-import mockDb from '../services/mockDb.js';
+import { api } from '../services/api.js';
 import { useAuth } from '../context/AuthContext.jsx';
 import FadeInWhenVisible from '../components/home/FadeInWhenVisible.jsx';
 
@@ -310,17 +310,20 @@ export default function Workshops({ navigate }) {
   const [selectedLevel, setSelectedLevel] = useState('ALL');
 
   // Load static data from mock database
+  const loadData = async () => {
+    try {
+      const workshopsRes = await api.workshops.getAll();
+      const clubsRes = await api.clubs.getAll();
+      if (workshopsRes.success) setWorkshops(workshopsRes.data);
+      if (clubsRes.success) setClubs(clubsRes.data);
+    } catch (err) {
+      console.error("Erreur lors de la récupération des ateliers:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const loadData = () => {
-      try {
-        setWorkshops(mockDb.workshops.getAll());
-        setClubs(mockDb.clubs.getAll());
-      } catch (err) {
-        console.error("Erreur lors de la récupération des ateliers:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
     loadData();
   }, []);
 
@@ -353,51 +356,41 @@ export default function Workshops({ navigate }) {
   }, [workshops]);
 
   // Handle registration action (registers, waitlists or deregisters user)
-  const handleToggleRegister = (workshopId) => {
+  const handleToggleRegister = async (workshopId) => {
     if (!user || togglingId) return;
 
     setTogglingId(workshopId);
 
-    // Simulate subtle latency for Visual Haptic effect
-    setTimeout(() => {
-      try {
-        const userFullName = `${user.firstName} ${user.lastName}`;
-        const res = mockDb.workshops.toggleRegister(workshopId, userFullName);
-        
-        if (res && res.success) {
-          // Re-load list locally to preserve integrity
-          setWorkshops(mockDb.workshops.getAll());
+    try {
+      const userFullName = `${user.firstName} ${user.lastName}`;
+      const res = await api.workshops.toggleRegister(workshopId, userFullName);
+      
+      if (res && res.success) {
+        // Re-load list locally to preserve integrity
+        const workshopsRes = await api.workshops.getAll();
+        if (workshopsRes.success) setWorkshops(workshopsRes.data);
 
-          let feedbackText = '';
-          let feedbackType = 'success';
+        let feedbackText = res.message;
+        let feedbackType = 'success';
 
-          if (res.action === 'registered') {
-            feedbackText = `Inscription confirmée pour '${res.workshop.title}' !`;
-          } else if (res.action === 'waitlisted') {
-            feedbackText = `Vous êtes placé en liste d'attente (Position #${res.position}) !`;
-            feedbackType = 'warning';
-          } else if (res.action === 'deregistered') {
-            feedbackText = `Vous êtes désinscrit de l'atelier '${res.workshop.title}'.`;
-            feedbackType = 'warning';
-
-            if (res.promotedUser) {
-              feedbackText = `Place libérée et réattribuée automatiquement au premier membre en attente (${res.promotedUser}) !`;
-              feedbackType = 'success';
-            }
-          } else if (res.action === 'removed_from_waitlist') {
-            feedbackText = `Vous avez quitté la file d'attente de '${res.workshop.title}'.`;
-            feedbackType = 'warning';
-          }
-
-          setToast({ message: feedbackText, type: feedbackType });
+        if (res.action === 'waitlisted') {
+          feedbackType = 'warning';
+        } else if (res.action === 'deregistered') {
+          feedbackType = 'warning';
+        } else if (res.action === 'removed_from_waitlist') {
+          feedbackType = 'warning';
         }
-      } catch (err) {
-        console.error("Failed to register for workshop", err);
-        setToast({ message: "Une erreur s'est produite lors de l'enregistrement.", type: 'danger' });
-      } finally {
-        setTogglingId(null);
+
+        setToast({ message: feedbackText, type: feedbackType });
+      } else {
+        setToast({ message: res.message || "Impossible de modifier votre inscription.", type: 'danger' });
       }
-    }, 350);
+    } catch (err) {
+      console.error("Failed to register for workshop", err);
+      setToast({ message: "Une erreur s'est produite lors de l'enregistrement.", type: 'danger' });
+    } finally {
+      setTogglingId(null);
+    }
   };
 
   return (

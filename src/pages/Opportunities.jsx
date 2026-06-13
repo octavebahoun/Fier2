@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  Search, Sparkles, Plus, Award, Coins, BookOpen, 
-  User, Mail, FileText, CheckCircle2, X, ShieldAlert, 
-  MapPin, Clock, ArrowRight, Briefcase 
+import {
+  Search, Sparkles, Plus, Award, Coins, BookOpen,
+  User, Mail, FileText, CheckCircle2, X, ShieldAlert,
+  MapPin, Clock, ArrowRight, Briefcase
 } from 'lucide-react';
 import { mockDb } from '../services/mockDb';
+import { api } from '../services/api';
 import { useAuth } from '../context/AuthContext.jsx';
 
 // ─────────────────────────── Toast Notification Component ───────────────────────────
@@ -15,8 +16,8 @@ function Toast({ message, type = 'success', onClose }) {
     return () => clearTimeout(timer);
   }, [onClose]);
 
-  const bgClass = type === 'success' 
-    ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400' 
+  const bgClass = type === 'success'
+    ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'
     : 'bg-rose-500/10 border-rose-500/30 text-rose-400';
 
   return (
@@ -40,8 +41,10 @@ export default function Opportunities({ navigate }) {
   const { user, hasMinRole } = useAuth();
   const [opportunities, setOpportunities] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
+  const [activeTab, setActiveTab] = useState('research'); // 'research' or 'partners'
   const [activeType, setActiveType] = useState('all');
   const [toast, setToast] = useState(null);
+  const [appliedOpportunityIds, setAppliedOpportunityIds] = useState(new Set());
 
   // Application Modal state
   const [selectedOpportunity, setSelectedOpportunity] = useState(null);
@@ -61,17 +64,46 @@ export default function Opportunities({ navigate }) {
   const applyTriggerRef = useRef(null);
   const publishTriggerRef = useRef(null);
 
+  const fetchOpportunities = async () => {
+    try {
+      const res = await api.opportunities.getAll();
+      if (res.success) {
+        setOpportunities(res.data);
+      }
+    } catch (err) {
+      console.error("Erreur lors de la récupération des opportunités:", err);
+    }
+  };
+
+  const fetchMyApplications = async () => {
+    if (!user) {
+      setAppliedOpportunityIds(new Set());
+      return;
+    }
+    try {
+      const res = await api.applications.getMyApplications();
+      if (res.success && res.data) {
+        setAppliedOpportunityIds(new Set(res.data.map(app => app.opportunityId)));
+      }
+    } catch (err) {
+      console.error("Erreur lors de la récupération de mes candidatures:", err);
+    }
+  };
+
   useEffect(() => {
-    // Fetch opportunities list from mockDb
-    setOpportunities(mockDb.opportunities.getAll());
+    fetchOpportunities();
   }, []);
+
+  useEffect(() => {
+    fetchMyApplications();
+  }, [user]);
 
   // Autofill student form fields once user changes
   useEffect(() => {
     if (user) {
       setApplyForm(prev => ({
         ...prev,
-        name: user.name || '',
+        name: user.firstName && user.lastName ? `${user.firstName} ${user.lastName}` : (user.name || ''),
         email: user.email || ''
       }));
     }
@@ -79,15 +111,20 @@ export default function Opportunities({ navigate }) {
 
   // Filter opportunities by text query & type select
   const filteredOpportunities = opportunities.filter(opt => {
-    const matchesSearch = 
+    const matchesSearch =
       opt.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       opt.discipline.toLowerCase().includes(searchQuery.toLowerCase()) ||
       opt.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
       opt.author.toLowerCase().includes(searchQuery.toLowerCase());
 
-    const matchesType = activeType === 'all' || opt.type === activeType;
-
-    return matchesSearch && matchesType;
+    if (activeTab === 'partners') {
+      return opt.type === 'Exclusivités Partenaires' && matchesSearch;
+    } else {
+      const matchesType = activeType === 'all'
+        ? opt.type !== 'Exclusivités Partenaires'
+        : opt.type === activeType;
+      return opt.type !== 'Exclusivités Partenaires' && matchesSearch && matchesType;
+    }
   });
 
   // Modal keydowns for Escape closing
@@ -125,7 +162,7 @@ export default function Opportunities({ navigate }) {
     setSelectedOpportunity(opt);
     setApplyError('');
     setApplyForm({
-      name: user.name || '',
+      name: user.firstName && user.lastName ? `${user.firstName} ${user.lastName}` : (user.name || ''),
       email: user.email || '',
       achievements: '',
       cvFile: ''
@@ -137,14 +174,32 @@ export default function Opportunities({ navigate }) {
     if (applyTriggerRef.current) applyTriggerRef.current.focus();
   };
 
-  const handleApplySubmit = (e) => {
+  const handleApplySubmit = async (e) => {
     e.preventDefault();
     if (!applyForm.name || !applyForm.email || !applyForm.achievements) {
       setApplyError("Veuillez remplir tous les champs requis.");
       return;
     }
-    setToast("Votre candidature scientifique a été transmise au laboratoire avec succès !");
-    closeApplyModal();
+    try {
+      const res = await api.applications.submit({
+        opportunityId: selectedOpportunity.id,
+        coverLetter: applyForm.achievements,
+        cvUrl: applyForm.cvFile ? `https://fieri-storage.local/${applyForm.cvFile}` : null
+      });
+
+      if (res.success) {
+        const successMessage = selectedOpportunity.type === 'Exclusivités Partenaires'
+          ? "Votre demande d'activation a été transmise au partenaire social avec succès ! Vous recevrez les instructions de l'offre par email."
+          : (res.message || "Votre candidature scientifique a été transmise au laboratoire avec succès !");
+        setToast(successMessage);
+        setAppliedOpportunityIds(prev => new Set([...prev, selectedOpportunity.id]));
+        closeApplyModal();
+      } else {
+        setApplyError(res.message || "Impossible de soumettre la candidature.");
+      }
+    } catch (err) {
+      setApplyError("Erreur réseau ou serveur lors de l'envoi de la candidature.");
+    }
   };
 
   // --- ACTIONS FOR CREATING (RESEARCHER CONNECTED) ---
@@ -161,7 +216,14 @@ export default function Opportunities({ navigate }) {
     publishTriggerRef.current = document.activeElement;
     setIsPublishModalOpen(true);
     setPublishError('');
-    setPublishForm({ title: '', type: 'CDD R&D', discipline: '', salary: '', description: '', requirements: '' });
+    setPublishForm({
+      title: '',
+      type: activeTab === 'partners' ? 'Exclusivités Partenaires' : 'CDD R&D',
+      discipline: '',
+      salary: '',
+      description: '',
+      requirements: ''
+    });
   };
 
   const closePublishModal = () => {
@@ -169,34 +231,43 @@ export default function Opportunities({ navigate }) {
     if (publishTriggerRef.current) publishTriggerRef.current.focus();
   };
 
-  const handlePublishSubmit = (e) => {
+  const handlePublishSubmit = async (e) => {
     e.preventDefault();
-    const sal = parseFloat(publishForm.salary);
+    const isPartner = publishForm.type === 'Exclusivités Partenaires';
+    const sal = isPartner ? publishForm.salary : parseFloat(publishForm.salary);
     if (!publishForm.title || !publishForm.discipline || !publishForm.description || !publishForm.requirements) {
       setPublishError("Tous les champs sont requis.");
       return;
     }
-    if (isNaN(sal) || sal <= 0) {
+    if (!isPartner && (isNaN(sal) || sal <= 0)) {
       setPublishError("Le salaire mensuel indiqué doit être supérieur à zéro.");
       return;
     }
+    if (isPartner && !publishForm.salary) {
+      setPublishError("Veuillez indiquer la valeur de l'avantage (ex. Remise -50%).");
+      return;
+    }
 
-    const newOpt = mockDb.opportunities.add({
-      title: publishForm.title,
-      type: publishForm.type,
-      discipline: publishForm.discipline,
-      salary: sal,
-      description: publishForm.description,
-      requirements: publishForm.requirements,
-      author: user.name || "Chercheur FIERI"
-    });
+    try {
+      const res = await api.opportunities.create({
+        title: publishForm.title,
+        type: publishForm.type,
+        discipline: publishForm.discipline,
+        salary: sal,
+        description: publishForm.description,
+        requirements: publishForm.requirements,
+        author: user.firstName && user.lastName ? `${user.firstName} ${user.lastName}` : (user.name || "Chercheur FIERI")
+      });
 
-    if (newOpt) {
-      setOpportunities(mockDb.opportunities.getAll());
-      setToast("Nouvelle opportunité publiée avec succès !");
-      closePublishModal();
-    } else {
-      setPublishError("Erreur interne lors de la sauvegarde.");
+      if (res.success) {
+        setToast("Nouvelle opportunité publiée avec succès !");
+        fetchOpportunities();
+        closePublishModal();
+      } else {
+        setPublishError(res.message || "Erreur lors de la sauvegarde.");
+      }
+    } catch (err) {
+      setPublishError("Erreur réseau ou serveur lors de la publication de l'opportunité.");
     }
   };
 
@@ -213,7 +284,7 @@ export default function Opportunities({ navigate }) {
 
   return (
     <div className="max-w-[88rem] mx-auto w-full py-24 px-6 md:px-12 lg:px-24 flex flex-col gap-12 relative min-h-screen">
-      
+
       <AnimatePresence>
         {toast && <Toast message={toast} onClose={() => setToast(null)} />}
       </AnimatePresence>
@@ -225,36 +296,117 @@ export default function Opportunities({ navigate }) {
       {/* Hero Header */}
       <div className="flex flex-col md:flex-row gap-6 items-start md:items-center justify-between relative z-10">
         <div className="space-y-4 max-w-2xl">
-          <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-fieri-blue/10 border border-fieri-blue/20 text-fieri-blue text-xs font-bold w-fit">
-            <Briefcase className="w-3.5 h-3.5" />
-            <span>CARRIÈRES & MATCHMAKING R&D</span>
-          </div>
-          <h1 className="text-4xl md:text-5xl font-black tracking-tight bg-gradient-to-r from-white via-text-secondary to-fieri-blue bg-clip-text text-transparent leading-tight">
-            Opportunités de Recherche
-          </h1>
-          <p className="text-text-secondary text-sm leading-relaxed">
-            Rejoignez nos laboratoires et contribuez aux ruptures scientifiques. Postulez à nos offres de Doctorat, CDD R&D, et stages avancés.
-          </p>
+          {activeTab === 'research' ? (
+            <>
+              <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-fieri-blue/10 border border-fieri-blue/20 text-fieri-blue text-xs font-bold w-fit">
+                <Briefcase className="w-3.5 h-3.5" />
+                <span>CARRIÈRES & MATCHMAKING R&D</span>
+              </div>
+              <h1 className="text-4xl md:text-5xl font-black tracking-tight bg-gradient-to-r from-white via-text-secondary to-fieri-blue bg-clip-text text-transparent leading-tight">
+                Opportunités de Recherche
+              </h1>
+              <p className="text-text-secondary text-sm leading-relaxed">
+                Rejoignez nos laboratoires et contribuez aux ruptures scientifiques. Postulez à nos offres de Doctorat, CDD R&D, et stages avancés.
+              </p>
+            </>
+          ) : (
+            <>
+              <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs font-bold w-fit">
+                <Sparkles className="w-3.5 h-3.5 text-rose-400" />
+                <span>AVANTAGES SOCIAUX & PARTENARIATS</span>
+              </div>
+              <h1 className="text-4xl md:text-5xl font-black tracking-tight bg-gradient-to-r from-white via-text-secondary to-rose-400 bg-clip-text text-transparent leading-tight">
+                Offres & Exclusivités
+              </h1>
+              <p className="text-text-secondary text-sm leading-relaxed">
+                Profitez des avantages exclusifs, réductions de loyer, bourses d'adhésion et subventions négociés pour les membres de la Cité FIERI auprès de nos partenaires sociaux.
+              </p>
+            </>
+          )}
         </div>
 
         <button
           onClick={openPublishModal}
-          className="px-5 py-3 rounded-2xl text-xs font-black uppercase tracking-wider text-white bg-fieri-blue hover:bg-fieri-blue/90 shadow-lg shadow-fieri-blue/20 transition-all cursor-pointer flex items-center gap-2"
+          className={`px-5 py-3 rounded-2xl text-xs font-black uppercase tracking-wider text-white transition-all cursor-pointer flex items-center gap-2 shadow-lg ${
+            activeTab === 'partners'
+              ? 'bg-rose-500 hover:bg-rose-500/90 shadow-rose-500/20'
+              : 'bg-fieri-blue hover:bg-fieri-blue/90 shadow-fieri-blue/20'
+          }`}
         >
           <Plus className="w-4 h-4" />
-          Publier une offre
+          {activeTab === 'partners' ? 'Proposer une exclusivité' : 'Publier une offre'}
         </button>
       </div>
 
+      {/* Tab Filter: Research / Social Partners Switcher */}
+      <div className="inline-flex items-center gap-1 p-1 rounded-2xl bg-white/3 border border-white/5 backdrop-blur-md w-fit relative z-10">
+        <button
+          onClick={() => {
+            setActiveTab('research');
+            setActiveType('all');
+          }}
+          className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+            activeTab === 'research'
+              ? 'bg-fieri-blue/20 border border-fieri-blue/30 text-fieri-blue shadow-sm shadow-fieri-blue/10'
+              : 'text-text-secondary hover:text-text-primary border border-transparent'
+          }`}
+        >
+          <Briefcase className="w-4.5 h-4.5" />
+          Opportunités R&D
+        </button>
+        <button
+          onClick={() => {
+            setActiveTab('partners');
+            setActiveType('Exclusivités Partenaires');
+          }}
+          className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+            activeTab === 'partners'
+              ? 'bg-rose-500/20 border border-rose-500/30 text-rose-400 shadow-sm shadow-rose-500/10'
+              : 'text-text-secondary hover:text-text-primary border border-transparent'
+          }`}
+        >
+          <Sparkles className="w-4.5 h-4.5" />
+          Offres & Exclusivités
+        </button>
+      </div>
+
+      {/* Social Partners Directory Section (only when in partners tab) */}
+      {activeTab === 'partners' && (
+        <div className="flex flex-col gap-4 relative z-10">
+          <h3 className="text-xs font-black uppercase tracking-wider text-text-secondary">
+            Nos partenaires sociaux à la Cité FIERI
+          </h3>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {[
+              { name: "MUA", role: "Mutuelle & Santé", desc: "Mutuelle Universitaire d'Afrique", color: "from-emerald-500/10 to-teal-500/5 hover:border-emerald-500/30", textColor: "text-emerald-400" },
+              { name: "COUS", role: "Logement & Social", desc: "Centre des Œuvres Universitaires", color: "from-amber-500/10 to-orange-500/5 hover:border-amber-500/30", textColor: "text-amber-400" },
+              { name: "Trans-Metro", role: "Mobilité Urbaine", desc: "Navettes & mobilités durables", color: "from-cyan-500/10 to-blue-500/5 hover:border-cyan-500/30", textColor: "text-cyan-400" },
+              { name: "Valkyrie R&D Labs", role: "Équipement & Logiciels", desc: "Dotation technologique", color: "from-rose-500/10 to-purple-500/5 hover:border-rose-500/30", textColor: "text-rose-400" }
+            ].map(partner => (
+              <div key={partner.name} className={`p-5 rounded-2xl bg-gradient-to-br ${partner.color} border border-white/5 flex flex-col gap-2 transition-all`}>
+                <div className="flex justify-between items-start">
+                  <span className={`text-base font-black tracking-wider ${partner.textColor}`}>{partner.name}</span>
+                  <span className="text-[8px] uppercase tracking-wider font-extrabold bg-white/5 px-2 py-0.5 rounded text-text-muted">Partenaire Officiel</span>
+                </div>
+                <div>
+                  <h4 className="text-[11px] font-bold text-text-primary">{partner.role}</h4>
+                  <p className="text-[10px] text-text-muted mt-1 leading-normal">{partner.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
       {/* Search & Selection Filter Header */}
       <div className="flex flex-col md:flex-row gap-4 items-center justify-between glass-panel border border-white/5 rounded-2xl p-4 relative z-10 bg-[#0d1120]/40">
-        
+
         {/* Input */}
         <div className="relative w-full md:max-w-md">
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted" />
           <input
             type="text"
-            placeholder="Rechercher par discipline, mot clé, superviseur..."
+            placeholder={activeTab === 'partners' ? "Rechercher une exclusivité, un partenaire..." : "Rechercher par discipline, mot clé, superviseur..."}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="w-full bg-white/3 border border-white/5 focus:border-fieri-blue/30 rounded-xl py-2.5 pl-11 pr-4 text-xs text-text-primary focus:outline-none transition-all"
@@ -262,104 +414,145 @@ export default function Opportunities({ navigate }) {
         </div>
 
         {/* Buttons filters */}
-        <div className="flex gap-2 w-full md:w-auto overflow-x-auto pb-1 md:pb-0 scrollbar-none">
-          {['all', 'CDD R&D', 'Doctorat', 'Stage de Recherche'].map((type) => (
-            <button
-              key={type}
-              onClick={() => setActiveType(type)}
-              className={`px-4 py-2 rounded-xl text-xs font-bold border transition-all shrink-0 cursor-pointer ${
-                activeType === type
-                  ? 'bg-fieri-blue border-fieri-blue text-white shadow-lg shadow-fieri-blue/10'
-                  : 'bg-white/3 border-white/5 text-text-secondary hover:text-text-primary'
-              }`}
-            >
-              {type === 'all' ? 'Toutes les offres' : type}
-            </button>
-          ))}
-        </div>
+        {activeTab === 'research' ? (
+          <div className="flex gap-2 w-full md:w-auto overflow-x-auto pb-1 md:pb-0 scrollbar-none">
+            {['all', 'CDD R&D', 'Doctorat', 'Stage de Recherche'].map((type) => (
+              <button
+                key={type}
+                onClick={() => setActiveType(type)}
+                className={`px-4 py-2 rounded-xl text-xs font-bold border transition-all shrink-0 cursor-pointer ${activeType === type
+                    ? 'bg-fieri-blue border-fieri-blue text-white shadow-lg shadow-fieri-blue/10'
+                    : 'bg-white/3 border-white/5 text-text-secondary hover:text-text-primary'
+                  }`}
+              >
+                {type === 'all' ? 'Toutes les offres' : type}
+              </button>
+            ))}
+          </div>
+        ) : (
+          <div className="text-[10px] font-extrabold uppercase tracking-wider text-rose-400 bg-rose-500/10 border border-rose-500/20 px-3.5 py-2 rounded-xl flex items-center gap-1.5 shrink-0">
+            <Sparkles className="w-3.5 h-3.5" />
+            <span>Offres Partenaires Socialement Engagés</span>
+          </div>
+        )}
 
       </div>
 
       {/* Interactive Opportunities Grid */}
       <div className="relative z-10">
         {filteredOpportunities.length > 0 ? (
-          <motion.div 
+          <motion.div
             variants={gridVariants}
             initial="hidden"
             animate="visible"
             className="grid grid-cols-1 md:grid-cols-2 gap-8"
           >
-            {filteredOpportunities.map((opt) => (
-              <motion.div
-                key={opt.id}
-                variants={cardVariants}
-                whileHover={{ y: -4, borderColor: "rgba(59, 130, 246, 0.25)", boxShadow: "0 0 30px rgba(59, 130, 246, 0.1)" }}
-                className="glass-panel border border-white/5 bg-[#0d1120]/60 backdrop-blur-xl rounded-3xl p-6 md:p-8 flex flex-col justify-between gap-6 transition-all"
-              >
-                <div className="space-y-4">
-                  {/* Top info row */}
-                  <div className="flex justify-between items-center gap-4">
-                    <span className={`text-[9px] font-black uppercase tracking-wider px-2.5 py-0.5 rounded-md border ${
-                      opt.type === 'CDD R&D'
-                        ? 'text-cyan-400 bg-cyan-500/10 border-cyan-500/10'
-                        : opt.type === 'Doctorat'
-                          ? 'text-fieri-blue bg-fieri-blue/10 border-fieri-blue/10'
-                          : 'text-amber-400 bg-amber-500/10 border-amber-500/10'
-                    }`}>
-                      {opt.type}
-                    </span>
-                    
-                    <span className="text-[9px] font-black uppercase tracking-wider text-text-muted bg-white/5 px-2 py-0.5 rounded">
-                      {opt.discipline}
-                    </span>
-                  </div>
+            {filteredOpportunities.map((opt) => {
+              const isPartnerOffer = opt.type === 'Exclusivités Partenaires';
+              return (
+                <motion.div
+                  key={opt.id}
+                  variants={cardVariants}
+                  whileHover={{
+                    y: -4,
+                    borderColor: isPartnerOffer ? "rgba(244, 63, 94, 0.25)" : "rgba(59, 130, 246, 0.25)",
+                    boxShadow: isPartnerOffer ? "0 0 30px rgba(244, 63, 94, 0.1)" : "0 0 30px rgba(59, 130, 246, 0.1)"
+                  }}
+                  className={`glass-panel border bg-[#0d1120]/60 backdrop-blur-xl rounded-3xl p-6 md:p-8 flex flex-col justify-between gap-6 transition-all ${
+                    isPartnerOffer ? 'border-rose-500/15' : 'border-white/5'
+                  }`}
+                >
+                  <div className="space-y-4">
+                    {/* Top info row */}
+                    <div className="flex justify-between items-center gap-4">
+                      <span className={`text-[9px] font-black uppercase tracking-wider px-2.5 py-0.5 rounded-md border ${
+                        isPartnerOffer
+                          ? 'text-rose-400 bg-rose-500/10 border-rose-500/10'
+                          : opt.type === 'CDD R&D'
+                            ? 'text-cyan-400 bg-cyan-500/10 border-cyan-500/10'
+                            : opt.type === 'Doctorat'
+                              ? 'text-fieri-blue bg-fieri-blue/10 border-fieri-blue/10'
+                              : 'text-amber-400 bg-amber-500/10 border-amber-500/10'
+                      }`}>
+                        {isPartnerOffer ? 'Partenaire Social' : opt.type}
+                      </span>
 
-                  {/* Title and author */}
-                  <div className="space-y-2">
-                    <h3 className="text-xl font-black tracking-tight text-text-primary">
-                      {opt.title}
-                    </h3>
-                    <p className="text-[10px] text-text-muted flex items-center gap-1">
-                      Proposé par : <strong className="text-fieri-blue font-bold">{opt.author}</strong>
-                    </p>
-                  </div>
+                      <span className={`text-[9px] font-black uppercase tracking-wider bg-white/5 px-2 py-0.5 rounded ${
+                        isPartnerOffer ? 'text-rose-300' : 'text-text-muted'
+                      }`}>
+                        {opt.discipline}
+                      </span>
+                    </div>
 
-                  {/* Body details */}
-                  <div className="space-y-3 pt-3 border-t border-white/5">
-                    <div>
-                      <h4 className="text-[10px] font-black uppercase tracking-wider text-text-secondary mb-1">Mission</h4>
-                      <p className="text-[11px] text-text-secondary leading-relaxed line-clamp-3 font-medium">
-                        {opt.description}
+                    {/* Title and author */}
+                    <div className="space-y-2">
+                      <h3 className="text-xl font-black tracking-tight text-text-primary">
+                        {opt.title}
+                      </h3>
+                      <p className="text-[10px] text-text-muted flex items-center gap-1">
+                        {isPartnerOffer ? 'Partenaire :' : 'Proposé par :'} <strong className={`${isPartnerOffer ? 'text-rose-400' : 'text-fieri-blue'} font-bold`}>{opt.author}</strong>
                       </p>
                     </div>
 
-                    <div>
-                      <h4 className="text-[10px] font-black uppercase tracking-wider text-text-secondary mb-1">Pré-requis</h4>
-                      <p className="text-[11px] text-text-muted leading-relaxed line-clamp-2">
-                        {opt.requirements}
-                      </p>
+                    {/* Body details */}
+                    <div className="space-y-3 pt-3 border-t border-white/5">
+                      <div>
+                        <h4 className="text-[10px] font-black uppercase tracking-wider text-text-secondary mb-1">
+                          {isPartnerOffer ? "Avantage exclusif" : "Mission"}
+                        </h4>
+                        <p className="text-[11px] text-text-secondary leading-relaxed line-clamp-3 font-medium">
+                          {opt.description}
+                        </p>
+                      </div>
+
+                      <div>
+                        <h4 className="text-[10px] font-black uppercase tracking-wider text-text-secondary mb-1">
+                          {isPartnerOffer ? "Conditions d'accès" : "Pré-requis"}
+                        </h4>
+                        <p className="text-[11px] text-text-muted leading-relaxed line-clamp-2">
+                          {opt.requirements}
+                        </p>
+                      </div>
                     </div>
                   </div>
-                </div>
 
-                {/* Footer Info & Application CTA */}
-                <div className="flex justify-between items-center pt-4 border-t border-white/5">
-                  <div className="flex items-center gap-1.5 text-xs text-emerald-400 font-black">
-                    <Coins className="w-4 h-4 text-emerald-400" />
-                    <span>{opt.salary} $ / mois</span>
+                  {/* Footer Info & Application CTA */}
+                  <div className="flex justify-between items-center pt-4 border-t border-white/5">
+                    {isPartnerOffer ? (
+                      <div className="flex items-center gap-1.5 text-xs text-rose-400 font-black">
+                        <Sparkles className="w-4 h-4 text-rose-400" />
+                        <span>{opt.salary}</span>
+                      </div>
+                    ) : (
+                      <div className="flex items-center gap-1.5 text-xs text-emerald-400 font-black">
+                        <Coins className="w-4 h-4 text-emerald-400" />
+                        <span>{opt.salary} $ / mois</span>
+                      </div>
+                    )}
+
+                    {appliedOpportunityIds.has(opt.id) ? (
+                      <span className="px-4 py-2 text-[10px] font-black uppercase tracking-wider text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 rounded-xl flex items-center gap-1.5">
+                        {isPartnerOffer ? 'Offre activée' : 'Candidature transmise'}
+                        <CheckCircle2 className="w-3.5 h-3.5" />
+                      </span>
+                    ) : (
+                      <button
+                        onClick={() => openApplyModal(opt)}
+                        className={`px-4 py-2 text-[10px] font-black uppercase tracking-wider text-white transition-all rounded-xl shadow-lg flex items-center gap-1.5 cursor-pointer ${
+                          isPartnerOffer
+                            ? 'bg-rose-500 hover:bg-rose-500/95 shadow-rose-500/10'
+                            : 'bg-fieri-blue hover:bg-fieri-blue/95 shadow-fieri-blue/10'
+                        }`}
+                      >
+                        {isPartnerOffer ? "En profiter" : "Postuler"}
+                        <ArrowRight className="w-3.5 h-3.5" />
+                      </button>
+                    )}
                   </div>
 
-                  <button
-                    onClick={() => openApplyModal(opt)}
-                    className="px-4 py-2 text-[10px] font-black uppercase tracking-wider text-white bg-fieri-blue hover:bg-fieri-blue/95 transition-all rounded-xl shadow-lg shadow-fieri-blue/10 flex items-center gap-1.5 cursor-pointer"
-                  >
-                    Postuler
-                    <ArrowRight className="w-3.5 h-3.5" />
-                  </button>
-                </div>
-
-              </motion.div>
-            ))}
+                </motion.div>
+              );
+            })}
           </motion.div>
         ) : (
           /* Empty state */
@@ -406,10 +599,15 @@ export default function Opportunities({ navigate }) {
 
               <div className="space-y-1">
                 <h3 className="text-xl font-black text-text-primary tracking-tight leading-tight">
-                  Rejoindre le Laboratoire
+                  {selectedOpportunity.type === 'Exclusivités Partenaires' ? "Bénéficier de l'offre partenaire" : "Rejoindre le Laboratoire"}
                 </h3>
                 <p className="text-xs text-text-secondary leading-relaxed">
-                  Candidature scientifique pour : <strong className="text-fieri-blue font-bold">{selectedOpportunity.title}</strong>.
+                  {selectedOpportunity.type === 'Exclusivités Partenaires'
+                    ? `Demande d'activation pour l'exclusivité : `
+                    : `Candidature scientifique pour : `}
+                  <strong className={`${selectedOpportunity.type === 'Exclusivités Partenaires' ? 'text-rose-400' : 'text-fieri-blue'} font-bold`}>
+                    {selectedOpportunity.title}
+                  </strong>.
                 </p>
               </div>
 
@@ -456,13 +654,17 @@ export default function Opportunities({ navigate }) {
 
                 <div className="flex flex-col gap-1.5">
                   <label htmlFor="student-achievements" className="text-[9px] font-black uppercase tracking-wider text-text-secondary">
-                    Réalisations Scientifiques Majeures / Motivations
+                    {selectedOpportunity.type === 'Exclusivités Partenaires'
+                      ? "Motivations & Justification de la demande d'avantage"
+                      : "Réalisations Scientifiques Majeures / Motivations"}
                   </label>
                   <textarea
                     id="student-achievements"
                     rows="3"
                     required
-                    placeholder="Décrivez vos projets académiques, contributions open source ou publications en lien avec cette discipline."
+                    placeholder={selectedOpportunity.type === 'Exclusivités Partenaires'
+                      ? "Veuillez indiquer vos motivations ou préciser vos besoins par rapport à cet avantage social."
+                      : "Décrivez vos projets académiques, contributions open source ou publications en lien avec cette discipline."}
                     value={applyForm.achievements}
                     onChange={(e) => setApplyForm({ ...applyForm, achievements: e.target.value })}
                     className="w-full bg-white/3 border border-white/5 rounded-xl p-3 text-xs font-semibold text-text-primary focus:outline-none focus:border-fieri-blue/30 placeholder:text-text-muted"
@@ -470,16 +672,24 @@ export default function Opportunities({ navigate }) {
                 </div>
 
                 <div className="flex flex-col gap-1.5">
-                  <span className="text-[9px] font-black uppercase tracking-wider text-text-secondary">Curriculum Vitae / Portfolio</span>
+                  <span className="text-[9px] font-black uppercase tracking-wider text-text-secondary">
+                    {selectedOpportunity.type === 'Exclusivités Partenaires'
+                      ? "Justificatif d'adhésion / Carte d'étudiant"
+                      : "Curriculum Vitae / Portfolio"}
+                  </span>
                   <div className="border border-dashed border-white/10 rounded-2xl p-4 bg-white/2 text-center flex flex-col items-center justify-center gap-2 hover:border-fieri-blue/30 hover:bg-white/3 transition-colors cursor-pointer relative">
-                    <FileText className="w-6 h-6 text-fieri-blue" />
+                    <FileText className={`w-6 h-6 ${selectedOpportunity.type === 'Exclusivités Partenaires' ? 'text-rose-500' : 'text-fieri-blue'}`} />
                     <div>
-                      <p className="text-[10px] text-text-primary font-bold">Simuler le dépôt d'un fichier PDF</p>
+                      <p className="text-[10px] text-text-primary font-bold">
+                        {selectedOpportunity.type === 'Exclusivités Partenaires'
+                          ? "Déposer un justificatif d'adhésion (PDF, JPG...)"
+                          : "Simuler le dépôt d'un fichier PDF"}
+                      </p>
                       <p className="text-[8px] text-text-muted mt-0.5">Taille max: 10 Mo (Simulation de validation)</p>
                     </div>
                     <input
                       type="file"
-                      accept=".pdf,.zip"
+                      accept=".pdf,.zip,.jpg,.png"
                       className="absolute inset-0 opacity-0 cursor-pointer"
                       onChange={(e) => setApplyForm({ ...applyForm, cvFile: e.target.files[0]?.name || '' })}
                     />
@@ -502,9 +712,13 @@ export default function Opportunities({ navigate }) {
                   </button>
                   <button
                     type="submit"
-                    className="flex-1 py-3 rounded-xl bg-fieri-blue hover:bg-fieri-blue/90 text-white text-xs font-black uppercase tracking-wider shadow-lg shadow-fieri-blue/20 cursor-pointer"
+                    className={`flex-1 py-3 rounded-xl text-white text-xs font-black uppercase tracking-wider shadow-lg cursor-pointer ${
+                      selectedOpportunity.type === 'Exclusivités Partenaires'
+                        ? 'bg-rose-500 hover:bg-rose-500/90 shadow-rose-500/20'
+                        : 'bg-fieri-blue hover:bg-fieri-blue/90 shadow-fieri-blue/20'
+                    }`}
                   >
-                    Transmettre
+                    {selectedOpportunity.type === 'Exclusivités Partenaires' ? "Activer l'offre" : "Transmettre"}
                   </button>
                 </div>
               </form>
@@ -585,6 +799,7 @@ export default function Opportunities({ navigate }) {
                       <option value="CDD R&D">CDD R&D</option>
                       <option value="Doctorat">Doctorat</option>
                       <option value="Stage de Recherche">Stage de Recherche</option>
+                      <option value="Exclusivités Partenaires">Exclusivité Partenaire (Sociaux)</option>
                     </select>
                   </div>
                 </div>
