@@ -214,8 +214,8 @@ export default function Auth({ navigate, redirectTo, onAuthComplete }) {
             className="absolute inset-0 bg-cover bg-center"
             style={{
               backgroundImage: authMode === 'login'
-                ? "url('/fieri_login_bg.png')"
-                : "url('/fieri_register_bg.png')"
+                ? "url('/fieri_login_bg.webp')"
+                : "url('/fieri_register_bg.webp')"
             }}
           />
         </AnimatePresence>

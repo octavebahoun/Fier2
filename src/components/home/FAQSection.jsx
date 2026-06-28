@@ -18,7 +18,7 @@ export default function FAQSection({ faq }) {
           <div className="absolute inset-0 bg-gradient-to-r from-transparent via-bg-primary/95 to-bg-primary z-10" />
           <div className="absolute inset-0 bg-gradient-to-t from-bg-primary via-transparent to-bg-primary z-10" />
           <img 
-            src="/faq_science_abstract.png" 
+            src="/faq_science_abstract.webp" 
             alt="Sciences et Mathématiques FIERI" 
             className="w-full h-full object-cover rounded-full filter blur-[1.5px] brightness-[0.85] contrast-[1.05]"
           />

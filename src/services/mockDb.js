@@ -7,10 +7,10 @@
  */
 
 import initialContent from '../../ancien_contenu.json';
-import roverImg from '../assets/project_slam_rover.png';
-import smartFarmingImg from '../assets/project_smart_farming.png';
-import solarMicrogridImg from '../assets/project_solar_microgrid.png';
-import plantDiseaseImg from '../assets/project_plant_disease_ai.png';
+import roverImg from '../assets/project_slam_rover.webp';
+import smartFarmingImg from '../assets/project_smart_farming.webp';
+import solarMicrogridImg from '../assets/project_solar_microgrid.webp';
+import plantDiseaseImg from '../assets/project_plant_disease_ai.webp';
 
 // Clés d'accès au stockage local avec préfixe fieri_
 const KEYS = {
