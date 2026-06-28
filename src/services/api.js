@@ -1,18 +1,7 @@
-/**
- * FIERI Research Platform — Passerelle API Centrale (Gateway Client)
- * 
- * Cette passerelle gère la communication avec le serveur de production FIERI
- * (https://backend-fieri.vercel.app) pour l'authentification et les métadonnées.
- * 
- * Mode Hybride Résilient :
- * - En développement (`import.meta.env.DEV`) : En cas de déconnexion réseau, d'erreur
- *   HTTP (404/5xx) ou d'absence de serveur local, les requêtes basculent de façon invisible
- *   et silencieuse sur la base locale persistée 'mockDb.js'.
- * - En production (`import.meta.env.PROD`) : Aucun repli silencieux n'est toléré ;
- *   toutes les pannes réseau se propagent pour afficher des notifications d'erreur (Toasts) à l'utilisateur.
- */
-
 import mockDb from './mockDb.js';
+
+/** Mettre à true pour court-circuiter TOUS les appels réseau et utiliser mockDb. */
+const MOCK_MODE = import.meta.env.VITE_MOCK_MODE === 'true';
 
 const BASE_URL = 'https://backend-fieri.vercel.app';
 
@@ -33,10 +22,18 @@ const getHeaders = () => {
 const delay = (ms = 200) => new Promise(resolve => setTimeout(resolve, ms));
 
 /**
- * Exécuteur de requête réseau sécurisé avec basculement automatique en DEV
- * et propagation stricte en PROD.
+ * Exécuteur de requête réseau sécurisé.
+ * Si MOCK_MODE est actif, court-circuite le réseau et appelle directement fallbackAction.
+ * Sinon, effectue la requête HTTP réelle avec basculement silencieux en DEV.
  */
 const request = async (path, options = {}, fallbackAction) => {
+  // ── Mode Mock global : aucun appel réseau ──
+  if (MOCK_MODE) {
+    console.info(`[FIERI API Gateway — MOCK_MODE] ${options.method || 'GET'} ${path}`);
+    if (fallbackAction) return await fallbackAction();
+    throw new Error(`[MOCK_MODE] Aucun fallback défini pour ${path}`);
+  }
+
   try {
     const response = await fetch(`${BASE_URL}${path}`, {
       ...options,
@@ -52,13 +49,10 @@ const request = async (path, options = {}, fallbackAction) => {
 
     return await response.json();
   } catch (err) {
-    if (import.meta.env.DEV) {
-      console.warn(`[FIERI API Gateway] Échec de la requête réseau vers '${path}'. Mode de développement détecté : basculement silencieux sur mockDb.`, err);
-      if (fallbackAction) {
-        return await fallbackAction();
-      }
+    if (import.meta.env.DEV && fallbackAction) {
+      console.warn(`[FIERI API Gateway] Échec vers '${path}' → fallback mockDb.`, err);
+      return await fallbackAction();
     }
-    // En production (ou si pas de fallback), propager l'erreur pour la capturer dans l'IHM
     throw err;
   }
 };
@@ -265,8 +259,12 @@ export const api = {
   // ------------------------------------------------------------
   projects: {
     getAll: async (filters = {}) => {
-      await delay(200);
-      let list = mockDb.projects.getAll();
+      const raw = await request(
+        '/projects',
+        { method: 'GET' },
+        async () => { await delay(200); return { success: true, data: mockDb.projects.getAll() }; }
+      );
+      let list = (raw?.data ?? raw) || [];
 
       if (filters.clubId) {
         list = list.filter(p => p.clubId === filters.clubId);
@@ -289,10 +287,16 @@ export const api = {
     },
 
     getById: async (id) => {
-      await delay(150);
-      const proj = mockDb.projects.getById(id);
-      if (!proj) return { success: false, message: "Projet introuvable." };
-      return { success: true, data: proj };
+      return request(
+        `/projects/${id}`,
+        { method: 'GET' },
+        async () => {
+          await delay(150);
+          const proj = mockDb.projects.getById(id);
+          if (!proj) return { success: false, message: 'Projet introuvable.' };
+          return { success: true, data: proj };
+        }
+      );
     },
 
     toggleStar: async (id) => {
@@ -340,17 +344,28 @@ export const api = {
   // ------------------------------------------------------------
   clubs: {
     getAll: async () => {
-      await delay(150);
-      const user = mockDb.auth.getLocalUser();
-      const userId = user?.id || null;
-      return { success: true, data: mockDb.clubs.getAll(userId) };
+      // userId needed for the mock fallback only; read from localStorage (safe in all contexts)
+      const getUserId = () => {
+        try { const u = JSON.parse(localStorage.getItem('fieri_user')); return u?.id || null; } catch { return null; }
+      };
+      return request(
+        '/clubs',
+        { method: 'GET' },
+        async () => { await delay(150); return { success: true, data: mockDb.clubs.getAll(getUserId()) }; }
+      );
     },
 
     getById: async (id) => {
-      await delay(120);
-      const club = mockDb.clubs.getById(id);
-      if (!club) return { success: false, message: "Club R&D introuvable." };
-      return { success: true, data: club };
+      return request(
+        `/clubs/${id}`,
+        { method: 'GET' },
+        async () => {
+          await delay(120);
+          const club = mockDb.clubs.getById(id);
+          if (!club) return { success: false, message: 'Club R&D introuvable.' };
+          return { success: true, data: club };
+        }
+      );
     },
 
     join: async (id) => {
@@ -396,8 +411,11 @@ export const api = {
   // ------------------------------------------------------------
   workshops: {
     getAll: async () => {
-      await delay(150);
-      return { success: true, data: mockDb.workshops.getAll() };
+      return request(
+        '/workshops',
+        { method: 'GET' },
+        async () => { await delay(150); return { success: true, data: mockDb.workshops.getAll() }; }
+      );
     },
 
     toggleRegister: async (id, userFullName) => {
@@ -462,8 +480,11 @@ export const api = {
   // ------------------------------------------------------------
   events: {
     getAll: async () => {
-      await delay(120);
-      return { success: true, data: mockDb.events.getAll() };
+      return request(
+        '/events',
+        { method: 'GET' },
+        async () => { await delay(120); return { success: true, data: mockDb.events.getAll() }; }
+      );
     },
 
     register: async (id) => {
@@ -519,15 +540,24 @@ export const api = {
     },
 
     getAll: async () => {
-      await delay(100);
-      return { success: true, data: mockDb.researchers.getAll() };
+      return request(
+        '/researchers',
+        { method: 'GET' },
+        async () => { await delay(100); return { success: true, data: mockDb.researchers.getAll() }; }
+      );
     },
 
     getById: async (id) => {
-      await delay(100);
-      const res = mockDb.researchers.getById(id);
-      if (!res) return { success: false, message: "Profil introuvable." };
-      return { success: true, data: res };
+      return request(
+        `/researchers/${id}`,
+        { method: 'GET' },
+        async () => {
+          await delay(100);
+          const res = mockDb.researchers.getById(id);
+          if (!res) return { success: false, message: 'Profil introuvable.' };
+          return { success: true, data: res };
+        }
+      );
     },
 
     toggleFollow: async (researcherId, userId) => {
@@ -543,21 +573,30 @@ export const api = {
   // ------------------------------------------------------------
   news: {
     getAll: async (includePending = false) => {
-      await delay(120);
-      return { success: true, data: mockDb.news.getAll(includePending) };
+      return request(
+        `/news${includePending ? '?includePending=true' : ''}`,
+        { method: 'GET' },
+        async () => { await delay(120); return { success: true, data: mockDb.news.getAll(includePending) }; }
+      );
     },
     getById: async (id) => {
-      await delay(120);
-      const article = mockDb.news.getById(id);
-      if (article) {
-        return { success: true, data: article };
-      }
-      return { success: false, error: "Article introuvable" };
+      return request(
+        `/news/${id}`,
+        { method: 'GET' },
+        async () => {
+          await delay(120);
+          const article = mockDb.news.getById(id);
+          if (article) return { success: true, data: article };
+          return { success: false, error: 'Article introuvable' };
+        }
+      );
     },
     submit: async (articleData) => {
-      await delay(200);
-      const newArticle = mockDb.news.add(articleData);
-      return { success: true, data: newArticle };
+      return request(
+        '/news',
+        { method: 'POST', body: JSON.stringify(articleData) },
+        async () => { await delay(200); const a = mockDb.news.add(articleData); return { success: true, data: a }; }
+      );
     },
     approve: async (id) => {
       await delay(200);
@@ -579,27 +618,25 @@ export const api = {
   // ------------------------------------------------------------
   dashboard: {
     getStats: async () => {
-      await delay(200);
-      const joinedClubs = mockDb.clubs.getAll().filter(c => c.joined);
-      const starredProjects = mockDb.projects.getAll().filter(p => p.starred);
-      const registeredWorkshops = mockDb.workshops.getAll().filter(w => w.registered);
-
-      return {
-        success: true,
-        data: {
-          clubsCount: joinedClubs.length,
-          projectsCount: starredProjects.length,
-          workshopsCount: registeredWorkshops.length,
-          joinedClubs,
-          starredProjects,
-          registeredWorkshops
+      return request(
+        '/dashboard/me',
+        { method: 'GET' },
+        async () => {
+          await delay(200);
+          const joinedClubs = mockDb.clubs.getAll().filter(c => c.joined);
+          const starredProjects = mockDb.projects.getAll().filter(p => p.starred);
+          const registeredWorkshops = mockDb.workshops.getAll().filter(w => w.registered);
+          return { success: true, data: { clubsCount: joinedClubs.length, projectsCount: starredProjects.length, workshopsCount: registeredWorkshops.length, joinedClubs, starredProjects, registeredWorkshops } };
         }
-      };
+      );
     },
 
     getNotifications: async () => {
-      await delay(80);
-      return { success: true, data: mockDb.notifications.getAll() };
+      return request(
+        '/notifications',
+        { method: 'GET' },
+        async () => { await delay(80); return { success: true, data: mockDb.notifications.getAll() }; }
+      );
     },
 
     markNotificationAsRead: async (id) => {
@@ -613,13 +650,15 @@ export const api = {
   // ------------------------------------------------------------
   contact: {
     sendMessage: async ({ name, email, subject, message }) => {
-      await delay(400);
-      const saved = mockDb.contactMessages.add({ name, email, subject, message });
-      return {
-        success: true,
-        data: saved,
-        message: 'Message envoyé avec succès. Notre équipe vous répondra sous 48h.'
-      };
+      return request(
+        '/contact',
+        { method: 'POST', body: JSON.stringify({ name, email, subject, message }) },
+        async () => {
+          await delay(400);
+          const saved = mockDb.contactMessages.add({ name, email, subject, message });
+          return { success: true, data: saved, message: 'Message envoyé avec succès. Notre équipe vous répondra sous 48h.' };
+        }
+      );
     }
   },
 
@@ -833,28 +872,31 @@ export const api = {
   // ------------------------------------------------------------
   applications: {
     submit: async ({ opportunityId, coverLetter, cvUrl }) => {
-      await delay(400);
       const raw = localStorage.getItem('fieri_user');
       const user = raw ? JSON.parse(raw) : null;
       if (!user) return { success: false, message: 'Vous devez être connecté pour candidater.' };
-
-      const res = mockDb.projectApplications.submit({
-        opportunityId,
-        userId: user.id,
-        userName: `${user.firstName} ${user.lastName}`,
-        userEmail: user.email,
-        coverLetter,
-        cvUrl
-      });
-      return res;
+      return request(
+        '/applications',
+        { method: 'POST', body: JSON.stringify({ opportunityId, coverLetter, cvUrl }) },
+        async () => {
+          await delay(400);
+          return mockDb.projectApplications.submit({ opportunityId, userId: user.id, userName: `${user.firstName} ${user.lastName}`, userEmail: user.email, coverLetter, cvUrl });
+        }
+      );
     },
 
     getMyApplications: async () => {
-      await delay(150);
-      const raw = localStorage.getItem('fieri_user');
-      const user = raw ? JSON.parse(raw) : null;
-      if (!user) return { success: false, data: [] };
-      return { success: true, data: mockDb.projectApplications.getByUser(user.id) };
+      return request(
+        '/applications/me',
+        { method: 'GET' },
+        async () => {
+          await delay(150);
+          const raw = localStorage.getItem('fieri_user');
+          const user = raw ? JSON.parse(raw) : null;
+          if (!user) return { success: false, data: [] };
+          return { success: true, data: mockDb.projectApplications.getByUser(user.id) };
+        }
+      );
     },
 
     hasApplied: async (opportunityId) => {

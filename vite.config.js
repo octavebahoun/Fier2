@@ -16,6 +16,6 @@ export default defineConfig({
     }
   },
   server: {
-    allowedHosts: ['.lhr.life']
+    allowedHosts: ['backend-fieri.vercel.app']
   }
 })
