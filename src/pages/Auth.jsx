@@ -38,8 +38,9 @@ export default function Auth({ navigate, redirectTo, onAuthComplete }) {
     confirmPassword: '',
     countryId: '',
     universityId: '',
-    branchId: '',
-    role: 'ETUDIANT'  // Rôle sélectionné à l'étape 1 : 'ETUDIANT' ou 'CHERCHEUR'
+    branchId: ''
+    // Le rôle n'est pas choisi par l'utilisateur : toute inscription démarre en
+    // ETUDIANT côté serveur. L'élévation de rôle est une décision serveur.
   });
 
   // Consommation du cache global des métadonnées organisationnelles
@@ -170,14 +171,12 @@ export default function Auth({ navigate, redirectTo, onAuthComplete }) {
       password,
       firstName,
       lastName,
-      branchId: Number(branchId),
-      role: registerData.role || 'ETUDIANT'
+      branchId: Number(branchId)
     });
     setLoading(false);
 
     if (res.success) {
-      const roleLabel = registerData.role === 'CHERCHEUR' ? 'chercheur' : 'étudiant';
-      setSuccessMsg(`Votre compte ${roleLabel} a été créé et connecté avec succès ! Redirection...`);
+      setSuccessMsg(`Votre compte a été créé et connecté avec succès ! Redirection...`);
       setTimeout(() => {
         if (redirectTo?.pageName) {
           navigate(redirectTo.pageName, redirectTo.params || {})

@@ -62,22 +62,25 @@ export const api = {
   // MODULE AUTHENTICATION & SESSION
   // ------------------------------------------------------------
   auth: {
-    register: async ({ email, password, firstName, lastName, branchId, role }) => {
+    register: async ({ email, password, firstName, lastName, branchId }) => {
       return request(
         '/auth/register',
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email, password, firstName, lastName, branchId, role })
+          body: JSON.stringify({ email, password, firstName, lastName, branchId })
         },
         async () => {
           await delay(300);
-          // Utiliser le rôle passé par le formulaire d'inscription (ETUDIANT ou CHERCHEUR)
-          const assignedRole = role || 'ETUDIANT';
+          // SÉCURITÉ : le rôle n'est jamais défini par le client. Toute inscription
+          // démarre en ETUDIANT ; l'élévation (CHERCHEUR / MENTOR / ADMIN) est une
+          // décision serveur (validation admin, attribution de badge). On ignore donc
+          // délibérément le `role` fourni dans la requête.
+          const assignedRole = 'ETUDIANT';
           const mockMember = {
             id: Math.floor(Math.random() * 9000) + 1000,
             email,
-            firstName: firstName || 'Chercheur',
+            firstName: firstName || 'Étudiant',
             lastName: lastName || 'FIERI',
             role: assignedRole,
             avatarUrl: null
@@ -87,7 +90,7 @@ export const api = {
           localStorage.setItem('fieri_user', JSON.stringify(mockMember));
           return {
             success: true,
-            message: `Inscription réussie (Mode Hors-ligne). Bienvenue, ${assignedRole === 'ETUDIANT' ? 'Étudiant' : 'Chercheur'} !`,
+            message: `Inscription réussie (Mode Hors-ligne). Bienvenue !`,
             data: {
               access_token: fakeToken,
               member: mockMember
@@ -452,7 +455,7 @@ export const api = {
     register: async (id) => {
       // Version de secours compatible
       await delay(180);
-      const user = mockDb.auth.getLocalUser();
+      const user = (() => { try { return JSON.parse(localStorage.getItem('fieri_user')); } catch { return null; } })();
       const userFullName = user ? `${user.firstName} ${user.lastName}` : "Étudiant FIERI";
 
       const res = mockDb.workshops.toggleRegister(id, userFullName);

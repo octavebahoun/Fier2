@@ -12,6 +12,7 @@ import {
   Shield
 } from 'lucide-react'
 import { useAuth } from '../../context/AuthContext.jsx'
+import RoleBadge from '../RoleBadge.jsx'
 
 export default function Sidebar({
   currentPage,
@@ -109,15 +110,11 @@ export default function Sidebar({
               <span className="text-xs font-bold text-text-primary truncate">
                 {user.firstName} {user.lastName}
               </span>
-              <span className={`text-[8.5px] uppercase tracking-wider font-extrabold self-start ${
-                user.role === 'ADMIN'
-                  ? 'text-red-400'
-                  : user.role === 'CHERCHEUR'
-                  ? 'text-fieri-blue'
-                  : 'text-emerald-400'
-              }`}>
-                {user.role === 'ADMIN' ? 'Administrateur' : user.role === 'CHERCHEUR' ? 'Chercheur FIERI' : user.role === 'ETUDIANT' ? 'Étudiant' : 'Membre'}
-              </span>
+              <RoleBadge
+                role={user.role}
+                variant="text"
+                className="text-[8.5px] uppercase tracking-wider font-extrabold self-start"
+              />
             </div>
           </motion.div>
         )}

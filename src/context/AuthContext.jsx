@@ -26,6 +26,34 @@ export const ROLES = {
 // Types de badges disponibles (attribués par Admin ou Responsable de club)
 export const BADGE_TYPES = ['CHERCHEUR', 'MENTOR', 'FORMATEUR', 'AMBASSADEUR', 'INNOVATEUR'];
 
+// ─── Présentation des rôles (source unique) ─────────────────────────────────
+// Toute couleur / libellé de rôle affiché dans l'UI DOIT venir d'ici.
+// Ajouter un rôle = éditer cet objet, pas chasser des ternaires dans les vues.
+//   • label : libellé complet (sidebar, profil)
+//   • short : libellé compact (pastille de navbar)
+//   • textClassName  : couleur seule (variante texte)
+//   • badgeClassName : fond + bordure + texte (variante pastille)
+export const ROLE_PRESENTATION = {
+  ADMIN:     { label: 'Administrateur',  short: 'Admin',     textClassName: 'text-red-400',      badgeClassName: 'bg-red-500/10 border-red-500/30 text-red-400' },
+  CHERCHEUR: { label: 'Chercheur FIERI', short: 'Chercheur', textClassName: 'text-fieri-blue',   badgeClassName: 'bg-accent-primary/15 border-accent-primary/30 text-fieri-blue' },
+  MENTOR:    { label: 'Mentor',          short: 'Mentor',    textClassName: 'text-violet-400',   badgeClassName: 'bg-violet-500/10 border-violet-500/30 text-violet-400' },
+  ETUDIANT:  { label: 'Étudiant',        short: 'Étudiant',  textClassName: 'text-emerald-400',  badgeClassName: 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400' },
+  VISITEUR:  { label: 'Invité',          short: 'Invité',    textClassName: 'text-slate-400',    badgeClassName: 'bg-slate-500/10 border-slate-500/30 text-slate-400' },
+};
+
+// Repli neutre pour un rôle inconnu / absent (jamais null → l'UI reste cohérente).
+const ROLE_PRESENTATION_FALLBACK = {
+  label: 'Membre', short: 'Membre', textClassName: 'text-emerald-400', badgeClassName: 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400',
+};
+
+/**
+ * getRolePresentation(role) — normalise la casse et renvoie toujours un objet
+ * de présentation exploitable (jamais null).
+ */
+export function getRolePresentation(role) {
+  return ROLE_PRESENTATION[String(role || '').toUpperCase()] || ROLE_PRESENTATION_FALLBACK;
+}
+
 export function AuthProvider({ children }) {
   const [user, setUser]       = useState(null);
   const [token, setToken]     = useState(null);
@@ -78,9 +106,9 @@ export function AuthProvider({ children }) {
     }
   }, []);
 
-  const handleRegister = useCallback(async ({ email, password, firstName, lastName, branchId, role }) => {
+  const handleRegister = useCallback(async ({ email, password, firstName, lastName, branchId }) => {
     try {
-      const res = await api.auth.register({ email, password, firstName, lastName, branchId, role });
+      const res = await api.auth.register({ email, password, firstName, lastName, branchId });
       if (res.success && res.data) {
         const { access_token, member } = res.data;
         setToken(access_token);

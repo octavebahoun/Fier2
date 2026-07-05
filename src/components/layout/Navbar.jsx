@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Menu, X, ChevronDown, Sun, Moon, LogOut, Search } from 'lucide-react'
 import Logo from '../Logo.jsx'
+import RoleBadge from '../RoleBadge.jsx'
 import api from '../../services/api.js'
 
 export default function Navbar({
@@ -194,15 +195,11 @@ export default function Navbar({
                     )}
                   </button>
                   {user && (
-                    <span className={`text-[8.5px] uppercase tracking-wider font-extrabold px-2.5 py-0.5 rounded-full border shrink-0 ${
-                      user.role === 'ADMIN'
-                        ? 'bg-red-500/10 border-red-500/30 text-red-400'
-                        : user.role === 'CHERCHEUR'
-                        ? 'bg-accent-primary/15 border-accent-primary/30 text-fieri-blue'
-                        : 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'
-                    }`}>
-                      {user.role === 'ADMIN' ? 'Admin' : user.role === 'CHERCHEUR' ? 'Chercheur' : user.role === 'ETUDIANT' ? 'Étudiant' : 'Membre'}
-                    </span>
+                    <RoleBadge
+                      role={user.role}
+                      variant="pill"
+                      className="text-[8.5px] uppercase tracking-wider font-extrabold px-2.5 py-0.5 rounded-full border shrink-0"
+                    />
                   )}
                 </div>
 
@@ -350,15 +347,11 @@ export default function Navbar({
                 >
                   <span>{user ? 'Mon Dashboard' : 'Se Connecter'}</span>
                   {user && (
-                    <span className={`text-[8.5px] uppercase tracking-wider font-extrabold px-2 py-0.5 rounded-full border shrink-0 ${
-                      user.role === 'ADMIN'
-                        ? 'bg-red-500/10 border-red-500/30 text-red-400'
-                        : user.role === 'CHERCHEUR'
-                        ? 'bg-accent-primary/15 border-accent-primary/30 text-fieri-blue'
-                        : 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'
-                    }`}>
-                      {user.role === 'ADMIN' ? 'Admin' : user.role === 'CHERCHEUR' ? 'Chercheur' : user.role === 'ETUDIANT' ? 'Étudiant' : 'Membre'}
-                    </span>
+                    <RoleBadge
+                      role={user.role}
+                      variant="pill"
+                      className="text-[8.5px] uppercase tracking-wider font-extrabold px-2 py-0.5 rounded-full border shrink-0"
+                    />
                   )}
                 </button>
               </div>
