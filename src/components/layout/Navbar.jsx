@@ -61,13 +61,13 @@ export default function Navbar({
   return (
     <header className="fixed top-3 left-0 right-0 z-50 pointer-events-none flex justify-center w-full px-4 md:px-6">
       {/* ====== DESKTOP NAVIGATION ====== */}
-      <div className="hidden md:flex items-center justify-center w-full max-w-7xl">
+      <div className="hidden md:flex items-center justify-center w-full max-w-[1600px]">
         <motion.div
           layout
           transition={{ type: 'spring', stiffness: 350, damping: 30 }}
           className={`border border-border-subtle bg-bg-secondary/90 backdrop-blur-xl shadow-[0_12px_40px_rgba(0,0,0,0.5)] transition-all duration-300 ease-out select-none flex items-center justify-between rounded-full overflow-hidden pointer-events-auto ${
             (!isScrolled || isNavExpanded)
-              ? 'w-[1100px] max-w-[95vw] h-14 px-6'
+              ? 'w-[1400px] max-w-[98vw] h-14 px-8'
               : 'w-[250px] h-12 px-4 cursor-pointer hover:border-accent-primary/40 group mx-auto'
           }`}
           onClick={() => {
@@ -138,7 +138,7 @@ export default function Navbar({
                     <button
                       key={link.id}
                       onClick={() => { navigate(link.id); setIsNavExpanded(false); }}
-                      className={`px-3.5 py-1.5 rounded-full text-[10.5px] font-black uppercase tracking-wider transition-all duration-250 cursor-pointer ${
+                      className={`px-3.5 py-1.5 rounded-full text-[10.5px] font-black uppercase tracking-wider whitespace-nowrap transition-all duration-250 cursor-pointer ${
                         isActive
                           ? 'text-text-primary bg-accent-primary/30 border border-accent-primary/40 shadow-inner'
                           : 'text-text-secondary hover:text-text-primary hover:bg-white/5 border border-transparent'

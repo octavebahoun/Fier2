@@ -2,11 +2,12 @@ import { useEffect, useState, useCallback } from 'react'
 import { motion } from 'framer-motion'
 import {
   Users, BookOpen, Calendar, ArrowRight, Award,
-  ChevronRight, Cpu, Zap, Leaf, Building2, Brain, Rocket, Bell
+  ChevronRight, Cpu, Zap, Leaf, Building2, Brain, Rocket, Bell,
+  Shield, Briefcase, PenSquare, UserCog, Lock
 } from 'lucide-react'
 import NotificationsCenter from './NotificationsCenter.jsx'
 import { api } from '../../services/api.js'
-import { useAuth } from '../../context/AuthContext.jsx'
+import { useAuth, getRolePresentation } from '../../context/AuthContext.jsx'
 
 const CLUB_ICONS = {
   'club-1': { icon: Cpu,       color: '#e05a2b' },
@@ -42,8 +43,20 @@ function StatCard({ label, value, icon: Icon, color, onClick }) {
 }
 
 export default function Dashboard({ navigate }) {
-  const { user, isResearcher } = useAuth()
+  const { user, isResearcher, isAdmin, isMentor, hasMinRole } = useAuth()
   const userId = user?.id ?? null
+
+  // Actions réservées selon le rôle — chaque entrée n'apparaît que si `show` est vrai.
+  const privilegedActions = [
+    { show: isAdmin?.(), label: 'Administration', desc: 'Gérer la plateforme et les membres', icon: Shield, color: '#ef4444', page: 'admin' },
+    { show: isAdmin?.(), label: 'Modérer les actualités', desc: 'Approuver ou rejeter les articles', icon: PenSquare, color: '#ef4444', page: 'news' },
+    { show: hasMinRole?.('CHERCHEUR'), label: 'Publier une opportunité', desc: 'Diffuser une offre R&D', icon: Briefcase, color: '#1b6fd8', page: 'opportunities' },
+    { show: hasMinRole?.('CHERCHEUR'), label: 'Rédiger un article', desc: 'Soumettre au journal scientifique', icon: PenSquare, color: '#1b6fd8', page: 'news' },
+    { show: hasMinRole?.('CHERCHEUR'), label: 'Éditer ma fiche chercheur', desc: 'Bio, spécialités, portfolio', icon: UserCog, color: '#1b6fd8', page: 'researcher-profile-edit' },
+    { show: isMentor?.(), label: 'Gérer les adhésions', desc: 'Valider les demandes de club', icon: Users, color: '#8b5cf6', page: 'clubs' },
+  ].filter(a => a.show)
+
+  const rolePres = getRolePresentation(user?.role)
 
   // Le backend /dashboard/me ne renvoie que des COMPTEURS (pas la liste des clubs
   // rejoints) : on affiche donc les compteurs, et la section « Mes Clubs » se
@@ -146,6 +159,50 @@ export default function Dashboard({ navigate }) {
               color="#f5a623"
               onClick={() => navigate?.('projects')}
             />
+          </div>
+
+          {/* ── Actions privilégiées (selon le rôle) ── */}
+          <div className="glass-panel rounded-3xl p-6 border border-white/5">
+            <div className="flex items-center gap-2.5 mb-1">
+              <Lock className="w-4 h-4 text-accent-primary" />
+              <h2 className="text-base font-extrabold text-text-primary tracking-tight">Actions privilégiées</h2>
+              <span className={`ml-auto text-[9px] uppercase tracking-wider font-extrabold px-2.5 py-0.5 rounded-full border ${rolePres.badgeClassName}`}>
+                {rolePres.label}
+              </span>
+            </div>
+            <p className="text-xs text-text-muted mb-4">Actions réservées à votre rôle sur la plateforme.</p>
+
+            {privilegedActions.length > 0 ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {privilegedActions.map(({ label, desc, icon: Icon, color, page }) => (
+                  <button
+                    key={label + page}
+                    onClick={() => navigate?.(page)}
+                    className="flex items-center gap-3 p-4 rounded-2xl border transition-all text-left group hover:-translate-y-0.5"
+                    style={{ background: `${color}0D`, borderColor: `${color}30` }}
+                  >
+                    <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0" style={{ background: `${color}1A`, border: `1px solid ${color}40` }}>
+                      <Icon className="w-5 h-5" style={{ color }} />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-xs font-bold text-text-primary">{label}</p>
+                      <p className="text-[10px] text-text-muted">{desc}</p>
+                    </div>
+                    <ArrowRight className="w-3.5 h-3.5 text-text-muted group-hover:translate-x-0.5 transition-transform shrink-0" />
+                  </button>
+                ))}
+              </div>
+            ) : (
+              <div className="flex items-start gap-3 p-4 rounded-2xl bg-white/3 border border-white/8">
+                <div className="w-9 h-9 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center shrink-0">
+                  <Lock className="w-4 h-4 text-emerald-400" />
+                </div>
+                <p className="text-xs text-text-secondary leading-relaxed">
+                  Votre compte <strong className="text-text-primary">{rolePres.label}</strong> donne accès aux candidatures, inscriptions et adhésions.
+                  Les privilèges <strong className="text-text-primary">Chercheur</strong> et <strong className="text-text-primary">Mentor</strong> (publication, modération, gestion de club) sont attribués par l'administration.
+                </p>
+              </div>
+            )}
           </div>
 
           {/* ── Section Mes Clubs ── */}
