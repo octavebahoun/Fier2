@@ -2,7 +2,7 @@ import api from './api.js';
 
 /**
  * Lightweight adapter for notifications used by UI components.
- * Delegates to `api.dashboard` endpoints when available, falling back to mock behavior handled by `api`/`mockDb`.
+ * Delegates to the real `api.dashboard` endpoints.
  */
 
 const getNotifications = async ({ limit = 20, offset = 0 } = {}) => {
@@ -37,7 +37,7 @@ const markAllRead = async () => {
     _emitUpdate()
     return true;
   }
-  // if not present, call mockDb via api if available
+  // pas de mark-all dédié : on marque chaque notification via l'API dashboard
   if (api.dashboard && typeof api.dashboard.getNotifications === 'function') {
     // best-effort: mark each as read via markNotificationAsRead
     const listRes = await api.dashboard.getNotifications();
