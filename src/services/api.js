@@ -5,6 +5,8 @@
 // toute erreur (réseau ou HTTP) telle quelle.
 // ─────────────────────────────────────────────────────────────────────────────
 
+import { normalizeResearcher } from './adapters.js';
+
 const BASE_URL = 'https://backend-fieri.vercel.app';
 
 /** En-têtes HTTP de base + jeton JWT si présent. */
@@ -137,10 +139,19 @@ export const api = {
 
   // ── 7. ANNUAIRE DES CHERCHEURS ─────────────────────────────────────────────
   researchers: {
-    getMe: () => get('/researchers/me'),
+    getMe: async () => {
+      const r = await get('/researchers/me')
+      return { ...r, data: normalizeResearcher(r.data) }
+    },
     updateMe: (payload) => put('/researchers/me', payload),
-    getAll: () => get('/researchers'),
-    getById: (id) => get(`/researchers/${id}`),
+    getAll: async () => {
+      const r = await get('/researchers')
+      return { ...r, data: Array.isArray(r.data) ? r.data.map(normalizeResearcher) : r.data }
+    },
+    getById: async (id) => {
+      const r = await get(`/researchers/${id}`)
+      return { ...r, data: normalizeResearcher(r.data) }
+    },
 
     // POST /researchers/:id/follow — le second argument (userId) est ignoré :
     // l'utilisateur est identifié par le JWT. Conservé pour compat des appelants.
