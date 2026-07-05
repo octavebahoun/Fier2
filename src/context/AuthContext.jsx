@@ -123,7 +123,11 @@ export function AuthProvider({ children }) {
       return { success: false, message: res.message || 'Identifiants invalides.' };
     } catch (err) {
       console.error('[FIERI AuthContext] Erreur lors de la connexion:', err);
-      return { success: false, message: "Une erreur réseau s'est produite lors de la connexion." };
+      let message = err?.serverMessage || "Une erreur s'est produite lors de la connexion.";
+      if (err?.status === 401 || err?.status === 400) message = "Email ou mot de passe incorrect.";
+      else if (err?.status === 404) message = "Aucun compte trouvé pour cet email.";
+      else if (!err?.status) message = "Serveur injoignable. Vérifiez votre connexion.";
+      return { success: false, message };
     }
   }, []);
 
@@ -141,7 +145,11 @@ export function AuthProvider({ children }) {
       return { success: false, message: res.message || "Erreur lors de l'inscription." };
     } catch (err) {
       console.error("[FIERI AuthContext] Erreur lors de l'inscription:", err);
-      return { success: false, message: "Une erreur réseau s'est produite lors de l'inscription." };
+      let message = err?.serverMessage || "Une erreur s'est produite lors de l'inscription.";
+      if (err?.status === 409) message = "Un compte existe déjà avec cet email. Essayez de vous connecter.";
+      else if (err?.status === 400 || err?.status === 422) message = err?.serverMessage || "Informations d'inscription invalides.";
+      else if (!err?.status) message = "Serveur injoignable. Vérifiez votre connexion.";
+      return { success: false, message };
     }
   }, []);
 

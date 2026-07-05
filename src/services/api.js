@@ -29,7 +29,18 @@ const request = async (path, options = {}) => {
   });
 
   if (!response.ok) {
-    throw new Error(`HTTP Error: ${response.status} ${response.statusText}`);
+    // On tente d'extraire le message d'erreur renvoyé par le backend afin de
+    // pouvoir l'afficher (ex. « email déjà utilisé » sur un 409) plutôt qu'un
+    // message générique. Le statut est attaché à l'erreur pour un mapping fin.
+    let serverMessage = '';
+    try {
+      const body = await response.clone().json();
+      serverMessage = body?.message || body?.error || '';
+    } catch { /* corps non-JSON */ }
+    const err = new Error(serverMessage || `HTTP Error: ${response.status} ${response.statusText}`);
+    err.status = response.status;
+    err.serverMessage = serverMessage;
+    throw err;
   }
 
   return await response.json();
