@@ -191,7 +191,7 @@ export default function Auth({ navigate, redirectTo, onAuthComplete }) {
   };
 
   return (
-    <div className="min-h-screen flex flex-col md:flex-row bg-[#080B14] relative overflow-x-hidden">
+    <div className="min-h-screen flex flex-col md:flex-row bg-bg-primary relative overflow-x-hidden">
 
       {/* 🌌 Halos cosmiques d'arrière-plan */}
       <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] rounded-full bg-accent-primary/10 blur-[150px] pointer-events-none" />
@@ -257,7 +257,7 @@ export default function Auth({ navigate, redirectTo, onAuthComplete }) {
           </div>
 
           {/* Bento Card des Statistiques */}
-          <div className="glass-panel border border-border-subtle/80 bg-[#0D1120]/45 p-5 md:p-6 rounded-2xl shadow-2xl backdrop-blur-md hidden sm:block">
+          <div className="glass-panel border border-border-subtle/80 bg-bg-secondary/45 p-5 md:p-6 rounded-2xl shadow-2xl backdrop-blur-md hidden sm:block">
             <div className="grid grid-cols-3 gap-4">
               <div>
                 <div className="text-xl lg:text-2xl font-black text-fieri-blue">5 000+</div>
@@ -374,7 +374,7 @@ export default function Auth({ navigate, redirectTo, onAuthComplete }) {
                         onChange={(e) => setLoginData({ ...loginData, email: e.target.value })}
                         aria-invalid={!!errorMsg}
                         aria-describedby={errorMsg ? "auth-error-message" : undefined}
-                        className="w-full bg-[#0D1120]/60 border border-border-subtle focus:border-fieri-blue/40 rounded-xl py-3 pl-11 pr-4 text-sm text-text-primary outline-none transition-all placeholder:text-text-muted"
+                        className="w-full bg-bg-secondary/60 border border-border-subtle focus:border-fieri-blue/40 rounded-xl py-3 pl-11 pr-4 text-sm text-text-primary outline-none transition-all placeholder:text-text-muted"
                       />
                     </div>
                   </div>
@@ -397,7 +397,7 @@ export default function Auth({ navigate, redirectTo, onAuthComplete }) {
                         onChange={(e) => setLoginData({ ...loginData, password: e.target.value })}
                         aria-invalid={!!errorMsg}
                         aria-describedby={errorMsg ? "auth-error-message" : undefined}
-                        className="w-full bg-[#0D1120]/60 border border-border-subtle focus:border-fieri-blue/40 rounded-xl py-3 pl-11 pr-12 text-sm text-text-primary outline-none transition-all placeholder:text-text-muted"
+                        className="w-full bg-bg-secondary/60 border border-border-subtle focus:border-fieri-blue/40 rounded-xl py-3 pl-11 pr-12 text-sm text-text-primary outline-none transition-all placeholder:text-text-muted"
                       />
                       <button
                         type="button"
@@ -518,7 +518,7 @@ export default function Auth({ navigate, redirectTo, onAuthComplete }) {
                               onChange={(e) => setRegisterData({ ...registerData, firstName: e.target.value })}
                               aria-invalid={!!errorMsg}
                               aria-describedby={errorMsg ? "auth-error-message" : undefined}
-                              className="w-full bg-[#0D1120]/60 border border-border-subtle focus:border-fieri-blue/40 rounded-xl py-3 pl-11 pr-4 text-sm text-text-primary outline-none transition-all placeholder:text-text-muted"
+                              className="w-full bg-bg-secondary/60 border border-border-subtle focus:border-fieri-blue/40 rounded-xl py-3 pl-11 pr-4 text-sm text-text-primary outline-none transition-all placeholder:text-text-muted"
                             />
                           </div>
                         </div>
@@ -537,7 +537,7 @@ export default function Auth({ navigate, redirectTo, onAuthComplete }) {
                               onChange={(e) => setRegisterData({ ...registerData, lastName: e.target.value })}
                               aria-invalid={!!errorMsg}
                               aria-describedby={errorMsg ? "auth-error-message" : undefined}
-                              className="w-full bg-[#0D1120]/60 border border-border-subtle focus:border-fieri-blue/40 rounded-xl py-3 pl-11 pr-4 text-sm text-text-primary outline-none transition-all placeholder:text-text-muted"
+                              className="w-full bg-bg-secondary/60 border border-border-subtle focus:border-fieri-blue/40 rounded-xl py-3 pl-11 pr-4 text-sm text-text-primary outline-none transition-all placeholder:text-text-muted"
                             />
                           </div>
                         </div>
@@ -558,7 +558,7 @@ export default function Auth({ navigate, redirectTo, onAuthComplete }) {
                             onChange={(e) => setRegisterData({ ...registerData, email: e.target.value })}
                             aria-invalid={!!errorMsg}
                             aria-describedby={errorMsg ? "auth-error-message" : undefined}
-                            className="w-full bg-[#0D1120]/60 border border-border-subtle focus:border-fieri-blue/40 rounded-xl py-3 pl-11 pr-4 text-sm text-text-primary outline-none transition-all placeholder:text-text-muted"
+                            className="w-full bg-bg-secondary/60 border border-border-subtle focus:border-fieri-blue/40 rounded-xl py-3 pl-11 pr-4 text-sm text-text-primary outline-none transition-all placeholder:text-text-muted"
                           />
                         </div>
                       </div>
@@ -579,7 +579,7 @@ export default function Auth({ navigate, redirectTo, onAuthComplete }) {
                             onChange={(e) => setRegisterData({ ...registerData, password: e.target.value })}
                             aria-invalid={!!errorMsg}
                             aria-describedby={errorMsg ? "auth-error-message" : undefined}
-                            className="w-full bg-[#0D1120]/60 border border-border-subtle focus:border-fieri-blue/40 rounded-xl py-3 pl-11 pr-12 text-sm text-text-primary outline-none transition-all placeholder:text-text-muted"
+                            className="w-full bg-bg-secondary/60 border border-border-subtle focus:border-fieri-blue/40 rounded-xl py-3 pl-11 pr-12 text-sm text-text-primary outline-none transition-all placeholder:text-text-muted"
                           />
                           <button
                             type="button"
@@ -607,7 +607,7 @@ export default function Auth({ navigate, redirectTo, onAuthComplete }) {
                             onChange={(e) => setRegisterData({ ...registerData, confirmPassword: e.target.value })}
                             aria-invalid={!!errorMsg}
                             aria-describedby={errorMsg ? "auth-error-message" : undefined}
-                            className="w-full bg-[#0D1120]/60 border border-border-subtle focus:border-fieri-blue/40 rounded-xl py-3 pl-11 pr-12 text-sm text-text-primary outline-none transition-all placeholder:text-text-muted"
+                            className="w-full bg-bg-secondary/60 border border-border-subtle focus:border-fieri-blue/40 rounded-xl py-3 pl-11 pr-12 text-sm text-text-primary outline-none transition-all placeholder:text-text-muted"
                           />
                           <button
                             type="button"
@@ -661,11 +661,11 @@ export default function Auth({ navigate, redirectTo, onAuthComplete }) {
                             }}
                             aria-invalid={!!errorMsg}
                             aria-describedby={errorMsg ? "auth-error-message" : undefined}
-                            className="w-full bg-[#0D1120]/60 border border-border-subtle focus:border-fieri-blue/40 rounded-xl py-3.5 pl-11 pr-4 text-sm text-text-primary outline-none transition-all appearance-none cursor-pointer"
+                            className="w-full bg-bg-secondary/60 border border-border-subtle focus:border-fieri-blue/40 rounded-xl py-3.5 pl-11 pr-4 text-sm text-text-primary outline-none transition-all appearance-none cursor-pointer"
                           >
                             <option value="">Sélectionnez un pays</option>
                             {countries.map(c => (
-                              <option key={c.id} value={c.id} className="bg-[#080B14]">
+                              <option key={c.id} value={c.id} className="bg-bg-primary">
                                 {c.name}
                               </option>
                             ))}
@@ -697,13 +697,13 @@ export default function Auth({ navigate, redirectTo, onAuthComplete }) {
                             }}
                             aria-invalid={!!errorMsg}
                             aria-describedby={errorMsg ? "auth-error-message" : undefined}
-                            className="w-full bg-[#0D1120]/60 border border-border-subtle focus:border-fieri-blue/40 rounded-xl py-3.5 pl-11 pr-4 text-sm text-text-primary outline-none transition-all appearance-none cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
+                            className="w-full bg-bg-secondary/60 border border-border-subtle focus:border-fieri-blue/40 rounded-xl py-3.5 pl-11 pr-4 text-sm text-text-primary outline-none transition-all appearance-none cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
                           >
                             <option value="">
                               {loadingMeta ? "Chargement..." : "Sélectionnez votre université"}
                             </option>
                             {universities.map(u => (
-                              <option key={u.id} value={u.id} className="bg-[#080B14]">
+                              <option key={u.id} value={u.id} className="bg-bg-primary">
                                 {u.name}
                               </option>
                             ))}
@@ -728,13 +728,13 @@ export default function Auth({ navigate, redirectTo, onAuthComplete }) {
                             onChange={(e) => setRegisterData(prev => ({ ...prev, branchId: e.target.value }))}
                             aria-invalid={!!errorMsg}
                             aria-describedby={errorMsg ? "auth-error-message" : undefined}
-                            className="w-full bg-[#0D1120]/60 border border-border-subtle focus:border-fieri-blue/40 rounded-xl py-3.5 pl-11 pr-4 text-sm text-text-primary outline-none transition-all appearance-none cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
+                            className="w-full bg-bg-secondary/60 border border-border-subtle focus:border-fieri-blue/40 rounded-xl py-3.5 pl-11 pr-4 text-sm text-text-primary outline-none transition-all appearance-none cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
                           >
                             <option value="">
                               {loadingMeta ? "Chargement..." : "Sélectionnez votre branche"}
                             </option>
                             {branches.map(b => (
-                              <option key={b.id} value={b.id} className="bg-[#080B14]">
+                              <option key={b.id} value={b.id} className="bg-bg-primary">
                                 {b.name}
                               </option>
                             ))}

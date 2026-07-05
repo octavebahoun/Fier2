@@ -2,28 +2,28 @@
 @import "tailwindcss";
 
 @theme {
-  /* ── Palette LIGHT : blanc / bleu / orange (défaut de la plateforme) ── */
-  --color-bg-primary: #F5F8FD;    /* fond de page, blanc cassé légèrement bleuté */
-  --color-bg-secondary: #FFFFFF;  /* cartes & panneaux */
-  --color-bg-tertiary: #EAF1FB;   /* surface surélevée subtile */
+  /* ── Thème SOMBRE (défaut de la plateforme) ── */
+  --color-bg-primary: #080B14;
+  --color-bg-secondary: #0D1120;
+  --color-bg-tertiary: #111827;
 
-  --color-accent-primary: #1B6FD8;   /* bleu FIERI */
-  --color-accent-secondary: #E8640C; /* orange FIERI */
-  --color-accent-tertiary: #F5821F;  /* orange clair */
+  --color-accent-primary: #1B4F8A;
+  --color-accent-secondary: #F5A623;
+  --color-accent-tertiary: #E8640C;
 
-  --color-accent-bleue: #1B6FD8;
-  --color-accent-amber: #E8640C;
-  --color-accent-blue-marine: #164E96;
+  --color-accent-bleue: #1B4F8A;
+  --color-accent-amber: #F5A623;
+  --color-accent-blue-marine: #1B4F8A;
   --color-fieri-blue: #1B6FD8;
-  --color-fieri-bleue: #E8640C;
+  --color-fieri-bleue: #F5821F;
 
-  --color-text-primary: #10182A;   /* texte principal (encre) */
-  --color-text-secondary: #4B5566; /* texte secondaire */
-  --color-text-muted: #8A93A6;     /* texte discret */
+  --color-text-primary: #F0EDE8;
+  --color-text-secondary: white;
+  --color-text-muted: #5A6070;
 
-  --color-border-subtle: #E2E8F2;  /* bordure pleine et claire */
-  --color-border-glow: rgba(27, 111, 216, 0.30);
-  --color-grid-line: rgba(16, 24, 42, 0.05);
+  --color-border-subtle: rgba(255, 255, 255, 0.06);
+  --color-border-glow: rgba(27, 79, 138, 0.4);
+  --color-grid-line: rgba(255, 255, 255, 0.03);
 
   --font-sans: 'Plus Jakarta Sans', sans-serif;
 
@@ -59,43 +59,65 @@
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   REBRAND LIGHT — blanc / bleu / orange · surfaces opaques · zéro glassmorphisme
-   Couche de surcharge globale : neutralise les effets « verre » et les fonds
-   sombres codés en dur dans les composants, sans toucher au JSX.
+   THÈME CLAIR AMÉLIORÉ — blanc / bleu / orange · surfaces opaques · sans verre.
+   Tout est scopé sous body.light-theme : le thème sombre par défaut est intact.
    ═══════════════════════════════════════════════════════════════════════════ */
+body.light-theme {
+  --color-bg-primary: #F5F8FD;    /* fond de page, blanc cassé bleuté */
+  --color-bg-secondary: #FFFFFF;  /* cartes & panneaux */
+  --color-bg-tertiary: #EAF1FB;   /* surface surélevée subtile */
 
-/* 1. Plus aucun flou de verre nulle part */
-*,
-*::before,
-*::after {
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
+  --color-accent-primary: #1B6FD8;   /* bleu FIERI */
+  --color-accent-secondary: #E8640C; /* orange FIERI */
+  --color-accent-tertiary: #F5821F;
+
+  --color-accent-bleue: #1B6FD8;
+  --color-accent-amber: #E8640C;
+  --color-accent-blue-marine: #164E96;
+  --color-fieri-blue: #1B6FD8;
+  --color-fieri-bleue: #E8640C;
+
+  --color-text-primary: #10182A;
+  --color-text-secondary: #4B5566;
+  --color-text-muted: #8A93A6;
+
+  --color-border-subtle: #E2E8F2;
+  --color-border-glow: rgba(27, 111, 216, 0.30);
+  --color-grid-line: rgba(16, 24, 42, 0.05);
+
+  /* Surfaces des panneaux à fond inline (voir --panel-glass sur body) */
+  --panel-glass: #FFFFFF;
+  --panel-glass-strong: #FFFFFF;
+
+  /* Effet « verre » désactivé en clair : opaque, sans flou */
+  --glass-bg: #FFFFFF;
+  --glass-bg-hover: #FFFFFF;
+  --glass-blur: none;
+  --glass-border: #E2E8F2;
+  --glass-border-hover: rgba(27, 111, 216, 0.35);
+  --glass-shadow: 0 1px 2px rgba(16, 24, 42, 0.04), 0 10px 30px rgba(16, 24, 42, 0.05);
+  --glass-shadow-hover: 0 4px 12px rgba(27, 111, 216, 0.10), 0 14px 40px rgba(16, 24, 42, 0.06);
 }
 
-/* 2. Fonds sombres codés en dur → surfaces blanches */
-[class*="bg-[#0d1120]"],
-[class*="bg-[#0D1120]"],
-[class*="bg-[#080B14]"],
-[class*="bg-[#080b14]"],
-[class*="bg-[#0d1424]"],
-[class*="bg-[#0D1424]"],
-[class*="bg-[#111827]"] {
-  background-color: #FFFFFF !important;
-}
-
-/* 3. Voiles blancs translucides (bg-white/xx) → surface claire lisible */
-[class*="bg-white/"] {
-  background-color: #EFF3FA !important;
-}
-
-/* 4. Bordures blanches translucides (border-white/xx) → bordure claire pleine */
-[class*="border-white/"] {
-  border-color: var(--color-border-subtle) !important;
-}
+/* (Les overrides visuels du thème clair sont regroupés en fin de fichier
+   pour garantir leur priorité dans la cascade Tailwind v4.) */
 
 
 /* Global resets and layouts */
 body {
+  /* Fonds des panneaux à style inline, pilotés par thème (dark par défaut) */
+  --panel-glass: rgba(13, 17, 32, 0.65);
+  --panel-glass-strong: rgba(13, 17, 32, 0.95);
+
+  /* Effet « verre » de .glass-panel, piloté par thème (dark par défaut) */
+  --glass-bg: rgba(13, 17, 32, 0.7);
+  --glass-bg-hover: rgba(15, 22, 42, 0.85);
+  --glass-blur: blur(16px);
+  --glass-border: rgba(255, 255, 255, 0.06);
+  --glass-border-hover: rgba(27, 111, 216, 0.35);
+  --glass-shadow: 0 4px 30px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  --glass-shadow-hover: 0 12px 40px rgba(27, 111, 216, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+
   background-color: var(--color-bg-primary);
   color: var(--color-text-primary);
   font-family: var(--font-sans);
@@ -144,31 +166,35 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(16, 24, 42, 0.15);
+  background: rgba(255, 255, 255, 0.1);
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(16, 24, 42, 0.28);
+  background: rgba(255, 255, 255, 0.2);
 }
 
-/* Utility animations and custom glass effects */
+/* Utility animations and custom glass effects.
+   Piloté par variables (mécanisme des tokens) → change proprement selon le thème
+   sans dépendre de la cascade des layers Tailwind. */
 .glass-panel {
-  background: #FFFFFF;
-  border: 1px solid var(--color-border-subtle);
-  box-shadow: 0 1px 2px rgba(16, 24, 42, 0.04), 0 10px 30px rgba(16, 24, 42, 0.05);
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .glass-panel:hover {
-  border-color: rgba(27, 111, 216, 0.35);
-  background: #FFFFFF;
-  box-shadow: 0 4px 12px rgba(27, 111, 216, 0.10), 0 14px 40px rgba(16, 24, 42, 0.06);
+  border-color: var(--glass-border-hover);
+  background: var(--glass-bg-hover);
+  box-shadow: var(--glass-shadow-hover);
   transform: translateY(-3px);
 }
 
 .text-gradient-blue {
-  background: linear-gradient(135deg, #1B6FD8 0%, #164E96 100%);
+  background: linear-gradient(135deg, #00F2FE 0%, #4FACFE 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
@@ -191,7 +217,7 @@ body {
   content: '';
   position: absolute;
   inset: 0;
-  background-image: radial-gradient(rgba(16, 24, 42, 0.06) 1px, transparent 1px);
+  background-image: radial-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px);
   background-size: 24px 24px;
   pointer-events: none;
   z-index: 0;
@@ -237,7 +263,7 @@ body {
 }
 
 .text-gradient-cosmic {
-  background: linear-gradient(135deg, #1B6FD8 0%, #164E96 50%, #E8640C 100%);
+  background: linear-gradient(135deg, #00F2FE 0%, #0072FF 50%, #FFB800 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
@@ -276,4 +302,42 @@ body {
 
 .animate-timeline-glow {
   animation: timeline-glow 2.5s ease-out infinite;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   OVERRIDES THÈME CLAIR (fin de fichier = priorité de cascade maximale)
+   Neutralise le glassmorphisme et les fonds sombres codés en dur, en clair
+   uniquement. Le thème sombre par défaut n'est pas affecté.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* Plus aucun flou de verre en clair */
+body.light-theme *,
+body.light-theme *::before,
+body.light-theme *::after {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/* Voiles blancs translucides → surface claire lisible.
+   (NB : les fonds sombres codés en dur — ex. bg-[#0d1120] — ont été remplacés
+   par le token bg-bg-secondary directement dans le JSX, donc theme-aware.) */
+body.light-theme [class*="bg-white/"] {
+  background-color: #EFF3FA !important;
+}
+
+/* Bordures blanches translucides → bordure claire pleine */
+body.light-theme [class*="border-white/"] {
+  border-color: var(--color-border-subtle) !important;
+}
+
+body.light-theme .dot-grid::before {
+  background-image: radial-gradient(rgba(16, 24, 42, 0.06) 1px, transparent 1px) !important;
+}
+
+body.light-theme ::-webkit-scrollbar-thumb {
+  background: rgba(16, 24, 42, 0.15);
+}
+
+body.light-theme ::-webkit-scrollbar-thumb:hover {
+  background: rgba(16, 24, 42, 0.28);
 }

@@ -22,7 +22,7 @@ function StatCard({ label, value, icon: Icon, color, onClick }) {
     <motion.div
       whileHover={{ y: -2 }}
       onClick={onClick}
-      className="glass-panel rounded-2xl p-5 border border-white/5 bg-[#0d1120]/60 backdrop-blur-xl flex flex-col gap-3 cursor-pointer group"
+      className="glass-panel rounded-2xl p-5 border border-white/5 bg-bg-secondary/60 backdrop-blur-xl flex flex-col gap-3 cursor-pointer group"
     >
       <div className="flex items-start justify-between">
         <div
@@ -87,7 +87,7 @@ export default function Dashboard({ navigate }) {
         <div className="lg:col-span-2 flex flex-col gap-6">
 
           {/* En-tête de bienvenue */}
-          <div className="glass-panel rounded-3xl p-8 border border-white/5 bg-[#0d1120]/60 backdrop-blur-xl relative overflow-hidden">
+          <div className="glass-panel rounded-3xl p-8 border border-white/5 bg-bg-secondary/60 backdrop-blur-xl relative overflow-hidden">
             <div className="absolute top-0 right-0 w-64 h-64 bg-fieri-blue/5 blur-[80px] rounded-full pointer-events-none" />
             <div className="relative z-10 flex flex-col gap-4">
               <div className="flex items-start justify-between gap-4 flex-wrap">
@@ -149,7 +149,7 @@ export default function Dashboard({ navigate }) {
           </div>
 
           {/* ── Section Mes Clubs ── */}
-          <div className="glass-panel rounded-3xl p-6 border border-white/5 bg-[#0d1120]/60 backdrop-blur-xl">
+          <div className="glass-panel rounded-3xl p-6 border border-white/5 bg-bg-secondary/60 backdrop-blur-xl">
             <div className="flex items-center justify-between mb-5">
               <div className="flex items-center gap-2.5">
                 <Users className="w-4 h-4 text-fieri-blue" />

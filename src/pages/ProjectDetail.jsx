@@ -268,7 +268,7 @@ export default function ProjectDetail({ navigate, projectId }) {
             
             {/* Project Cover Image */}
             {project.image && (
-              <div className="relative h-64 md:h-80 rounded-3xl overflow-hidden border border-white/5 bg-[#0d1120]/60 backdrop-blur-xl shadow-2xl">
+              <div className="relative h-64 md:h-80 rounded-3xl overflow-hidden border border-white/5 bg-bg-secondary/60 backdrop-blur-xl shadow-2xl">
                 <img 
                   src={project.image} 
                   alt={project.title} 
@@ -279,7 +279,7 @@ export default function ProjectDetail({ navigate, projectId }) {
             )}
 
             {/* Header info */}
-            <div className="glass-panel border border-white/5 rounded-3xl p-8 flex flex-col gap-6 bg-[#0d1120]/60 backdrop-blur-xl">
+            <div className="glass-panel border border-white/5 rounded-3xl p-8 flex flex-col gap-6 bg-bg-secondary/60 backdrop-blur-xl">
               <div className="flex justify-between items-start gap-4">
                 <span className="text-[10px] font-black uppercase tracking-wider text-emerald-400 bg-emerald-500/10 border border-emerald-500/10 px-3 py-1 rounded-md">
                   {project.status}
@@ -309,7 +309,7 @@ export default function ProjectDetail({ navigate, projectId }) {
             </div>
 
             {/* In-depth research description */}
-            <div className="glass-panel border border-white/5 rounded-3xl p-8 flex flex-col gap-6 bg-[#0d1120]/60 backdrop-blur-xl">
+            <div className="glass-panel border border-white/5 rounded-3xl p-8 flex flex-col gap-6 bg-bg-secondary/60 backdrop-blur-xl">
               <h2 className="text-lg font-black text-text-primary flex items-center gap-2">
                 <Info className="w-5 h-5 text-fieri-blue" />
                 Description de l'Initiative
@@ -320,7 +320,7 @@ export default function ProjectDetail({ navigate, projectId }) {
             </div>
 
             {/* Milestone Timeline Component */}
-            <div className="glass-panel border border-white/5 rounded-3xl p-8 flex flex-col gap-8 bg-[#0d1120]/60 backdrop-blur-xl">
+            <div className="glass-panel border border-white/5 rounded-3xl p-8 flex flex-col gap-8 bg-bg-secondary/60 backdrop-blur-xl">
               <h2 className="text-lg font-black text-text-primary flex items-center gap-2">
                 <Trophy className="w-5 h-5 text-fieri-blue animate-pulse" />
                 Jalons & Avancement Scientifique
@@ -383,7 +383,7 @@ export default function ProjectDetail({ navigate, projectId }) {
             </div>
 
             {/* Team Members Section */}
-            <div className="glass-panel border border-white/5 rounded-3xl p-8 flex flex-col gap-6 bg-[#0d1120]/60 backdrop-blur-xl">
+            <div className="glass-panel border border-white/5 rounded-3xl p-8 flex flex-col gap-6 bg-bg-secondary/60 backdrop-blur-xl">
               <h2 className="text-lg font-black text-text-primary flex items-center gap-2">
                 <Users className="w-5 h-5 text-fieri-blue" />
                 Membres de l'Équipe
@@ -421,7 +421,7 @@ export default function ProjectDetail({ navigate, projectId }) {
           <div className="flex flex-col gap-8 col-span-1">
             
             {/* Financial Pledge Progress Bento */}
-            <div className="glass-panel border border-white/5 rounded-3xl p-6 bg-[#0d1120]/60 backdrop-blur-xl flex flex-col gap-6 justify-between relative overflow-hidden">
+            <div className="glass-panel border border-white/5 rounded-3xl p-6 bg-bg-secondary/60 backdrop-blur-xl flex flex-col gap-6 justify-between relative overflow-hidden">
               <div className="absolute top-0 right-0 w-32 h-32 bg-fieri-blue/5 rounded-full blur-[40px] pointer-events-none" />
               
               <div className="space-y-4 relative z-10">
@@ -471,7 +471,7 @@ export default function ProjectDetail({ navigate, projectId }) {
             </div>
 
             {/* Interactive Subscription / Follow Card */}
-            <div className="glass-panel border border-white/5 rounded-3xl p-6 bg-[#0d1120]/60 backdrop-blur-xl flex flex-col gap-6 relative overflow-hidden">
+            <div className="glass-panel border border-white/5 rounded-3xl p-6 bg-bg-secondary/60 backdrop-blur-xl flex flex-col gap-6 relative overflow-hidden">
               <div className="space-y-4 relative z-10">
                 <div className="flex items-center gap-2 text-[10px] font-black text-fieri-blue uppercase tracking-wider">
                   <Star className="w-4 h-4" />
@@ -501,7 +501,7 @@ export default function ProjectDetail({ navigate, projectId }) {
             </div>
 
             {/* Associated Research Club Bento */}
-            <div className="glass-panel border border-white/5 rounded-3xl p-6 bg-[#0d1120]/60 backdrop-blur-xl flex flex-col justify-between relative overflow-hidden group/club">
+            <div className="glass-panel border border-white/5 rounded-3xl p-6 bg-bg-secondary/60 backdrop-blur-xl flex flex-col justify-between relative overflow-hidden group/club">
               <div className="space-y-4">
                 <span className="text-[10px] font-black uppercase tracking-wider text-text-muted">
                   Laboratoire Parent

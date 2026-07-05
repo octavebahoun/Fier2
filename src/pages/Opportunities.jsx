@@ -342,7 +342,7 @@ export default function Opportunities({ navigate }) {
           </div>
 
           {/* Search & Selection Filter Header */}
-          <div className="flex flex-col md:flex-row gap-4 items-center justify-between glass-panel border border-white/5 rounded-2xl p-4 relative z-10 bg-[#0d1120]/40">
+          <div className="flex flex-col md:flex-row gap-4 items-center justify-between glass-panel border border-white/5 rounded-2xl p-4 relative z-10 bg-bg-secondary/40">
             {/* Input */}
             <div className="relative w-full md:max-w-md">
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted" />
@@ -390,7 +390,7 @@ export default function Opportunities({ navigate }) {
                       borderColor: "rgba(59, 130, 246, 0.25)",
                       boxShadow: "0 0 30px rgba(59, 130, 246, 0.1)"
                     }}
-                    className="glass-panel border bg-[#0d1120]/60 backdrop-blur-xl rounded-3xl p-6 md:p-8 flex flex-col justify-between gap-6 transition-all border-white/5"
+                    className="glass-panel border bg-bg-secondary/60 backdrop-blur-xl rounded-3xl p-6 md:p-8 flex flex-col justify-between gap-6 transition-all border-white/5"
                   >
                     <div className="space-y-4">
                       {/* Top info row */}
@@ -690,7 +690,7 @@ export default function Opportunities({ navigate }) {
                           id="publish-type"
                           value={publishForm.type}
                           onChange={(e) => setPublishForm({ ...publishForm, type: e.target.value })}
-                          className="w-full bg-[#0d1120] border border-white/5 rounded-xl py-2.5 px-4 text-xs font-semibold text-text-primary focus:outline-none focus:border-fieri-blue/30"
+                          className="w-full bg-bg-secondary border border-white/5 rounded-xl py-2.5 px-4 text-xs font-semibold text-text-primary focus:outline-none focus:border-fieri-blue/30"
                         >
                           <option value="CDD R&D">CDD R&D</option>
                           <option value="Doctorat">Doctorat</option>

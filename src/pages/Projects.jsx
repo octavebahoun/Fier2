@@ -175,7 +175,7 @@ export default function Projects({ navigate }) {
                   variants={cardVariants}
                   className={`${
                     isFeatured ? 'md:col-span-2 flex-col md:flex-row' : 'col-span-1 flex-col'
-                  } group relative glass-panel rounded-3xl overflow-hidden border border-white/5 bg-[#0d1120]/60 backdrop-blur-xl transition-all cursor-pointer flex min-h-[380px]`}
+                  } group relative glass-panel rounded-3xl overflow-hidden border border-white/5 bg-bg-secondary/60 backdrop-blur-xl transition-all cursor-pointer flex min-h-[380px]`}
                   whileHover={{ 
                     y: -4, 
                     boxShadow: "0 0 30px rgba(59, 130, 246, 0.15)",
