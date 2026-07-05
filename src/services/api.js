@@ -5,7 +5,7 @@
 // toute erreur (réseau ou HTTP) telle quelle.
 // ─────────────────────────────────────────────────────────────────────────────
 
-import { normalizeResearcher } from './adapters.js';
+import { normalizeResearcher, normalizeClub } from './adapters.js';
 
 const BASE_URL = 'https://backend-fieri.vercel.app';
 
@@ -110,8 +110,14 @@ export const api = {
 
   // ── 4. CLUBS & PÔLES DE RECHERCHE ──────────────────────────────────────────
   clubs: {
-    getAll: () => get('/clubs'),
-    getById: (id) => get(`/clubs/${id}`),
+    getAll: async () => {
+      const r = await get('/clubs')
+      return { ...r, data: Array.isArray(r.data) ? r.data.map(normalizeClub) : r.data }
+    },
+    getById: async (id) => {
+      const r = await get(`/clubs/${id}`)
+      return { ...r, data: normalizeClub(r.data) }
+    },
     join: (id) => post(`/clubs/${id}/join`),
     leave: (id) => del(`/clubs/${id}/join`)
   },

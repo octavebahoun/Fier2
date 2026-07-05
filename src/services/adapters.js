@@ -7,6 +7,36 @@
 // si le backend enrichit ses réponses plus tard), puis une valeur par défaut sûre.
 // ─────────────────────────────────────────────────────────────────────────────
 
+// Palette d'accents (héritée du mock) : le backend ne fournit pas de couleur de
+// pôle, on en dérive une stable à partir de l'id pour préserver l'identité visuelle.
+const CLUB_ACCENTS = ['#e05a2b', '#1b6fd8', '#10b981', '#f5a623', '#1b4f8a']
+function pickAccent(id) {
+  const s = String(id ?? '')
+  let h = 0
+  for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) >>> 0
+  return CLUB_ACCENTS[h % CLUB_ACCENTS.length]
+}
+
+/**
+ * Club. Backend liste : { id, name, discipline, memberCount }.
+ * Backend détail : { id, name, description, members }.
+ */
+export function normalizeClub(c) {
+  if (!c || typeof c !== 'object') return c
+  return {
+    ...c,
+    id: c.id,
+    title: c.name ?? c.title ?? '',
+    kicker: c.name ?? c.kicker ?? '',
+    desc: c.description ?? c.desc ?? c.discipline ?? '',
+    membersCount: c.memberCount ?? c.membersCount ?? 0,
+    divisions: c.divisions ?? [],
+    projetPhare: c.projetPhare ?? '',
+    joined: c.joined ?? false,
+    accent: c.accent ?? pickAccent(c.id)
+  }
+}
+
 /**
  * Chercheur. Backend liste : { id, firstName, lastName, bio, skills, followers }.
  * Backend détail : + { projects, distinctions }. Backend /me : { id, bio, skills, avatarUrl }.
