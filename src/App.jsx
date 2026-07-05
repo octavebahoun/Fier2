@@ -58,46 +58,11 @@ function App() {
   const [isNavExpanded, setIsNavExpanded] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
-  // Thème
-  const [theme, setTheme] = useState('dark')
-
-  // Newsletter (footer)
-  const [newsletterEmail, setNewsletterEmail] = useState('')
-  const [newsletterSubscribed, setNewsletterSubscribed] = useState(false)
-  const [newsletterError, setNewsletterError] = useState(null)
-
   const { user, logout } = useAuth()
-
-  const handleNewsletterSubmit = async (e) => {
-    e.preventDefault()
-    setNewsletterError(null)
-    if (!newsletterEmail || !newsletterEmail.includes('@')) {
-      setNewsletterError('Veuillez entrer une adresse e-mail valide.')
-      return
-    }
-    try {
-      await new Promise((resolve) => setTimeout(resolve, 800))
-      setNewsletterSubscribed(true)
-      setNewsletterEmail('')
-      setTimeout(() => setNewsletterSubscribed(false), 4500)
-    } catch {
-      setNewsletterError("Erreur lors de l'inscription. Veuillez réessayer.")
-    }
-  }
 
   const handleLogout = () => {
     logout()
     navigate('home')
-  }
-
-  const toggleTheme = () => {
-    const nextTheme = theme === 'dark' ? 'light' : 'dark'
-    setTheme(nextTheme)
-    if (nextTheme === 'light') {
-      document.body.classList.add('light-theme')
-    } else {
-      document.body.classList.remove('light-theme')
-    }
   }
 
   // Détection du scroll (contracte la pilule de navigation)
@@ -132,8 +97,6 @@ function App() {
     <AppLayout
       currentPage={currentPage}
       navigate={navigate}
-      theme={theme}
-      toggleTheme={toggleTheme}
       user={user}
       handleLogout={handleLogout}
       isScrolled={isScrolled}
@@ -141,12 +104,6 @@ function App() {
       setIsNavExpanded={setIsNavExpanded}
       mobileMenuOpen={mobileMenuOpen}
       setMobileMenuOpen={setMobileMenuOpen}
-      newsletterEmail={newsletterEmail}
-      setNewsletterEmail={setNewsletterEmail}
-      newsletterSubscribed={newsletterSubscribed}
-      newsletterError={newsletterError}
-      setNewsletterError={setNewsletterError}
-      handleNewsletterSubmit={handleNewsletterSubmit}
     >
       <Routes>
         <Route path="/" element={<Home navigate={navigate} />} />

@@ -3,13 +3,12 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { Menu, X, ChevronDown, Sun, Moon, LogOut, Search } from 'lucide-react'
 import Logo from '../Logo.jsx'
 import RoleBadge from '../RoleBadge.jsx'
+import { useTheme } from '../../context/ThemeContext.jsx'
 import api from '../../services/api.js'
 
 export default function Navbar({
   currentPage,
   navigate,
-  theme,
-  toggleTheme,
   user,
   handleLogout,
   isScrolled,
@@ -18,6 +17,7 @@ export default function Navbar({
   mobileMenuOpen,
   setMobileMenuOpen
 }) {
+  const { theme, toggleTheme } = useTheme()
   const [unreadCount, setUnreadCount] = useState(0)
 
   useEffect(() => {

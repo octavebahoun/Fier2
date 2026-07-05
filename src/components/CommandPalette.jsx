@@ -15,8 +15,10 @@ import {
   Shield,
   LayoutDashboard
 } from 'lucide-react'
+import { useTheme } from '../context/ThemeContext.jsx'
 
-export default function CommandPalette({ navigate, theme, toggleTheme }) {
+export default function CommandPalette({ navigate }) {
+  const { theme, toggleTheme } = useTheme()
   const [isOpen, setIsOpen] = useState(false)
   const [search, setSearch] = useState('')
   const [selectedIndex, setSelectedIndex] = useState(0)

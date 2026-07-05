@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Navbar from './Navbar.jsx'
 import Sidebar from './Sidebar.jsx'
@@ -10,35 +10,47 @@ export default function AppLayout({
   children,
   currentPage,
   navigate,
-  theme,
-  toggleTheme,
   user,
   handleLogout,
   isScrolled,
   isNavExpanded,
   setIsNavExpanded,
   mobileMenuOpen,
-  setMobileMenuOpen,
-  newsletterEmail,
-  setNewsletterEmail,
-  newsletterSubscribed,
-  newsletterError,
-  setNewsletterError,
-  handleNewsletterSubmit
+  setMobileMenuOpen
 }) {
   const showSidebar = !!user
   const showFooter = currentPage !== 'auth'
 
+  // État de la newsletter — colocalisé ici (le formulaire ne vit que dans ce footer).
+  const [newsletterEmail, setNewsletterEmail] = useState('')
+  const [newsletterSubscribed, setNewsletterSubscribed] = useState(false)
+  const [newsletterError, setNewsletterError] = useState(null)
+
+  const handleNewsletterSubmit = async (e) => {
+    e.preventDefault()
+    setNewsletterError(null)
+    if (!newsletterEmail || !newsletterEmail.includes('@')) {
+      setNewsletterError('Veuillez entrer une adresse e-mail valide.')
+      return
+    }
+    try {
+      await new Promise((resolve) => setTimeout(resolve, 800))
+      setNewsletterSubscribed(true)
+      setNewsletterEmail('')
+      setTimeout(() => setNewsletterSubscribed(false), 4500)
+    } catch {
+      setNewsletterError("Erreur lors de l'inscription. Veuillez réessayer.")
+    }
+  }
+
   return (
     <div className="min-h-screen flex flex-col relative bg-bg-primary text-text-primary selection:bg-accent-bleue selection:text-white">
       {/* Universal Command Palette */}
-      <CommandPalette navigate={navigate} theme={theme} toggleTheme={toggleTheme} />
+      <CommandPalette navigate={navigate} />
       {/* 1. Navigation Shell */}
       <Navbar
         currentPage={currentPage}
         navigate={navigate}
-        theme={theme}
-        toggleTheme={toggleTheme}
         user={user}
         handleLogout={handleLogout}
         isScrolled={isScrolled}
