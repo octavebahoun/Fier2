@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Navbar from './Navbar.jsx'
 import Sidebar from './Sidebar.jsx'
-import PerspectiveGrid from '../PerspectiveGrid.jsx'
 import Logo from '../Logo.jsx'
 import CommandPalette from '../CommandPalette.jsx'
 
@@ -99,10 +98,7 @@ export default function AppLayout({
 
         {/* 4. Footer Area */}
         {showFooter && (
-          <footer className="w-full bg-bg-secondary border-t border-border-subtle z-10 py-12 relative overflow-hidden shrink-0">
-            {/* Dovetail-style 3D wireframe room depth effect */}
-            <PerspectiveGrid />
-
+          <footer className="w-full bg-bg-secondary border-t border-border-subtle z-10 py-12 relative shrink-0">
             <div className="max-w-7xl mx-auto px-6 lg:px-12 flex flex-col gap-10 relative z-10">
               <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
                 {/* Column 1: Info and Brand */}
