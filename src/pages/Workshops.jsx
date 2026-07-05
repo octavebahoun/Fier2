@@ -51,7 +51,7 @@ function WorkshopCard({ workshop, club, user, onToggleRegister, isToggling, navi
       whileHover={{ y: -4, transition: { duration: 0.2, ease: [0.16, 1, 0.3, 1] } }}
       className="relative flex flex-col rounded-2xl overflow-hidden backdrop-blur-xl border flex-1"
       style={{
-        background: 'rgba(13, 17, 32, 0.65)',
+        background: '#FFFFFF',
         borderColor: `${clubAccent}30`,
         boxShadow: `0 4px 32px ${clubAccent}08`,
       }}

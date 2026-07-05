@@ -72,7 +72,7 @@ function JoinConfirmModal({ club, onConfirm, onCancel }) {
         onClick={(e) => e.stopPropagation()}
         className="relative w-full max-w-md rounded-3xl border p-8 shadow-2xl backdrop-blur-xl"
         style={{
-          background: 'rgba(13, 17, 32, 0.95)',
+          background: '#FFFFFF',
           borderColor: `${club.accent}40`,
           boxShadow: `0 0 60px ${club.accent}20`,
         }}
@@ -154,7 +154,7 @@ function ClubCard({ club, user, onJoin, onLeave, isPending, joiningId, isManager
       whileHover={{ y: -4, transition: { duration: 0.2, ease: [0.16, 1, 0.3, 1] } }}
       className="relative flex flex-col rounded-2xl overflow-hidden backdrop-blur-xl border"
       style={{
-        background: 'rgba(13, 17, 32, 0.65)',
+        background: '#FFFFFF',
         borderColor: `${club.accent}38`,
         boxShadow: `0 4px 32px ${club.accent}12`,
       }}

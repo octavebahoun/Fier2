@@ -2,27 +2,28 @@
 @import "tailwindcss";
 
 @theme {
-  --color-bg-primary: #080B14;
-  --color-bg-secondary: #0D1120;
-  --color-bg-tertiary: #111827;
+  /* ── Palette LIGHT : blanc / bleu / orange (défaut de la plateforme) ── */
+  --color-bg-primary: #F5F8FD;    /* fond de page, blanc cassé légèrement bleuté */
+  --color-bg-secondary: #FFFFFF;  /* cartes & panneaux */
+  --color-bg-tertiary: #EAF1FB;   /* surface surélevée subtile */
 
-  --color-accent-primary: #1B4F8A;
-  --color-accent-secondary: #F5A623;
-  --color-accent-tertiary: #E8640C;
+  --color-accent-primary: #1B6FD8;   /* bleu FIERI */
+  --color-accent-secondary: #E8640C; /* orange FIERI */
+  --color-accent-tertiary: #F5821F;  /* orange clair */
 
-  --color-accent-bleue: #1B4F8A;
-  --color-accent-amber: #F5A623;
-  --color-accent-blue-marine: #1B4F8A;
+  --color-accent-bleue: #1B6FD8;
+  --color-accent-amber: #E8640C;
+  --color-accent-blue-marine: #164E96;
   --color-fieri-blue: #1B6FD8;
-  --color-fieri-bleue: #F5821F;
+  --color-fieri-bleue: #E8640C;
 
-  --color-text-primary: #F0EDE8;
-  --color-text-secondary: white;
-  --color-text-muted: #5A6070;
+  --color-text-primary: #10182A;   /* texte principal (encre) */
+  --color-text-secondary: #4B5566; /* texte secondaire */
+  --color-text-muted: #8A93A6;     /* texte discret */
 
-  --color-border-subtle: rgba(255, 255, 255, 0.06);
-  --color-border-glow: rgba(27, 79, 138, 0.4);
-  --color-grid-line: rgba(255, 255, 255, 0.03);
+  --color-border-subtle: #E2E8F2;  /* bordure pleine et claire */
+  --color-border-glow: rgba(27, 111, 216, 0.30);
+  --color-grid-line: rgba(16, 24, 42, 0.05);
 
   --font-sans: 'Plus Jakarta Sans', sans-serif;
 
@@ -57,41 +58,39 @@
   }
 }
 
-/* Light mode theme overrides */
-body.light-theme {
-  --color-bg-primary: #FAFBFF;
-  --color-bg-secondary: #FFFFFF;
-  --color-bg-tertiary: #EAF0FF;
-  --color-text-primary: #111827;
-  --color-text-secondary: #6B7280;
-  --color-text-muted: #9CA3AF;
-  --color-border-subtle: rgba(17, 24, 39, 0.08);
-  --color-border-glow: rgba(27, 111, 216, 0.2);
-  --color-grid-line: rgba(17, 24, 39, 0.04);
+/* ═══════════════════════════════════════════════════════════════════════════
+   REBRAND LIGHT — blanc / bleu / orange · surfaces opaques · zéro glassmorphisme
+   Couche de surcharge globale : neutralise les effets « verre » et les fonds
+   sombres codés en dur dans les composants, sans toucher au JSX.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* 1. Plus aucun flou de verre nulle part */
+*,
+*::before,
+*::after {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
 }
 
-body.light-theme .glass-panel {
-  background: rgba(255, 255, 255, 0.75);
-  border: 1px solid rgba(17, 24, 39, 0.06);
-  box-shadow: 0 4px 30px rgba(17, 24, 39, 0.04), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+/* 2. Fonds sombres codés en dur → surfaces blanches */
+[class*="bg-[#0d1120]"],
+[class*="bg-[#0D1120]"],
+[class*="bg-[#080B14]"],
+[class*="bg-[#080b14]"],
+[class*="bg-[#0d1424]"],
+[class*="bg-[#0D1424]"],
+[class*="bg-[#111827]"] {
+  background-color: #FFFFFF !important;
 }
 
-body.light-theme .glass-panel:hover {
-  border-color: rgba(27, 111, 216, 0.25);
-  background: rgba(255, 255, 255, 0.85);
-  box-shadow: 0 12px 40px rgba(27, 111, 216, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+/* 3. Voiles blancs translucides (bg-white/xx) → surface claire lisible */
+[class*="bg-white/"] {
+  background-color: #EFF3FA !important;
 }
 
-body.light-theme .dot-grid::before {
-  background-image: radial-gradient(rgba(17, 24, 39, 0.05) 1px, transparent 1px);
-}
-
-body.light-theme ::-webkit-scrollbar-thumb {
-  background: rgba(17, 24, 39, 0.1);
-}
-
-body.light-theme ::-webkit-scrollbar-thumb:hover {
-  background: rgba(17, 24, 39, 0.2);
+/* 4. Bordures blanches translucides (border-white/xx) → bordure claire pleine */
+[class*="border-white/"] {
+  border-color: var(--color-border-subtle) !important;
 }
 
 
@@ -145,32 +144,31 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(16, 24, 42, 0.15);
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.2);
+  background: rgba(16, 24, 42, 0.28);
 }
 
 /* Utility animations and custom glass effects */
 .glass-panel {
-  background: rgba(13, 17, 32, 0.7);
-  backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.05);
-  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  background: #FFFFFF;
+  border: 1px solid var(--color-border-subtle);
+  box-shadow: 0 1px 2px rgba(16, 24, 42, 0.04), 0 10px 30px rgba(16, 24, 42, 0.05);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .glass-panel:hover {
   border-color: rgba(27, 111, 216, 0.35);
-  background: rgba(15, 22, 42, 0.85);
-  box-shadow: 0 12px 40px rgba(27, 111, 216, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  background: #FFFFFF;
+  box-shadow: 0 4px 12px rgba(27, 111, 216, 0.10), 0 14px 40px rgba(16, 24, 42, 0.06);
   transform: translateY(-3px);
 }
 
 .text-gradient-blue {
-  background: linear-gradient(135deg, #00F2FE 0%, #4FACFE 100%);
+  background: linear-gradient(135deg, #1B6FD8 0%, #164E96 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
@@ -193,7 +191,7 @@ body {
   content: '';
   position: absolute;
   inset: 0;
-  background-image: radial-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+  background-image: radial-gradient(rgba(16, 24, 42, 0.06) 1px, transparent 1px);
   background-size: 24px 24px;
   pointer-events: none;
   z-index: 0;
@@ -239,7 +237,7 @@ body {
 }
 
 .text-gradient-cosmic {
-  background: linear-gradient(135deg, #00F2FE 0%, #0072FF 50%, #FFB800 100%);
+  background: linear-gradient(135deg, #1B6FD8 0%, #164E96 50%, #E8640C 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
