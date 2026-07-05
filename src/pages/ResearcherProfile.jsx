@@ -18,6 +18,7 @@ import {
   Newspaper
 } from 'lucide-react'
 import { useAuth } from '../context/AuthContext.jsx'
+import { useAuthGate } from '../context/AuthGateContext.jsx'
 import { api } from '../services/api.js'
 
 // ─────────────────────────── Toast Notification Component ───────────────────────────
@@ -169,6 +170,7 @@ function ProfileSkeleton() {
 // ─────────────────────────── Main Researcher Profile Page ───────────────────────────
 export default function ResearcherProfile({ navigate, researcherId }) {
   const { user } = useAuth()
+  const { promptLogin } = useAuthGate()
   const [researcher, setResearcher] = useState(null)
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState(null)
@@ -232,7 +234,7 @@ export default function ResearcherProfile({ navigate, researcherId }) {
 
   // Handle follow / unfollow action
   const handleFollowToggle = async () => {
-    if (!user) return // Gated
+    if (!user) { promptLogin('Connectez-vous pour suivre ce chercheur.'); return }
     if (followLoading) return
 
     setFollowLoading(true)

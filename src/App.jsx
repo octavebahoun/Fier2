@@ -4,6 +4,7 @@ import './App.css'
 import AppLayout from './components/layout/AppLayout.jsx'
 import ProtectedRoute from './components/ProtectedRoute.jsx'
 import { useAuth } from './context/AuthContext.jsx'
+import { AuthGateProvider } from './context/AuthGateContext.jsx'
 import { useAppNavigate, pathToPageName } from './navigation.js'
 
 // Pages
@@ -108,6 +109,7 @@ function App() {
   }, [isNavExpanded, mobileMenuOpen])
 
   return (
+    <AuthGateProvider>
     <AppLayout
       currentPage={currentPage}
       navigate={navigate}
@@ -190,6 +192,7 @@ function App() {
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </AppLayout>
+    </AuthGateProvider>
   )
 }
 

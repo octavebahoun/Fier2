@@ -8,6 +8,7 @@ import {
 } from 'lucide-react';
 import { api } from '../services/api';
 import { useAuth } from '../context/AuthContext.jsx';
+import { useAuthGate } from '../context/AuthGateContext.jsx';
 
 // ─────────────────────────── Toast Notification Component ───────────────────────────
 function Toast({ message, type = 'success', onClose }) {
@@ -64,6 +65,7 @@ function ProjectDetailSkeleton() {
 // ─────────────────────────── Main Component ───────────────────────────
 export default function ProjectDetail({ navigate, projectId }) {
   const { user } = useAuth();
+  const { promptLogin } = useAuthGate();
   const [project, setProject] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -112,7 +114,7 @@ export default function ProjectDetail({ navigate, projectId }) {
   // Handle follow / unfollow toggle with localStorage
   const handleFollowToggle = async () => {
     if (!user) {
-      setToast("Veuillez vous connecter pour suivre ce projet.");
+      promptLogin("Connectez-vous pour suivre ce projet.");
       return;
     }
 
@@ -132,7 +134,7 @@ export default function ProjectDetail({ navigate, projectId }) {
   // Open modal and set focus inside
   const openPledgeModal = () => {
     if (!user) {
-      setToast("Veuillez vous connecter pour soutenir ce projet.");
+      promptLogin("Connectez-vous pour soutenir ce projet.");
       return;
     }
     setIsPledgeModalOpen(true);

@@ -5,6 +5,7 @@ import {
   Radio, X, Clock, CheckCircle2, Zap, ExternalLink
 } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext.jsx';
+import { useAuthGate } from '@/context/AuthGateContext.jsx';
 import { api } from '@/services/api.js';
 
 // ─── Toast Component ────────────────────────────────────────────────────────
@@ -275,6 +276,7 @@ function EventCard({ event, user, onRegister, onLiveAccess, isRegistering }) {
 // ─── Main Events Page ─────────────────────────────────────────────────────────
 export default function Events({ navigate }) {
   const { user } = useAuth();
+  const { promptLogin } = useAuthGate();
   const [events, setEvents] = React.useState([]);
   const [isLoading, setIsLoading] = React.useState(true);
   const [isRegistering, setIsRegistering] = React.useState(null);
@@ -302,7 +304,7 @@ export default function Events({ navigate }) {
   // Handle event registration
   const handleRegister = async (eventId) => {
     if (!user) {
-      navigate?.('auth');
+      promptLogin("Connectez-vous pour vous inscrire à cet événement.");
       return;
     }
     setIsRegistering(eventId);
@@ -324,7 +326,7 @@ export default function Events({ navigate }) {
   // Handle live streaming access gating
   const handleLiveAccess = (event) => {
     if (!user) {
-      navigate?.('auth');
+      promptLogin("Connectez-vous pour accéder au live.");
       return;
     }
     if (!event.registered) {
