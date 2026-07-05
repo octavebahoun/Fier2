@@ -1,35 +1,22 @@
-import mockDb from './mockDb.js';
-
-// NOTE : le mock n'est plus utilisé comme fallback réseau — le gateway `request()`
-// ci-dessous parle exclusivement au backend réel et propage toute erreur.
-// `mockDb` reste importé car certaines méthodes (badges, memberships, tasks,
-// follow/registrations…) n'ont pas encore d'endpoint réel et s'appuient encore
-// dessus directement. À câbler côté backend puis retirer.
+// ─────────────────────────────────────────────────────────────────────────────
+// FIERI Research — Client API REST
+// Câblé sur les endpoints de production documentés dans docs/fieri_backend_api.md.
+// Plus aucun mock ici : le gateway parle exclusivement au backend réel et propage
+// toute erreur (réseau ou HTTP) telle quelle.
+// ─────────────────────────────────────────────────────────────────────────────
 
 const BASE_URL = 'https://backend-fieri.vercel.app';
 
-/**
- * Récupère le jeton JWT et génère les en-têtes HTTP de base.
- */
+/** En-têtes HTTP de base + jeton JWT si présent. */
 const getHeaders = () => {
   const token = localStorage.getItem('fieri_auth_token');
   return {
     'Content-Type': 'application/json',
-    ...(token ? { 'Authorization': `Bearer ${token}` } : {})
+    ...(token ? { Authorization: `Bearer ${token}` } : {})
   };
 };
 
-/**
- * Simulateur de latence réseau pour les actions mockées.
- */
-const delay = (ms = 200) => new Promise(resolve => setTimeout(resolve, ms));
-
-/**
- * Exécuteur de requête réseau — backend réel uniquement.
- * Aucune bascule mock : toute erreur (réseau ou HTTP) est propagée telle quelle.
- * Le 3ᵉ argument (ancien `fallbackAction`) est toléré mais ignoré, afin de ne pas
- * avoir à réécrire les ~29 call-sites ; il sera retiré lors d'un nettoyage ultérieur.
- */
+/** Exécuteur bas-niveau. Toute réponse non-2xx lève une erreur. */
 const request = async (path, options = {}) => {
   const response = await fetch(`${BASE_URL}${path}`, {
     ...options,
@@ -46,124 +33,40 @@ const request = async (path, options = {}) => {
   return await response.json();
 };
 
+// Helpers de verbes HTTP — gardent les méthodes ci-dessous concises et lisibles.
+const get = (path) => request(path, { method: 'GET' });
+const post = (path, body) => request(path, { method: 'POST', ...(body !== undefined ? { body: JSON.stringify(body) } : {}) });
+const put = (path, body) => request(path, { method: 'PUT', ...(body !== undefined ? { body: JSON.stringify(body) } : {}) });
+const patch = (path, body) => request(path, { method: 'PATCH', ...(body !== undefined ? { body: JSON.stringify(body) } : {}) });
+const del = (path) => request(path, { method: 'DELETE' });
+
+/** Construit une query-string à partir des paramètres définis (ignore null/''/undefined). */
+const qs = (params) => {
+  const entries = Object.entries(params || {}).filter(
+    ([, v]) => v !== undefined && v !== null && v !== ''
+  );
+  return entries.length ? `?${new URLSearchParams(entries).toString()}` : '';
+};
+
 export const api = {
-  // ------------------------------------------------------------
-  // MODULE AUTHENTICATION & SESSION
-  // ------------------------------------------------------------
+  // ── 1. AUTHENTIFICATION & SESSION ──────────────────────────────────────────
   auth: {
-    register: async ({ email, password, firstName, lastName, branchId }) => {
-      return request(
-        '/auth/register',
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email, password, firstName, lastName, branchId })
-        },
-        async () => {
-          await delay(300);
-          // SÉCURITÉ : le rôle n'est jamais défini par le client. Toute inscription
-          // démarre en ETUDIANT ; l'élévation (CHERCHEUR / MENTOR / ADMIN) est une
-          // décision serveur (validation admin, attribution de badge). On ignore donc
-          // délibérément le `role` fourni dans la requête.
-          const assignedRole = 'ETUDIANT';
-          const mockMember = {
-            id: Math.floor(Math.random() * 9000) + 1000,
-            email,
-            firstName: firstName || 'Étudiant',
-            lastName: lastName || 'FIERI',
-            role: assignedRole,
-            avatarUrl: null
-          };
-          const fakeToken = `mock-token-${Date.now()}`;
-          localStorage.setItem('fieri_auth_token', fakeToken);
-          localStorage.setItem('fieri_user', JSON.stringify(mockMember));
-          return {
-            success: true,
-            message: `Inscription réussie (Mode Hors-ligne). Bienvenue !`,
-            data: {
-              access_token: fakeToken,
-              member: mockMember
-            }
-          };
-        }
-      );
-    },
+    // Le rôle n'est volontairement PAS transmis : l'attribution est une décision
+    // serveur (voir docs). Toute inscription démarre en ETUDIANT côté backend.
+    register: ({ email, password, firstName, lastName, branchId }) =>
+      post('/auth/register', { email, password, firstName, lastName, branchId }),
 
-    login: async (email, password) => {
-      return request(
-        '/auth/login',
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email, password })
-        },
-        async () => {
-          await delay(200);
+    login: (email, password) => post('/auth/login', { email, password }),
 
-          // ── Détection du rôle par email en mode fallback (DEV uniquement) ──
-          // Pour tester un profil admin     : admin@fieri.dev
-          // Pour tester un profil étudiant  : etudiant@fieri.dev (ou *@etudiant.*)
-          // Pour tester un profil chercheur : tout autre email
-          const e = (email || '').toLowerCase();
-          let detectedRole = 'CHERCHEUR';
-          if (e.startsWith('admin') || e.includes('@admin.')) {
-            detectedRole = 'ADMIN';
-          } else if (e.startsWith('etudiant') || e.includes('etudiant@') || e.includes('@student.') || e.includes('.etudiant@')) {
-            detectedRole = 'ETUDIANT';
-          }
-
-          const mockMember = {
-            id: 101,
-            email: email || 'chercheur@fieri.dev',
-            firstName: email ? email.split('@')[0] : 'Chercheur',
-            lastName: 'FIERI',
-            role: detectedRole,
-            avatarUrl: null
-          };
-          const fakeToken = `mock-token-${Date.now()}`;
-          localStorage.setItem('fieri_auth_token', fakeToken);
-          localStorage.setItem('fieri_user', JSON.stringify(mockMember));
-          return {
-            success: true,
-            message: `Connexion réussie (Mode Hors-ligne). Profil : ${detectedRole}`,
-            data: {
-              access_token: fakeToken,
-              member: mockMember
-            }
-          };
-        }
-      );
-    },
-
-    getProfile: async () => {
-      const token = localStorage.getItem('fieri_auth_token');
-      if (token && token.startsWith('mock-token')) {
-        const user = localStorage.getItem('fieri_user');
-        return { success: true, data: user ? JSON.parse(user) : null };
-      }
-
-      return request(
-        '/members/me',
-        { method: 'GET' },
-        async () => {
-          const user = localStorage.getItem('fieri_user');
-          if (user) {
-            return { success: true, data: JSON.parse(user) };
-          }
-          return { success: false, message: "Session expirée ou invalide." };
-        }
-      );
-    },
+    getProfile: () => get('/members/me'),
 
     logout: () => {
       localStorage.removeItem('fieri_auth_token');
       localStorage.removeItem('fieri_user');
-      return { success: true, message: "Déconnexion réussie" };
+      return { success: true, message: 'Déconnexion réussie' };
     },
 
-    isAuthenticated: () => {
-      return !!localStorage.getItem('fieri_auth_token');
-    },
+    isAuthenticated: () => !!localStorage.getItem('fieri_auth_token'),
 
     getLocalUser: () => {
       const u = localStorage.getItem('fieri_user');
@@ -171,747 +74,155 @@ export const api = {
     }
   },
 
-  // ------------------------------------------------------------
-  // MODULE ORGANISATIONS ET MÉTADONNÉES
-  // ------------------------------------------------------------
+  // ── 2. STRUCTURE INSTITUTIONNELLE & MÉTADONNÉES ────────────────────────────
   org: {
-    getCountries: async () => {
-      return request(
-        '/countries',
-        { method: 'GET' },
-        async () => {
-          return {
-            success: true,
-            data: [
-              { id: 1, name: "Bénin" },
-              { id: 2, name: "Togo" }
-            ]
-          };
-        }
-      );
-    },
-
-    getCountryById: async (id) => {
-      return request(
-        `/countries/${id}`,
-        { method: 'GET' },
-        async () => {
-          const countries = [
-            { id: 1, name: "Bénin" },
-            { id: 2, name: "Togo" }
-          ];
-          const c = countries.find(item => item.id === Number(id));
-          return c ? { success: true, data: c } : { success: false, message: "Pays introuvable." };
-        }
-      );
-    },
-
-    getUniversities: async (countryId) => {
-      return request(
-        `/countries/${countryId}/universities`,
-        { method: 'GET' },
-        async () => {
-          const list = [
-            { id: 1, name: "Université d'Abomey-Calavi (UAC)", countryId: 1 },
-            { id: 2, name: "Université de Parakou (UP)", countryId: 1 },
-            { id: 3, name: "Université de Lomé (UL)", countryId: 2 }
-          ];
-          return {
-            success: true,
-            data: list.filter(u => u.countryId === Number(countryId))
-          };
-        }
-      );
-    },
-
-    getBranches: async (universityId) => {
-      return request(
-        `/universities/${universityId}/branches`,
-        { method: 'GET' },
-        async () => {
-          const list = [
-            { id: 1, name: "Génie Logiciel & IA", universityId: 1 },
-            { id: 2, name: "Systèmes Embarqués & IoT", universityId: 1 },
-            { id: 3, name: "Génie Civil & BIM", universityId: 1 },
-            { id: 4, name: "Énergies Renouvelables", universityId: 1 },
-            { id: 5, name: "Réseaux & Télécoms", universityId: 2 },
-            { id: 6, name: "Sécurité Informatique", universityId: 3 }
-          ];
-          return {
-            success: true,
-            data: list.filter(b => b.universityId === Number(universityId))
-          };
-        }
-      );
-    }
+    getCountries: () => get('/countries'),
+    getCountryById: (id) => get(`/countries/${id}`),
+    getUniversities: (countryId) => get(`/countries/${countryId}/universities`),
+    getBranches: (universityId) => get(`/universities/${universityId}/branches`)
   },
 
-  // ------------------------------------------------------------
-  // MODULE PROJETS DE RECHERCHE R&D (Mock persisté)
-  // ------------------------------------------------------------
+  // ── 3. PROJETS DE RECHERCHE R&D ────────────────────────────────────────────
   projects: {
-    getAll: async (filters = {}) => {
-      const raw = await request(
-        '/projects',
-        { method: 'GET' },
-        async () => { await delay(200); return { success: true, data: mockDb.projects.getAll() }; }
-      );
-      let list = (raw?.data ?? raw) || [];
+    getAll: (filters = {}) =>
+      get(`/projects${qs({ clubId: filters.clubId, status: filters.status, search: filters.search })}`),
 
-      if (filters.clubId) {
-        list = list.filter(p => p.clubId === filters.clubId);
-      }
+    getById: (id) => get(`/projects/${id}`),
 
-      if (filters.search) {
-        const q = filters.search.toLowerCase();
-        list = list.filter(p =>
-          p.title.toLowerCase().includes(q) ||
-          p.summary.toLowerCase().includes(q) ||
-          p.technologies.some(t => t.toLowerCase().includes(q))
-        );
-      }
-
-      if (filters.status) {
-        list = list.filter(p => p.status === filters.status);
-      }
-
-      return { success: true, data: list };
-    },
-
-    getById: async (id) => {
-      return request(
-        `/projects/${id}`,
-        { method: 'GET' },
-        async () => {
-          await delay(150);
-          const proj = mockDb.projects.getById(id);
-          if (!proj) return { success: false, message: 'Projet introuvable.' };
-          return { success: true, data: proj };
-        }
-      );
-    },
-
-    toggleStar: async (id) => {
-      await delay(150);
-      const proj = mockDb.projects.getById(id);
-      if (!proj) return { success: false, message: "Projet introuvable." };
-      proj.starred = !proj.starred;
-      proj.stars += proj.starred ? 1 : -1;
-      mockDb.projects.update(proj);
-      return {
-        success: true,
-        data: proj,
-        message: proj.starred ? "Projet ajouté aux favoris R&D" : "Projet retiré des favoris"
-      };
-    },
-
-    support: async (id, amount, message = "") => {
-      await delay(300);
-      const proj = mockDb.projects.getById(id);
-      if (!proj) return { success: false, message: "Projet introuvable." };
-      proj.budgetRaised += Number(amount);
-      proj.supportersCount += 1;
-      mockDb.projects.update(proj);
-      return {
-        success: true,
-        data: proj,
-        message: `Félicitations ! Votre contribution de ${amount} $ a été prise en compte avec succès pour propulser ce projet.`
-      };
-    },
-
-    isFollowed: async (id) => {
-      await delay(100);
-      return { success: true, data: mockDb.projects.isFollowed(id) };
-    },
-
+    // POST /projects/:id/follow — bascule favori. Renvoie { starred }.
     toggleFollow: async (id) => {
-      await delay(150);
-      const state = mockDb.projects.toggleFollow(id);
-      return { success: true, data: state, message: state ? "Projet suivi avec succès !" : "Abonnement au projet retiré." };
-    }
+      const r = await post(`/projects/${id}/follow`);
+      return { success: r.success, data: r.starred, message: r.message };
+    },
+
+    // Pas d'endpoint dédié : on dérive l'état de suivi du projet lui-même.
+    isFollowed: async (id) => {
+      const r = await get(`/projects/${id}`);
+      return { success: r.success, data: !!r.data?.starred };
+    },
+
+    // POST /projects/:id/support — contribution financière. Renvoie { newBudget }.
+    support: (id, amount, message = '') =>
+      post(`/projects/${id}/support`, { amount, message })
   },
 
-  // ------------------------------------------------------------
-  // MODULE CLUBS DE RECHERCHE ET PÔLES (Mock persisté)
-  // ------------------------------------------------------------
+  // ── 4. CLUBS & PÔLES DE RECHERCHE ──────────────────────────────────────────
   clubs: {
-    getAll: async () => {
-      // userId needed for the mock fallback only; read from localStorage (safe in all contexts)
-      const getUserId = () => {
-        try { const u = JSON.parse(localStorage.getItem('fieri_user')); return u?.id || null; } catch { return null; }
-      };
-      return request(
-        '/clubs',
-        { method: 'GET' },
-        async () => { await delay(150); return { success: true, data: mockDb.clubs.getAll(getUserId()) }; }
-      );
-    },
-
-    getById: async (id) => {
-      return request(
-        `/clubs/${id}`,
-        { method: 'GET' },
-        async () => {
-          await delay(120);
-          const club = mockDb.clubs.getById(id);
-          if (!club) return { success: false, message: 'Club R&D introuvable.' };
-          return { success: true, data: club };
-        }
-      );
-    },
-
-    join: async (id) => {
-      await delay(200);
-      const club = mockDb.clubs.getById(id);
-      if (!club) return { success: false, message: "Club introuvable." };
-      if (club.joined) return { success: true, message: "Vous faites déjà partie de ce pôle." };
-
-      club.joined = true;
-      club.membersCount += 1;
-      mockDb.clubs.update(club);
-
-      // Ajouter une notification au tableau de bord
-      mockDb.notifications.add(`Félicitations, vous avez rejoint le pôle '${club.kicker}' !`);
-
-      return {
-        success: true,
-        data: club,
-        message: `Adhésion validée. Bienvenue au sein de la Cité '${club.kicker}' !`
-      };
-    },
-
-    leave: async (id) => {
-      await delay(150);
-      const club = mockDb.clubs.getById(id);
-      if (!club) return { success: false, message: "Club introuvable." };
-      if (!club.joined) return { success: true };
-
-      club.joined = false;
-      club.membersCount -= 1;
-      mockDb.clubs.update(club);
-
-      return {
-        success: true,
-        data: club,
-        message: `Vous avez quitté le pôle '${club.kicker}' avec succès.`
-      };
-    }
+    getAll: () => get('/clubs'),
+    getById: (id) => get(`/clubs/${id}`),
+    join: (id) => post(`/clubs/${id}/join`),
+    leave: (id) => del(`/clubs/${id}/join`)
   },
 
-  // ------------------------------------------------------------
-  // MODULE ACADÉMIE & FORMATIONS (Mock persisté)
-  // ------------------------------------------------------------
+  // ── 5. ATELIERS & ACADÉMIE ─────────────────────────────────────────────────
   workshops: {
-    getAll: async () => {
-      return request(
-        '/workshops',
-        { method: 'GET' },
-        async () => { await delay(150); return { success: true, data: mockDb.workshops.getAll() }; }
-      );
-    },
+    getAll: () => get('/workshops'),
 
-    toggleRegister: async (id, userFullName) => {
-      await delay(200);
-      const res = mockDb.workshops.toggleRegister(id, userFullName);
-      if (!res || !res.success) {
-        return { success: false, message: "Impossible de modifier votre inscription." };
-      }
+    // POST /workshops/:id/register (body userFullName) → { action, position, ... }
+    register: (id, userFullName) => post(`/workshops/${id}/register`, { userFullName }),
 
-      let message = "";
-      if (res.action === 'registered') {
-        message = `Inscription validée pour l'atelier '${res.workshop.title}'.`;
-      } else if (res.action === 'waitlisted') {
-        message = `Placé sur la file d'attente (Position #${res.position}) pour l'atelier '${res.workshop.title}'.`;
-      } else if (res.action === 'deregistered') {
-        message = `Vous êtes désinscrit de l'atelier '${res.workshop.title}'.`;
-        if (res.promotedUser) {
-          message += ` La place libérée a été réattribuée automatiquement à ${res.promotedUser} (premier de la file d'attente).`;
-        }
-      } else if (res.action === 'removed_from_waitlist') {
-        message = `Vous avez quitté la file d'attente de l'atelier '${res.workshop.title}'.`;
-      }
+    // DELETE /workshops/:id/register
+    deregister: (id) => del(`/workshops/${id}/register`),
 
-      return {
-        success: true,
-        data: res.workshop,
-        action: res.action,
-        promotedUser: res.promotedUser,
-        position: res.position,
-        message
-      };
-    },
-
-    register: async (id) => {
-      // Version de secours compatible
-      await delay(180);
-      const user = (() => { try { return JSON.parse(localStorage.getItem('fieri_user')); } catch { return null; } })();
-      const userFullName = user ? `${user.firstName} ${user.lastName}` : "Étudiant FIERI";
-
-      const res = mockDb.workshops.toggleRegister(id, userFullName);
-      if (!res || !res.success) {
-        return { success: false, message: "Impossible de procéder à l'inscription." };
-      }
-
-      if (res.action === 'deregistered') {
-        // Si la fonction s'est désinscrite accidentellement (on re-clique), on rétablit l'état inscrit
-        mockDb.workshops.toggleRegister(id, userFullName);
-      }
-
-      return {
-        success: true,
-        data: res.workshop,
-        message: res.action === 'waitlisted'
-          ? `Placé sur la file d'attente (Position #${res.position}) pour '${res.workshop.title}'.`
-          : `Inscription réussie au '${res.workshop.title}'.`
-      };
-    }
+    // Dispatcher pratique : l'appelant fournit l'état courant d'inscription.
+    toggleRegister: (id, userFullName, isRegistered) =>
+      isRegistered ? del(`/workshops/${id}/register`) : post(`/workshops/${id}/register`, { userFullName })
   },
 
-  // ------------------------------------------------------------
-  // MODULE ÉVÉNEMENTS & CONCOURS (Mock persisté)
-  // ------------------------------------------------------------
+  // ── 6. ÉVÉNEMENTS & LIVE STREAMS ───────────────────────────────────────────
   events: {
-    getAll: async () => {
-      return request(
-        '/events',
-        { method: 'GET' },
-        async () => { await delay(120); return { success: true, data: mockDb.events.getAll() }; }
-      );
-    },
-
-    register: async (id) => {
-      await delay(150);
-      const ev = mockDb.events.getById(id);
-      if (!ev) return { success: false, message: "Événement introuvable." };
-      if (ev.registered) return { success: true, message: "Vous êtes déjà enregistré pour cet événement." };
-
-      ev.registered = true;
-      ev.participantsCount += 1;
-      mockDb.events.update(ev);
-
-      return {
-        success: true,
-        data: ev,
-        message: `Enregistrement validé ! Votre passe d'accès pour '${ev.title}' est actif.`
-      };
-    }
+    getAll: () => get('/events'),
+    register: (id) => post(`/events/${id}/register`)
   },
 
-  // ------------------------------------------------------------
-  // MODULE ANNUAIRE DES CHERCHEURS (Mock persisté)
-  // ------------------------------------------------------------
+  // ── 7. ANNUAIRE DES CHERCHEURS ─────────────────────────────────────────────
   researchers: {
-    getMe: async () => {
-      return request(
-        '/researchers/me',
-        { method: 'GET' },
-        async () => {
-          await delay(120);
-          const me = mockDb.researchers.getMe();
-          if (!me) return { success: false, message: 'Session invalide.' };
-          return { success: true, data: me };
-        }
-      );
-    },
+    getMe: () => get('/researchers/me'),
+    updateMe: (payload) => put('/researchers/me', payload),
+    getAll: () => get('/researchers'),
+    getById: (id) => get(`/researchers/${id}`),
 
-    updateMe: async (payload) => {
-      return request(
-        '/researchers/me',
-        {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-        },
-        async () => {
-          await delay(180);
-          const updated = mockDb.researchers.updateMe(payload);
-          if (!updated) return { success: false, message: 'Impossible de mettre à jour le profil.' };
-          return { success: true, data: updated, message: 'Profil mis à jour.' };
-        }
-      );
-    },
-
-    getAll: async () => {
-      return request(
-        '/researchers',
-        { method: 'GET' },
-        async () => { await delay(100); return { success: true, data: mockDb.researchers.getAll() }; }
-      );
-    },
-
-    getById: async (id) => {
-      return request(
-        `/researchers/${id}`,
-        { method: 'GET' },
-        async () => {
-          await delay(100);
-          const res = mockDb.researchers.getById(id);
-          if (!res) return { success: false, message: 'Profil introuvable.' };
-          return { success: true, data: res };
-        }
-      );
-    },
-
-    toggleFollow: async (researcherId, userId) => {
-      await delay(150);
-      const res = mockDb.researchers.toggleFollow(researcherId, userId);
-      if (!res) return { success: false, message: "Profil introuvable." };
-      return { success: true, data: res };
+    // POST /researchers/:id/follow — le second argument (userId) est ignoré :
+    // l'utilisateur est identifié par le JWT. Conservé pour compat des appelants.
+    toggleFollow: async (researcherId) => {
+      const r = await post(`/researchers/${researcherId}/follow`);
+      return { success: r.success, data: r.following, following: r.following, message: r.message };
     }
   },
 
-  // ------------------------------------------------------------
-  // MODULE ACTUALITÉS & JOURNAL (Mock persisté)
-  // ------------------------------------------------------------
+  // ── 8. ACTUALITÉS & JOURNAL SCIENTIFIQUE ───────────────────────────────────
   news: {
-    getAll: async (includePending = false) => {
-      return request(
-        `/news${includePending ? '?includePending=true' : ''}`,
-        { method: 'GET' },
-        async () => { await delay(120); return { success: true, data: mockDb.news.getAll(includePending) }; }
-      );
-    },
-    getById: async (id) => {
-      return request(
-        `/news/${id}`,
-        { method: 'GET' },
-        async () => {
-          await delay(120);
-          const article = mockDb.news.getById(id);
-          if (article) return { success: true, data: article };
-          return { success: false, error: 'Article introuvable' };
-        }
-      );
-    },
-    submit: async (articleData) => {
-      return request(
-        '/news',
-        { method: 'POST', body: JSON.stringify(articleData) },
-        async () => { await delay(200); const a = mockDb.news.add(articleData); return { success: true, data: a }; }
-      );
-    },
-    approve: async (id) => {
-      await delay(200);
-      const approved = mockDb.news.approve(id);
-      if (approved) {
-        return { success: true, data: approved };
-      }
-      return { success: false, error: "Impossible d'approuver l'article" };
-    },
-    reject: async (id) => {
-      await delay(200);
-      const success = mockDb.news.delete(id);
-      return { success: true, data: success };
-    }
+    getAll: (includePending = false) =>
+      get(`/news${qs({ includePending: includePending ? 'true' : undefined })}`),
+    getById: (id) => get(`/news/${id}`),
+    submit: (articleData) => post('/news', articleData),
+    approve: (id) => patch(`/news/${id}/approve`),
+    reject: (id) => del(`/news/${id}`)
   },
 
-  // ------------------------------------------------------------
-  // MODULE TABLEAU DE BORD & STATS (Mock persisté)
-  // ------------------------------------------------------------
+  // ── 9. TABLEAU DE BORD & NOTIFICATIONS ─────────────────────────────────────
   dashboard: {
-    getStats: async () => {
-      return request(
-        '/dashboard/me',
-        { method: 'GET' },
-        async () => {
-          await delay(200);
-          const joinedClubs = mockDb.clubs.getAll().filter(c => c.joined);
-          const starredProjects = mockDb.projects.getAll().filter(p => p.starred);
-          const registeredWorkshops = mockDb.workshops.getAll().filter(w => w.registered);
-          return { success: true, data: { clubsCount: joinedClubs.length, projectsCount: starredProjects.length, workshopsCount: registeredWorkshops.length, joinedClubs, starredProjects, registeredWorkshops } };
-        }
-      );
-    },
-
-    getNotifications: async () => {
-      return request(
-        '/notifications',
-        { method: 'GET' },
-        async () => { await delay(80); return { success: true, data: mockDb.notifications.getAll() }; }
-      );
-    },
-
-    markNotificationAsRead: async (id) => {
-      mockDb.notifications.markAsRead(id);
-      return { success: true };
-    }
+    getStats: () => get('/dashboard/me'),
+    getNotifications: () => get('/notifications'),
+    markNotificationAsRead: (id) => put(`/notifications/${id}/read`)
   },
 
-  // ------------------------------------------------------------
-  // MODULE CONTACT & SUPPORT (Persisté localement)
-  // ------------------------------------------------------------
+  // ── 10. FORMULAIRE DE CONTACT ──────────────────────────────────────────────
   contact: {
-    sendMessage: async ({ name, email, subject, message }) => {
-      return request(
-        '/contact',
-        { method: 'POST', body: JSON.stringify({ name, email, subject, message }) },
-        async () => {
-          await delay(400);
-          const saved = mockDb.contactMessages.add({ name, email, subject, message });
-          return { success: true, data: saved, message: 'Message envoyé avec succès. Notre équipe vous répondra sous 48h.' };
-        }
-      );
-    }
+    sendMessage: ({ name, email, subject, message }) =>
+      post('/contact', { name, email, subject, message })
   },
 
-  // ------------------------------------------------------------
-  // MODULE TÂCHES PROJET (Chef de projet) — Mock persisté
-  // ------------------------------------------------------------
+  // ── 11. TÂCHES KANBAN ──────────────────────────────────────────────────────
   tasks: {
-    getByProject: async (projectId) => {
-      await delay(120);
-      return { success: true, data: mockDb.tasks.getByProject(projectId) };
-    },
-
-    create: async (taskData) => {
-      await delay(200);
-      const task = mockDb.tasks.create(taskData);
-      return { success: true, data: task, message: 'Tâche créée avec succès.' };
-    },
-
-    update: async (taskId, patch) => {
-      await delay(150);
-      const updated = mockDb.tasks.update({ id: taskId, ...patch });
-      if (!updated) return { success: false, message: 'Tâche introuvable.' };
-      return { success: true, data: updated, message: 'Tâche mise à jour.' };
-    },
-
-    assign: async (taskId, assignedTo) => {
-      await delay(150);
-      const updated = mockDb.tasks.assign(taskId, assignedTo);
-      if (!updated) return { success: false, message: 'Tâche introuvable.' };
-      return { success: true, data: updated, message: `Tâche assignée à ${assignedTo}.` };
-    },
-
-    setPriority: async (taskId, priority) => {
-      await delay(100);
-      const updated = mockDb.tasks.setPriority(taskId, priority);
-      if (!updated) return { success: false, message: 'Tâche introuvable.' };
-      return { success: true, data: updated, message: `Priorité définie à ${priority}.` };
-    },
-
-    delete: async (taskId) => {
-      await delay(120);
-      mockDb.tasks.delete(taskId);
-      return { success: true, message: 'Tâche supprimée.' };
-    }
+    getByProject: (projectId) => get(`/tasks/project/${projectId}`),
+    create: (taskData) => post('/tasks', taskData),
+    update: (taskId, patchData) => put(`/tasks/${taskId}`, patchData),
+    assign: (taskId, assignedTo) => patch(`/tasks/${taskId}/assign`, { assignedTo }),
+    setPriority: (taskId, priority) => patch(`/tasks/${taskId}/priority`, { priority }),
+    delete: (taskId) => del(`/tasks/${taskId}`)
   },
 
-  // ------------------------------------------------------------
-  // MODULE BADGES (Admin / Responsable de club)
-  // ------------------------------------------------------------
+  // ── 12. BADGES D'HONNEUR ───────────────────────────────────────────────────
   badges: {
-    getByUser: async (userId) => {
-      await delay(80);
-      return { success: true, data: mockDb.badges.getByUser(userId) };
-    },
-
-    award: async (userId, userName, badgeType, awardedBy) => {
-      await delay(200);
-      const res = mockDb.badges.award(userId, userName, badgeType, awardedBy);
-      return res;
-    },
-
-    revoke: async (badgeId) => {
-      await delay(150);
-      mockDb.badges.revoke(badgeId);
-      return { success: true, message: 'Badge retiré.' };
-    },
-
-    getTypes: () => mockDb.badges.TYPES
+    getByUser: (userId) => get(`/badges/user/${userId}`),
+    award: (userId, userName, badgeType, awardedBy) =>
+      post('/badges/award', { userId, userName, badgeType, awardedBy }),
+    revoke: (badgeId) => del(`/badges/${badgeId}`)
   },
 
-  // ------------------------------------------------------------
-  // MODULE ADHÉSIONS CLUBS avec VALIDATION (Responsable de club)
-  // ------------------------------------------------------------
+  // ── 13. ADHÉSIONS DE CLUBS AVEC VALIDATION ─────────────────────────────────
   memberships: {
-    /**
-     * Soumet une DEMANDE d'adhésion — ne rejoint pas directement le club.
-     * Le Responsable de club devra approuver ou rejeter.
-     */
-    requestJoin: async (clubId, user) => {
-      await delay(200);
-      const res = mockDb.joinRequests.create(
-        clubId,
-        user.id,
-        `${user.firstName} ${user.lastName}`,
-        user.email
-      );
-      if (!res.success) return res;
-      return {
-        success: true,
-        data: res.data,
-        message: 'Demande d\'adhésion soumise. En attente de validation par le Responsable du club.'
-      };
-    },
-
-    getPendingRequests: async (clubId) => {
-      await delay(150);
-      return { success: true, data: mockDb.joinRequests.getPending(clubId) };
-    },
-
-    getAllRequests: async (clubId) => {
-      await delay(150);
-      return { success: true, data: mockDb.joinRequests.getByClub(clubId) };
-    },
-
-    getUserRequests: async (userId) => {
-      await delay(100);
-      return { success: true, data: mockDb.joinRequests.getByUser(userId) };
-    },
-
-    approve: async (requestId) => {
-      await delay(200);
-      const res = mockDb.joinRequests.approve(requestId);
-      return res;
-    },
-
-    reject: async (requestId, reason = '') => {
-      await delay(200);
-      const res = mockDb.joinRequests.reject(requestId, reason);
-      return res;
-    },
-
-    /** Quitter un club (toujours direct, pas de validation) */
-    leave: async (clubId, userId) => {
-      await delay(150);
-      const club = mockDb.clubs.getById(clubId);
-      if (!club) return { success: false, message: 'Club introuvable.' };
-      const result = mockDb.clubs.toggleJoin(clubId, userId);
-      if (result && result.joined === false) {
-        return { success: true, data: result, message: `Vous avez quitté le club '${club.kicker}'.` };
-      }
-      return { success: false, message: 'Vous n\'étiez pas membre de ce club.' };
-    }
+    requestJoin: (clubId, user) => post('/memberships/requests', { clubId, user }),
+    getPendingRequests: (clubId) => get(`/memberships/requests/pending/${clubId}`),
+    getAllRequests: (clubId) => get(`/memberships/requests/club/${clubId}`),
+    getUserRequests: (userId) => get(`/memberships/requests/user/${userId}`),
+    approve: (requestId) => patch(`/memberships/requests/${requestId}/approve`),
+    reject: (requestId, reason = '') => patch(`/memberships/requests/${requestId}/reject`, { reason }),
+    leave: (clubId, userId) => del(`/memberships/${clubId}/user/${userId}`)
   },
 
-  // ------------------------------------------------------------
-  // MODULE OPPORTUNITÉS DE RECHERCHE (Chercheur / Membre)
-  // ------------------------------------------------------------
+  // ── OPPORTUNITÉS ───────────────────────────────────────────────────────────
+  // ⚠️ NON documenté dans la spec backend (seul /applications l'est). Ces routes
+  // sont supposées exister côté serveur ; à défaut elles renverront 404 tant que
+  // le backend ne les expose pas. À confirmer / documenter.
   opportunities: {
-    getAll: async () => {
-      return request(
-        '/opportunities',
-        { method: 'GET' },
-        async () => {
-          await delay(150);
-          return { success: true, data: mockDb.opportunities.getAll() };
-        }
-      );
-    },
-
-    getById: async (id) => {
-      return request(
-        `/opportunities/${id}`,
-        { method: 'GET' },
-        async () => {
-          await delay(120);
-          const opt = mockDb.opportunities.getById(id);
-          if (!opt) return { success: false, message: "Opportunité introuvable." };
-          return { success: true, data: opt };
-        }
-      );
-    },
-
-    create: async (optData) => {
-      return request(
-        '/opportunities',
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(optData)
-        },
-        async () => {
-          await delay(200);
-          const opt = mockDb.opportunities.add(optData);
-          return { success: true, data: opt, message: 'Nouvelle opportunité publiée avec succès !' };
-        }
-      );
-    },
-
-    update: async (id, updatedData) => {
-      return request(
-        `/opportunities/${id}`,
-        {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(updatedData)
-        },
-        async () => {
-          await delay(150);
-          const opt = mockDb.opportunities.update({ id, ...updatedData });
-          if (!opt) return { success: false, message: 'Opportunité introuvable.' };
-          return { success: true, data: opt, message: 'Opportunité mise à jour.' };
-        }
-      );
-    },
-
-    delete: async (id) => {
-      return request(
-        `/opportunities/${id}`,
-        { method: 'DELETE' },
-        async () => {
-          await delay(120);
-          mockDb.opportunities.delete(id);
-          return { success: true, message: 'Opportunité supprimée.' };
-        }
-      );
-    }
+    getAll: () => get('/opportunities'),
+    getById: (id) => get(`/opportunities/${id}`),
+    create: (optData) => post('/opportunities', optData),
+    update: (id, updatedData) => put(`/opportunities/${id}`, updatedData),
+    delete: (id) => del(`/opportunities/${id}`)
   },
 
-  // ------------------------------------------------------------
-  // MODULE CANDIDATURES AUX OPPORTUNITÉS (Membre)
-  // ------------------------------------------------------------
+  // ── 14. CANDIDATURES AUX OPPORTUNITÉS ──────────────────────────────────────
   applications: {
-    submit: async ({ opportunityId, coverLetter, cvUrl }) => {
-      const raw = localStorage.getItem('fieri_user');
-      const user = raw ? JSON.parse(raw) : null;
-      if (!user) return { success: false, message: 'Vous devez être connecté pour candidater.' };
-      return request(
-        '/applications',
-        { method: 'POST', body: JSON.stringify({ opportunityId, coverLetter, cvUrl }) },
-        async () => {
-          await delay(400);
-          return mockDb.projectApplications.submit({ opportunityId, userId: user.id, userName: `${user.firstName} ${user.lastName}`, userEmail: user.email, coverLetter, cvUrl });
-        }
-      );
-    },
-
-    getMyApplications: async () => {
-      return request(
-        '/applications/me',
-        { method: 'GET' },
-        async () => {
-          await delay(150);
-          const raw = localStorage.getItem('fieri_user');
-          const user = raw ? JSON.parse(raw) : null;
-          if (!user) return { success: false, data: [] };
-          return { success: true, data: mockDb.projectApplications.getByUser(user.id) };
-        }
-      );
-    },
-
-    hasApplied: async (opportunityId) => {
-      await delay(80);
-      const raw = localStorage.getItem('fieri_user');
-      const user = raw ? JSON.parse(raw) : null;
-      if (!user) return { success: true, data: false };
-      return { success: true, data: mockDb.projectApplications.hasApplied(opportunityId, user.id) };
-    },
-
-    getByOpportunity: async (opportunityId) => {
-      await delay(150);
-      return { success: true, data: mockDb.projectApplications.getByOpportunity(opportunityId) };
-    },
-
-    updateStatus: async (applicationId, status) => {
-      await delay(200);
-      const updated = mockDb.projectApplications.updateStatus(applicationId, status);
-      if (!updated) return { success: false, message: 'Candidature introuvable.' };
-      return { success: true, data: updated, message: `Statut mis à jour : ${status}.` };
-    }
+    submit: ({ opportunityId, coverLetter, cvUrl }) =>
+      post('/applications', { opportunityId, coverLetter, cvUrl }),
+    getMyApplications: () => get('/applications/me'),
+    hasApplied: (opportunityId) => get(`/applications/check/${opportunityId}`),
+    getByOpportunity: (opportunityId) => get(`/applications/opportunity/${opportunityId}`),
+    updateStatus: (applicationId, status) => patch(`/applications/${applicationId}/status`, { status })
   }
 };
 
 export default api;
-

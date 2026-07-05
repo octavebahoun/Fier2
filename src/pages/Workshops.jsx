@@ -363,8 +363,9 @@ export default function Workshops({ navigate }) {
 
     try {
       const userFullName = `${user.firstName} ${user.lastName}`;
-      const res = await api.workshops.toggleRegister(workshopId, userFullName);
-      
+      const current = workshops.find(w => w.id === workshopId);
+      const res = await api.workshops.toggleRegister(workshopId, userFullName, !!current?.registered);
+
       if (res && res.success) {
         // Re-load list locally to preserve integrity
         const workshopsRes = await api.workshops.getAll();
