@@ -5,7 +5,7 @@
 // toute erreur (réseau ou HTTP) telle quelle.
 // ─────────────────────────────────────────────────────────────────────────────
 
-import { normalizeResearcher, normalizeClub } from './adapters.js';
+import { normalizeResearcher, normalizeClub, normalizeWorkshop } from './adapters.js';
 
 const BASE_URL = 'https://backend-fieri.vercel.app';
 
@@ -124,7 +124,10 @@ export const api = {
 
   // ── 5. ATELIERS & ACADÉMIE ─────────────────────────────────────────────────
   workshops: {
-    getAll: () => get('/workshops'),
+    getAll: async () => {
+      const r = await get('/workshops')
+      return { ...r, data: Array.isArray(r.data) ? r.data.map(normalizeWorkshop) : r.data }
+    },
 
     // POST /workshops/:id/register (body userFullName) → { action, position, ... }
     register: (id, userFullName) => post(`/workshops/${id}/register`, { userFullName }),

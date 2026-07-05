@@ -38,6 +38,35 @@ export function normalizeClub(c) {
 }
 
 /**
+ * Atelier. Backend : { id, title, instructor, capacity, registeredCount, waitlistCount }.
+ * Les champs « par-utilisateur » (registered, inWaitlist, position) ne sont pas
+ * fournis par la liste : défauts sûrs. La liste nominative de file d'attente
+ * (waitlistUsers) n'existe pas côté backend → tableau vide (fonctionnalité dégradée).
+ */
+export function normalizeWorkshop(w) {
+  if (!w || typeof w !== 'object') return w
+  const capacity = w.capacity ?? w.totalPlaces ?? 0
+  const registeredCount = w.registeredCount ?? 0
+  return {
+    ...w,
+    id: w.id,
+    title: w.title ?? '',
+    instructor: w.instructor ?? '',
+    totalPlaces: capacity,
+    placesLeft: w.placesLeft ?? Math.max(0, capacity - registeredCount),
+    registered: w.registered ?? false,
+    inWaitlist: w.inWaitlist ?? false,
+    waitlistPosition: w.waitlistPosition ?? null,
+    waitlistUsers: w.waitlistUsers ?? [],
+    level: w.level ?? '',
+    duration: w.duration ?? '',
+    desc: w.desc ?? w.description ?? '',
+    date: w.date ?? '',
+    clubId: w.clubId ?? null
+  }
+}
+
+/**
  * Chercheur. Backend liste : { id, firstName, lastName, bio, skills, followers }.
  * Backend détail : + { projects, distinctions }. Backend /me : { id, bio, skills, avatarUrl }.
  */
