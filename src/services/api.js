@@ -5,7 +5,7 @@
 // toute erreur (réseau ou HTTP) telle quelle.
 // ─────────────────────────────────────────────────────────────────────────────
 
-import { normalizeResearcher, normalizeClub, normalizeWorkshop, normalizeEvent } from './adapters.js';
+import { normalizeResearcher, normalizeClub, normalizeWorkshop, normalizeEvent, normalizeNews } from './adapters.js';
 
 const BASE_URL = 'https://backend-fieri.vercel.app';
 
@@ -175,9 +175,14 @@ export const api = {
 
   // ── 8. ACTUALITÉS & JOURNAL SCIENTIFIQUE ───────────────────────────────────
   news: {
-    getAll: (includePending = false) =>
-      get(`/news${qs({ includePending: includePending ? 'true' : undefined })}`),
-    getById: (id) => get(`/news/${id}`),
+    getAll: async (includePending = false) => {
+      const r = await get(`/news${qs({ includePending: includePending ? 'true' : undefined })}`)
+      return { ...r, data: Array.isArray(r.data) ? r.data.map(normalizeNews) : r.data }
+    },
+    getById: async (id) => {
+      const r = await get(`/news/${id}`)
+      return { ...r, data: normalizeNews(r.data) }
+    },
     submit: (articleData) => post('/news', articleData),
     approve: (id) => patch(`/news/${id}/approve`),
     reject: (id) => del(`/news/${id}`)

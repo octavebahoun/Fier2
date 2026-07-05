@@ -91,6 +91,26 @@ export function normalizeEvent(ev) {
 }
 
 /**
+ * Article d'actualité. Backend : { id, title, content, status, category }.
+ * NB : la page lit `categorie` (français) alors que le backend expose `category`.
+ * excerpt/author/image/date ne sont pas fournis → défauts (excerpt dérivé du contenu).
+ */
+export function normalizeNews(a) {
+  if (!a || typeof a !== 'object') return a
+  return {
+    ...a,
+    id: a.id,
+    title: a.title ?? '',
+    categorie: a.category ?? a.categorie ?? '',
+    excerpt: a.excerpt ?? a.content ?? '',
+    author: a.author ?? '',
+    image: a.image ?? null,
+    date: a.date ?? '',
+    status: a.status ?? 'APPROVED'
+  }
+}
+
+/**
  * Chercheur. Backend liste : { id, firstName, lastName, bio, skills, followers }.
  * Backend détail : + { projects, distinctions }. Backend /me : { id, bio, skills, avatarUrl }.
  */
