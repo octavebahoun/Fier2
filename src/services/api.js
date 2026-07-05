@@ -34,27 +34,33 @@ const request = async (path, options = {}, fallbackAction) => {
     throw new Error(`[MOCK_MODE] Aucun fallback défini pour ${path}`);
   }
 
+  let response;
   try {
-    const response = await fetch(`${BASE_URL}${path}`, {
+    response = await fetch(`${BASE_URL}${path}`, {
       ...options,
       headers: {
         ...getHeaders(),
         ...options.headers
       }
     });
-
-    if (!response.ok) {
-      throw new Error(`HTTP Error: ${response.status} ${response.statusText}`);
-    }
-
-    return await response.json();
-  } catch (err) {
+  } catch (networkErr) {
+    // ── Vraie erreur réseau (serveur injoignable, DNS, hors-ligne…) ──
+    // C'est le SEUL cas où l'on bascule sur le mock en DEV. Une réponse HTTP
+    // d'erreur (voir plus bas) n'est jamais masquée : on veut voir les 401/500.
     if (import.meta.env.DEV && fallbackAction) {
-      console.warn(`[FIERI API Gateway] Échec vers '${path}' → fallback mockDb.`, err);
+      console.warn(`[FIERI API Gateway] Réseau injoignable pour '${path}' → fallback mockDb.`, networkErr);
       return await fallbackAction();
     }
-    throw err;
+    throw networkErr;
   }
+
+  if (!response.ok) {
+    // Le serveur a répondu une erreur (401, 404, 500…). On NE masque PAS avec le
+    // mock : on propage pour ne pas transformer un échec réel en faux succès.
+    throw new Error(`HTTP Error: ${response.status} ${response.statusText}`);
+  }
+
+  return await response.json();
 };
 
 export const api = {

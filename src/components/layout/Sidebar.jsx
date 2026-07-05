@@ -32,7 +32,9 @@ export default function Sidebar({
       id: 'profile',
       label: 'Mon Profil',
       icon: User,
-      params: { researcherId: user?.id || 'r1' }
+      // Sentinel 'me' : ResearcherProfile résout le profil via la session
+      // (api.researchers.getMe), plutôt qu'un id deviné qui ne correspond à rien.
+      params: { researcherId: 'me' }
     }] : []),
     ...(hasMinRole('ADMIN') ? [{
       id: 'admin',

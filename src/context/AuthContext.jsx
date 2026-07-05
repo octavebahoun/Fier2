@@ -58,6 +58,27 @@ export function AuthProvider({ children }) {
   const [user, setUser]       = useState(null);
   const [token, setToken]     = useState(null);
   const [loading, setLoading] = useState(true);
+  const [badges, setBadges]   = useState([]);
+
+  // Charger les badges de l'utilisateur via l'API (plus de lecture directe de
+  // localStorage : le contexte ne connaît qu'UNE seule façon de savoir qui tu es).
+  useEffect(() => {
+    if (!user) {
+      setBadges([]);
+      return;
+    }
+    let active = true;
+    (async () => {
+      try {
+        const res = await api.badges.getByUser(user.id);
+        if (active && res?.success) setBadges(res.data || []);
+      } catch (err) {
+        console.error('[FIERI AuthContext] Erreur lors du chargement des badges:', err);
+        if (active) setBadges([]);
+      }
+    })();
+    return () => { active = false; };
+  }, [user]);
 
   // Restaurer la session utilisateur au démarrage
   useEffect(() => {
@@ -173,27 +194,22 @@ export function AuthProvider({ children }) {
   const isResearcher = useCallback(() => hasMinRole('CHERCHEUR'), [hasMinRole]);
   const isStudent    = useCallback(() => hasMinRole('ETUDIANT'), [hasMinRole]);
   const isEtudiant   = isStudent; // alias francophone
-  const isMentor     = useCallback(() => {
-    // Un MENTOR est soit un user avec role='MENTOR', soit un CHERCHEUR/ADMIN avec le badge MENTOR
-    if (!user) return false;
-    if (user.role?.toUpperCase() === 'MENTOR') return true;
-    // Vérifier les badges dans mockDb (disponible côté client uniquement)
-    try {
-      const badges = JSON.parse(localStorage.getItem('fieri_db_badges') || '[]');
-      return badges.some(b => b.userId === String(user.id) && b.badgeType === 'MENTOR');
-    } catch { return false; }
-  }, [user]);
-
   /**
    * hasBadge(badgeType) — vérifie si l'utilisateur possède un badge spécifique.
+   * Lit l'état `badges` chargé via l'API (les badges sont déjà filtrés sur l'user).
    */
   const hasBadge = useCallback((badgeType) => {
     if (!user) return false;
-    try {
-      const badges = JSON.parse(localStorage.getItem('fieri_db_badges') || '[]');
-      return badges.some(b => b.userId === String(user.id) && b.badgeType === badgeType?.toUpperCase());
-    } catch { return false; }
-  }, [user]);
+    const target = badgeType?.toUpperCase();
+    return badges.some(b => b.badgeType?.toUpperCase() === target);
+  }, [user, badges]);
+
+  const isMentor     = useCallback(() => {
+    // Un MENTOR est soit un user avec role='MENTOR', soit un membre avec le badge MENTOR
+    if (!user) return false;
+    if (user.role?.toUpperCase() === 'MENTOR') return true;
+    return hasBadge('MENTOR');
+  }, [user, hasBadge]);
 
   const value = useMemo(() => ({
     user,
@@ -211,6 +227,7 @@ export function AuthProvider({ children }) {
     isEtudiant,
     isMentor,
     hasBadge,
+    badges,
     ROLES,
     ROLE_LEVELS,
     BADGE_TYPES,
@@ -229,6 +246,7 @@ export function AuthProvider({ children }) {
     isEtudiant,
     isMentor,
     hasBadge,
+    badges,
   ]);
 
   return (

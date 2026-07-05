@@ -189,7 +189,11 @@ export default function ResearcherProfile({ navigate, researcherId }) {
 
       try {
         setIsLoading(true)
-        const res = await api.researchers.getById(researcherId)
+        // Sentinel 'me' → profil du chercheur connecté, résolu côté session
+        // (évite le mismatch entre user.id numérique et l'id 'me-<id>' du dépôt).
+        const res = researcherId === 'me'
+          ? await api.researchers.getMe()
+          : await api.researchers.getById(researcherId)
         if (active) {
           if (res.success && res.data) {
             setResearcher(res.data)
