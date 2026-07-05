@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
-import { Menu, X, ChevronDown, LogIn, LayoutDashboard, Sparkles, GraduationCap, Compass, Rss, Search, Sun, Moon, LogOut } from 'lucide-react'
+import { Routes, Route, Navigate, useLocation, useParams } from 'react-router-dom'
 import './App.css'
-import { api } from './services/api.js'
 import AppLayout from './components/layout/AppLayout.jsx'
+import ProtectedRoute from './components/ProtectedRoute.jsx'
 import { useAuth } from './context/AuthContext.jsx'
+import { useAppNavigate, pathToPageName } from './navigation.js'
 
-// Import all 14 pages
+// Pages
 import Home from './pages/Home.jsx'
 import CiteIntegration from './pages/CiteIntegration.jsx'
 import StudentPortal from './pages/StudentPortal.jsx'
@@ -25,50 +25,70 @@ import Auth from './pages/Auth.jsx'
 import Opportunities from './pages/Opportunities.jsx'
 import Admin from './pages/Admin.jsx'
 import PAF from './pages/PAF.jsx'
-import Logo from './components/Logo.jsx'
-import PerspectiveGrid from './components/PerspectiveGrid.jsx'
+
+// ─── Route-wrappers : injectent les paramètres d'URL dans les pages qui en ont
+// besoin, sans modifier les pages elles-mêmes. ────────────────────────────────
+function ProjectDetailRoute() {
+  const navigate = useAppNavigate()
+  const { projectId } = useParams()
+  return <ProjectDetail navigate={navigate} projectId={projectId} />
+}
+
+function ProfileRoute() {
+  const navigate = useAppNavigate()
+  const { researcherId } = useParams()
+  return <ResearcherProfile navigate={navigate} researcherId={researcherId} />
+}
+
+function AuthRoute() {
+  const navigate = useAppNavigate()
+  const location = useLocation()
+  // `from` est un chemin mémorisé par ProtectedRoute ; buildPath l'accepte tel quel.
+  const from = location.state?.from
+  const redirectTo = from ? { pageName: from } : null
+  return <Auth navigate={navigate} redirectTo={redirectTo} onAuthComplete={() => {}} />
+}
 
 function App() {
-  const [currentPage, setCurrentPage] = useState('home')
-  const [postAuthRedirect, setPostAuthRedirect] = useState(null)
+  const navigate = useAppNavigate()
+  const location = useLocation()
+  const currentPage = pathToPageName(location.pathname)
+
   const [isScrolled, setIsScrolled] = useState(false)
   const [isNavExpanded, setIsNavExpanded] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-  const isDesktopNavExpanded = !isScrolled || isNavExpanded
-  
-  // Theme state and Search query state
+
+  // Thème
   const [theme, setTheme] = useState('dark')
-  const [searchQuery, setSearchQuery] = useState('')
+
+  // Newsletter (footer)
   const [newsletterEmail, setNewsletterEmail] = useState('')
   const [newsletterSubscribed, setNewsletterSubscribed] = useState(false)
   const [newsletterError, setNewsletterError] = useState(null)
 
+  const { user, logout } = useAuth()
+
   const handleNewsletterSubmit = async (e) => {
-    e.preventDefault();
-    setNewsletterError(null);
+    e.preventDefault()
+    setNewsletterError(null)
     if (!newsletterEmail || !newsletterEmail.includes('@')) {
-      setNewsletterError("Veuillez entrer une adresse e-mail valide.");
-      return;
+      setNewsletterError('Veuillez entrer une adresse e-mail valide.')
+      return
     }
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 800));
-      setNewsletterSubscribed(true);
-      setNewsletterEmail('');
-      setTimeout(() => {
-        setNewsletterSubscribed(false);
-      }, 4500);
+      await new Promise((resolve) => setTimeout(resolve, 800))
+      setNewsletterSubscribed(true)
+      setNewsletterEmail('')
+      setTimeout(() => setNewsletterSubscribed(false), 4500)
     } catch {
-      setNewsletterError("Erreur lors de l'inscription. Veuillez réessayer.");
+      setNewsletterError("Erreur lors de l'inscription. Veuillez réessayer.")
     }
-  };
-
-  const { user, logout, loading, hasMinRole } = useAuth()
+  }
 
   const handleLogout = () => {
-    logout();
-    navigate('home');
-  };
+    logout()
+    navigate('home')
+  }
 
   const toggleTheme = () => {
     const nextTheme = theme === 'dark' ? 'light' : 'dark'
@@ -80,36 +100,12 @@ function App() {
     }
   }
 
-  // Shared state for selected project or active researcher profile detail
-  const [selectedProjectId, setSelectedProjectId] = useState('p1')
-  const [selectedResearcherId, setSelectedResearcherId] = useState('r1')
-
-  // Gating privé silencieux et immédiat si non authentifié
-  useEffect(() => {
-    if (!loading) {
-      const protectedPages = {
-        'dashboard': 'ETUDIANT',
-        'admin': 'ADMIN',
-        'researcher-profile-edit': 'CHERCHEUR',
-      };
-      const minRoleRequired = protectedPages[currentPage];
-      if (minRoleRequired) {
-        if (!user) {
-          setPostAuthRedirect({ pageName: currentPage, params: {} })
-          navigate('auth')
-        } else if (!hasMinRole(minRoleRequired)) {
-          navigate('home')
-        }
-      }
-    }
-  }, [currentPage, user, loading, hasMinRole]);
-
-  // Handle scroll detection
+  // Détection du scroll (contracte la pilule de navigation)
   useEffect(() => {
     const handleScroll = () => {
       if (window.scrollY > 40) {
         setIsScrolled(true)
-        setIsNavExpanded(false) // contract signature pill on scroll down
+        setIsNavExpanded(false)
       } else {
         setIsScrolled(false)
       }
@@ -118,10 +114,9 @@ function App() {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
-  // Handle click outside to collapse navigation menus automatically
+  // Repli automatique des menus au clic extérieur
   useEffect(() => {
     const handleClickOutside = (e) => {
-      // If expanded and click is outside active nav container
       if (isNavExpanded && !e.target.closest('.pointer-events-auto')) {
         setIsNavExpanded(false)
       }
@@ -132,84 +127,6 @@ function App() {
     window.addEventListener('mousedown', handleClickOutside)
     return () => window.removeEventListener('mousedown', handleClickOutside)
   }, [isNavExpanded, mobileMenuOpen])
-
-  // Smooth scroll back to top on page change
-  const navigate = (pageName, params = {}) => {
-    setCurrentPage(pageName)
-    setMobileMenuOpen(false)
-    setIsNavExpanded(false)
-    
-    if (params.projectId) {
-      setSelectedProjectId(params.projectId)
-    }
-    if (params.researcherId) {
-      setSelectedResearcherId(params.researcherId)
-    }
-    
-    window.scrollTo({ top: 0, behavior: 'smooth' })
-  }
-
-  // Handle Dynamic Component Rendering
-  const renderPage = () => {
-    // Redirection/gating préventive pour éviter les flashs visuels
-    const protectedPages = {
-      'dashboard': 'ETUDIANT',
-      'admin': 'ADMIN',
-      'researcher-profile-edit': 'CHERCHEUR',
-    };
-    const minRoleRequired = protectedPages[currentPage];
-    if (minRoleRequired && (!user || !hasMinRole(minRoleRequired))) {
-      return null;
-    }
-
-    switch (currentPage) {
-      case 'home':
-        return <Home navigate={navigate} />
-      case 'cite':
-      case 'cite-integration':
-        return <CiteIntegration navigate={navigate} />
-      case 'student-portal':
-        return <StudentPortal navigate={navigate} />
-      case 'news':
-        return <News navigate={navigate} />
-      case 'clubs':
-        return <ResearchClubs navigate={navigate} />
-      case 'projects':
-        return <Projects navigate={navigate} selectedProjectId={selectedProjectId} />
-      case 'project-detail':
-        return <ProjectDetail navigate={navigate} projectId={selectedProjectId} />
-      case 'workshops':
-        return <Workshops navigate={navigate} />
-      case 'events':
-        return <Events navigate={navigate} />
-      case 'members':
-        return <Members navigate={navigate} />
-      case 'dashboard':
-        return <Dashboard navigate={navigate} />
-      case 'profile':
-        return <ResearcherProfile navigate={navigate} researcherId={selectedResearcherId} />
-      case 'researcher-profile-edit':
-        return <ResearcherProfileEdit navigate={navigate} />
-      case 'admin':
-        return <Admin navigate={navigate} />
-      case 'contact':
-        return <Contact navigate={navigate} />
-      case 'auth':
-        return (
-          <Auth
-            navigate={navigate}
-            redirectTo={postAuthRedirect}
-            onAuthComplete={() => setPostAuthRedirect(null)}
-          />
-        )
-      case 'opportunities':
-        return <Opportunities navigate={navigate} />
-      case 'paf':
-        return <PAF navigate={navigate} />
-      default:
-        return <Home navigate={navigate} />
-    }
-  }
 
   return (
     <AppLayout
@@ -231,7 +148,54 @@ function App() {
       setNewsletterError={setNewsletterError}
       handleNewsletterSubmit={handleNewsletterSubmit}
     >
-      {renderPage()}
+      <Routes>
+        <Route path="/" element={<Home navigate={navigate} />} />
+        <Route path="/cite" element={<CiteIntegration navigate={navigate} />} />
+        <Route path="/student-portal" element={<StudentPortal navigate={navigate} />} />
+        <Route path="/news" element={<News navigate={navigate} />} />
+        <Route path="/clubs" element={<ResearchClubs navigate={navigate} />} />
+        <Route path="/projects" element={<Projects navigate={navigate} />} />
+        <Route path="/projects/:projectId" element={<ProjectDetailRoute />} />
+        <Route path="/workshops" element={<Workshops navigate={navigate} />} />
+        <Route path="/events" element={<Events navigate={navigate} />} />
+        <Route path="/members" element={<Members navigate={navigate} />} />
+        <Route path="/opportunities" element={<Opportunities navigate={navigate} />} />
+        <Route path="/paf" element={<PAF navigate={navigate} />} />
+        <Route path="/contact" element={<Contact navigate={navigate} />} />
+        <Route path="/auth" element={<AuthRoute />} />
+
+        {/* Profil : /profile/edit AVANT /profile/:researcherId */}
+        <Route
+          path="/profile/edit"
+          element={
+            <ProtectedRoute minRole="CHERCHEUR">
+              <ResearcherProfileEdit navigate={navigate} />
+            </ProtectedRoute>
+          }
+        />
+        <Route path="/profile/:researcherId" element={<ProfileRoute />} />
+
+        {/* Pages protégées */}
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute minRole="ETUDIANT">
+              <Dashboard navigate={navigate} />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin"
+          element={
+            <ProtectedRoute minRole="ADMIN">
+              <Admin navigate={navigate} />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Fallback */}
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
     </AppLayout>
   )
 }
