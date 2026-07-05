@@ -1,7 +1,10 @@
 import mockDb from './mockDb.js';
 
-/** Mettre à true pour court-circuiter TOUS les appels réseau et utiliser mockDb. */
-const MOCK_MODE = import.meta.env.VITE_MOCK_MODE === 'true';
+// NOTE : le mock n'est plus utilisé comme fallback réseau — le gateway `request()`
+// ci-dessous parle exclusivement au backend réel et propage toute erreur.
+// `mockDb` reste importé car certaines méthodes (badges, memberships, tasks,
+// follow/registrations…) n'ont pas encore d'endpoint réel et s'appuient encore
+// dessus directement. À câbler côté backend puis retirer.
 
 const BASE_URL = 'https://backend-fieri.vercel.app';
 
@@ -22,41 +25,21 @@ const getHeaders = () => {
 const delay = (ms = 200) => new Promise(resolve => setTimeout(resolve, ms));
 
 /**
- * Exécuteur de requête réseau sécurisé.
- * Si MOCK_MODE est actif, court-circuite le réseau et appelle directement fallbackAction.
- * Sinon, effectue la requête HTTP réelle avec basculement silencieux en DEV.
+ * Exécuteur de requête réseau — backend réel uniquement.
+ * Aucune bascule mock : toute erreur (réseau ou HTTP) est propagée telle quelle.
+ * Le 3ᵉ argument (ancien `fallbackAction`) est toléré mais ignoré, afin de ne pas
+ * avoir à réécrire les ~29 call-sites ; il sera retiré lors d'un nettoyage ultérieur.
  */
-const request = async (path, options = {}, fallbackAction) => {
-  // ── Mode Mock global : aucun appel réseau ──
-  if (MOCK_MODE) {
-    console.info(`[FIERI API Gateway — MOCK_MODE] ${options.method || 'GET'} ${path}`);
-    if (fallbackAction) return await fallbackAction();
-    throw new Error(`[MOCK_MODE] Aucun fallback défini pour ${path}`);
-  }
-
-  let response;
-  try {
-    response = await fetch(`${BASE_URL}${path}`, {
-      ...options,
-      headers: {
-        ...getHeaders(),
-        ...options.headers
-      }
-    });
-  } catch (networkErr) {
-    // ── Vraie erreur réseau (serveur injoignable, DNS, hors-ligne…) ──
-    // C'est le SEUL cas où l'on bascule sur le mock en DEV. Une réponse HTTP
-    // d'erreur (voir plus bas) n'est jamais masquée : on veut voir les 401/500.
-    if (import.meta.env.DEV && fallbackAction) {
-      console.warn(`[FIERI API Gateway] Réseau injoignable pour '${path}' → fallback mockDb.`, networkErr);
-      return await fallbackAction();
+const request = async (path, options = {}) => {
+  const response = await fetch(`${BASE_URL}${path}`, {
+    ...options,
+    headers: {
+      ...getHeaders(),
+      ...options.headers
     }
-    throw networkErr;
-  }
+  });
 
   if (!response.ok) {
-    // Le serveur a répondu une erreur (401, 404, 500…). On NE masque PAS avec le
-    // mock : on propage pour ne pas transformer un échec réel en faux succès.
     throw new Error(`HTTP Error: ${response.status} ${response.statusText}`);
   }
 
