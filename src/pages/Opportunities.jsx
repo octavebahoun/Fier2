@@ -5,7 +5,6 @@ import {
   User, Mail, FileText, CheckCircle2, X, ShieldAlert,
   MapPin, Clock, ArrowRight, Briefcase
 } from 'lucide-react';
-import { mockDb } from '../services/mockDb';
 import { api } from '../services/api';
 import { useAuth } from '../context/AuthContext.jsx';
 import Offers from './Offers.jsx';

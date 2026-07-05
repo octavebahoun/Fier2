@@ -5,7 +5,7 @@
 // toute erreur (réseau ou HTTP) telle quelle.
 // ─────────────────────────────────────────────────────────────────────────────
 
-import { normalizeResearcher, normalizeClub, normalizeWorkshop, normalizeEvent, normalizeNews } from './adapters.js';
+import { normalizeResearcher, normalizeClub, normalizeWorkshop, normalizeEvent, normalizeNews, normalizeProject } from './adapters.js';
 
 const BASE_URL = 'https://backend-fieri.vercel.app';
 
@@ -86,10 +86,15 @@ export const api = {
 
   // ── 3. PROJETS DE RECHERCHE R&D ────────────────────────────────────────────
   projects: {
-    getAll: (filters = {}) =>
-      get(`/projects${qs({ clubId: filters.clubId, status: filters.status, search: filters.search })}`),
+    getAll: async (filters = {}) => {
+      const r = await get(`/projects${qs({ clubId: filters.clubId, status: filters.status, search: filters.search })}`)
+      return { ...r, data: Array.isArray(r.data) ? r.data.map(normalizeProject) : r.data }
+    },
 
-    getById: (id) => get(`/projects/${id}`),
+    getById: async (id) => {
+      const r = await get(`/projects/${id}`)
+      return { ...r, data: normalizeProject(r.data) }
+    },
 
     // POST /projects/:id/follow — bascule favori. Renvoie { starred }.
     toggleFollow: async (id) => {

@@ -5,7 +5,6 @@ import {
   Coins, Users, BookOpen, Star, Plus, 
   Layers, Lightbulb, Compass, Award
 } from 'lucide-react';
-import { mockDb } from '../services/mockDb';
 import { api } from '../services/api';
 
 export default function Projects({ navigate }) {

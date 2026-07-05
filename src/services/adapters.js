@@ -111,6 +111,31 @@ export function normalizeNews(a) {
 }
 
 /**
+ * Projet R&D. Backend : { id, title, summary, status, clubId, stars, starred,
+ * budgetRaised, technologies }. Détail : + { description, team }.
+ * author/clubName/image/budgetGoal/supportersCount non fournis → défauts.
+ */
+export function normalizeProject(p) {
+  if (!p || typeof p !== 'object') return p
+  return {
+    ...p,
+    id: p.id,
+    title: p.title ?? '',
+    summary: p.summary ?? '',
+    status: p.status ?? '',
+    stars: p.stars ?? 0,
+    starred: p.starred ?? false,
+    budgetRaised: p.budgetRaised ?? 0,
+    budgetGoal: p.budgetGoal ?? 0,
+    technologies: p.technologies ?? [],
+    supportersCount: p.supportersCount ?? 0,
+    author: p.author ?? '',
+    clubName: p.clubName ?? '',
+    image: p.image ?? null
+  }
+}
+
+/**
  * Chercheur. Backend liste : { id, firstName, lastName, bio, skills, followers }.
  * Backend détail : + { projects, distinctions }. Backend /me : { id, bio, skills, avatarUrl }.
  */
