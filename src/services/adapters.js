@@ -67,6 +67,30 @@ export function normalizeWorkshop(w) {
 }
 
 /**
+ * Événement. Backend : { id, title, date, isLive, streamUrl }.
+ * Les métadonnées riches (lieu, dotation, timeline, tagline) et l'état
+ * d'inscription ne sont pas fournis → défauts sûrs.
+ */
+export function normalizeEvent(ev) {
+  if (!ev || typeof ev !== 'object') return ev
+  return {
+    ...ev,
+    id: ev.id,
+    title: ev.title ?? '',
+    date: ev.date ?? '',
+    isLive: ev.isLive ?? false,
+    liveUrl: ev.streamUrl ?? ev.liveUrl ?? '',
+    registered: ev.registered ?? false,
+    prizePool: ev.prizePool ?? '',
+    location: ev.location ?? '',
+    timeline: ev.timeline ?? [],
+    tagline: ev.tagline ?? '',
+    participantsCount: ev.participantsCount ?? 0,
+    desc: ev.desc ?? ev.description ?? ''
+  }
+}
+
+/**
  * Chercheur. Backend liste : { id, firstName, lastName, bio, skills, followers }.
  * Backend détail : + { projects, distinctions }. Backend /me : { id, bio, skills, avatarUrl }.
  */
