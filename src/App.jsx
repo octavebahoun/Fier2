@@ -11,7 +11,9 @@ import Home from './pages/Home.jsx'
 import CiteIntegration from './pages/CiteIntegration.jsx'
 import StudentPortal from './pages/StudentPortal.jsx'
 import News from './pages/News.jsx'
+import NewsDetail from './pages/NewsDetail.jsx'
 import ResearchClubs from './pages/ResearchClubs.jsx'
+import ClubDetail from './pages/ClubDetail.jsx'
 import Projects from './pages/Projects.jsx'
 import ProjectDetail from './pages/ProjectDetail.jsx'
 import Workshops from './pages/Workshops.jsx'
@@ -38,6 +40,18 @@ function ProfileRoute() {
   const navigate = useAppNavigate()
   const { researcherId } = useParams()
   return <ResearcherProfile navigate={navigate} researcherId={researcherId} />
+}
+
+function NewsDetailRoute() {
+  const navigate = useAppNavigate()
+  const { newsId } = useParams()
+  return <NewsDetail navigate={navigate} newsId={newsId} />
+}
+
+function ClubDetailRoute() {
+  const navigate = useAppNavigate()
+  const { clubId } = useParams()
+  return <ClubDetail navigate={navigate} clubId={clubId} />
 }
 
 function AuthRoute() {
@@ -112,7 +126,9 @@ function App() {
         <Route path="/students" element={<StudentPortal navigate={navigate} />} />
         <Route path="/student-portal" element={<StudentPortal navigate={navigate} />} />
         <Route path="/news" element={<News navigate={navigate} />} />
+        <Route path="/news/:newsId" element={<NewsDetailRoute />} />
         <Route path="/clubs" element={<ResearchClubs navigate={navigate} />} />
+        <Route path="/clubs/:clubId" element={<ClubDetailRoute />} />
         <Route path="/projects" element={<Projects navigate={navigate} />} />
         <Route path="/projects/:projectId" element={<ProjectDetailRoute />} />
         {/* Formations (ex-Ateliers) */}

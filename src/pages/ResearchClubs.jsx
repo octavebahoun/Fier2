@@ -144,7 +144,7 @@ const CLUB_ICONS = {
 };
 
 // ─────────────────────────── Club Card Component ───────────────────────────
-function ClubCard({ club, user, onJoin, onLeave, isPending, joiningId, isManager, pendingMembers = [], onApproveRequest, onRejectRequest }) {
+function ClubCard({ club, user, navigate, onJoin, onLeave, isPending, joiningId, isManager, pendingMembers = [], onApproveRequest, onRejectRequest }) {
   const Icon = CLUB_ICONS[club.id] || Star;
   const isJoining = joiningId === club.id;
   const [showManage, setShowManage] = useState(false);
@@ -199,7 +199,12 @@ function ClubCard({ club, user, onJoin, onLeave, isPending, joiningId, isManager
       {/* Corps : titre + description */}
       <div className="flex-1 px-6 py-4 space-y-3">
         <h3 className="text-text-primary font-bold text-base leading-snug line-clamp-2">
-          {club.title}
+          <button
+            onClick={() => navigate?.('club-detail', { clubId: club.id })}
+            className="text-left hover:text-accent-primary transition-colors cursor-pointer"
+          >
+            {club.title}
+          </button>
         </h3>
         <p className="text-text-secondary text-sm leading-relaxed line-clamp-3">
           {club.desc}
@@ -580,6 +585,7 @@ export default function ResearchClubs({ navigate }) {
                 <ClubCard
                   club={club}
                   user={user}
+                  navigate={navigate}
                   onJoin={handleJoinClick}
                   onLeave={handleLeaveClick}
                   isPending={isPending}

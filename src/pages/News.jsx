@@ -352,7 +352,7 @@ export default function News({ navigate }) {
                 {/* Card Button */}
                 <div className="px-6 pb-6 pt-4">
                   <button
-                    onClick={() => setReadingArticle(item)}
+                    onClick={() => navigate?.('news-detail', { newsId: item.id })}
                     className="w-full flex items-center justify-center gap-2 py-3 rounded-xl border border-border-subtle hover:border-indigo-500/40 bg-white/5 hover:bg-indigo-600/10 text-xs font-bold text-text-primary hover:text-indigo-400 transition-all cursor-pointer"
                   >
                     <span>Consulter la publication</span>
