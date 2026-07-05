@@ -22,7 +22,8 @@ export default function ProtectedRoute({ minRole, children }) {
   if (loading) return null
 
   if (!user) {
-    return <Navigate to="/auth" replace state={{ from: location.pathname }} />
+    // Wireframe : une page protégée renvoie le visiteur vers l'espace login /members.
+    return <Navigate to="/members" replace state={{ from: location.pathname }} />
   }
 
   if (minRole && !hasMinRole(minRole)) {

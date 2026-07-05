@@ -302,7 +302,7 @@ export default function ResearcherProfile({ navigate, researcherId }) {
               </p>
             </div>
             <button
-              onClick={() => navigate('members')}
+              onClick={() => navigate('researchers')}
               className="px-6 py-3 rounded-2xl text-xs font-bold text-white bg-fieri-blue hover:bg-fieri-blue/90 shadow-lg shadow-fieri-blue/20 transition-all cursor-pointer flex items-center gap-2"
             >
               <ArrowLeft className="w-4 h-4" />
@@ -322,7 +322,7 @@ export default function ResearcherProfile({ navigate, researcherId }) {
         {/* Navigation & Kicker */}
         <div className="flex flex-col gap-3">
           <button
-            onClick={() => navigate('members')}
+            onClick={() => navigate('researchers')}
             className="group flex items-center gap-2.5 text-xs font-black tracking-widest uppercase text-text-muted hover:text-fieri-blue transition-colors cursor-pointer w-fit"
             aria-label="Retourner à l'annuaire de la communauté"
           >

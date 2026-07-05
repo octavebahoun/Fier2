@@ -108,20 +108,40 @@ function App() {
       <Routes>
         <Route path="/" element={<Home navigate={navigate} />} />
         <Route path="/cite" element={<CiteIntegration navigate={navigate} />} />
+        {/* Accueil étudiant */}
+        <Route path="/students" element={<StudentPortal navigate={navigate} />} />
         <Route path="/student-portal" element={<StudentPortal navigate={navigate} />} />
         <Route path="/news" element={<News navigate={navigate} />} />
         <Route path="/clubs" element={<ResearchClubs navigate={navigate} />} />
         <Route path="/projects" element={<Projects navigate={navigate} />} />
         <Route path="/projects/:projectId" element={<ProjectDetailRoute />} />
+        {/* Formations (ex-Ateliers) */}
+        <Route path="/formations" element={<Workshops navigate={navigate} />} />
         <Route path="/workshops" element={<Workshops navigate={navigate} />} />
         <Route path="/events" element={<Events navigate={navigate} />} />
-        <Route path="/members" element={<Members navigate={navigate} />} />
         <Route path="/opportunities" element={<Opportunities navigate={navigate} />} />
         <Route path="/paf" element={<PAF navigate={navigate} />} />
+        {/* Aide / Contact */}
+        <Route path="/help" element={<Contact navigate={navigate} />} />
         <Route path="/contact" element={<Contact navigate={navigate} />} />
+
+        {/* Espace login / conversion (wireframe : /members) + alias /auth */}
+        <Route path="/members" element={<AuthRoute />} />
         <Route path="/auth" element={<AuthRoute />} />
 
-        {/* Profil : /profile/edit AVANT /profile/:researcherId */}
+        {/* Annuaire des chercheurs (déplacé de /members vers /researchers) */}
+        <Route path="/researchers" element={<Members navigate={navigate} />} />
+        {/* /researchers/edit AVANT /researchers/:researcherId */}
+        <Route
+          path="/researchers/edit"
+          element={
+            <ProtectedRoute minRole="CHERCHEUR">
+              <ResearcherProfileEdit navigate={navigate} />
+            </ProtectedRoute>
+          }
+        />
+        <Route path="/researchers/:researcherId" element={<ProfileRoute />} />
+        {/* Anciens chemins /profile/* conservés en alias */}
         <Route
           path="/profile/edit"
           element={

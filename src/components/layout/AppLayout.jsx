@@ -173,7 +173,7 @@ export default function AppLayout({
                   <span className="text-xs font-bold tracking-widest text-text-primary uppercase">Espace Privé</span>
                   <ul className="flex flex-col gap-2">
                     <li><button onClick={() => navigate(user ? 'dashboard' : 'auth')} className="text-xs text-text-secondary hover:text-text-primary transition-colors text-left cursor-pointer">{user ? 'Mon Dashboard' : 'Se Connecter'}</button></li>
-                    <li><button onClick={() => navigate('members')} className="text-xs text-text-secondary hover:text-text-primary transition-colors text-left cursor-pointer">Annuaire des Membres</button></li>
+                    <li><button onClick={() => navigate('researchers')} className="text-xs text-text-secondary hover:text-text-primary transition-colors text-left cursor-pointer">Annuaire des Membres</button></li>
                     <li><button onClick={() => navigate('contact')} className="text-xs text-text-secondary hover:text-text-primary transition-colors text-left cursor-pointer">Aide & FAQ</button></li>
                   </ul>
                 </div>

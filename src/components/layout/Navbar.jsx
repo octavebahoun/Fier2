@@ -126,7 +126,7 @@ export default function Navbar({
                   { id: 'home', label: 'Accueil' },
                   { id: 'cite', label: 'Cité' },
                   { id: 'projects', label: 'Institut' },
-                  { id: 'workshops', label: 'Académie' },
+                  { id: 'workshops', label: 'Formations' },
                   { id: 'clubs', label: 'Clubs' },
                   { id: 'opportunities', label: 'Opportunités' },
                   { id: 'news', label: 'Actualités & Événements' }
@@ -327,7 +327,7 @@ export default function Navbar({
 
               <div className="grid grid-cols-2 gap-1.5 relative z-10">
                 {[
-                  { id: 'members', label: 'Annuaire' },
+                  { id: 'researchers', label: 'Annuaire' },
                   { id: 'contact', label: 'Contact' }
                 ].map((item) => (
                   <button

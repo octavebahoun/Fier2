@@ -118,7 +118,7 @@ export default function CommandPalette({ navigate }) {
       category: 'Navigation',
       icon: Users,
       action: () => {
-        navigate('members')
+        navigate('researchers')
         setIsOpen(false)
       }
     },
