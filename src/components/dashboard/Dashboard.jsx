@@ -5,7 +5,7 @@ import {
   ChevronRight, Cpu, Zap, Leaf, Building2, Brain, Rocket, Bell
 } from 'lucide-react'
 import NotificationsCenter from './NotificationsCenter.jsx'
-import { mockDb } from '../../services/mockDb.js'
+import { api } from '../../services/api.js'
 import { useAuth } from '../../context/AuthContext.jsx'
 
 const CLUB_ICONS = {
@@ -45,34 +45,32 @@ export default function Dashboard({ navigate }) {
   const { user, isResearcher } = useAuth()
   const userId = user?.id ?? null
 
-  const [joinedClubs, setJoinedClubs]   = useState([])
+  // Le backend /dashboard/me ne renvoie que des COMPTEURS (pas la liste des clubs
+  // rejoints) : on affiche donc les compteurs, et la section « Mes Clubs » se
+  // dégrade en résumé (pas de cartes détaillées faute d'endpoint dédié).
+  const [joinedClubs] = useState([])
+  const [clubsCount, setClubsCount]         = useState(0)
   const [workshopsCount, setWorkshopsCount] = useState(0)
   const [projectsCount, setProjectsCount]   = useState(0)
   const [notifications, setNotifications]   = useState([])
 
-  const loadData = useCallback(() => {
-    // Clubs rejoints par cet utilisateur
-    const clubs = mockDb.clubs.getJoinedByUser(userId)
-    setJoinedClubs(clubs)
-
-    // Ateliers inscrits
+  const loadData = useCallback(async () => {
     try {
-      const workshops = mockDb.workshops.getAll()
-      const fullName = user ? `${user.firstName} ${user.lastName}` : null
-      setWorkshopsCount(
-        fullName ? workshops.filter(w => w.registered).length : 0
-      )
-    } catch { setWorkshopsCount(0) }
+      const statsRes = await api.dashboard.getStats()
+      if (statsRes?.success && statsRes.data) {
+        const d = statsRes.data
+        setClubsCount(d.joinedClubsCount ?? d.clubsCount ?? 0)
+        setWorkshopsCount(d.registeredWorkshopsCount ?? d.workshopsCount ?? 0)
+        setProjectsCount(d.starredProjectsCount ?? d.projectsCount ?? 0)
+      }
+    } catch { /* compteurs laissés à 0 en cas d'erreur backend */ }
 
-    // Projets suivis (utiliser le mockDb local)
     try {
-      const followed = JSON.parse(localStorage.getItem('fieri_followed_projects') || '[]')
-      setProjectsCount(followed.length)
-    } catch { setProjectsCount(0) }
-
-    // Notifications non lues
-    const notifs = mockDb.notifications.getAll()
-    setNotifications(notifs.filter(n => !n.read))
+      const notifRes = await api.dashboard.getNotifications()
+      if (notifRes?.success && Array.isArray(notifRes.data)) {
+        setNotifications(notifRes.data.filter(n => !n.read))
+      }
+    } catch { /* pas de notifications si l'appel échoue */ }
   }, [userId, user])
 
   useEffect(() => {
@@ -129,7 +127,7 @@ export default function Dashboard({ navigate }) {
           <div className="grid grid-cols-3 gap-4">
             <StatCard
               label="Clubs rejoints"
-              value={joinedClubs.length}
+              value={clubsCount}
               icon={Users}
               color="#1b6fd8"
               onClick={() => navigate?.('clubs')}
@@ -170,12 +168,16 @@ export default function Dashboard({ navigate }) {
                 <div className="w-12 h-12 rounded-2xl bg-white/5 border border-white/8 flex items-center justify-center">
                   <Users className="w-5 h-5 text-text-muted" />
                 </div>
-                <p className="text-sm text-text-secondary">Vous n'avez pas encore rejoint de club.</p>
+                <p className="text-sm text-text-secondary">
+                  {clubsCount > 0
+                    ? `Vous êtes membre de ${clubsCount} club${clubsCount > 1 ? 's' : ''}.`
+                    : "Vous n'avez pas encore rejoint de club."}
+                </p>
                 <button
                   onClick={() => navigate?.('clubs')}
                   className="px-4 py-2 rounded-xl bg-fieri-blue text-white text-xs font-bold hover:bg-fieri-blue/90 transition-all"
                 >
-                  Explorer les clubs
+                  {clubsCount > 0 ? 'Voir mes clubs' : 'Explorer les clubs'}
                 </button>
               </div>
             ) : (
