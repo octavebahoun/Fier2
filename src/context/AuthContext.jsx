@@ -7,20 +7,26 @@ const AuthContext = createContext(null);
 // Chaque rôle englobe tous les rôles de niveau inférieur.
 // VISITEUR < ETUDIANT < CHERCHEUR ≈ MENTOR < ADMIN
 export const ROLE_LEVELS = {
-  VISITEUR:  0,
-  ETUDIANT:  1,
-  CHERCHEUR: 2,
-  MENTOR:    2, // Même niveau que CHERCHEUR, distingué par badge
-  ADMIN:     3,
+  VISITEUR:       0,
+  ETUDIANT:       1,
+  CHERCHEUR:      2,
+  MENTOR:         2, // Même niveau que CHERCHEUR, distingué par badge
+  CHEF_DE_PROJET: 2, // Encadrement de projet (tâches, candidatures)
+  RESPONSABLE:    2, // Responsable de club (adhésions, gestion du club)
+  ADMIN:          3,
 };
 
-// Valeurs autorisées (pour validation et affichage)
+// Valeurs autorisées (pour validation et affichage). Alignées sur les rôles du
+// backend NestJS (RolesGuard) : ETUDIANT, CHERCHEUR, MENTOR, CHEF_DE_PROJET,
+// RESPONSABLE, ADMIN.
 export const ROLES = {
-  VISITEUR:  'VISITEUR',
-  ETUDIANT:  'ETUDIANT',
-  CHERCHEUR: 'CHERCHEUR',
-  MENTOR:    'MENTOR',
-  ADMIN:     'ADMIN',
+  VISITEUR:       'VISITEUR',
+  ETUDIANT:       'ETUDIANT',
+  CHERCHEUR:      'CHERCHEUR',
+  MENTOR:         'MENTOR',
+  CHEF_DE_PROJET: 'CHEF_DE_PROJET',
+  RESPONSABLE:    'RESPONSABLE',
+  ADMIN:          'ADMIN',
 };
 
 // Types de badges disponibles (attribués par Admin ou Responsable de club)
@@ -34,11 +40,13 @@ export const BADGE_TYPES = ['CHERCHEUR', 'MENTOR', 'FORMATEUR', 'AMBASSADEUR', '
 //   • textClassName  : couleur seule (variante texte)
 //   • badgeClassName : fond + bordure + texte (variante pastille)
 export const ROLE_PRESENTATION = {
-  ADMIN:     { label: 'Administrateur',  short: 'Admin',     textClassName: 'text-red-400',      badgeClassName: 'bg-red-500/10 border-red-500/30 text-red-400' },
-  CHERCHEUR: { label: 'Chercheur FIERI', short: 'Chercheur', textClassName: 'text-fieri-blue',   badgeClassName: 'bg-accent-primary/15 border-accent-primary/30 text-fieri-blue' },
-  MENTOR:    { label: 'Mentor',          short: 'Mentor',    textClassName: 'text-violet-400',   badgeClassName: 'bg-violet-500/10 border-violet-500/30 text-violet-400' },
-  ETUDIANT:  { label: 'Étudiant',        short: 'Étudiant',  textClassName: 'text-emerald-400',  badgeClassName: 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400' },
-  VISITEUR:  { label: 'Invité',          short: 'Invité',    textClassName: 'text-slate-400',    badgeClassName: 'bg-slate-500/10 border-slate-500/30 text-slate-400' },
+  ADMIN:          { label: 'Administrateur',      short: 'Admin',       textClassName: 'text-red-400',     badgeClassName: 'bg-red-500/10 border-red-500/30 text-red-400' },
+  RESPONSABLE:    { label: 'Responsable de club', short: 'Responsable', textClassName: 'text-amber-400',   badgeClassName: 'bg-amber-500/10 border-amber-500/30 text-amber-400' },
+  CHEF_DE_PROJET: { label: 'Chef de projet',      short: 'Chef projet', textClassName: 'text-cyan-400',    badgeClassName: 'bg-cyan-500/10 border-cyan-500/30 text-cyan-400' },
+  CHERCHEUR:      { label: 'Chercheur FIERI',     short: 'Chercheur',   textClassName: 'text-fieri-blue',  badgeClassName: 'bg-accent-primary/15 border-accent-primary/30 text-fieri-blue' },
+  MENTOR:         { label: 'Mentor',              short: 'Mentor',      textClassName: 'text-violet-400',  badgeClassName: 'bg-violet-500/10 border-violet-500/30 text-violet-400' },
+  ETUDIANT:       { label: 'Étudiant',            short: 'Étudiant',    textClassName: 'text-emerald-400', badgeClassName: 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400' },
+  VISITEUR:       { label: 'Invité',              short: 'Invité',      textClassName: 'text-slate-400',   badgeClassName: 'bg-slate-500/10 border-slate-500/30 text-slate-400' },
 };
 
 // Repli neutre pour un rôle inconnu / absent (jamais null → l'UI reste cohérente).

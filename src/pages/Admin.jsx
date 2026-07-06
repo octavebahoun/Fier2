@@ -6,6 +6,7 @@ import {
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext.jsx';
 import { api } from '../services/api';
+import MembersManager from '../components/admin/MembersManager.jsx';
 
 // ─────────────────────────── Toast Component ───────────────────────────
 function Toast({ message, type = 'success', onClose }) {
@@ -43,6 +44,7 @@ export default function Admin({ navigate }) {
   const [actionInProgress, setActionInProgress] = useState(null); // ID of article being approved/rejected
   const [expandedArticleId, setExpandedArticleId] = useState(null); // ID of expanded article for reading
   const [toast, setToast] = useState(null);
+  const [tab, setTab] = useState('moderation'); // 'moderation' | 'members'
 
   // Load pending articles and statistics
   const loadData = async () => {
@@ -149,6 +151,35 @@ export default function Admin({ navigate }) {
         </p>
       </div>
 
+      {/* Onglets de la console d'administration */}
+      <div className="flex items-center gap-1 p-1 rounded-2xl bg-bg-secondary/60 border border-border-subtle w-fit mb-8">
+        {[
+          { id: 'moderation', label: 'Comité de lecture', icon: BookOpen },
+          { id: 'members', label: 'Membres', icon: Users },
+        ].map((t) => {
+          const TabIcon = t.icon;
+          const active = tab === t.id;
+          return (
+            <button
+              key={t.id}
+              onClick={() => setTab(t.id)}
+              className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                active
+                  ? 'bg-accent-primary/20 border border-accent-primary/30 text-text-primary'
+                  : 'text-text-secondary hover:text-text-primary border border-transparent'
+              }`}
+            >
+              <TabIcon className="w-4 h-4" />
+              {t.label}
+            </button>
+          );
+        })}
+      </div>
+
+      {tab === 'members' ? (
+        <MembersManager notify={(message, type) => setToast({ message, type })} />
+      ) : (
+      <>
       {/* Grid d'administration */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
         <div className="glass-panel border border-border-subtle bg-bg-secondary/40 p-6 rounded-2xl">
@@ -337,6 +368,9 @@ export default function Admin({ navigate }) {
           </div>
         )}
       </div>
+
+      </>
+      )}
 
       {/* Toast Popups */}
       <AnimatePresence>

@@ -64,13 +64,12 @@ const qs = (params) => {
 export const api = {
   // ── 1. AUTHENTIFICATION & SESSION ──────────────────────────────────────────
   auth: {
-    // ⚠️ Contournement front assumé : le backend attribue CHERCHEUR par défaut et
-    // honore tout `role` reçu (cf. docs/backend-endpoints-todo.md §Sécurité). Tant
-    // que ce n'est pas corrigé côté serveur, on force le MOINDRE privilège (ETUDIANT)
-    // pour que toute inscription via l'UI démarre bien en étudiant. La promotion
-    // (ETUDIANT → CHERCHEUR/MENTOR/ADMIN) doit rester une décision ADMIN côté backend.
+    // Le rôle n'est PAS transmis : depuis le déploiement backend du 2026-07-06, le
+    // serveur force `ETUDIANT` à l'inscription et ignore tout `role` reçu (hijack
+    // bloqué — vérifié en prod). L'élévation de rôle est une décision ADMIN
+    // exclusive, via api.members.setRole (PATCH /members/:id/role).
     register: ({ email, password, firstName, lastName, branchId }) =>
-      post('/auth/register', { email, password, firstName, lastName, branchId, role: 'ETUDIANT' }),
+      post('/auth/register', { email, password, firstName, lastName, branchId }),
 
     login: (email, password) => post('/auth/login', { email, password }),
 
@@ -88,6 +87,19 @@ export const api = {
       const u = localStorage.getItem('fieri_user');
       return u ? JSON.parse(u) : null;
     }
+  },
+
+  // ── 1b. MEMBRES & GESTION DES RÔLES (ADMIN) ────────────────────────────────
+  // Endpoints livrés côté backend (cf. inventaire API). ⚠️ Non encore déployés sur
+  // la prod au 2026-07-06 (renvoient 404) : l'UI Admin ▸ Membres dégrade proprement
+  // tant que ce n'est pas en ligne, puis fonctionne sans changement.
+  members: {
+    // GET /members — liste paginée. Query: search, role, page, limit.
+    list: (params = {}) =>
+      get(`/members${qs({ search: params.search, role: params.role, page: params.page, limit: params.limit })}`),
+    getById: (id) => get(`/members/${id}`),
+    // PATCH /members/:id/role — promotion / rétrogradation. Body { role }.
+    setRole: (id, role) => patch(`/members/${id}/role`, { role }),
   },
 
   // ── 2. STRUCTURE INSTITUTIONNELLE & MÉTADONNÉES ────────────────────────────

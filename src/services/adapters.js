@@ -90,6 +90,19 @@ export function normalizeEvent(ev) {
   }
 }
 
+// Le backend peut renvoyer `author` en string OU en objet { id, firstName, lastName }
+// (évolution API 2026-07-06). On aplatit TOUJOURS en nom affichable pour éviter
+// « Objects are not valid as a React child », et on conserve l'id séparément.
+export function authorName(author) {
+  if (author && typeof author === 'object') {
+    return `${author.firstName ?? ''} ${author.lastName ?? ''}`.trim() || 'Anonyme'
+  }
+  return author ?? ''
+}
+export function authorId(author) {
+  return (author && typeof author === 'object') ? (author.id ?? null) : null
+}
+
 /**
  * Article d'actualité. Backend : { id, title, content, status, category }.
  * NB : la page lit `categorie` (français) alors que le backend expose `category`.
@@ -103,7 +116,8 @@ export function normalizeNews(a) {
     title: a.title ?? '',
     categorie: a.category ?? a.categorie ?? '',
     excerpt: a.excerpt ?? a.content ?? '',
-    author: a.author ?? '',
+    author: authorName(a.author),
+    authorId: authorId(a.author),
     image: a.image ?? null,
     date: a.date ?? '',
     status: a.status ?? 'APPROVED'
@@ -129,7 +143,8 @@ export function normalizeProject(p) {
     budgetGoal: p.budgetGoal ?? 0,
     technologies: p.technologies ?? [],
     supportersCount: p.supportersCount ?? 0,
-    author: p.author ?? '',
+    author: authorName(p.author),
+    authorId: authorId(p.author),
     clubName: p.clubName ?? '',
     image: p.image ?? null
   }
