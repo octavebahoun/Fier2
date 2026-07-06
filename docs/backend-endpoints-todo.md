@@ -10,6 +10,25 @@
 
 ---
 
+## ✅ STATUT AU 2026-07-06 (soir) — BACKEND DÉPLOYÉ, POINTS CRITIQUES RÉSOLUS
+
+L'équipe backend a livré et **déployé** en prod. Vérifié en direct :
+- ✅ **§0 Sécurité** : `/auth/register` force `ETUDIANT` et ignore tout `role` client (hijack bloqué).
+- ✅ **§1 Membres** : `GET /members`, `GET /members/:id`, `PATCH /members/:id/role` (ADMIN) LIVE.
+  → Front branché : onglet **Admin ▸ Membres** (promotion/rétrogradation) fonctionnel.
+- ✅ **§2 Bugs 500** : `/projects`, `/researchers/:id`, `/opportunities` répondent 200.
+- ✅ **§3-4** : `/stats`, `/publications`, `/contributions`, `/formations`, enrichissements OK.
+- ✅ **6 rôles** confirmés : ETUDIANT, CHERCHEUR, MENTOR, CHEF_DE_PROJET, RESPONSABLE, ADMIN.
+
+**⚠️ Seul changement de contrat à noter (géré côté front) :** `news.author` et
+`project.author` sont désormais des **objets** `{ id, firstName, lastName }` (avant :
+string). Le front les aplatit dans `src/services/adapters.js` (`authorName`/`authorId`).
+Merci de **garder ce format stable** (ou prévenir avant de le rechanger).
+
+Le détail historique ci-dessous est conservé pour référence.
+
+---
+
 ## 0. 🔴 SÉCURITÉ — Élévation de privilèges à l'inscription (CRITIQUE)
 
 **Constat (reproduit en direct) :**
