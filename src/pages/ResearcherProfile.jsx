@@ -264,6 +264,9 @@ export default function ResearcherProfile({ navigate, researcherId }) {
     }
   }
 
+  // Check if viewing own profile
+  const isOwnProfile = user && researcher && String(researcher.id) === String(user.id)
+
   // Get custom mock publications list
   const publications = MOCK_PUBLICATIONS[researcher?.id] || []
 
@@ -274,7 +277,7 @@ export default function ResearcherProfile({ navigate, researcherId }) {
         {toast && <Toast message={toast} onClose={() => setToast(null)} />}
       </AnimatePresence>
 
-      <AnimatePresence mode="wait">
+      <AnimatePresence>
         {isLoading ? (
           <motion.div
             key="profile-skeleton"
@@ -451,7 +454,11 @@ export default function ResearcherProfile({ navigate, researcherId }) {
 
               {/* Follow Toggle Dynamic Button with Gating Matrix */}
               <div className="relative z-10 flex flex-col gap-3">
-                {user ? (
+                {isOwnProfile ? (
+                  <div className="py-3 px-4 rounded-2xl bg-fieri-blue/5 border border-fieri-blue/10 text-center">
+                    <p className="text-[10px] font-bold text-fieri-blue/70">C'est votre profil</p>
+                  </div>
+                ) : user ? (
                   // LOGGED IN: Active follow toggle
                   <button
                     onClick={handleFollowToggle}

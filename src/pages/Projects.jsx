@@ -288,15 +288,10 @@ export default function Projects({ navigate }) {
                       {/* Author block and visual Explore link */}
                       <div className="flex justify-between items-center gap-4">
                         <div className="flex items-center gap-2.5">
-                          <img 
-                            src={p.author.avatar} 
-                            alt={p.author.name}
-                            className="w-7 h-7 rounded-full border border-white/10 object-cover" 
-                          />
-                          <div>
-                            <h4 className="text-[10px] font-bold text-text-primary line-clamp-1">{p.author.name}</h4>
-                            <p className="text-[8px] text-text-muted">{p.author.role}</p>
-                          </div>
+                          <span className="w-7 h-7 rounded-full bg-fieri-blue/10 border border-white/10 flex items-center justify-center text-[9px] font-black text-fieri-blue shrink-0">
+                            {p.author ? p.author.charAt(0).toUpperCase() : '?'}
+                          </span>
+                          <span className="text-[10px] font-bold text-text-primary line-clamp-1">{p.author}</span>
                         </div>
 
                         <div className="flex items-center gap-1 text-[9px] font-black uppercase tracking-wider text-fieri-blue group-hover:translate-x-1 transition-transform">

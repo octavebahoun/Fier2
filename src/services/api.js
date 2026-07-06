@@ -5,7 +5,7 @@
 // toute erreur (réseau ou HTTP) telle quelle.
 // ─────────────────────────────────────────────────────────────────────────────
 
-import { normalizeResearcher, normalizeClub, normalizeWorkshop, normalizeEvent, normalizeNews, normalizeProject } from './adapters.js';
+import { normalizeResearcher, normalizeClub, normalizeWorkshop, normalizeEvent, normalizeNews, normalizeProject, normalizeOpportunity } from './adapters.js';
 
 const BASE_URL = 'https://backend-fieri.vercel.app';
 
@@ -266,8 +266,14 @@ export const api = {
   // sont supposées exister côté serveur ; à défaut elles renverront 404 tant que
   // le backend ne les expose pas. À confirmer / documenter.
   opportunities: {
-    getAll: () => get('/opportunities'),
-    getById: (id) => get(`/opportunities/${id}`),
+    getAll: async () => {
+      const r = await get('/opportunities')
+      return { ...r, data: Array.isArray(r.data) ? r.data.map(normalizeOpportunity) : r.data }
+    },
+    getById: async (id) => {
+      const r = await get(`/opportunities/${id}`)
+      return { ...r, data: normalizeOpportunity(r.data) }
+    },
     create: (optData) => post('/opportunities', optData),
     update: (id, updatedData) => put(`/opportunities/${id}`, updatedData),
     delete: (id) => del(`/opportunities/${id}`)

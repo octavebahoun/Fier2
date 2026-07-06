@@ -125,6 +125,29 @@ export function normalizeNews(a) {
 }
 
 /**
+ * Opportunité / Offre partenaire. Backend probable : { id, title, type, discipline,
+ * description, requirements, salary, author }.
+ * author peut être string OU { id, firstName, lastName }.
+ */
+export function normalizeOpportunity(o) {
+  if (!o || typeof o !== 'object') return o
+  return {
+    ...o,
+    id: o.id,
+    title: o.title ?? '',
+    type: o.type ?? '',
+    discipline: o.discipline ?? '',
+    description: o.description ?? '',
+    requirements: o.requirements ?? '',
+    salary: o.salary ?? '',
+    author: authorName(o.author),
+    authorId: authorId(o.author),
+    date: o.date ?? '',
+    location: o.location ?? ''
+  }
+}
+
+/**
  * Projet R&D. Backend : { id, title, summary, status, clubId, stars, starred,
  * budgetRaised, technologies }. Détail : + { description, team }.
  * author/clubName/image/budgetGoal/supportersCount non fournis → défauts.

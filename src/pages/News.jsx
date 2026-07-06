@@ -122,8 +122,10 @@ export default function News({ navigate }) {
     setSubmitting(true);
     try {
       const authorName = user?.name || "Chercheur FIERI";
+      const { categorie, ...rest } = newArticle;
       const payload = {
-        ...newArticle,
+        ...rest,
+        category: categorie,
         author: authorName,
       };
 
