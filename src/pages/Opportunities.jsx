@@ -38,7 +38,7 @@ function Toast({ message, type = 'success', onClose }) {
 
 // ─────────────────────────── Opportunities Page Component ───────────────────────────
 export default function Opportunities({ navigate }) {
-  const { user, hasMinRole } = useAuth();
+  const { user, can } = useAuth();
   const [opportunities, setOpportunities] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [activeTab, setActiveTab] = useState('partners'); // 'partners' (Offers) by default, or 'research' (R&D)
@@ -202,8 +202,7 @@ export default function Opportunities({ navigate }) {
       navigate?.('auth');
       return;
     }
-    const isResearcher = hasMinRole('CHERCHEUR');
-    if (!isResearcher) {
+    if (!can('opportunity:create')) {
       setToast("Accès refusé. Cette fonctionnalité est réservée aux chercheurs certifiés.");
       return;
     }
@@ -332,13 +331,15 @@ export default function Opportunities({ navigate }) {
               </p>
             </div>
 
-            <button
-              onClick={openPublishModal}
-              className="px-5 py-3 rounded-2xl text-xs font-black uppercase tracking-wider text-white transition-all cursor-pointer flex items-center gap-2 shadow-lg bg-fieri-blue hover:bg-fieri-blue/90 shadow-fieri-blue/20"
-            >
-              <Plus className="w-4 h-4" />
-              Publier une offre
-            </button>
+            {can('opportunity:create') && (
+              <button
+                onClick={openPublishModal}
+                className="px-5 py-3 rounded-2xl text-xs font-black uppercase tracking-wider text-white transition-all cursor-pointer flex items-center gap-2 shadow-lg bg-fieri-blue hover:bg-fieri-blue/90 shadow-fieri-blue/20"
+              >
+                <Plus className="w-4 h-4" />
+                Publier une offre
+              </button>
+            )}
           </div>
 
           {/* Search & Selection Filter Header */}

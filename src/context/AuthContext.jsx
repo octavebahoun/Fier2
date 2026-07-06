@@ -54,6 +54,41 @@ export function getRolePresentation(role) {
   return ROLE_PRESENTATION[String(role || '').toUpperCase()] || ROLE_PRESENTATION_FALLBACK;
 }
 
+// ─── Matrice de capacités (source unique du contrôle d'accès) ────────────────
+// On ne teste JAMAIS un rôle « en dur » dans les vues. On teste une CAPACITÉ.
+// `can('news:submit')` plutôt que `hasMinRole('CHERCHEUR')` : l'intention est
+// explicite, et faire évoluer les droits = éditer cette table, pas chasser des
+// ternaires dans 15 fichiers. Chaque capacité pointe vers le rôle minimum requis.
+//
+//   VISITEUR  : rien (contenu public en lecture seule, géré hors capacités)
+//   ETUDIANT  : participer (rejoindre, s'inscrire, candidater, suivre)
+//   CHERCHEUR : produire (publier, créer opportunités/projets, éditer sa fiche)
+//   MENTOR    : encadrer (valider les adhésions de club)
+//   ADMIN     : gouverner (modérer, administrer, gérer les membres)
+export const PERMISSIONS = {
+  // — Participation (tout membre connecté) —
+  'dashboard:view':     'ETUDIANT',
+  'profile:viewOwn':    'ETUDIANT',
+  'club:join':          'ETUDIANT',
+  'workshop:register':  'ETUDIANT',
+  'event:register':     'ETUDIANT',
+  'opportunity:apply':  'ETUDIANT',
+  'project:follow':     'ETUDIANT',
+  'researcher:follow':  'ETUDIANT',
+  // — Production (chercheur et au-dessus) —
+  'researcher:editOwn': 'CHERCHEUR',
+  'news:submit':        'CHERCHEUR',
+  'opportunity:create': 'CHERCHEUR',
+  'project:create':     'CHERCHEUR',
+  // — Encadrement (mentor et au-dessus) —
+  'club:manage':        'MENTOR',
+  // — Gouvernance (admin uniquement) —
+  'news:moderate':      'ADMIN',
+  'opportunity:review': 'ADMIN',
+  'member:manage':      'ADMIN',
+  'admin:access':       'ADMIN',
+};
+
 export function AuthProvider({ children }) {
   const [user, setUser]       = useState(null);
   const [token, setToken]     = useState(null);
@@ -146,10 +181,16 @@ export function AuthProvider({ children }) {
     } catch (err) {
       console.error("[FIERI AuthContext] Erreur lors de l'inscription:", err);
       let message = err?.serverMessage || "Une erreur s'est produite lors de l'inscription.";
-      if (err?.status === 409) message = "Un compte existe déjà avec cet email. Essayez de vous connecter.";
-      else if (err?.status === 400 || err?.status === 422) message = err?.serverMessage || "Informations d'inscription invalides.";
-      else if (!err?.status) message = "Serveur injoignable. Vérifiez votre connexion.";
-      return { success: false, message };
+      let code = null;
+      if (err?.status === 409) {
+        message = "Un compte existe déjà avec cet email. Essayez de vous connecter.";
+        code = 'EMAIL_EXISTS';
+      } else if (err?.status === 400 || err?.status === 422) {
+        message = err?.serverMessage || "Informations d'inscription invalides.";
+      } else if (!err?.status) {
+        message = "Serveur injoignable. Vérifiez votre connexion.";
+      }
+      return { success: false, message, code };
     }
   }, []);
 
@@ -219,6 +260,26 @@ export function AuthProvider({ children }) {
     return hasBadge('MENTOR');
   }, [user, hasBadge]);
 
+  /**
+   * can(capability) — LA fonction de contrôle d'accès à utiliser dans les vues.
+   * Renvoie true si l'utilisateur courant possède la capacité demandée.
+   * Capacité inconnue → false (fail-safe : on refuse par défaut, on ne devine pas).
+   *
+   *   {can('news:submit') && <BoutonPublier />}   // invisible si pas le droit
+   *   <button disabled={!can('club:join')} …/>     // désactivé sinon
+   */
+  const can = useCallback((capability) => {
+    const required = PERMISSIONS[capability];
+    if (!required) {
+      console.warn(`[FIERI AuthContext] Capacité inconnue: "${capability}" → accès refusé.`);
+      return false;
+    }
+    // Le mentorat peut venir d'un badge (pas seulement du rôle) : on élargit
+    // la capacité d'encadrement aux porteurs du badge MENTOR.
+    if (required === 'MENTOR' && isMentor()) return true;
+    return hasMinRole(required);
+  }, [hasMinRole, isMentor]);
+
   const value = useMemo(() => ({
     user,
     token,
@@ -234,11 +295,13 @@ export function AuthProvider({ children }) {
     isStudent,
     isEtudiant,
     isMentor,
+    can,
     hasBadge,
     badges,
     ROLES,
     ROLE_LEVELS,
     BADGE_TYPES,
+    PERMISSIONS,
   }), [
     user,
     token,
@@ -253,6 +316,7 @@ export function AuthProvider({ children }) {
     isStudent,
     isEtudiant,
     isMentor,
+    can,
     hasBadge,
     badges,
   ]);

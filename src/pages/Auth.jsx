@@ -59,6 +59,8 @@ export default function Auth({ navigate, redirectTo, onAuthComplete }) {
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
+  // Vrai si l'inscription a échoué car l'email existe déjà (→ raccourci connexion)
+  const [emailExists, setEmailExists] = useState(false);
 
   // Ref pour le focus de l'étape 2 (sélecteur pays)
   const countrySelectRef = useRef(null);
@@ -87,7 +89,16 @@ export default function Auth({ navigate, redirectTo, onAuthComplete }) {
     setAuthMode(mode);
     setErrorMsg('');
     setSuccessMsg('');
+    setEmailExists(false);
     setRegisterStep(1);
+  };
+
+  // Raccourci depuis l'erreur « email déjà utilisé » : bascule sur la connexion
+  // en pré-remplissant l'email saisi à l'inscription.
+  const switchToLoginWithEmail = () => {
+    const email = registerData.email;
+    handleModeChange('login');
+    setLoginData((prev) => ({ ...prev, email }));
   };
 
   // Soumission Connexion

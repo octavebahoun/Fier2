@@ -1,7 +1,8 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Navbar from './Navbar.jsx'
 import Sidebar from './Sidebar.jsx'
+import TopBar from './TopBar.jsx'
 import Logo from '../Logo.jsx'
 import CommandPalette from '../CommandPalette.jsx'
 
@@ -17,8 +18,20 @@ export default function AppLayout({
   mobileMenuOpen,
   setMobileMenuOpen
 }) {
-  const showSidebar = !!user
+  // ─── App-shell : dès qu'on est connecté, la navigation marketing (navbar) laisse
+  // la place à un shell « back-office » : sidebar (nav principale) + topbar fine.
+  const isAuthed = !!user
+  const [collapsed, setCollapsed] = useState(false)   // sidebar repliée (desktop)
+  const [mobileOpen, setMobileOpen] = useState(false) // tiroir sidebar (mobile)
+
+  // Referme le tiroir mobile à chaque navigation.
+  useEffect(() => { setMobileOpen(false) }, [currentPage])
+
   const showFooter = currentPage !== 'auth'
+  // Décalage horizontal du contenu = largeur de la sidebar (uniquement connecté, ≥ md).
+  const contentOffset = isAuthed ? (collapsed ? 'md:pl-[76px]' : 'md:pl-64') : ''
+  // Marge haute du contenu : sous la topbar si connecté, sinon comportement marketing.
+  const mainPadTop = isAuthed ? 'pt-16' : ((currentPage === 'home' || currentPage === 'auth') ? 'pt-0' : 'pt-20')
 
   // État de la newsletter — colocalisé ici (le formulaire ne vit que dans ce footer).
   const [newsletterEmail, setNewsletterEmail] = useState('')
@@ -46,40 +59,48 @@ export default function AppLayout({
     <div className="min-h-screen flex flex-col relative bg-bg-primary text-text-primary selection:bg-accent-bleue selection:text-white">
       {/* Universal Command Palette */}
       <CommandPalette navigate={navigate} />
-      {/* 1. Navigation Shell */}
-      <Navbar
-        currentPage={currentPage}
-        navigate={navigate}
-        user={user}
-        handleLogout={handleLogout}
-        isScrolled={isScrolled}
-        isNavExpanded={isNavExpanded}
-        setIsNavExpanded={setIsNavExpanded}
-        mobileMenuOpen={mobileMenuOpen}
-        setMobileMenuOpen={setMobileMenuOpen}
-      />
-
-      {/* 2. Sidebar Shell (Connected profiles only) */}
-      {showSidebar && (
-        <Sidebar
+      {/* 1. Navigation : navbar marketing (déconnecté) OU shell sidebar+topbar (connecté) */}
+      {isAuthed ? (
+        <>
+          <Sidebar
+            currentPage={currentPage}
+            navigate={navigate}
+            user={user}
+            handleLogout={handleLogout}
+            collapsed={collapsed}
+            setCollapsed={setCollapsed}
+            mobileOpen={mobileOpen}
+            setMobileOpen={setMobileOpen}
+          />
+          <TopBar
+            currentPage={currentPage}
+            navigate={navigate}
+            user={user}
+            collapsed={collapsed}
+            onOpenMobile={() => setMobileOpen(true)}
+          />
+        </>
+      ) : (
+        <Navbar
           currentPage={currentPage}
           navigate={navigate}
           user={user}
           handleLogout={handleLogout}
+          isScrolled={isScrolled}
+          isNavExpanded={isNavExpanded}
+          setIsNavExpanded={setIsNavExpanded}
+          mobileMenuOpen={mobileMenuOpen}
+          setMobileMenuOpen={setMobileMenuOpen}
         />
       )}
 
-      {/* 3. Main Dynamic Content Area */}
+      {/* 2. Zone de contenu (décalée à droite de la sidebar quand connecté) */}
       <div
-        className={`flex-grow flex flex-col transition-all duration-300 ease-[0.16,1,0.3,1] ${
-          showSidebar ? 'pl-10' : 'pl-0'
-        }`}
+        className={`flex-grow flex flex-col transition-[padding] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] ${contentOffset}`}
       >
         <main
           id="main-content"
-          className={`flex-grow ${
-            currentPage === 'home' || currentPage === 'auth' ? 'pt-0' : 'pt-20'
-          } ${currentPage === 'auth' ? 'pb-0' : 'pb-16'} z-10 w-full`}
+          className={`flex-grow ${mainPadTop} ${currentPage === 'auth' ? 'pb-0' : 'pb-16'} z-10 w-full`}
         >
           {/* Framer Motion Cross-Fade Transition */}
           <AnimatePresence mode="wait">

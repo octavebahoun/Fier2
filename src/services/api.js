@@ -64,10 +64,13 @@ const qs = (params) => {
 export const api = {
   // ── 1. AUTHENTIFICATION & SESSION ──────────────────────────────────────────
   auth: {
-    // Le rôle n'est volontairement PAS transmis : l'attribution est une décision
-    // serveur (voir docs). Toute inscription démarre en ETUDIANT côté backend.
+    // ⚠️ Contournement front assumé : le backend attribue CHERCHEUR par défaut et
+    // honore tout `role` reçu (cf. docs/backend-endpoints-todo.md §Sécurité). Tant
+    // que ce n'est pas corrigé côté serveur, on force le MOINDRE privilège (ETUDIANT)
+    // pour que toute inscription via l'UI démarre bien en étudiant. La promotion
+    // (ETUDIANT → CHERCHEUR/MENTOR/ADMIN) doit rester une décision ADMIN côté backend.
     register: ({ email, password, firstName, lastName, branchId }) =>
-      post('/auth/register', { email, password, firstName, lastName, branchId }),
+      post('/auth/register', { email, password, firstName, lastName, branchId, role: 'ETUDIANT' }),
 
     login: (email, password) => post('/auth/login', { email, password }),
 
