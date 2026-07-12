@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { useState, useEffect, useRef } from 'react'
+import { motion, AnimatePresence, useReducedMotion } from 'framer-motion'
 import Navbar from './Navbar.jsx'
 import Sidebar from './Sidebar.jsx'
 import TopBar from './TopBar.jsx'
@@ -23,9 +23,18 @@ export default function AppLayout({
   const isAuthed = !!user
   const [collapsed, setCollapsed] = useState(false)   // sidebar repliée (desktop)
   const [mobileOpen, setMobileOpen] = useState(false) // tiroir sidebar (mobile)
+  const mainRef = useRef(null)
+  const shouldReduceMotion = useReducedMotion()
 
   // Referme le tiroir mobile à chaque navigation.
-  useEffect(() => { setMobileOpen(false) }, [currentPage])
+  useEffect(() => {
+    const timer = window.setTimeout(() => setMobileOpen(false), 0)
+    return () => window.clearTimeout(timer)
+  }, [currentPage])
+
+  useEffect(() => {
+    mainRef.current?.focus({ preventScroll: true })
+  }, [currentPage])
 
   const showFooter = currentPage !== 'auth'
   // Décalage horizontal du contenu = largeur de la sidebar (uniquement connecté, ≥ md).
@@ -108,16 +117,18 @@ export default function AppLayout({
       >
         <main
           id="main-content"
+          ref={mainRef}
+          tabIndex={-1}
           className={`flex-grow ${mainPadTop} ${currentPage === 'auth' ? 'pb-0' : 'pb-16'} z-10 w-full`}
         >
           {/* Framer Motion Cross-Fade Transition */}
           <AnimatePresence mode="wait">
             <motion.div
               key={currentPage}
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -12 }}
-              transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
+              initial={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: 12 }}
+              animate={shouldReduceMotion ? { opacity: 1 } : { opacity: 1, y: 0 }}
+              exit={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: -12 }}
+              transition={{ duration: shouldReduceMotion ? 0.01 : 0.2, ease: [0.16, 1, 0.3, 1] }}
               className="w-full h-full"
             >
               {children}
@@ -144,31 +155,39 @@ export default function AppLayout({
 
                   {/* Newsletter Form */}
                   <div className="mt-4 flex flex-col gap-2 max-w-xs text-left">
-                    <span className="text-[10px] font-black tracking-widest text-accent-primary uppercase">Newsletter</span>
+                    <label htmlFor="footer-newsletter-email" className="text-[10px] font-black tracking-widest text-accent-primary uppercase">
+                      Newsletter
+                    </label>
                     {newsletterSubscribed ? (
-                      <div className="text-xs text-accent-secondary bg-accent-secondary/10 border border-accent-secondary/20 p-2.5 rounded-lg font-medium animate-pulse">
+                      <div className="text-xs text-accent-secondary bg-accent-secondary/10 border border-accent-secondary/20 p-2.5 rounded-lg font-medium" role="status" aria-live="polite">
                         ✓ Abonnement validé avec succès !
                       </div>
                     ) : (
                       <form onSubmit={handleNewsletterSubmit} className="flex flex-col gap-2">
                         <div className="flex gap-2">
                           <input
+                            id="footer-newsletter-email"
+                            name="newsletterEmail"
                             type="email"
                             required
-                            placeholder="Votre e-mail..."
+                            autoComplete="email"
+                            inputMode="email"
+                            placeholder="vous@exemple.com"
                             value={newsletterEmail}
+                            aria-invalid={!!newsletterError}
+                            aria-describedby={newsletterError ? 'footer-newsletter-error' : undefined}
                             onChange={(e) => { setNewsletterEmail(e.target.value); if (newsletterError) setNewsletterError(null); }}
-                            className={`bg-bg-primary/60 border ${newsletterError ? 'border-red-500/50' : 'border-border-subtle hover:border-accent-primary/40'} focus:border-accent-primary focus:outline-none rounded-lg px-3 py-2 text-xs text-text-primary placeholder:text-text-muted transition-all flex-grow min-w-0`}
+                            className={`bg-bg-primary/60 border ${newsletterError ? 'border-red-500/50' : 'border-border-subtle hover:border-accent-primary/40'} focus:border-accent-primary rounded-lg px-3 py-2 text-xs text-text-primary placeholder:text-text-muted transition-[border-color,background-color,box-shadow] flex-grow min-w-0`}
                           />
                           <button
                             type="submit"
-                            className="bg-accent-primary hover:bg-accent-primary/95 text-text-primary px-3 rounded-lg text-xs font-black transition-all cursor-pointer shadow-md hover:shadow-accent-primary/20 shrink-0"
+                            className="min-h-11 min-w-11 bg-accent-primary hover:bg-accent-primary/95 text-text-primary px-3 rounded-lg text-xs font-black transition-[background-color,box-shadow] cursor-pointer shadow-md hover:shadow-accent-primary/20 shrink-0"
                           >
                             OK
                           </button>
                         </div>
                         {newsletterError && (
-                          <span className="text-[10px] text-red-400">{newsletterError}</span>
+                          <span id="footer-newsletter-error" className="text-[10px] text-red-400" role="alert">{newsletterError}</span>
                         )}
                       </form>
                     )}

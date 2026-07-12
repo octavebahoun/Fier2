@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import { useMemo } from 'react'
 import {
   LayoutDashboard,
   UserRound,
@@ -121,6 +121,7 @@ export default function Sidebar({
             onClick={() => navigate('dashboard')}
             className="flex items-center gap-2.5 cursor-pointer group min-w-0"
             title="Tableau de bord"
+            aria-label="Aller au tableau de bord"
           >
             <div className="w-8 h-8 shrink-0 flex items-center justify-center rounded-lg bg-accent-primary/20 border border-accent-primary/40 group-hover:border-fieri-blue/60 transition-colors">
               <span className="text-fieri-blue text-xs font-black">F</span>
@@ -145,8 +146,9 @@ export default function Sidebar({
               onClick={() => setCollapsed?.(true)}
               className="hidden md:flex p-1.5 rounded-lg text-text-muted hover:text-text-primary hover:bg-white/5 transition-all cursor-pointer"
               title="Replier la barre"
+              aria-label="Replier la barre latérale"
             >
-              <ChevronsLeft className="w-4 h-4" />
+              <ChevronsLeft className="w-4 h-4" aria-hidden="true" />
             </button>
           )}
         </div>
@@ -189,13 +191,15 @@ export default function Sidebar({
                     key={item.id}
                     onClick={() => go(item)}
                     title={collapsed ? item.label : undefined}
+                    aria-label={collapsed ? item.label : undefined}
+                    aria-current={active ? 'page' : undefined}
                     className={`relative w-full h-9 rounded-lg flex items-center transition-all duration-200 cursor-pointer
                       ${collapsed ? 'justify-center px-0' : 'px-2.5 gap-3'}
                       ${active
                         ? 'bg-accent-primary/20 border border-accent-primary/30 text-text-primary'
                         : 'border border-transparent text-text-secondary hover:text-text-primary hover:bg-white/5'}`}
                   >
-                    <Icon className={`w-[18px] h-[18px] shrink-0 ${active ? 'text-fieri-blue' : ''}`} />
+                    <Icon className={`w-[18px] h-[18px] shrink-0 ${active ? 'text-fieri-blue' : ''}`} aria-hidden="true" />
                     {!collapsed && (
                       <span className="text-xs font-semibold tracking-wide whitespace-nowrap truncate">{item.label}</span>
                     )}
@@ -216,10 +220,11 @@ export default function Sidebar({
           <button
             onClick={() => go({ id: 'contact' })}
             title={collapsed ? 'Aide & Contact' : undefined}
+            aria-label={collapsed ? 'Aide & Contact' : undefined}
             className={`w-full h-9 rounded-lg flex items-center transition-all cursor-pointer text-text-secondary hover:text-text-primary hover:bg-white/5 border border-transparent
               ${collapsed ? 'justify-center px-0' : 'px-2.5 gap-3'}`}
           >
-            <LifeBuoy className="w-[18px] h-[18px] shrink-0" />
+            <LifeBuoy className="w-[18px] h-[18px] shrink-0" aria-hidden="true" />
             {!collapsed && <span className="text-xs font-semibold tracking-wide">Aide & Contact</span>}
           </button>
 
@@ -227,19 +232,21 @@ export default function Sidebar({
             <button
               onClick={() => setCollapsed?.(false)}
               title="Déplier la barre"
+              aria-label="Déplier la barre latérale"
               className="hidden md:flex w-full h-9 rounded-lg items-center justify-center text-text-muted hover:text-text-primary hover:bg-white/5 border border-transparent transition-all cursor-pointer"
             >
-              <ChevronsRight className="w-[18px] h-[18px]" />
+              <ChevronsRight className="w-[18px] h-[18px]" aria-hidden="true" />
             </button>
           )}
 
           <button
             onClick={handleLogout}
             title={collapsed ? 'Se déconnecter' : undefined}
+            aria-label={collapsed ? 'Se déconnecter' : undefined}
             className={`w-full h-9 rounded-lg flex items-center transition-all cursor-pointer text-red-400 hover:text-red-300 hover:bg-red-500/10 border border-transparent hover:border-red-500/20
               ${collapsed ? 'justify-center px-0' : 'px-2.5 gap-3'}`}
           >
-            <LogOut className="w-[18px] h-[18px] shrink-0" />
+            <LogOut className="w-[18px] h-[18px] shrink-0" aria-hidden="true" />
             {!collapsed && <span className="text-xs font-semibold tracking-wide">Déconnexion</span>}
           </button>
         </div>

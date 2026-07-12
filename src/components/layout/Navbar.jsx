@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Menu, X, ChevronDown, Sun, Moon, LogOut, Search } from 'lucide-react'
+import { X, ChevronDown, Sun, Moon, LogOut, Search } from 'lucide-react'
 import Logo from '../Logo.jsx'
 import RoleBadge from '../RoleBadge.jsx'
 import { useTheme } from '../../context/ThemeContext.jsx'
@@ -30,8 +30,8 @@ export default function Navbar({
           const count = (res.data || []).filter(n => !n.read).length
           setUnreadCount(count)
         }
-      } catch (e) {
-        // ignore
+      } catch {
+        // Les notifications ne doivent pas bloquer la navigation.
       }
     }
     const handleUpdate = () => { void loadUnread() }
@@ -41,7 +41,9 @@ export default function Navbar({
         if (ev.key.includes('fieri_db_notifications') || ev.key.includes('fieri_db')) {
           void loadUnread()
         }
-      } catch {}
+      } catch {
+        // Ignore les événements storage non conformes.
+      }
     }
 
     loadUnread()
@@ -58,6 +60,13 @@ export default function Navbar({
       }
     }
   }, [user])
+
+  const openCollapsedNav = () => {
+    if (isScrolled && !isNavExpanded) {
+      setIsNavExpanded(true)
+    }
+  }
+
   return (
     <header className="fixed top-3 left-0 right-0 z-50 pointer-events-none flex justify-center w-full px-4 md:px-6">
       {/* ====== DESKTOP NAVIGATION ====== */}
@@ -70,9 +79,15 @@ export default function Navbar({
               ? 'w-[1400px] max-w-[98vw] h-14 px-8'
               : 'w-[250px] h-12 px-4 cursor-pointer hover:border-accent-primary/40 group mx-auto'
           }`}
-          onClick={() => {
-            if (isScrolled && !isNavExpanded) {
-              setIsNavExpanded(true)
+          role={isScrolled && !isNavExpanded ? 'button' : undefined}
+          tabIndex={isScrolled && !isNavExpanded ? 0 : undefined}
+          aria-label={isScrolled && !isNavExpanded ? 'Ouvrir le menu principal' : undefined}
+          aria-expanded={isScrolled && !isNavExpanded ? false : undefined}
+          onClick={openCollapsedNav}
+          onKeyDown={(event) => {
+            if ((event.key === 'Enter' || event.key === ' ') && isScrolled && !isNavExpanded) {
+              event.preventDefault()
+              openCollapsedNav()
             }
           }}
         >
@@ -109,16 +124,18 @@ export default function Navbar({
               onClick={(e) => e.stopPropagation()} // Prevent closing capsule on inner clicks
             >
               {/* Brand Logo & Name */}
-              <div
+              <button
+                type="button"
                 onClick={() => navigate('home')}
-                className="flex items-center gap-2.5 cursor-pointer shrink-0 select-none group pointer-events-auto"
+                className="flex items-center gap-2.5 cursor-pointer shrink-0 select-none group pointer-events-auto rounded-full"
+                aria-label="Aller à l'accueil"
               >
                 <div className="relative w-8 h-8 flex items-center justify-center rounded-lg bg-accent-primary/20 border border-accent-primary/40 group-hover:border-fieri-blue/60 transition-colors">
                   <span className="text-fieri-blue text-xs font-black">F</span>
-                  <span className="absolute -top-0.5 -right-0.5 w-1.5 h-1.5 rounded-full bg-accent-secondary border border-bg-primary animate-pulse" />
+                  <span className="absolute -top-0.5 -right-0.5 w-1.5 h-1.5 rounded-full bg-accent-secondary border border-bg-primary animate-pulse" aria-hidden="true" />
                 </div>
                 <Logo className="h-5" />
-              </div>
+              </button>
 
               {/* Nav Links */}
               <div className="flex items-center gap-1">
@@ -138,6 +155,7 @@ export default function Navbar({
                     <button
                       key={link.id}
                       onClick={() => { navigate(link.id); setIsNavExpanded(false); }}
+                      aria-current={isActive ? 'page' : undefined}
                       className={`px-3.5 py-1.5 rounded-full text-[10.5px] font-black uppercase tracking-wider whitespace-nowrap transition-all duration-250 cursor-pointer ${
                         isActive
                           ? 'text-text-primary bg-accent-primary/30 border border-accent-primary/40 shadow-inner'
@@ -157,16 +175,18 @@ export default function Navbar({
                   onClick={() => window.__openPalette?.()}
                   className="p-2 rounded-full hover:bg-white/5 border border-transparent hover:border-border-subtle text-text-secondary hover:text-text-primary transition-all cursor-pointer"
                   title="Commandes (⌘K)"
+                  aria-label="Ouvrir la palette de commandes"
                 >
-                  <Search className="w-3.5 h-3.5" />
+                  <Search className="w-3.5 h-3.5" aria-hidden="true" />
                 </button>
                 {/* Theme Toggle */}
                 <button
                   onClick={toggleTheme}
                   className="p-2 rounded-full hover:bg-white/5 border border-transparent hover:border-border-subtle text-text-secondary hover:text-text-primary transition-all cursor-pointer"
                   title={theme === 'dark' ? "Passer au mode clair" : "Passer au mode sombre"}
+                  aria-label={theme === 'dark' ? "Passer au mode clair" : "Passer au mode sombre"}
                 >
-                  {theme === 'dark' ? <Sun className="w-3.5 h-3.5" /> : <Moon className="w-3.5 h-3.5" />}
+                  {theme === 'dark' ? <Sun className="w-3.5 h-3.5" aria-hidden="true" /> : <Moon className="w-3.5 h-3.5" aria-hidden="true" />}
                 </button>
 
                 {/* Logout Button (Desktop) */}
@@ -175,8 +195,9 @@ export default function Navbar({
                     onClick={handleLogout}
                     className="p-2 rounded-full hover:bg-red-500/10 border border-transparent hover:border-red-500/20 text-red-400 hover:text-red-300 transition-all cursor-pointer"
                     title="Se déconnecter"
+                    aria-label="Se déconnecter"
                   >
-                    <LogOut className="w-3.5 h-3.5" />
+                    <LogOut className="w-3.5 h-3.5" aria-hidden="true" />
                   </button>
                 )}
 
@@ -212,8 +233,9 @@ export default function Navbar({
                     }}
                     className="flex items-center justify-center w-7.5 h-7.5 rounded-full border border-border-subtle hover:border-white/20 hover:bg-white/5 transition-all text-text-secondary hover:text-text-primary cursor-pointer ml-1"
                     title="Réduire le menu"
+                    aria-label="Réduire le menu"
                   >
-                    <X className="w-3.5 h-3.5" />
+                    <X className="w-3.5 h-3.5" aria-hidden="true" />
                   </button>
                 )}
               </div>
@@ -224,9 +246,13 @@ export default function Navbar({
 
       {/* ====== MOBILE NAVIGATION ====== */}
       <div className="md:hidden flex flex-col items-center w-full pointer-events-auto">
-        <motion.div
+        <motion.button
+          type="button"
           layout
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          aria-expanded={mobileMenuOpen}
+          aria-controls="mobile-main-menu"
+          aria-label={mobileMenuOpen ? 'Fermer le menu principal' : 'Ouvrir le menu principal'}
           className="flex items-center justify-between border border-border-subtle bg-bg-secondary/95 backdrop-blur-xl shadow-lg h-10 px-3 rounded-full cursor-pointer hover:border-accent-primary/20 transition-all select-none mx-auto w-[200px]"
         >
           {/* Brand name & symbol */}
@@ -249,7 +275,7 @@ export default function Navbar({
               mobileMenuOpen ? 'w-3 -translate-y-[2.5px] -rotate-45' : 'w-3'
             }`} />
           </div>
-        </motion.div>
+        </motion.button>
 
         {/* Centered Mobile Dropdown glass card */}
         <AnimatePresence>
@@ -259,6 +285,7 @@ export default function Navbar({
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 15, scale: 0.95 }}
               transition={{ duration: 0.2, ease: 'easeOut' }}
+              id="mobile-main-menu"
               className="absolute top-12 left-1/2 -translate-x-1/2 w-[295px] pointer-events-auto bg-bg-secondary/95 border border-border-subtle backdrop-blur-2xl rounded-2xl shadow-2xl p-5 flex flex-col gap-4 z-50 overflow-hidden"
             >
               {/* Embedded cosmic blur */}
@@ -270,8 +297,9 @@ export default function Navbar({
                 <button
                   onClick={toggleTheme}
                   className="p-1.5 rounded-full bg-white/5 border border-border-subtle text-text-primary cursor-pointer"
+                  aria-label={theme === 'dark' ? "Passer au mode clair" : "Passer au mode sombre"}
                 >
-                  {theme === 'dark' ? <Sun className="w-3.5 h-3.5" /> : <Moon className="w-3.5 h-3.5" />}
+                  {theme === 'dark' ? <Sun className="w-3.5 h-3.5" aria-hidden="true" /> : <Moon className="w-3.5 h-3.5" aria-hidden="true" />}
                 </button>
               </div>
 
@@ -282,8 +310,9 @@ export default function Navbar({
                   <button
                     onClick={handleLogout}
                     className="p-1.5 rounded-full bg-red-500/10 border border-red-500/20 text-red-400 cursor-pointer"
+                    aria-label="Se déconnecter"
                   >
-                    <LogOut className="w-3.5 h-3.5" />
+                    <LogOut className="w-3.5 h-3.5" aria-hidden="true" />
                   </button>
                 </div>
               )}
@@ -307,6 +336,7 @@ export default function Navbar({
                     <button
                       key={link.id}
                       onClick={() => { navigate(link.id); setMobileMenuOpen(false); }}
+                      aria-current={isActive ? 'page' : undefined}
                       className={`w-full text-left py-2 px-3 rounded-xl flex items-center justify-between group transition-all duration-200 cursor-pointer ${
                         isActive
                           ? 'bg-accent-primary/20 border border-accent-primary/30 text-text-primary'

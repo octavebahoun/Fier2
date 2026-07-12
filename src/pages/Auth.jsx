@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Eye,
@@ -10,12 +10,10 @@ import {
   Globe,
   GraduationCap,
   BookOpen,
-  FlaskConical,
   User,
   Mail,
   Lock
 } from 'lucide-react';
-import { api } from '../services/api';
 import { useData } from '../context/DataContext.jsx';
 import { useAuth } from '../context/AuthContext.jsx';
 
@@ -59,9 +57,6 @@ export default function Auth({ navigate, redirectTo, onAuthComplete }) {
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
-  // Vrai si l'inscription a échoué car l'email existe déjà (→ raccourci connexion)
-  const [emailExists, setEmailExists] = useState(false);
-
   // Ref pour le focus de l'étape 2 (sélecteur pays)
   const countrySelectRef = useRef(null);
 
@@ -89,16 +84,7 @@ export default function Auth({ navigate, redirectTo, onAuthComplete }) {
     setAuthMode(mode);
     setErrorMsg('');
     setSuccessMsg('');
-    setEmailExists(false);
     setRegisterStep(1);
-  };
-
-  // Raccourci depuis l'erreur « email déjà utilisé » : bascule sur la connexion
-  // en pré-remplissant l'email saisi à l'inscription.
-  const switchToLoginWithEmail = () => {
-    const email = registerData.email;
-    handleModeChange('login');
-    setLoginData((prev) => ({ ...prev, email }));
   };
 
   // Soumission Connexion
@@ -329,6 +315,7 @@ export default function Auth({ navigate, redirectTo, onAuthComplete }) {
                 exit={{ opacity: 0, y: -10 }}
                 className="flex items-center gap-3 p-4 rounded-xl border border-red-500/20 bg-red-950/20 text-red-300 text-xs"
                 role="alert"
+                aria-live="assertive"
                 id="auth-error-message"
               >
                 <AlertCircle className="w-4 h-4 text-red-400 shrink-0" />
@@ -342,7 +329,8 @@ export default function Auth({ navigate, redirectTo, onAuthComplete }) {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -10 }}
                 className="flex items-center gap-3 p-4 rounded-xl border border-emerald-500/20 bg-emerald-950/20 text-emerald-300 text-xs"
-                role="alert"
+                role="status"
+                aria-live="polite"
                 id="auth-success-message"
               >
                 <Check className="w-4 h-4 text-emerald-400 shrink-0" />
@@ -372,15 +360,20 @@ export default function Auth({ navigate, redirectTo, onAuthComplete }) {
                 <form onSubmit={handleLoginSubmit} className="flex flex-col gap-4">
                   {/* Email */}
                   <div className="flex flex-col gap-1.5">
-                    <label className="text-[10px] font-black uppercase tracking-wider text-text-secondary">
+                    <label htmlFor="login-email" className="text-[10px] font-black uppercase tracking-wider text-text-secondary">
                       ADRESSE EMAIL <span className="text-fieri-blue">*</span>
                     </label>
                     <div className="relative">
                       <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted" />
                       <input
+                        id="login-email"
+                        name="email"
                         type="email"
                         required
                         placeholder="oktav@fieri.dev"
+                        autoComplete="email"
+                        inputMode="email"
+                        spellCheck={false}
                         value={loginData.email}
                         onChange={(e) => setLoginData({ ...loginData, email: e.target.value })}
                         aria-invalid={!!errorMsg}
@@ -393,7 +386,7 @@ export default function Auth({ navigate, redirectTo, onAuthComplete }) {
                   {/* Mot de passe */}
                   <div className="flex flex-col gap-1.5">
                     <div className="flex justify-between items-center">
-                      <label className="text-[10px] font-black uppercase tracking-wider text-text-secondary">
+                      <label htmlFor="login-password" className="text-[10px] font-black uppercase tracking-wider text-text-secondary">
                         MOT DE PASSE <span className="text-fieri-blue">*</span>
                       </label>
                     </div>
@@ -403,7 +396,9 @@ export default function Auth({ navigate, redirectTo, onAuthComplete }) {
                         type={showLoginPassword ? "text" : "password"}
                         required
                         placeholder="••••••••••••"
-                        autoComplete="new-password"
+                        id="login-password"
+                        name="password"
+                        autoComplete="current-password"
                         value={loginData.password}
                         onChange={(e) => setLoginData({ ...loginData, password: e.target.value })}
                         aria-invalid={!!errorMsg}
@@ -414,6 +409,8 @@ export default function Auth({ navigate, redirectTo, onAuthComplete }) {
                         type="button"
                         onClick={() => setShowLoginPassword(!showLoginPassword)}
                         className="absolute right-4 top-1/2 -translate-y-1/2 text-text-muted hover:text-text-secondary transition-colors cursor-pointer"
+                        aria-label={showLoginPassword ? 'Masquer le mot de passe' : 'Afficher le mot de passe'}
+                        aria-pressed={showLoginPassword}
                       >
                         {showLoginPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                       </button>
@@ -516,15 +513,18 @@ export default function Auth({ navigate, redirectTo, onAuthComplete }) {
                       {/* Prénom & Nom */}
                       <div className="grid grid-cols-2 gap-4">
                         <div className="flex flex-col gap-1.5">
-                          <label className="text-[10px] font-black uppercase tracking-wider text-text-secondary">
+                          <label htmlFor="register-first-name" className="text-[10px] font-black uppercase tracking-wider text-text-secondary">
                             PRÉNOM <span className="text-fieri-blue">*</span>
                           </label>
                           <div className="relative">
                             <User className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted" />
                             <input
+                              id="register-first-name"
+                              name="firstName"
                               type="text"
                               required
                               placeholder="Kofi"
+                              autoComplete="given-name"
                               value={registerData.firstName}
                               onChange={(e) => setRegisterData({ ...registerData, firstName: e.target.value })}
                               aria-invalid={!!errorMsg}
@@ -535,15 +535,18 @@ export default function Auth({ navigate, redirectTo, onAuthComplete }) {
                         </div>
 
                         <div className="flex flex-col gap-1.5">
-                          <label className="text-[10px] font-black uppercase tracking-wider text-text-secondary">
+                          <label htmlFor="register-last-name" className="text-[10px] font-black uppercase tracking-wider text-text-secondary">
                             NOM <span className="text-fieri-blue">*</span>
                           </label>
                           <div className="relative">
                             <User className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted" />
                             <input
+                              id="register-last-name"
+                              name="lastName"
                               type="text"
                               required
                               placeholder="Asante"
+                              autoComplete="family-name"
                               value={registerData.lastName}
                               onChange={(e) => setRegisterData({ ...registerData, lastName: e.target.value })}
                               aria-invalid={!!errorMsg}
@@ -556,15 +559,20 @@ export default function Auth({ navigate, redirectTo, onAuthComplete }) {
 
                       {/* Email */}
                       <div className="flex flex-col gap-1.5">
-                        <label className="text-[10px] font-black uppercase tracking-wider text-text-secondary">
+                        <label htmlFor="register-email" className="text-[10px] font-black uppercase tracking-wider text-text-secondary">
                           EMAIL <span className="text-fieri-blue">*</span>
                         </label>
                         <div className="relative">
                           <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted" />
                           <input
+                            id="register-email"
+                            name="email"
                             type="email"
                             required
                             placeholder="vous@email.com"
+                            autoComplete="email"
+                            inputMode="email"
+                            spellCheck={false}
                             value={registerData.email}
                             onChange={(e) => setRegisterData({ ...registerData, email: e.target.value })}
                             aria-invalid={!!errorMsg}
@@ -576,12 +584,14 @@ export default function Auth({ navigate, redirectTo, onAuthComplete }) {
 
                       {/* Mot de passe */}
                       <div className="flex flex-col gap-1.5">
-                        <label className="text-[10px] font-black uppercase tracking-wider text-text-secondary">
+                        <label htmlFor="register-password" className="text-[10px] font-black uppercase tracking-wider text-text-secondary">
                           MOT DE PASSE <span className="text-fieri-blue">*</span>
                         </label>
                         <div className="relative">
                           <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted" />
                           <input
+                            id="register-password"
+                            name="password"
                             type={showRegisterPassword ? "text" : "password"}
                             required
                             placeholder="Min. 8 caractères"
@@ -596,6 +606,8 @@ export default function Auth({ navigate, redirectTo, onAuthComplete }) {
                             type="button"
                             onClick={() => setShowRegisterPassword(!showRegisterPassword)}
                             className="absolute right-4 top-1/2 -translate-y-1/2 text-text-muted hover:text-text-secondary transition-colors cursor-pointer"
+                            aria-label={showRegisterPassword ? 'Masquer le mot de passe' : 'Afficher le mot de passe'}
+                            aria-pressed={showRegisterPassword}
                           >
                             {showRegisterPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                           </button>
@@ -604,12 +616,14 @@ export default function Auth({ navigate, redirectTo, onAuthComplete }) {
 
                       {/* Confirmer le Mot de passe */}
                       <div className="flex flex-col gap-1.5">
-                        <label className="text-[10px] font-black uppercase tracking-wider text-text-secondary">
+                        <label htmlFor="register-confirm-password" className="text-[10px] font-black uppercase tracking-wider text-text-secondary">
                           CONFIRMER LE MOT DE PASSE <span className="text-fieri-blue">*</span>
                         </label>
                         <div className="relative">
                           <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted" />
                           <input
+                            id="register-confirm-password"
+                            name="confirmPassword"
                             type={showConfirmPassword ? "text" : "password"}
                             required
                             placeholder="••••••••"
@@ -624,6 +638,8 @@ export default function Auth({ navigate, redirectTo, onAuthComplete }) {
                             type="button"
                             onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                             className="absolute right-4 top-1/2 -translate-y-1/2 text-text-muted hover:text-text-secondary transition-colors cursor-pointer"
+                            aria-label={showConfirmPassword ? 'Masquer la confirmation du mot de passe' : 'Afficher la confirmation du mot de passe'}
+                            aria-pressed={showConfirmPassword}
                           >
                             {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                           </button>
@@ -652,12 +668,14 @@ export default function Auth({ navigate, redirectTo, onAuthComplete }) {
                     >
                       {/* Pays */}
                       <div className="flex flex-col gap-1.5">
-                        <label className="text-[10px] font-black uppercase tracking-wider text-text-secondary">
+                        <label htmlFor="register-country" className="text-[10px] font-black uppercase tracking-wider text-text-secondary">
                           PAYS DE RECHERCHE <span className="text-fieri-blue">*</span>
                         </label>
                         <div className="relative">
                           <Globe className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted" />
                           <select
+                            id="register-country"
+                            name="countryId"
                             ref={countrySelectRef}
                             required
                             value={registerData.countryId}
@@ -689,12 +707,14 @@ export default function Auth({ navigate, redirectTo, onAuthComplete }) {
 
                       {/* Université (Désactivé si aucun pays sélectionné) */}
                       <div className="flex flex-col gap-1.5">
-                        <label className="text-[10px] font-black uppercase tracking-wider text-text-secondary">
+                        <label htmlFor="register-university" className="text-[10px] font-black uppercase tracking-wider text-text-secondary">
                           UNIVERSITÉ PARTENAIRE <span className="text-fieri-blue">*</span>
                         </label>
                         <div className="relative">
                           <GraduationCap className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted" />
                           <select
+                            id="register-university"
+                            name="universityId"
                             required
                             disabled={!registerData.countryId || loadingMeta}
                             value={registerData.universityId}
@@ -727,12 +747,14 @@ export default function Auth({ navigate, redirectTo, onAuthComplete }) {
 
                       {/* Branche / Pôle (Désactivé si aucune université sélectionnée) */}
                       <div className="flex flex-col gap-1.5">
-                        <label className="text-[10px] font-black uppercase tracking-wider text-text-secondary">
+                        <label htmlFor="register-branch" className="text-[10px] font-black uppercase tracking-wider text-text-secondary">
                           BRANCHE / PÔLE ACADÉMIQUE <span className="text-fieri-blue">*</span>
                         </label>
                         <div className="relative">
                           <BookOpen className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted" />
                           <select
+                            id="register-branch"
+                            name="branchId"
                             required
                             disabled={!registerData.universityId || loadingMeta}
                             value={registerData.branchId}

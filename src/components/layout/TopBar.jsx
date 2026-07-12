@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Menu, Search, Sun, Moon, Bell } from 'lucide-react'
 import RoleBadge from '../RoleBadge.jsx'
 import { useTheme } from '../../context/ThemeContext.jsx'
@@ -84,8 +84,9 @@ export default function TopBar({ currentPage, navigate, user, collapsed, onOpenM
           onClick={() => window.__openPalette?.()}
           className="flex items-center gap-2 h-9 px-3 rounded-xl border border-border-subtle bg-bg-primary/40 text-text-muted hover:text-text-secondary hover:border-accent-primary/40 transition-all cursor-pointer"
           title="Rechercher (⌘K)"
+          aria-label="Ouvrir la recherche"
         >
-          <Search className="w-3.5 h-3.5" />
+          <Search className="w-3.5 h-3.5" aria-hidden="true" />
           <span className="hidden sm:inline text-[11px] font-semibold">Rechercher…</span>
           <kbd className="hidden md:inline text-[9px] font-bold px-1.5 py-0.5 rounded bg-white/5 border border-border-subtle">⌘K</kbd>
         </button>
@@ -95,8 +96,9 @@ export default function TopBar({ currentPage, navigate, user, collapsed, onOpenM
           onClick={toggleTheme}
           className="p-2 rounded-lg text-text-secondary hover:text-text-primary hover:bg-white/5 border border-transparent hover:border-border-subtle transition-all cursor-pointer"
           title={theme === 'dark' ? 'Mode clair' : 'Mode sombre'}
+          aria-label={theme === 'dark' ? 'Passer au mode clair' : 'Passer au mode sombre'}
         >
-          {theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+          {theme === 'dark' ? <Sun className="w-4 h-4" aria-hidden="true" /> : <Moon className="w-4 h-4" aria-hidden="true" />}
         </button>
 
         {/* Notifications */}
@@ -104,8 +106,9 @@ export default function TopBar({ currentPage, navigate, user, collapsed, onOpenM
           onClick={() => navigate('dashboard')}
           className="relative p-2 rounded-lg text-text-secondary hover:text-text-primary hover:bg-white/5 border border-transparent hover:border-border-subtle transition-all cursor-pointer"
           title="Notifications"
+          aria-label={unreadCount > 0 ? `${unreadCount} notification${unreadCount > 1 ? 's' : ''} non lue${unreadCount > 1 ? 's' : ''}` : 'Notifications'}
         >
-          <Bell className="w-4 h-4" />
+          <Bell className="w-4 h-4" aria-hidden="true" />
           {unreadCount > 0 && (
             <span className="absolute -top-0.5 -right-0.5 inline-flex items-center justify-center min-w-[16px] h-4 px-1 rounded-full bg-accent-secondary text-white text-[9px] font-black">
               {unreadCount > 99 ? '99+' : unreadCount}
@@ -118,6 +121,7 @@ export default function TopBar({ currentPage, navigate, user, collapsed, onOpenM
           onClick={() => navigate('dashboard')}
           className="flex items-center gap-2 pl-1.5 cursor-pointer"
           title={`${user?.firstName ?? ''} ${user?.lastName ?? ''}`.trim()}
+          aria-label="Ouvrir le tableau de bord"
         >
           <div className="w-8 h-8 rounded-full bg-accent-primary/20 border border-accent-primary/30 flex items-center justify-center shrink-0">
             <span className="text-text-primary font-bold text-[11px]">

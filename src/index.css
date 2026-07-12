@@ -121,11 +121,32 @@ body {
   background-color: var(--color-bg-primary);
   color: var(--color-text-primary);
   font-family: var(--font-sans);
-  font-size: 14px;
+  font-size: 16px;
   line-height: 1.6;
   overflow-x: hidden;
   position: relative;
   min-height: 100vh;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: rgba(27, 111, 216, 0.2);
+}
+
+html {
+  color-scheme: dark;
+  scroll-behavior: smooth;
+}
+
+html.light-theme,
+body.light-theme {
+  color-scheme: light;
+}
+
+:where(a, button, input, select, textarea, summary, [role="button"], [tabindex]:not([tabindex="-1"])):focus-visible {
+  outline: 3px solid rgba(245, 166, 35, 0.9);
+  outline-offset: 3px;
+}
+
+#main-content:focus {
+  outline: none;
 }
 
 @media (min-width: 768px) {
@@ -183,7 +204,11 @@ body {
   -webkit-backdrop-filter: var(--glass-blur);
   border: 1px solid var(--glass-border);
   box-shadow: var(--glass-shadow);
-  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.2s ease;
 }
 
 .glass-panel:hover {
@@ -266,6 +291,25 @@ body {
   background: linear-gradient(135deg, #00F2FE 0%, #0072FF 50%, #FFB800 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .glass-panel:hover {
+    transform: none;
+  }
 }
 
 /* === LIVE STREAMING BADGE ANIMATION === */
