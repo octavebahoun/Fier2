@@ -63,9 +63,9 @@
    Tout est scopé sous body.light-theme : le thème sombre par défaut est intact.
    ═══════════════════════════════════════════════════════════════════════════ */
 body.light-theme {
-  --color-bg-primary: #F5F8FD;    /* fond de page, blanc cassé bleuté */
-  --color-bg-secondary: #FFFFFF;  /* cartes & panneaux */
-  --color-bg-tertiary: #EAF1FB;   /* surface surélevée subtile */
+  --color-bg-primary: #FFFFFF;    /* fond de page : blanc pur (couleur principale) */
+  --color-bg-secondary: #FFFFFF;  /* cartes & panneaux (délimités par bordure + ombre) */
+  --color-bg-tertiary: #F2F5FA;   /* surface surélevée, gris très léger neutre */
 
   --color-accent-primary: #1B6FD8;   /* bleu FIERI */
   --color-accent-secondary: #E8640C; /* orange FIERI */
@@ -340,4 +340,39 @@ body.light-theme ::-webkit-scrollbar-thumb {
 
 body.light-theme ::-webkit-scrollbar-thumb:hover {
   background: rgba(16, 24, 42, 0.28);
+}
+
+/* ── Titres à dégradé : illisibles sur blanc (ex. « from-white … », pastels).
+   En clair on force un texte SOLIDE foncé et lisible, sans fluo. ── */
+body.light-theme .bg-clip-text.text-transparent {
+  background-image: none !important;
+  -webkit-text-fill-color: var(--color-text-primary) !important;
+  color: var(--color-text-primary) !important;
+}
+
+/* ── Spans à dégradé fluo (.text-gradient-*) → couleur de marque solide,
+   contrastée sur blanc, pour garder un accent sans agresser l'œil. ── */
+body.light-theme .text-gradient-blue,
+body.light-theme .text-gradient-cosmic {
+  background: none !important;
+  -webkit-text-fill-color: var(--color-accent-primary) !important;
+  color: var(--color-accent-primary) !important;
+}
+body.light-theme .text-gradient-orange {
+  background: none !important;
+  -webkit-text-fill-color: var(--color-accent-secondary) !important;
+  color: var(--color-accent-secondary) !important;
+}
+
+/* ── Glows / halos néon désactivés en clair (ça « casse les yeux ») ── */
+body.light-theme .circuit-trace-1,
+body.light-theme .circuit-trace-2 {
+  filter: none !important;
+}
+body.light-theme .animate-timeline-glow,
+body.light-theme .animate-pulse-glow {
+  animation: none !important;
+}
+body.light-theme .halo-radial {
+  background: radial-gradient(circle, rgba(27, 111, 216, 0.06) 0%, transparent 70%) !important;
 }
