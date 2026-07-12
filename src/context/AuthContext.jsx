@@ -145,6 +145,13 @@ export function AuthProvider({ children }) {
         }
       } catch (err) {
         console.error('[FIERI AuthContext] Erreur lors de la restauration de la session:', err);
+        // Token expiré / invalide → on nettoie la session pour ne pas laisser
+        // une UI "connectée" mais cassée (chaque appel /me renverrait 401).
+        // On ne déconnecte QUE sur une vraie erreur d'auth : un 500 ou une
+        // coupure réseau ne doit pas détruire la session de l'utilisateur.
+        if (err?.status === 401 || err?.status === 403) {
+          handleLogout();
+        }
       } finally {
         setLoading(false);
       }
