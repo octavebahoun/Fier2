@@ -391,7 +391,7 @@ function ClubCard({ club, user, navigate, onJoin, onLeave, isPending, joiningId,
 
 // ─────────────────────────── ResearchClubs Page ───────────────────────────────
 export default function ResearchClubs({ navigate }) {
-  const { user, isAdmin, isMentor } = useAuth();
+  const { user, isAdmin } = useAuth();
   const userId = user?.id ?? null;
   const [clubs, setClubs] = useState([]);
   const [myRequests, setMyRequests] = useState([]);
@@ -418,9 +418,15 @@ export default function ResearchClubs({ navigate }) {
       setMyRequests([]);
     }
 
-    if (user && (isAdmin() || isMentor())) {
+    // Demandes en attente : uniquement pour les clubs que l'utilisateur gère
+    // (ADMIN → tous ; RESPONSABLE → uniquement le(s) club(s) dont il est responsable).
+    // On filtre en amont pour éviter les appels qui renverraient 403.
+    if (user) {
+      const managed = allClubs.filter(
+        (club) => isAdmin() || club.responsibleId === userId,
+      );
       const pendingMap = {};
-      for (const club of allClubs) {
+      for (const club of managed) {
         const res = await api.memberships.getPendingRequests(club.id);
         if (res.success) {
           pendingMap[club.id] = res.data;
@@ -590,7 +596,7 @@ export default function ResearchClubs({ navigate }) {
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
           {clubs.map((club, index) => {
             const isPending = myRequests.some(r => r.clubId === club.id && r.status === 'PENDING');
-            const isManager = user && (isAdmin() || isMentor());
+            const isManager = user && (isAdmin() || club.responsibleId === userId);
             const pendingMembers = pendingRequests[club.id] || [];
 
             return (

@@ -89,6 +89,11 @@ export default function ClubDetail({ navigate, clubId }) {
             <div className="flex items-center gap-3 mt-1 text-xs text-text-muted flex-wrap">
               {club.discipline && <span className="inline-flex items-center gap-1.5"><GraduationCap className="w-3.5 h-3.5" /> {club.discipline}</span>}
               <span>{(club.membersCount ?? 0).toLocaleString('fr-FR')} membres</span>
+              {club.responsible && (
+                <span className="inline-flex items-center gap-1.5 font-bold" style={{ color: accent }}>
+                  Responsable&nbsp;: {`${club.responsible.firstName ?? ''} ${club.responsible.lastName ?? ''}`.trim() || '—'}
+                </span>
+              )}
             </div>
           </div>
           <button

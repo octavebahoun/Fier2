@@ -33,6 +33,10 @@ export function normalizeClub(c) {
     divisions: c.divisions ?? [],
     projetPhare: c.projetPhare ?? '',
     joined: c.joined ?? false,
+    // Responsable du pôle (chef de club) : id du membre + objet { firstName, lastName }.
+    // Défaut null tant que le backend déployé n'expose pas encore ces champs.
+    responsibleId: c.responsibleId ?? null,
+    responsible: c.responsible ?? null,
     accent: c.accent ?? pickAccent(c.id)
   }
 }
