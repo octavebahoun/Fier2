@@ -1,6 +1,5 @@
-import React, { createContext, useContext, useState, useCallback, useEffect, useMemo } from 'react'
-
-const ThemeContext = createContext(null)
+import { useState, useCallback, useEffect, useMemo } from 'react'
+import { ThemeContext } from './useTheme.js'
 
 /**
  * ThemeProvider — état de thème global (dark/light).
@@ -10,12 +9,17 @@ const ThemeContext = createContext(null)
 export function ThemeProvider({ children }) {
   const [theme, setTheme] = useState('dark')
 
-  // Applique/retire la classe sur <body> à chaque changement de thème.
+  // Applique/retire la classe sur <html> et <body> à chaque changement de thème.
   useEffect(() => {
+    const root = document.documentElement
     if (theme === 'light') {
+      root.classList.add('light-theme')
       document.body.classList.add('light-theme')
+      root.style.colorScheme = 'light'
     } else {
+      root.classList.remove('light-theme')
       document.body.classList.remove('light-theme')
+      root.style.colorScheme = 'dark'
     }
   }, [theme])
 
@@ -27,13 +31,3 @@ export function ThemeProvider({ children }) {
 
   return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>
 }
-
-export function useTheme() {
-  const context = useContext(ThemeContext)
-  if (!context) {
-    throw new Error('useTheme doit être utilisé au sein d\'un ThemeProvider.')
-  }
-  return context
-}
-
-export default ThemeContext

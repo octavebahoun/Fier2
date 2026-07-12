@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { X, ChevronDown, Sun, Moon, LogOut, Search } from 'lucide-react'
 import Logo from '../Logo.jsx'
 import RoleBadge from '../RoleBadge.jsx'
-import { useTheme } from '../../context/ThemeContext.jsx'
+import { useTheme } from '../../context/useTheme.js'
 import api from '../../services/api.js'
 
 export default function Navbar({

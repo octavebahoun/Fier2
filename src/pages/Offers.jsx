@@ -445,7 +445,7 @@ export default function Offers({ navigate }) {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={closeApplyModal}
-              className="absolute inset-0 bg-slate-950/70 backdrop-blur-md"
+              className="absolute inset-0 bg-black/60 backdrop-blur-md"
             />
 
             <motion.div
@@ -453,7 +453,7 @@ export default function Offers({ navigate }) {
               initial={{ opacity: 0, scale: 0.95, y: 15 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 15 }}
-              className="glass-panel border border-white/10 rounded-3xl p-8 max-w-lg w-full relative bg-[#090d1a]/85 backdrop-blur-2xl shadow-2xl z-10 flex flex-col gap-6"
+              className="glass-panel border border-white/10 rounded-3xl p-8 max-w-lg w-full relative bg-bg-secondary/90 backdrop-blur-2xl shadow-2xl z-10 flex flex-col gap-6"
               role="dialog"
               aria-modal="true"
             >
@@ -587,7 +587,7 @@ export default function Offers({ navigate }) {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={closePublishModal}
-              className="absolute inset-0 bg-slate-950/70 backdrop-blur-md"
+              className="absolute inset-0 bg-black/60 backdrop-blur-md"
             />
 
             <motion.div
@@ -595,7 +595,7 @@ export default function Offers({ navigate }) {
               initial={{ opacity: 0, scale: 0.95, y: 15 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 15 }}
-              className="glass-panel border border-white/10 rounded-3xl p-8 max-w-xl w-full relative bg-[#090d1a]/85 backdrop-blur-2xl shadow-2xl z-10 flex flex-col gap-6"
+              className="glass-panel border border-white/10 rounded-3xl p-8 max-w-xl w-full relative bg-bg-secondary/90 backdrop-blur-2xl shadow-2xl z-10 flex flex-col gap-6"
               role="dialog"
               aria-modal="true"
             >

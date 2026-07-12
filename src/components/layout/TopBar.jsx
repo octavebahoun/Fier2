@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Menu, Search, Sun, Moon, Bell } from 'lucide-react'
 import RoleBadge from '../RoleBadge.jsx'
-import { useTheme } from '../../context/ThemeContext.jsx'
+import { useTheme } from '../../context/useTheme.js'
 import api from '../../services/api.js'
 
 // Libellés lisibles pour la barre supérieure (titre de la section courante).

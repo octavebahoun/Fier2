@@ -276,7 +276,7 @@ export default function ProjectDetail({ navigate, projectId }) {
                   alt={project.title} 
                   className="absolute inset-0 w-full h-full object-cover" 
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#090d1a] via-transparent to-transparent opacity-80" />
+                <div className="absolute inset-0 bg-gradient-to-t from-bg-secondary via-transparent to-transparent opacity-80" />
               </div>
             )}
 
@@ -540,7 +540,7 @@ export default function ProjectDetail({ navigate, projectId }) {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={closePledgeModal}
-              className="absolute inset-0 bg-slate-950/70 backdrop-blur-md"
+              className="absolute inset-0 bg-bg-primary/80 backdrop-blur-md"
             />
 
             {/* Modal Box */}
@@ -550,7 +550,7 @@ export default function ProjectDetail({ navigate, projectId }) {
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 15 }}
               transition={{ type: 'spring', duration: 0.4 }}
-              className="glass-panel border border-white/10 rounded-3xl p-8 max-w-md w-full relative bg-[#090d1a]/85 backdrop-blur-2xl shadow-2xl z-10 flex flex-col gap-6"
+              className="glass-panel border border-white/10 rounded-3xl p-8 max-w-md w-full relative bg-bg-secondary/90 backdrop-blur-2xl shadow-2xl z-10 flex flex-col gap-6"
               role="dialog"
               aria-modal="true"
               aria-labelledby="modal-title"

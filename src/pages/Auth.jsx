@@ -217,7 +217,7 @@ export default function Auth({ navigate, redirectTo, onAuthComplete }) {
         </AnimatePresence>
 
         {/* Dégradé sombre pour lisibilité */}
-        <div className="absolute inset-0 bg-gradient-to-t from-[#080B14] via-[#080B14]/65 to-transparent pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-t from-bg-primary via-bg-primary/65 to-transparent pointer-events-none" />
 
         {/* Contenu textuel et statistiques */}
         <div className="relative z-10 flex flex-col gap-5 md:gap-7">

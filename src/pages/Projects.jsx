@@ -200,9 +200,9 @@ export default function Projects({ navigate }) {
                         className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
                       />
                     )}
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#0d1120] via-transparent to-transparent opacity-70 pointer-events-none" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-bg-secondary via-transparent to-transparent opacity-70 pointer-events-none" />
                     {isFeatured && (
-                      <div className="absolute inset-0 hidden md:block bg-gradient-to-r from-transparent via-transparent to-[#0d1120] opacity-80 pointer-events-none" />
+                      <div className="absolute inset-0 hidden md:block bg-gradient-to-r from-transparent via-transparent to-bg-secondary opacity-80 pointer-events-none" />
                     )}
                   </div>
 
