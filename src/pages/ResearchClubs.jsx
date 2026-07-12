@@ -343,8 +343,21 @@ function ClubCard({ club, user, navigate, onJoin, onLeave, isPending, joiningId,
                           className="flex items-center justify-between p-2 rounded-lg bg-white/[0.02] border border-white/5 text-[11px]"
                         >
                           <div className="min-w-0 flex-1 pr-2">
-                            <p className="font-bold text-text-primary truncate">{req.userName}</p>
-                            <p className="text-[10px] text-text-secondary truncate">{req.userEmail}</p>
+                            {(() => {
+                              // Le backend renvoie le demandeur sous req.user {firstName, lastName, email}.
+                              // On reste tolérant aux anciennes formes (userName/userEmail).
+                              const name = req.user
+                                ? `${req.user.firstName ?? ''} ${req.user.lastName ?? ''}`.trim()
+                                : ''
+                              const displayName = name || req.userName || req.user?.email || 'Membre'
+                              const email = req.user?.email || req.userEmail || ''
+                              return (
+                                <>
+                                  <p className="font-bold text-text-primary truncate">{displayName}</p>
+                                  {email && <p className="text-[10px] text-text-secondary truncate">{email}</p>}
+                                </>
+                              )
+                            })()}
                           </div>
                           <div className="flex gap-1 shrink-0">
                             <button
