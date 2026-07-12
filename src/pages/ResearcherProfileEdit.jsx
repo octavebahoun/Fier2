@@ -35,6 +35,11 @@ export function validateResearcherProfileEdit(values) {
     errors.cvUrl = 'Lien invalide (http/https requis).'
   }
 
+  const avatarUrl = String(values.avatarUrl || '').trim()
+  if (avatarUrl && !isValidHttpUrl(avatarUrl)) {
+    errors.avatarUrl = 'Lien invalide (http/https requis).'
+  }
+
   const bio = String(values.bio || '')
   if (bio.length > 1200) errors.bio = 'Bio trop longue (1200 caractères max).'
 
@@ -82,6 +87,7 @@ export default function ResearcherProfileEdit({ navigate }) {
     role: '',
     bio: '',
     specialties: '',
+    avatarUrl: '',
     portfolioUrl: '',
     cvUrl: ''
   })
@@ -121,6 +127,8 @@ export default function ResearcherProfileEdit({ navigate }) {
             role: me.role || user.role || prev.role,
             bio: me.bio || prev.bio,
             specialties: Array.isArray(me.specialties) ? me.specialties.join(', ') : (me.specialties || prev.specialties),
+            // L'adaptateur normalise avatarUrl → avatar
+            avatarUrl: me.avatar || me.avatarUrl || prev.avatarUrl,
             portfolioUrl: me.portfolioUrl || prev.portfolioUrl,
             cvUrl: me.cvUrl || prev.cvUrl
           }))
@@ -172,6 +180,7 @@ export default function ResearcherProfileEdit({ navigate }) {
           .split(',')
           .map((s) => s.trim())
           .filter(Boolean),
+        avatarUrl: String(values.avatarUrl || '').trim(),
         portfolioUrl: String(values.portfolioUrl || '').trim(),
         cvUrl: String(values.cvUrl || '').trim()
       }
@@ -282,6 +291,44 @@ export default function ResearcherProfileEdit({ navigate }) {
                 className="w-full px-4 py-3 rounded-lg bg-bg-primary border border-border-subtle"
                 placeholder="Robotique, IoT, Vision…"
               />
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-sm font-bold" htmlFor="rpe-avatar">Photo de profil (URL)</label>
+              <div className="flex items-center gap-4">
+                <div className="w-16 h-16 shrink-0 rounded-2xl overflow-hidden border border-border-subtle bg-bg-primary flex items-center justify-center">
+                  {isValidHttpUrl(String(values.avatarUrl || '').trim()) ? (
+                    <img
+                      src={values.avatarUrl}
+                      alt="Aperçu de votre photo de profil"
+                      className="w-full h-full object-cover"
+                      onError={(e) => { e.currentTarget.style.visibility = 'hidden' }}
+                      onLoad={(e) => { e.currentTarget.style.visibility = 'visible' }}
+                    />
+                  ) : (
+                    <span className="text-xs font-bold text-text-muted">
+                      {`${values.name?.[0] ?? ''}`.toUpperCase() || 'P'}
+                    </span>
+                  )}
+                </div>
+                <div className="flex-1 space-y-2">
+                  <input
+                    id="rpe-avatar"
+                    type="url"
+                    value={values.avatarUrl}
+                    onChange={setField('avatarUrl')}
+                    className="w-full px-4 py-3 rounded-lg bg-bg-primary border border-border-subtle"
+                    placeholder="https://…/ma-photo.jpg"
+                    aria-invalid={errors.avatarUrl ? 'true' : 'false'}
+                    aria-describedby={errors.avatarUrl ? 'rpe-avatar-error' : undefined}
+                  />
+                  {errors.avatarUrl ? (
+                    <div id="rpe-avatar-error" className="text-sm text-rose-400 font-bold">{errors.avatarUrl}</div>
+                  ) : (
+                    <p className="text-xs text-text-muted">Collez le lien d'une image (JPG/PNG). L'aperçu s'affiche à gauche.</p>
+                  )}
+                </div>
+              </div>
             </div>
 
             <div className="space-y-2">

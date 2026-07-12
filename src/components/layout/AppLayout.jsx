@@ -57,6 +57,14 @@ export default function AppLayout({
 
   return (
     <div className="min-h-screen flex flex-col relative bg-bg-primary text-text-primary selection:bg-accent-bleue selection:text-white">
+      {/* Lien d'évitement (a11y) : caché, apparaît au focus clavier pour sauter
+          directement au contenu sans re-tabuler toute la navigation. */}
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:absolute focus:z-[100] focus:top-3 focus:left-3 focus:px-4 focus:py-2 focus:rounded-lg focus:bg-accent-primary focus:text-white focus:font-bold focus:shadow-lg"
+      >
+        Aller au contenu principal
+      </a>
       {/* Universal Command Palette */}
       <CommandPalette navigate={navigate} />
       {/* 1. Navigation : navbar marketing (déconnecté) OU shell sidebar+topbar (connecté) */}
