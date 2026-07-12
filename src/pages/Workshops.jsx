@@ -6,6 +6,7 @@ import {
 } from 'lucide-react';
 import { api } from '../services/api.js';
 import { useAuth } from '../context/AuthContext.jsx';
+import { useTheme } from '../context/useTheme.js';
 import FadeInWhenVisible from '../components/home/FadeInWhenVisible.jsx';
 
 // ─────────────────────────── Toast Component ───────────────────────────
@@ -296,6 +297,7 @@ function WorkshopCard({ workshop, club, user, onToggleRegister, isToggling, navi
 // ─────────────────────────── Workshops Page ───────────────────────────
 export default function Workshops({ navigate }) {
   const { user } = useAuth();
+  const { theme } = useTheme();
   
   // Data lists loaded dynamically
   const [workshops, setWorkshops] = useState([]);
@@ -535,7 +537,7 @@ export default function Workshops({ navigate }) {
                   onClick={() => setSelectedClubId('ALL')}
                   className={`px-4 py-2 rounded-xl text-xs font-bold border transition-all cursor-pointer ${
                     selectedClubId === 'ALL'
-                      ? 'bg-white text-bg-primary border-white font-black shadow-lg shadow-white/5'
+                      ? 'bg-text-primary text-bg-primary border-text-primary font-black shadow-lg shadow-text-primary/5'
                       : 'bg-white/5 border-white/8 text-text-secondary hover:text-text-primary hover:bg-white/8'
                   }`}
                 >
@@ -546,6 +548,12 @@ export default function Workshops({ navigate }) {
                 {clubs.map((club) => {
                   const isActive = selectedClubId === club.id;
                   const accentColor = club.accent;
+                  const isLight = theme === 'light';
+                  
+                  const defaultBg = isLight ? 'rgba(0, 0, 0, 0.04)' : 'rgba(255, 255, 255, 0.03)';
+                  const defaultBorder = isLight ? 'rgba(0, 0, 0, 0.08)' : 'rgba(255, 255, 255, 0.08)';
+                  const defaultColor = isLight ? 'rgba(0, 0, 0, 0.65)' : 'rgba(255, 255, 255, 0.65)';
+                  const hoverColor = isLight ? 'rgba(0, 0, 0, 0.9)' : '#fff';
                   
                   return (
                     <button
@@ -553,21 +561,21 @@ export default function Workshops({ navigate }) {
                       onClick={() => setSelectedClubId(club.id)}
                       className="px-4 py-2 rounded-xl text-xs font-bold border transition-all cursor-pointer focus:outline-none"
                       style={{
-                        background: isActive ? accentColor : 'rgba(255, 255, 255, 0.03)',
-                        borderColor: isActive ? accentColor : 'rgba(255, 255, 255, 0.08)',
-                        color: isActive ? '#fff' : 'rgba(255, 255, 255, 0.65)',
+                        background: isActive ? accentColor : defaultBg,
+                        borderColor: isActive ? accentColor : defaultBorder,
+                        color: isActive ? '#fff' : defaultColor,
                         boxShadow: isActive ? `0 0 16px ${accentColor}35` : 'none'
                       }}
                       onMouseEnter={(e) => {
                         if (!isActive) {
                           e.currentTarget.style.borderColor = accentColor;
-                          e.currentTarget.style.color = '#fff';
+                          e.currentTarget.style.color = hoverColor;
                         }
                       }}
                       onMouseLeave={(e) => {
                         if (!isActive) {
-                          e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.08)';
-                          e.currentTarget.style.color = 'rgba(255, 255, 255, 0.65)';
+                          e.currentTarget.style.borderColor = defaultBorder;
+                          e.currentTarget.style.color = defaultColor;
                         }
                       }}
                     >

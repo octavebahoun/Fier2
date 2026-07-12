@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import {
   ArrowLeft,
@@ -22,6 +22,7 @@ import {
 } from 'lucide-react';
 import citeImage from '../assets/fieri_student_hub.webp';
 import { useAuth } from '../context/AuthContext.jsx';
+import api from '../services/api.js';
 
 const citeData = {
   globalGovernance: {
@@ -220,6 +221,31 @@ const getInitialJoinForm = () => ({
   motivation: ''
 });
 
+const countryFallbacks = {
+  'Bénin': { flag: '🇧🇯', region: 'Afrique de l’Ouest', summary: 'Cité pilote FIERI avec des clubs universitaires orientés innovation utile.' },
+  'Côte d’Ivoire': { flag: '🇨🇮', region: 'Afrique de l’Ouest', summary: 'Déploiement orienté concours, prototypage et clubs scientifiques campus.' }
+};
+
+const universityFallbacks = {
+  'Université d\'Abomey-Calavi': { city: 'Abomey-Calavi' },
+  'ENEAM': { city: 'Cotonou' }
+};
+
+const clubFallbacks = {
+  'club-1': {
+    domain: 'Robotique, IA embarquée, mécatronique',
+    activity: 'Atelier rover autonome et initiation ROS.',
+    decision: 'Priorité donnée aux prototypes utiles pour l’agriculture locale.',
+    textile: 'Tricot bleu marine avec motif circuit et badge Robotique.'
+  },
+  'club-2': {
+    domain: 'Biotechnologies et génomique',
+    activity: 'Recherches sur la génomique et les bio-technologies appliquées.',
+    decision: 'Créer une banque de datasets locaux pour les projets étudiants.',
+    textile: 'T-shirt blanc et bleu avec symbole neural FIERI.'
+  }
+};
+
 export default function CiteIntegration({ navigate }) {
   const { user } = useAuth();
   const [view, setView] = useState('countries');
@@ -230,10 +256,211 @@ export default function CiteIntegration({ navigate }) {
   const [joinForm, setJoinForm] = useState(getInitialJoinForm);
   const [submitted, setSubmitted] = useState(false);
 
-  const countries = citeData.countries;
+  // Dynamic backend states
+  const [rawCountries, setRawCountries] = useState([]);
+  const [universitiesMap, setUniversitiesMap] = useState({});
+  const [branchesMap, setBranchesMap] = useState({});
+  const [clubs, setClubs] = useState([]);
+  const [members, setMembers] = useState([]);
+  const [loading, setLoading] = useState(true);
+  
+  const [selectedClubDetail, setSelectedClubDetail] = useState(null);
+  const [loadingClubDetail, setLoadingClubDetail] = useState(false);
+
+  // Load all hierarchy and members from backend
+  const loadData = async () => {
+    try {
+      setLoading(true);
+      const [countryRes, clubsRes, membersRes] = await Promise.all([
+        api.org.getCountries(),
+        api.clubs.getAll(),
+        api.members.list({ limit: 100 })
+      ]);
+
+      const countriesList = countryRes.success ? (countryRes.data || []) : [];
+      setRawCountries(countriesList);
+      setClubs(clubsRes.success ? (clubsRes.data || []) : []);
+      setMembers(membersRes.success ? (membersRes.data || []) : []);
+
+      const tempUnis = {};
+      const tempBranches = {};
+
+      await Promise.all(
+        countriesList.map(async (c) => {
+          const uniRes = await api.org.getUniversities(c.id);
+          if (uniRes.success) {
+            tempUnis[c.id] = uniRes.data || [];
+            await Promise.all(
+              (uniRes.data || []).map(async (u) => {
+                const branchRes = await api.org.getBranches(u.id);
+                if (branchRes.success) {
+                  tempBranches[u.id] = branchRes.data || [];
+                }
+              })
+            );
+          }
+        })
+      );
+
+      setUniversitiesMap(tempUnis);
+      setBranchesMap(tempBranches);
+    } catch (err) {
+      console.error("Erreur lors de l'initialisation de la cité :", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    loadData();
+  }, []);
+
+  // Fetch selected club details dynamically when selectedClubId changes
+  useEffect(() => {
+    if (selectedClubId) {
+      setLoadingClubDetail(true);
+      api.clubs.getById(selectedClubId).then((res) => {
+        if (res.success) {
+          setSelectedClubDetail(res.data);
+        }
+        setLoadingClubDetail(false);
+      }).catch(() => setLoadingClubDetail(false));
+    } else {
+      setSelectedClubDetail(null);
+    }
+  }, [selectedClubId]);
+
+  // Helper to resolve a member's location within the country/university/branch hierarchy
+  const getMemberLocation = (member) => {
+    let memberBranch = null;
+    let memberUni = null;
+    let memberCountry = null;
+
+    for (const [uniId, bList] of Object.entries(branchesMap)) {
+      const foundBranch = (bList || []).find(b => b.id === member.branchId);
+      if (foundBranch) {
+        memberBranch = foundBranch;
+        for (const [cId, uList] of Object.entries(universitiesMap)) {
+          const foundUni = (uList || []).find(u => u.id === foundBranch.universityId);
+          if (foundUni) {
+            memberUni = foundUni;
+            memberCountry = rawCountries.find(c => c.id === foundUni.countryId);
+            break;
+          }
+        }
+        break;
+      }
+    }
+    return { branch: memberBranch, university: memberUni, country: memberCountry };
+  };
+
+  // Reconstruct the full hierarchical data model
+  const countries = useMemo(() => {
+    return rawCountries.map(c => {
+      const fallback = countryFallbacks[c.name] || { flag: '🌐', region: 'Afrique', summary: 'Cité de recherche et d\'innovation FIERI.' };
+      
+      const unisList = universitiesMap[c.id] || [];
+      const countryUnis = unisList.map(u => {
+        const uFallback = universityFallbacks[u.name] || { city: 'Campus' };
+        
+        const uniClubs = clubs.map(club => {
+          const clubFallback = clubFallbacks[club.id] || {
+            domain: club.discipline || 'Recherche scientifique',
+            activity: club.description || 'Activités du pôle R&D.',
+            decision: 'Décisions prises collectivement pour l\'innovation utile.',
+            textile: 'Tricot officiel FIERI.'
+          };
+          return {
+            id: club.id,
+            name: club.name,
+            domain: clubFallback.domain,
+            members: club.memberCount || 0,
+            activity: clubFallback.activity,
+            decision: clubFallback.decision,
+            textile: clubFallback.textile
+          };
+        });
+
+        const leaders = members
+          .filter(m => (m.role === 'RESPONSABLE' || m.role === 'MENTOR') && getMemberLocation(m).university?.id === u.id)
+          .map(m => ({
+            name: `${m.firstName} ${m.lastName}`,
+            role: m.role === 'MENTOR' ? 'Mentor Universitaire' : 'Responsable Universitaire',
+            contact: m.email
+          }));
+
+        return {
+          id: u.id,
+          name: u.name,
+          city: uFallback.city,
+          leaders: leaders.length ? leaders : [
+            { name: 'Dr. Nadège B.', role: 'Responsable universitaire', contact: 'contact@fieri.org' }
+          ],
+          clubs: uniClubs
+        };
+      });
+
+      const bureau = members
+        .filter(m => m.role === 'ADMIN' && getMemberLocation(m).country?.id === c.id)
+        .map(m => ({
+          name: `${m.firstName} ${m.lastName}`,
+          role: 'Membre du Bureau National',
+          contact: m.email
+        }));
+
+      return {
+        id: c.id,
+        name: c.name,
+        flag: fallback.flag,
+        region: fallback.region,
+        summary: fallback.summary,
+        bureau: bureau.length ? bureau : [
+          { name: 'Arielle H.', role: 'Présidente nationale', contact: 'arielle@fieri.org' }
+        ],
+        universities: countryUnis
+      };
+    });
+  }, [rawCountries, universitiesMap, branchesMap, clubs, members]);
+
+  // Selected entities based on selection hooks
   const selectedCountry = countries.find((country) => country.id === selectedCountryId);
   const selectedUniversity = selectedCountry?.universities.find((university) => university.id === selectedUniversityId);
-  const selectedClub = selectedUniversity?.clubs.find((club) => club.id === selectedClubId);
+  
+  // Decorate selectedClub with dynamic details and chief loaded from backend
+  const selectedClub = useMemo(() => {
+    if (!selectedUniversity) return null;
+    const basicClub = selectedUniversity.clubs.find((club) => club.id === selectedClubId);
+    if (!basicClub) return null;
+
+    // Resolve chief
+    let chief = null;
+    if (selectedClubDetail && selectedClubDetail.members) {
+      const foundChief = selectedClubDetail.members.find(m => m.role === 'RESPONSABLE') ||
+                         selectedClubDetail.members.find(m => m.role === 'CHEF_DE_PROJET') ||
+                         selectedClubDetail.members.find(m => m.role === 'ADMIN') ||
+                         selectedClubDetail.members[0];
+      if (foundChief) {
+        const fullInfo = members.find(m => m.id === foundChief.id);
+        chief = {
+          name: `${foundChief.firstName} ${foundChief.lastName}`,
+          role: foundChief.role === 'RESPONSABLE' ? 'Responsable du Club' : 'Chef de projet / Référent',
+          phone: fullInfo?.phone || '+229 01 00 00 00 00',
+          email: fullInfo?.email || foundChief.email || ''
+        };
+      }
+    }
+
+    return {
+      ...basicClub,
+      members: selectedClubDetail?.members?.length ?? basicClub.members,
+      chief: chief || {
+        name: 'Christ M.',
+        role: 'Responsable du club',
+        phone: '+229 01 67 45 21 09',
+        email: 'robotique.uac@fieri.org'
+      }
+    };
+  }, [selectedUniversity, selectedClubId, selectedClubDetail, members]);
 
   const filteredCountries = countries.filter((country) =>
     country.name.toLowerCase().includes(query.toLowerCase()) ||
@@ -287,10 +514,20 @@ export default function CiteIntegration({ navigate }) {
     setJoinForm((current) => ({ ...current, [field]: value }));
   };
 
-  const handleJoinSubmit = (event) => {
+  const handleJoinSubmit = async (event) => {
     event.preventDefault();
-    setSubmitted(true);
-    setJoinForm(getInitialJoinForm());
+    try {
+      const res = await api.memberships.requestJoin(selectedClubId, { id: user.id });
+      if (res.success) {
+        setSubmitted(true);
+        setJoinForm(getInitialJoinForm());
+      } else {
+        alert(res.message || "Impossible d'envoyer la demande.");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Une erreur s'est produite lors de l'envoi de la demande d'intégration.");
+    }
   };
 
   return (
@@ -351,97 +588,107 @@ export default function CiteIntegration({ navigate }) {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
           >
-            {view === 'countries' && (
-              <CountriesView
-                countries={filteredCountries}
-                query={query}
-                setQuery={setQuery}
-                onCountrySelect={goCountry}
-                onGlobalGovernance={() => setView('global')}
-              />
-            )}
+            {loading ? (
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+                {[1, 2, 3].map((n) => (
+                  <div key={n} className="glass-panel h-48 rounded-2xl animate-pulse bg-bg-secondary/40 border border-border-subtle" />
+                ))}
+              </div>
+            ) : (
+              <>
+                {view === 'countries' && (
+                  <CountriesView
+                    countries={filteredCountries}
+                    query={query}
+                    setQuery={setQuery}
+                    onCountrySelect={goCountry}
+                    onGlobalGovernance={() => setView('global')}
+                  />
+                )}
 
-            {view === 'global' && (
-              <GovernanceView
-                title="Fondateurs et gouvernance globale"
-                subtitle="Équipe internationale qui porte la vision, la coordination et l’expansion de la FIERI."
-                people={citeData.globalGovernance.founders}
-                board={citeData.globalGovernance.board}
-                onBack={goCountries}
-              />
-            )}
+                {view === 'global' && (
+                  <GovernanceView
+                    title="Fondateurs et gouvernance globale"
+                    subtitle="Équipe internationale qui porte la vision, la coordination et l’expansion de la FIERI."
+                    people={citeData.globalGovernance.founders}
+                    board={citeData.globalGovernance.board}
+                    onBack={goCountries}
+                  />
+                )}
 
-            {view === 'country' && selectedCountry && (
-              <CountryView
-                country={selectedCountry}
-                universities={filteredUniversities}
-                query={query}
-                setQuery={setQuery}
-                onUniversitySelect={goUniversity}
-                onNationalBureau={() => setView('national')}
-              />
-            )}
+                {view === 'country' && selectedCountry && (
+                  <CountryView
+                    country={selectedCountry}
+                    universities={filteredUniversities}
+                    query={query}
+                    setQuery={setQuery}
+                    onUniversitySelect={goUniversity}
+                    onNationalBureau={() => setView('national')}
+                  />
+                )}
 
-            {view === 'national' && selectedCountry && (
-              <GovernanceView
-                title={`Bureau national FIERI - ${selectedCountry.name}`}
-                subtitle="Responsables chargés de coordonner les universités, les clubs et les projets du pays."
-                people={selectedCountry.bureau}
-                board={['Coordination nationale', 'Suivi des universités', 'Partenariats locaux', 'Communication pays']}
-                onBack={() => goCountry()}
-              />
-            )}
+                {view === 'national' && selectedCountry && (
+                  <GovernanceView
+                    title={`Bureau national FIERI - ${selectedCountry.name}`}
+                    subtitle="Responsables chargés de coordonner les universités, les clubs et les projets du pays."
+                    people={selectedCountry.bureau}
+                    board={['Coordination nationale', 'Suivi des universités', 'Partenariats locaux', 'Communication pays']}
+                    onBack={() => goCountry()}
+                  />
+                )}
 
-            {view === 'university' && selectedUniversity && (
-              <UniversityView
-                university={selectedUniversity}
-                clubs={filteredClubs}
-                query={query}
-                setQuery={setQuery}
-                onClubSelect={goClub}
-                onUniversityLeaders={() => setView('university-leaders')}
-              />
-            )}
+                {view === 'university' && selectedUniversity && (
+                  <UniversityView
+                    university={selectedUniversity}
+                    clubs={filteredClubs}
+                    query={query}
+                    setQuery={setQuery}
+                    onClubSelect={goClub}
+                    onUniversityLeaders={() => setView('university-leaders')}
+                  />
+                )}
 
-            {view === 'university-leaders' && selectedUniversity && (
-              <GovernanceView
-                title={`Responsables FIERI - ${selectedUniversity.name}`}
-                subtitle="Référents de la cité FIERI au sein de l’administration universitaire."
-                people={selectedUniversity.leaders}
-                board={['Coordination campus', 'Animation des clubs', 'Accueil des nouveaux membres']}
-                onBack={() => goUniversity()}
-              />
-            )}
+                {view === 'university-leaders' && selectedUniversity && (
+                  <GovernanceView
+                    title={`Responsables FIERI - ${selectedUniversity.name}`}
+                    subtitle="Référents de la cité FIERI au sein de l’administration universitaire."
+                    people={selectedUniversity.leaders}
+                    board={['Coordination campus', 'Animation des clubs', 'Accueil des nouveaux membres']}
+                    onBack={() => goUniversity()}
+                  />
+                )}
 
-            {view === 'club' && selectedClub && (
-              <ClubView
-                club={selectedClub}
-                university={selectedUniversity}
-                country={selectedCountry}
-                onChief={() => setView('club-chief')}
-                onJoin={() => {
-                  if (!user) {
-                    navigate?.('auth');
-                  } else {
-                    setView('join');
-                  }
-                }}
-              />
-            )}
+                {view === 'club' && selectedClub && (
+                  <ClubView
+                    club={selectedClub}
+                    university={selectedUniversity}
+                    country={selectedCountry}
+                    onChief={() => setView('club-chief')}
+                    onJoin={() => {
+                      if (!user) {
+                        navigate?.('auth');
+                      } else {
+                        setView('join');
+                      }
+                    }}
+                  />
+                )}
 
-            {view === 'club-chief' && selectedClub && (
-              <ChiefView club={selectedClub} onBack={() => goClub()} />
-            )}
+                {view === 'club-chief' && selectedClub && (
+                  <ChiefView club={selectedClub} onBack={() => goClub()} />
+                )}
 
-            {view === 'join' && selectedClub && (
-              <JoinView
-                club={selectedClub}
-                form={joinForm}
-                submitted={submitted}
-                onBack={() => goClub()}
-                onChange={handleJoinChange}
-                onSubmit={handleJoinSubmit}
-              />
+                {view === 'join' && selectedClub && (
+                  <JoinView
+                    club={selectedClub}
+                    form={joinForm}
+                    submitted={submitted}
+                    onBack={() => goClub()}
+                    onChange={handleJoinChange}
+                    onSubmit={handleJoinSubmit}
+                  />
+                )}
+              </>
             )}
           </motion.div>
         </div>
