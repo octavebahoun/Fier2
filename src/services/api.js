@@ -173,11 +173,29 @@ export const api = {
 
   // ── 6. ÉVÉNEMENTS & LIVE STREAMS ───────────────────────────────────────────
   events: {
-    getAll: async () => {
-      const r = await get('/events')
+    // GET /events — filtres : scope (upcoming|past), universityId, clubId.
+    getAll: async (filters = {}) => {
+      const r = await get(`/events${qs({ scope: filters.scope, universityId: filters.universityId, clubId: filters.clubId })}`)
       return { ...r, data: Array.isArray(r.data) ? r.data.map(normalizeEvent) : r.data }
     },
-    register: (id) => post(`/events/${id}/register`)
+
+    // GET /events/history — historique des événements passés.
+    getHistory: async (filters = {}) => {
+      const r = await get(`/events/history${qs({ universityId: filters.universityId, clubId: filters.clubId })}`)
+      return { ...r, data: Array.isArray(r.data) ? r.data.map(normalizeEvent) : r.data }
+    },
+
+    register: (id) => post(`/events/${id}/register`),
+
+    // GET /events/:id/registrants — RESP_COMM / CHEF_UNIV.
+    getRegistrants: (id) => get(`/events/${id}/registrants`),
+
+    // POST /events/:id/mark-attendance — body { memberIds: number[] }.
+    markAttendance: (id, memberIds) =>
+      post(`/events/${id}/mark-attendance`, { memberIds }),
+
+    // POST /events/:id/publish-social — RESP_COMM / CHEF_UNIV (OAuth mockée).
+    publishSocial: (id) => post(`/events/${id}/publish-social`)
   },
 
   // ── 7. ANNUAIRE DES CHERCHEURS ─────────────────────────────────────────────
@@ -287,6 +305,146 @@ export const api = {
     hasApplied: (opportunityId) => get(`/applications/check/${opportunityId}`),
     getByOpportunity: (opportunityId) => get(`/applications/opportunity/${opportunityId}`),
     updateStatus: (applicationId, status) => patch(`/applications/${applicationId}/status`, { status })
+  },
+
+  // ── 15. GOUVERNANCE & EXCLUSIONS ──────────────────────────────────────────
+  governance: {
+    // POST /members/:id/request-deletion — Responsable de Club.
+    requestDeletion: (memberId, reason) =>
+      post(`/members/${memberId}/request-deletion`, { reason }),
+
+    // POST /members/:id/confirm-deletion — Chef Universitaire. Body { approved, reason? }.
+    confirmDeletion: (memberId, approved, reason = '') =>
+      post(`/members/${memberId}/confirm-deletion`, { approved, reason }),
+
+    // GET /universities/:id/deletion-requests — Chef Universitaire.
+    listDeletionRequests: (universityId) =>
+      get(`/universities/${universityId}/deletion-requests`)
+  },
+
+  // ── 16. ATTESTATIONS & CERTIFICATS ───────────────────────────────────────
+  certificate: {
+    // POST /members/upload-signature (multipart, champ 'signature') — Chef Universitaire.
+    uploadSignature: async (file) => {
+      const token = localStorage.getItem('fieri_auth_token');
+      const form = new FormData();
+      form.append('signature', file);
+      const res = await fetch(`${BASE_URL}/members/upload-signature`, {
+        method: 'POST',
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
+        body: form
+      });
+      if (!res.ok) {
+        const b = await res.clone().json().catch(() => ({}));
+        const err = new Error(b?.message || `HTTP Error: ${res.status}`);
+        err.status = res.status;
+        throw err;
+      }
+      return res.json();
+    },
+
+    // POST /universities/:id/certificates — Chef Universitaire. Body IssueCertificateDto.
+    issue: (universityId, dto) =>
+      post(`/universities/${universityId}/certificates`, dto),
+
+    // GET /members/:id/certificates — attestations reçues par un membre.
+    listForMember: (memberId) => get(`/members/${memberId}/certificates`)
+  },
+
+  // ── 17. ESPACE CITE (club) & RECENSEMENT ─────────────────────────────────
+  clubSpace: {
+    // GET /clubs/:id/members-list
+    membersList: (clubId) => get(`/clubs/${clubId}/members-list`),
+
+    // POST /clubs/:id/submit-census — Responsable de Club.
+    submitCensus: (clubId) => post(`/clubs/${clubId}/submit-census`),
+
+    // POST /clubs/:id/assigned-activities — Responsable de Club.
+    createAssignedActivity: (clubId, dto) =>
+      post(`/clubs/${clubId}/assigned-activities`, dto),
+
+    // PATCH /assigned-activities/:id — { status }.
+    updateActivity: (id, status) =>
+      patch(`/assigned-activities/${id}`, { status }),
+
+    // GET /members/me/assigned-activities — tableau de bord du membre.
+    myDashboard: () => get(`/members/me/assigned-activities`),
+
+    // GET /universities/:id/census-history — Secrétaire.
+    censusHistory: (universityId) =>
+      get(`/universities/${universityId}/census-history`),
+
+    // POST /universities/:id/validate-census/:censusId — Secrétaire.
+    validateCensus: (universityId, censusId) =>
+      post(`/universities/${universityId}/validate-census/${censusId}`),
+
+    // POST /clubs/:id/activity-reports — Responsable de Club.
+    submitReport: (clubId, dto) =>
+      post(`/clubs/${clubId}/activity-reports`, dto),
+
+    // GET /clubs/:id/activity-reports
+    clubReports: (clubId) => get(`/clubs/${clubId}/activity-reports`),
+
+    // GET /universities/:id/activity-reports — Secrétaire.
+    universityReports: (universityId) =>
+      get(`/universities/${universityId}/activity-reports`)
+  },
+
+  // ── 18. CHALLENGES & HACKATHONS ──────────────────────────────────────────
+  challenges: {
+    // POST /clubs/:id/challenges — Responsable de Club.
+    create: (clubId, dto) => post(`/clubs/${clubId}/challenges`, dto),
+
+    // GET /clubs/:id/challenges
+    listByClub: (clubId) => get(`/clubs/${clubId}/challenges`),
+
+    // GET /challenges/:id
+    getById: (id) => get(`/challenges/${id}`),
+
+    // POST /challenges/:id/submit — membre connecté.
+    submit: (id, dto) => post(`/challenges/${id}/submit`, dto),
+
+    // POST /challenges/:id/submissions/:submissionId/evaluate — Responsable de Club.
+    evaluate: (id, submissionId, dto) =>
+      post(`/challenges/${id}/submissions/${submissionId}/evaluate`, dto),
+
+    // POST /challenges/:id/close — Responsable de Club.
+    close: (id, dto) => post(`/challenges/${id}/close`, dto)
+  },
+
+  hackathons: {
+    // POST /universities/:id/hackathons — Chef Universitaire.
+    create: (universityId, dto) =>
+      post(`/universities/${universityId}/hackathons`, dto),
+
+    // GET /universities/:id/hackathons
+    listByUniversity: (universityId) =>
+      get(`/universities/${universityId}/hackathons`),
+
+    // GET /clubs/:id/hackathons
+    listByClub: (clubId) => get(`/clubs/${clubId}/hackathons`)
+  },
+
+  // ── 19. SOUTIENS & TRÉSORERIE ────────────────────────────────────────────
+  support: {
+    // POST /support/initiate-financial — don Genius Pay (public).
+    initiateFinancial: (dto) => post(`/support/initiate-financial`, dto),
+
+    // POST /support/submit-physical — déclaration soutien matériel (public).
+    submitPhysical: (dto) => post(`/support/submit-physical`, dto),
+
+    // POST /support/:id/sign-biometric — signature « empreinte ».
+    signBiometric: (id, payload = {}) => post(`/support/${id}/sign-biometric`, payload)
+  },
+
+  treasury: {
+    // GET /universities/:id/treasury — Trésorier / Chef Universitaire.
+    getTreasury: (universityId) =>
+      get(`/universities/${universityId}/treasury`),
+
+    // POST /universities/:id/treasury/transactions — Trésorier.
+    recordTransaction: (universityId, dto) =>
+      post(`/universities/${universityId}/treasury/transactions`, dto)
   }
 };
 

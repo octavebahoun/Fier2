@@ -1,20 +1,22 @@
-import React from 'react';
-import { Globe2 } from 'lucide-react';
-import { motion, useReducedMotion } from 'framer-motion';
+import { Globe2, Building2, Landmark, Factory, Banknote, FlaskConical } from 'lucide-react';
 import FadeInWhenVisible from './FadeInWhenVisible.jsx';
 
-export default function PartnersSection({ partenaires }) {
-  const shouldReduceMotion = useReducedMotion();
-  // Duplicate logos array to make a seamless infinite loop scrolling effect
-  const duplicatedLogos = [...partenaires.logos, ...partenaires.logos, ...partenaires.logos];
+const TYPE_ICONS = {
+  'Université partenaire': Building2,
+  'Partenaire technologique': FlaskConical,
+  'Partenaire industriel': Factory,
+  'Soutien institutionnel': Landmark,
+  'Soutien financier': Banknote,
+  'Partenaire d\'expérimentation': Globe2
+};
 
+export default function PartnersSection({ partenaires }) {
   return (
-    <section id="partenaires" className="py-20 px-6 md:px-12 lg:px-24 border-b border-border-subtle bg-bg-secondary/5 relative overflow-hidden">
+    <section id="partenaires" className="py-24 px-6 md:px-12 lg:px-24 border-b border-border-subtle bg-bg-secondary/5 relative overflow-hidden">
       {/* Glow ambient background spot */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[70vw] h-[25vw] rounded-full bg-radial from-accent-primary/6 to-transparent blur-[120px] pointer-events-none z-0" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[70vw] h-[25vw] rounded-full bg-radial from-accent-primary/8 to-transparent blur-[120px] pointer-events-none z-0" />
 
       <div className="max-w-[92rem] mx-auto w-full relative z-10">
-        
         {/* Header Block */}
         <div className="text-center max-w-3xl mx-auto mb-14">
           <FadeInWhenVisible direction="down" delay={0.05}>
@@ -27,40 +29,35 @@ export default function PartnersSection({ partenaires }) {
             <h2 className="text-2xl md:text-3xl font-extrabold tracking-tight text-text-primary">
               {partenaires.title}
             </h2>
+            <p className="text-text-secondary text-sm font-light mt-3 max-w-xl mx-auto">
+              Ils soutiennent et accélèrent l'excellence scientifique et technologique du FIERI.
+            </p>
           </FadeInWhenVisible>
         </div>
 
-        {/* Seamless Infinite Loop Horizontal Ticker Container */}
-        <div className="w-full relative py-4 overflow-hidden mask-fade-horizontal">
-          <motion.div 
-            className="flex items-center gap-6.5 w-max"
-            animate={shouldReduceMotion ? {} : { x: [0, -1200] }}
-            transition={{
-              repeat: Infinity,
-              duration: 35,
-              ease: "linear"
-            }}
-          >
-            {duplicatedLogos.map((partner, index) => (
-              <div 
-                key={index}
-                className="glass-panel shrink-0 px-8 py-5.5 rounded-2xl border border-border-subtle/70 bg-bg-secondary/20 hover:bg-bg-secondary/40 hover:border-accent-primary/20 transition-all duration-350 shadow-sm flex flex-col items-start gap-1 select-none cursor-default group"
-              >
-                {/* Glowing decoration inside element */}
-                <div className="absolute -top-10 -right-10 w-20 h-20 rounded-full bg-radial from-accent-primary/12 to-transparent blur-[20px] opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
-
-                <span className="text-sm font-black text-text-primary group-hover:text-accent-primary transition-colors">
-                  {partner.name}
-                </span>
-                
-                <span className="text-[9px] font-bold uppercase tracking-wider text-text-muted">
-                  {partner.type}
-                </span>
-              </div>
-            ))}
-          </motion.div>
+        {/* Grille statique des partenaires commerciaux (aucun défilement automatique) */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {partenaires.logos.map((partner, index) => {
+            const Icon = TYPE_ICONS[partner.type] || Globe2;
+            return (
+              <FadeInWhenVisible key={index} delay={index * 0.06} direction="up">
+                <div className="glass-panel h-full px-7 py-6 rounded-2xl border border-border-subtle/70 bg-bg-secondary/20 hover:bg-bg-secondary/40 hover:border-accent-primary/30 transition-all duration-350 shadow-sm flex items-center gap-4 select-none cursor-default group">
+                  <div className="w-11 h-11 rounded-xl flex items-center justify-center bg-accent-primary/10 border border-accent-primary/20 shrink-0 group-hover:scale-105 transition-transform">
+                    <Icon className="w-5 h-5 text-accent-primary" />
+                  </div>
+                  <div className="flex flex-col gap-1 min-w-0">
+                    <span className="text-sm font-black text-text-primary group-hover:text-accent-primary transition-colors truncate">
+                      {partner.name}
+                    </span>
+                    <span className="text-[9px] font-bold uppercase tracking-wider text-text-muted">
+                      {partner.type}
+                    </span>
+                  </div>
+                </div>
+              </FadeInWhenVisible>
+            );
+          })}
         </div>
-
       </div>
     </section>
   );

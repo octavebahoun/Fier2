@@ -11,9 +11,8 @@ import MissionsSection from '../components/home/MissionsSection.jsx';
 import VisionSection from '../components/home/VisionSection.jsx';
 import StatsSection from '../components/home/StatsSection.jsx';
 import ResearchClubsSection from '../components/home/ResearchClubsSection.jsx';
-import EventsSection from '../components/home/EventsSection.jsx';
-import WorkshopsSection from '../components/home/WorkshopsSection.jsx';
-import PAFSection from '../components/home/PAFSection.jsx';
+import JournalSection from '../components/home/JournalSection.jsx';
+import ProgrammesSection from '../components/home/ProgrammesSection.jsx';
 import PartnersSection from '../components/home/PartnersSection.jsx';
 import FAQSection from '../components/home/FAQSection.jsx';
 import ContactSection from '../components/home/ContactSection.jsx';
@@ -54,8 +53,8 @@ export default function Home({ navigate }) {
     vision, 
     stats, 
     clubs, 
-    evenements, 
-    paf, 
+    journal, 
+    programmes, 
     partenaires, 
     faq, 
     contact 
@@ -81,19 +80,16 @@ export default function Home({ navigate }) {
       {/* SECTION 6 : LES CHIFFRES CLÉS (STATS) */}
       <StatsSection stats={stats} />
 
-      {/* SECTION 7 : LES 6 CLUBS R&D (LA PETITE JUMELÉE) */}
+      {/* SECTION 7 : GRAND CAROUSEL DE TOUTES LES CITE */}
       <ResearchClubsSection clubs={clubs} navigate={navigate} />
 
-      {/* SECTION 8 : APPEL AUX CONCOURS & HACKATHONS */}
-      <EventsSection evenements={evenements} navigate={navigate} />
+      {/* SECTION 8 : JOURNAL UNIFIÉ (ateliers, offres, actualités) */}
+      <JournalSection journal={journal} navigate={navigate} />
 
-      {/* SECTION 9 : ATELIERS TECHNIQUES */}
-      <WorkshopsSection navigate={navigate} />
+      {/* SECTION 9 : NOS PROGRAMMES (ambassadeur, bénévolat, mentorat…) */}
+      <ProgrammesSection programmes={programmes} navigate={navigate} />
 
-      {/* SECTION 10 : LE CURSUS D'ACCOMPAGNEMENT (PAF) */}
-      <PAFSection paf={paf} navigate={navigate} />
-
-      {/* SECTION 11 : NOS PARTENAIRES */}
+      {/* SECTION 10 : PARTENAIRES COMMERCIAUX */}
       <PartnersSection partenaires={partenaires} />
 
       {/* SECTION 12 : FOIRE AUX QUESTIONS (FAQ) */}

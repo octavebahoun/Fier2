@@ -30,6 +30,10 @@ export const PAGE_TO_PATH = {
   auth:                      () => '/members',              // login désormais sous /members
   opportunities:             () => '/opportunities',
   paf:                       () => '/paf',
+  gouvernance:               () => '/gouvernance',
+  'espace-cite':             () => '/espace-cite',
+  challenges:                () => '/challenges',
+  soutiens:                  () => '/soutiens',
 }
 
 /**
@@ -74,6 +78,10 @@ export function pathToPageName(pathname) {
     '/contact': 'contact',
     '/opportunities': 'opportunities',
     '/paf': 'paf',
+    '/gouvernance': 'gouvernance',
+    '/espace-cite': 'espace-cite',
+    '/challenges': 'challenges',
+    '/soutiens': 'soutiens',
   }
   return STATIC[pathname] || 'home'
 }
