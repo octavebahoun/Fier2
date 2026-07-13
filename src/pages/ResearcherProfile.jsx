@@ -202,13 +202,10 @@ export default function ResearcherProfile({ navigate, researcherId }) {
             const fCount = res.data.followersCount ?? res.data.stars ?? 0
             setFollowersCount(fCount)
             
-            // Check if current user is in followers list
-            if (user && res.data.followers) {
-              const following = res.data.followers.some(fid => String(fid) === String(user.id))
-              setIsFollowing(following)
-            } else {
-              setIsFollowing(false)
-            }
+            // Le backend n'expose pas la liste des abonnés (count seulement) :
+            // on ne peut pas déduire l'état « je suis abonné » depuis le détail.
+            // Activation optimiste gérée via toggleFollow.
+            setIsFollowing(false)
             setError(null)
           } else {
             setError(res.message || "Impossible de charger le profil.")
@@ -245,7 +242,7 @@ export default function ResearcherProfile({ navigate, researcherId }) {
         const updated = res.data
         const nextFollowing = !isFollowing
         setIsFollowing(nextFollowing)
-        setFollowersCount(updated.followersCount ?? updated.stars ?? 0)
+        setFollowersCount(c => nextFollowing ? c + 1 : Math.max(0, c - 1))
         
         // Show success toast
         setToast(

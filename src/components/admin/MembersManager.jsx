@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { Users, Search, Loader2, ShieldAlert, RefreshCw, ChevronDown } from 'lucide-react';
 import { api } from '../../services/api';
-import { useAuth, getRolePresentation, ROLE_LEVELS } from '../../context/AuthContext.jsx';
+import { useAuth, getRolePresentation, ROLE_SORT_PRIORITY } from '../../context/AuthContext.jsx';
 
 // Rôles attribuables par un ADMIN (VISITEUR n'est pas un rôle de compte).
 // Alignés sur les rôles du backend (RolesGuard).
@@ -32,8 +32,8 @@ export default function MembersManager({ notify }) {
       if (res?.success) {
         // Tri décroissant par niveau de rôle (ADMIN en tête), puis par nom.
         const sorted = [...(res.data || [])].sort((a, b) => {
-          const la = ROLE_LEVELS[a.role?.toUpperCase()] ?? -1;
-          const lb = ROLE_LEVELS[b.role?.toUpperCase()] ?? -1;
+          const la = ROLE_SORT_PRIORITY[a.role?.toUpperCase()] ?? -1;
+          const lb = ROLE_SORT_PRIORITY[b.role?.toUpperCase()] ?? -1;
           if (lb !== la) return lb - la;
           return `${a.lastName}`.localeCompare(`${b.lastName}`);
         });

@@ -140,7 +140,7 @@ export function normalizeOpportunity(o) {
     id: o.id,
     title: o.title ?? '',
     type: o.type ?? '',
-    discipline: o.discipline ?? '',
+    discipline: o.domain ?? o.discipline ?? '',
     description: o.description ?? '',
     requirements: o.requirements ?? '',
     salary: o.salary ?? '',

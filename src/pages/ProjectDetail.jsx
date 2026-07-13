@@ -185,7 +185,7 @@ export default function ProjectDetail({ navigate, projectId }) {
     try {
       const res = await api.projects.support(project.id, amount);
       if (res.success) {
-        setProject(res.data);
+        setProject(p => ({ ...p, budgetRaised: res.data.newBudget }));
         setToast(res.message || `Merci ! Votre promesse de soutien de ${amount} $ a été enregistrée.`);
         closePledgeModal();
       } else {

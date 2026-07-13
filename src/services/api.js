@@ -7,7 +7,9 @@
 
 import { normalizeResearcher, normalizeClub, normalizeWorkshop, normalizeEvent, normalizeNews, normalizeProject, normalizeOpportunity } from './adapters.js';
 
-const BASE_URL = 'https://backend-fieri.vercel.app';
+const BASE_URL = typeof window !== 'undefined' && window.location.hostname === 'localhost'
+  ? 'http://localhost:3000'
+  : 'https://backend-fieri.vercel.app';
 
 /** En-têtes HTTP de base + jeton JWT si présent. */
 const getHeaders = () => {

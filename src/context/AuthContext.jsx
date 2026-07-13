@@ -3,22 +3,36 @@ import api from '../services/api.js';
 
 const AuthContext = createContext(null);
 
-// ─── Hiérarchie des rôles ───────────────────────────────────────────────────
-// Chaque rôle englobe tous les rôles de niveau inférieur.
-// VISITEUR < ETUDIANT < CHERCHEUR ≈ MENTOR < ADMIN
-export const ROLE_LEVELS = {
-  VISITEUR:       0,
-  ETUDIANT:       1,
-  CHERCHEUR:      2,
-  MENTOR:         2, // Même niveau que CHERCHEUR, distingué par badge
-  CHEF_DE_PROJET: 2, // Encadrement de projet (tâches, candidatures)
-  RESPONSABLE:    2, // Responsable de club (adhésions, gestion du club)
-  ADMIN:          3,
+// ─── Structure d'héritage des rôles (RBAC Graphe) ───────────────────────────
+// Résout la collision linéaire : un Chercheur et un Responsable de club sont
+// tous deux au-dessus de l'Étudiant simple, mais n'ont pas les mêmes privilèges.
+// Le graphe garantit que :
+//   - L'admin hérite de tous les rôles.
+//   - Le chercheur / responsable / mentor / chef de projet héritent tous d'étudiant.
+//   - Un chercheur n'est PAS un responsable de club, et vice-versa.
+export const ROLE_INHERITANCE = {
+  VISITEUR:       [],
+  ETUDIANT:       ['VISITEUR'],
+  CHERCHEUR:      ['ETUDIANT'],
+  MENTOR:         ['ETUDIANT'],
+  CHEF_DE_PROJET: ['ETUDIANT'],
+  RESPONSABLE:    ['ETUDIANT'],
+  ADMIN:          ['CHERCHEUR', 'MENTOR', 'CHEF_DE_PROJET', 'RESPONSABLE'],
 };
 
-// Valeurs autorisées (pour validation et affichage). Alignées sur les rôles du
-// backend NestJS (RolesGuard) : ETUDIANT, CHERCHEUR, MENTOR, CHEF_DE_PROJET,
-// RESPONSABLE, ADMIN.
+// Fonction récursive de résolution d'héritage
+export function isRoleOrInherits(userRole, requiredRole) {
+  if (!userRole || !requiredRole) return false;
+  const user = userRole.toUpperCase();
+  const req = requiredRole.toUpperCase();
+  if (user === req) return true;
+
+  const parents = ROLE_INHERITANCE[user];
+  if (!parents) return false;
+
+  return parents.some(parent => isRoleOrInherits(parent, req));
+}
+
 export const ROLES = {
   VISITEUR:       'VISITEUR',
   ETUDIANT:       'ETUDIANT',
@@ -27,6 +41,17 @@ export const ROLES = {
   CHEF_DE_PROJET: 'CHEF_DE_PROJET',
   RESPONSABLE:    'RESPONSABLE',
   ADMIN:          'ADMIN',
+};
+
+// Priorité de tri des rôles pour l'affichage (ex: gestion des membres)
+export const ROLE_SORT_PRIORITY = {
+  ADMIN:          6,
+  RESPONSABLE:    5,
+  CHEF_DE_PROJET: 4,
+  MENTOR:         3,
+  CHERCHEUR:      2,
+  ETUDIANT:       1,
+  VISITEUR:       0,
 };
 
 // Types de badges disponibles (attribués par Admin ou Responsable de club)
@@ -237,21 +262,15 @@ export function AuthProvider({ children }) {
   // ─── Helpers de Rôles ────────────────────────────────────────────────────
 
   /**
-   * hasMinRole(minRole) — retourne true si l'utilisateur a au moins ce niveau.
+   * hasMinRole(minRole) — retourne true si l'utilisateur possède ou hérite de ce rôle.
    * C'est la méthode principale à utiliser pour les gardes d'accès.
-   *
-   * Exemples :
-   *   hasMinRole('ETUDIANT')  → true pour ETUDIANT, CHERCHEUR, ADMIN
-   *   hasMinRole('CHERCHEUR') → true pour CHERCHEUR et ADMIN seulement
-   *   hasMinRole('ADMIN')     → true pour ADMIN seulement
-   *   hasMinRole('VISITEUR')  → toujours true (contenu public)
    */
   const hasMinRole = useCallback((minRole) => {
-    const minLevel  = ROLE_LEVELS[minRole?.toUpperCase()] ?? 0;
-    const userLevel = ROLE_LEVELS[user?.role?.toUpperCase()] ?? -1;
-    // Si l'utilisateur n'est pas connecté, seul VISITEUR (niveau 0) est autorisé
-    if (!user) return minLevel === 0;
-    return userLevel >= minLevel;
+    if (!minRole) return true;
+    const req = minRole.toUpperCase();
+    if (req === 'VISITEUR') return true;
+    if (!user || !user.role) return false;
+    return isRoleOrInherits(user.role, req);
   }, [user]);
 
   /**
@@ -260,18 +279,10 @@ export function AuthProvider({ children }) {
    */
   const hasRole = useCallback((roleName) => {
     if (!user || !user.role) return false;
-    const userRole   = user.role.toUpperCase();
-    const targetRole = roleName.toUpperCase();
-
-    // Hiérarchie linéaire : un rôle supérieur satisfait un rôle inférieur
-    const userLevel   = ROLE_LEVELS[userRole]   ?? -1;
-    const targetLevel = ROLE_LEVELS[targetRole] ?? -1;
-
-    if (targetLevel < 0) return userRole === targetRole; // rôle inconnu : correspondance exacte
-    return userLevel >= targetLevel;
+    return isRoleOrInherits(user.role, roleName);
   }, [user]);
 
-  const isAdmin      = useCallback(() => hasMinRole('ADMIN'), [hasMinRole]);
+  const isAdmin      = useCallback(() => user?.role?.toUpperCase() === 'ADMIN', [user]);
   const isResearcher = useCallback(() => hasMinRole('CHERCHEUR'), [hasMinRole]);
   const isStudent    = useCallback(() => hasMinRole('ETUDIANT'), [hasMinRole]);
   const isEtudiant   = isStudent; // alias francophone
@@ -380,7 +391,7 @@ export function AuthProvider({ children }) {
     isClubResponsible,
     isAnyClubResponsible,
     ROLES,
-    ROLE_LEVELS,
+    ROLE_SORT_PRIORITY,
     BADGE_TYPES,
     PERMISSIONS,
   }), [
