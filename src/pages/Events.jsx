@@ -411,7 +411,7 @@ function EventCard({ event, user, onRegister, onLiveAccess, isRegistering, canMa
 
 // ─── Main Events Page ─────────────────────────────────────────────────────────
 export default function Events({ navigate }) {
-  const { user, can, isAdmin } = useAuth();
+  const { user, isAdmin, isRespComm, isChefUniversitaire } = useAuth();
   const { promptLogin } = useAuthGate();
   const [tab, setTab] = React.useState('upcoming'); // 'upcoming' | 'history'
   const [events, setEvents] = React.useState([]);
@@ -430,21 +430,13 @@ export default function Events({ navigate }) {
     setTimeout(() => setToast(null), 4000);
   };
 
-  // Droit de gestion d'un événement : ADMIN, RESP_COMM / CHEF_UNIV (rôle ou post),
-  // ou producteur de contenu (fallback large — le backend reste l'arbitre final).
-  const canManageEvent = React.useMemo(() => {
-    if (!user) return false;
-    if (isAdmin()) return true;
-    if (can('news:submit')) return true;
-    const posts = user.universityPosts || user.posts || [];
-    if (Array.isArray(posts)) {
-      return posts.some((p) => {
-        const v = (typeof p === 'string' ? p : p?.post || p?.postType || '').toUpperCase();
-        return ['RESP_COMMUNICATION', 'CHEF_UNIVERSITAIRE', 'RESP_COMM', 'CHEF_UNIV'].includes(v);
-      });
-    }
-    return false;
-  }, [user, can, isAdmin]);
+  // Droit de gestion d'un événement (inscrits, présences, publication réseaux) :
+  // ADMIN, ou Responsable Communication / Chef Universitaire de son université.
+  // Le backend vérifie en plus que l'université de l'événement correspond.
+  const canManageEvent = React.useMemo(
+    () => !!user && (isAdmin() || isRespComm() || isChefUniversitaire()),
+    [user, isAdmin, isRespComm, isChefUniversitaire],
+  );
 
   // Load events on mount / tab change
   React.useEffect(() => {
