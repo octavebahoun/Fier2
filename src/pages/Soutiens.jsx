@@ -646,17 +646,21 @@ function TreasurySection({ universityId, setToast }) {
 
 // ─────────────────────────── Page Soutiens ───────────────────────────
 export default function Soutiens({ navigate }) {
-  const { user, can } = useAuth();
+  const { user, isTreasurer } = useAuth();
   const [tab, setTab] = useState('financial');
   const [toast, setToast] = useState(null);
 
   const userUniversityId = user?.universityId ?? user?.universityPost?.universityId ?? null;
   const [universityId, setUniversityId] = useState(userUniversityId);
 
-  const isTreasurer =
-    user?.universityPost?.post === 'TRESORIER' ||
-    user?.universityPost?.post === 'CHEF_UNIVERSITAIRE';
-  const showTreasury = can('admin:access') || isTreasurer;
+  // Le profil se charge de façon asynchrone : dès que l'université du membre est
+  // connue, on la pré-sélectionne (sans écraser un choix manuel déjà fait).
+  useEffect(() => {
+    if (userUniversityId) setUniversityId((prev) => prev ?? userUniversityId);
+  }, [userUniversityId]);
+
+  // La trésorerie n'est visible que pour le Trésorier / Chef Universitaire / ADMIN.
+  const showTreasury = isTreasurer();
 
   const tabs = [
     { id: 'financial', label: 'Soutien financier', icon: Wallet },

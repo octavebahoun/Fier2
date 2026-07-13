@@ -159,15 +159,31 @@ export function AuthProvider({ children }) {
     restoreSession();
   }, []);
 
+  // Enrichit un membre minimal (issu de login/register) avec le profil complet
+  // de /members/me (scope de gouvernance). Retombe sur le membre minimal si
+  // l'appel échoue — on ne bloque jamais la connexion pour autant.
+  const enrichProfile = useCallback(async (minimalMember) => {
+    try {
+      const me = await api.auth.getProfile();
+      if (me?.success && me.data) return me.data;
+    } catch (err) {
+      console.warn('[FIERI AuthContext] Profil complet indisponible, membre minimal conservé:', err?.message);
+    }
+    return minimalMember;
+  }, []);
+
   const handleLogin = useCallback(async (email, password) => {
     try {
       const res = await api.auth.login(email, password);
       if (res.success && res.data) {
         const { access_token, member } = res.data;
         setToken(access_token);
-        setUser(member);
         localStorage.setItem('fieri_auth_token', access_token);
-        localStorage.setItem('fieri_user', JSON.stringify(member));
+        // Le login ne renvoie qu'un membre minimal : on enrichit immédiatement
+        // avec le profil complet (scope de gouvernance) pour un RBAC correct.
+        const fullUser = await enrichProfile(member);
+        setUser(fullUser);
+        localStorage.setItem('fieri_user', JSON.stringify(fullUser));
         return { success: true, message: res.message };
       }
       return { success: false, message: res.message || 'Identifiants invalides.' };
@@ -179,7 +195,7 @@ export function AuthProvider({ children }) {
       else if (!err?.status) message = "Serveur injoignable. Vérifiez votre connexion.";
       return { success: false, message };
     }
-  }, []);
+  }, [enrichProfile]);
 
   const handleRegister = useCallback(async ({ email, password, firstName, lastName, branchId }) => {
     try {
@@ -187,9 +203,10 @@ export function AuthProvider({ children }) {
       if (res.success && res.data) {
         const { access_token, member } = res.data;
         setToken(access_token);
-        setUser(member);
         localStorage.setItem('fieri_auth_token', access_token);
-        localStorage.setItem('fieri_user', JSON.stringify(member));
+        const fullUser = await enrichProfile(member);
+        setUser(fullUser);
+        localStorage.setItem('fieri_user', JSON.stringify(fullUser));
         return { success: true, message: res.message };
       }
       return { success: false, message: res.message || "Erreur lors de l'inscription." };
@@ -207,7 +224,7 @@ export function AuthProvider({ children }) {
       }
       return { success: false, message, code };
     }
-  }, []);
+  }, [enrichProfile]);
 
   const handleLogout = useCallback(() => {
     api.auth.logout();
@@ -295,6 +312,44 @@ export function AuthProvider({ children }) {
     return hasMinRole(required);
   }, [hasMinRole, isMentor]);
 
+  // ─── Postes de gouvernance scopés (Community OS) ─────────────────────────
+  // Ces postes ne suivent PAS la hiérarchie linéaire des rôles : ils sont
+  // attachés à une université / un pays / un club. On les lit sur le profil
+  // enrichi (/members/me). Un ADMIN global satisfait toujours ces contrôles.
+  const universityPost = user?.universityPost?.post ?? null;
+  const countryPost = user?.countryPost?.post ?? null;
+  const universityId = user?.universityId ?? user?.universityPost?.universityId ?? null;
+
+  const isChefUniversitaire = useCallback(
+    () => isAdmin() || universityPost === 'CHEF_UNIVERSITAIRE',
+    [isAdmin, universityPost],
+  );
+  // Le Chef Universitaire supervise la trésorerie ; le Trésorier la gère.
+  const isTreasurer = useCallback(
+    () => isAdmin() || universityPost === 'TRESORIER' || universityPost === 'CHEF_UNIVERSITAIRE',
+    [isAdmin, universityPost],
+  );
+  const isSecretary = useCallback(
+    () => isAdmin() || universityPost === 'SECRETAIRE',
+    [isAdmin, universityPost],
+  );
+  const isRespComm = useCallback(
+    () => isAdmin() || universityPost === 'RESP_COMMUNICATION',
+    [isAdmin, universityPost],
+  );
+  const isCountryGovernor = useCallback(
+    () => isAdmin() || countryPost === 'GOUVERNANT_PAYS',
+    [isAdmin, countryPost],
+  );
+  const isClubResponsible = useCallback(
+    (clubId) => isAdmin() || (user?.responsibleClubIds || []).includes(clubId),
+    [isAdmin, user],
+  );
+  const isAnyClubResponsible = useCallback(
+    () => isAdmin() || (user?.responsibleClubIds || []).length > 0,
+    [isAdmin, user],
+  );
+
   const value = useMemo(() => ({
     user,
     token,
@@ -313,6 +368,17 @@ export function AuthProvider({ children }) {
     can,
     hasBadge,
     badges,
+    // Scope de gouvernance
+    universityId,
+    universityPost,
+    countryPost,
+    isChefUniversitaire,
+    isTreasurer,
+    isSecretary,
+    isRespComm,
+    isCountryGovernor,
+    isClubResponsible,
+    isAnyClubResponsible,
     ROLES,
     ROLE_LEVELS,
     BADGE_TYPES,
@@ -334,6 +400,16 @@ export function AuthProvider({ children }) {
     can,
     hasBadge,
     badges,
+    universityId,
+    universityPost,
+    countryPost,
+    isChefUniversitaire,
+    isTreasurer,
+    isSecretary,
+    isRespComm,
+    isCountryGovernor,
+    isClubResponsible,
+    isAnyClubResponsible,
   ]);
 
   return (
