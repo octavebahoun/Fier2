@@ -3,11 +3,10 @@ import { motion } from 'framer-motion'
 import {
   Users, BookOpen, Calendar, ArrowRight, Award,
   ChevronRight, Cpu, Zap, Leaf, Building2, Brain, Rocket, Bell,
-  Shield, Briefcase, PenSquare, UserCog, Lock
+  Shield, Briefcase, PenSquare, UserCog, Lock, FolderGit2, GraduationCap
 } from 'lucide-react'
-import NotificationsCenter from './NotificationsCenter.jsx'
 import { api } from '../../services/api.js'
-import { useAuth, getRolePresentation } from '../../context/AuthContext.jsx'
+import { useAuth, getRolePresentation, ROLE_PRESENTATION } from '../../context/AuthContext.jsx'
 
 const CLUB_ICONS = {
   'club-1': { icon: Cpu,       color: '#e05a2b' },
@@ -42,18 +41,32 @@ function StatCard({ label, value, icon: Icon, color, onClick }) {
   )
 }
 
+/**
+ * Dashboard — tableau de bord post-connexion.
+ *
+ * ── REFONTE v2 ──
+ * • Les notifications ne sont PLUS incrustées ici (elles sont dans la modal TopBar).
+ * • Le layout est désormais pleine largeur (1 colonne, pas 2/3 + 1/3).
+ * • Les « Actions privilégiées » ne s'affichent QUE si l'utilisateur en a vraiment.
+ * • L'accès rapide s'adapte au rôle (pas de liens inutiles pour un étudiant simple).
+ */
 export default function Dashboard({ navigate }) {
-  const { user, isResearcher, isAdmin, isMentor, hasMinRole } = useAuth()
+  const { user, isResearcher, isAdmin, isMentor, hasMinRole, can, isAnyClubResponsible } = useAuth()
   const userId = user?.id ?? null
+
+  const isChercheur = isResearcher?.()
+  const isAdminUser = isAdmin?.()
+  const isResponsable = isAnyClubResponsible?.()
+  const userRole = user?.role?.toUpperCase() || 'ETUDIANT'
 
   // Actions réservées selon le rôle — chaque entrée n'apparaît que si `show` est vrai.
   const privilegedActions = [
-    { show: isAdmin?.(), label: 'Administration', desc: 'Gérer la plateforme et les membres', icon: Shield, color: '#ef4444', page: 'admin' },
-    { show: isAdmin?.(), label: 'Modérer les actualités', desc: 'Approuver ou rejeter les articles', icon: PenSquare, color: '#ef4444', page: 'news' },
-    { show: hasMinRole?.('CHERCHEUR'), label: 'Publier une opportunité', desc: 'Diffuser une offre R&D', icon: Briefcase, color: '#1b6fd8', page: 'opportunities' },
-    { show: hasMinRole?.('CHERCHEUR'), label: 'Rédiger un article', desc: 'Soumettre au journal scientifique', icon: PenSquare, color: '#1b6fd8', page: 'news' },
-    { show: hasMinRole?.('CHERCHEUR'), label: 'Éditer ma fiche chercheur', desc: 'Bio, spécialités, portfolio', icon: UserCog, color: '#1b6fd8', page: 'researcher-profile-edit' },
-    { show: isMentor?.(), label: 'Gérer les adhésions', desc: 'Valider les demandes de club', icon: Users, color: '#8b5cf6', page: 'clubs' },
+    { show: isAdminUser, label: 'Administration', desc: 'Gérer la plateforme et les membres', icon: Shield, color: '#ef4444', page: 'admin' },
+    { show: isAdminUser, label: 'Modérer les actualités', desc: 'Approuver ou rejeter les articles', icon: PenSquare, color: '#ef4444', page: 'news' },
+    { show: isChercheur, label: 'Publier une opportunité', desc: 'Diffuser une offre R&D', icon: Briefcase, color: '#1b6fd8', page: 'opportunities' },
+    { show: isChercheur, label: 'Rédiger un article', desc: 'Soumettre au journal scientifique', icon: PenSquare, color: '#1b6fd8', page: 'news' },
+    { show: isChercheur, label: 'Éditer ma fiche chercheur', desc: 'Bio, spécialités, portfolio', icon: UserCog, color: '#1b6fd8', page: 'researcher-profile-edit' },
+    { show: isMentor?.() || isResponsable, label: 'Gérer les adhésions', desc: 'Valider les demandes de club', icon: Users, color: '#8b5cf6', page: 'clubs' },
   ].filter(a => a.show)
 
   const rolePres = getRolePresentation(user?.role)
@@ -65,7 +78,7 @@ export default function Dashboard({ navigate }) {
   const [clubsCount, setClubsCount]         = useState(0)
   const [workshopsCount, setWorkshopsCount] = useState(0)
   const [projectsCount, setProjectsCount]   = useState(0)
-  const [notifications, setNotifications]   = useState([])
+  const [notifCount, setNotifCount]         = useState(0)
 
   const loadData = useCallback(async () => {
     try {
@@ -81,7 +94,7 @@ export default function Dashboard({ navigate }) {
     try {
       const notifRes = await api.dashboard.getNotifications()
       if (notifRes?.success && Array.isArray(notifRes.data)) {
-        setNotifications(notifRes.data.filter(n => !n.read))
+        setNotifCount(notifRes.data.filter(n => !n.read).length)
       }
     } catch { /* pas de notifications si l'appel échoue */ }
   }, [userId, user])
@@ -90,223 +103,211 @@ export default function Dashboard({ navigate }) {
     loadData()
   }, [loadData])
 
-  const fullName = user ? `${user.firstName} ${user.lastName}` : 'Chercheur'
+  const fullName = user ? `${user.firstName} ${user.lastName}` : 'Membre'
+
+  // Accès rapide — adapté au rôle
+  const quickLinks = [
+    { label: 'Événements', icon: Calendar, page: 'events', color: '#f5a623', show: true },
+    { label: 'Formations', icon: GraduationCap, page: 'workshops', color: '#10b981', show: true },
+    { label: 'Opportunités', icon: Award, page: 'opportunities', color: '#8b5cf6', show: isChercheur },
+    { label: 'Projets', icon: FolderGit2, page: 'projects', color: '#1b6fd8', show: isChercheur },
+    { label: 'Portail Étudiant', icon: BookOpen, page: 'student-portal', color: '#10b981', show: !isChercheur },
+  ].filter(l => l.show)
 
   return (
-    <div className="max-w-7xl mx-auto px-6 lg:px-12 py-10">
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <div className="max-w-5xl mx-auto px-6 lg:px-12 py-10">
+      <div className="flex flex-col gap-6">
 
-        {/* ── Colonne principale ── */}
-        <div className="lg:col-span-2 flex flex-col gap-6">
-
-          {/* En-tête de bienvenue */}
-          <div className="glass-panel rounded-3xl p-8 border border-white/5 bg-bg-secondary/60 backdrop-blur-xl relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-64 h-64 bg-fieri-blue/5 blur-[80px] rounded-full pointer-events-none" />
-            <div className="relative z-10 flex flex-col gap-4">
-              <div className="flex items-start justify-between gap-4 flex-wrap">
-                <div>
-                  <p className="text-[10px] font-black uppercase tracking-[0.25em] text-fieri-blue mb-1">Tableau de bord</p>
-                  <h1 className="text-2xl md:text-3xl font-extrabold text-text-primary tracking-tight">
-                    Bonjour, {fullName.split(' ')[0]} 👋
-                  </h1>
-                  <p className="text-xs text-text-secondary mt-1">
-                    {isResearcher?.() ? 'Profil Chercheur · FIERI Research' : 'Membre · FIERI Research'}
-                  </p>
-                </div>
-                {isResearcher?.() && (
+        {/* ── En-tête de bienvenue ── */}
+        <div className="glass-panel rounded-3xl p-8 border border-white/5 bg-bg-secondary/60 backdrop-blur-xl relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-64 h-64 bg-fieri-blue/5 blur-[80px] rounded-full pointer-events-none" />
+          <div className="relative z-10 flex flex-col gap-4">
+            <div className="flex items-start justify-between gap-4 flex-wrap">
+              <div>
+                <p className="text-[10px] font-black uppercase tracking-[0.25em] text-fieri-blue mb-1">Tableau de bord</p>
+                <h1 className="text-2xl md:text-3xl font-extrabold text-text-primary tracking-tight">
+                  Bonjour, {fullName.split(' ')[0]} 👋
+                </h1>
+                <p className="text-xs text-text-secondary mt-1">
+                  {isChercheur ? 'Profil Chercheur · FIERI Research' : 'Membre · FIERI Research'}
+                </p>
+              </div>
+              <div className="flex items-center gap-2 shrink-0">
+                <span className={`text-[9px] uppercase tracking-wider font-extrabold px-2.5 py-1 rounded-full border ${rolePres.badgeClassName}`}>
+                  {rolePres.label}
+                </span>
+                {isChercheur && (
                   <button
                     onClick={() => navigate?.('researcher-profile-edit')}
-                    className="shrink-0 px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-xs font-bold text-text-secondary hover:bg-white/10 transition-all"
+                    className="px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-xs font-bold text-text-secondary hover:bg-white/10 transition-all"
                   >
                     Modifier mon profil
                   </button>
                 )}
               </div>
-
-              {notifications.length > 0 && (
-                <div className="flex items-center gap-3 p-3 rounded-xl bg-fieri-blue/8 border border-fieri-blue/20 text-xs">
-                  <Bell className="w-4 h-4 text-fieri-blue shrink-0" />
-                  <span className="text-text-secondary">
-                    Vous avez{' '}
-                    <strong className="text-fieri-blue">{notifications.length} notification{notifications.length > 1 ? 's' : ''}</strong>{' '}
-                    non lue{notifications.length > 1 ? 's' : ''}.
-                  </span>
-                </div>
-              )}
             </div>
-          </div>
 
-          {/* Stats rapides */}
-          <div className="grid grid-cols-3 gap-4">
-            <StatCard
-              label="CITE rejointes"
-              value={clubsCount}
-              icon={Users}
-              color="#1b6fd8"
-              onClick={() => navigate?.('clubs')}
-            />
-            <StatCard
-              label="Ateliers inscrits"
-              value={workshopsCount}
-              icon={BookOpen}
-              color="#10b981"
-              onClick={() => navigate?.('workshops')}
-            />
-            <StatCard
-              label="Projets suivis"
-              value={projectsCount}
-              icon={Award}
-              color="#f5a623"
-              onClick={() => navigate?.('projects')}
-            />
+            {notifCount > 0 && (
+              <div className="flex items-center gap-3 p-3 rounded-xl bg-fieri-blue/8 border border-fieri-blue/20 text-xs">
+                <Bell className="w-4 h-4 text-fieri-blue shrink-0" />
+                <span className="text-text-secondary">
+                  Vous avez{' '}
+                  <strong className="text-fieri-blue">{notifCount} notification{notifCount > 1 ? 's' : ''}</strong>{' '}
+                  non lue{notifCount > 1 ? 's' : ''} — cliquez sur la cloche 🔔 pour les consulter.
+                </span>
+              </div>
+            )}
           </div>
+        </div>
 
-          {/* ── Actions privilégiées (selon le rôle) ── */}
+        {/* ── Stats rapides ── */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+          <StatCard
+            label="CITE rejointes"
+            value={clubsCount}
+            icon={Users}
+            color="#1b6fd8"
+            onClick={() => navigate?.('clubs')}
+          />
+          <StatCard
+            label="Ateliers inscrits"
+            value={workshopsCount}
+            icon={BookOpen}
+            color="#10b981"
+            onClick={() => navigate?.('workshops')}
+          />
+          <StatCard
+            label="Projets suivis"
+            value={projectsCount}
+            icon={Award}
+            color="#f5a623"
+            onClick={() => navigate?.('projects')}
+          />
+        </div>
+
+        {/* ── Actions privilégiées (SEULEMENT si le rôle en a) ── */}
+        {privilegedActions.length > 0 && (
           <div className="glass-panel rounded-3xl p-6 border border-white/5">
             <div className="flex items-center gap-2.5 mb-1">
               <Lock className="w-4 h-4 text-accent-primary" />
               <h2 className="text-base font-extrabold text-text-primary tracking-tight">Actions privilégiées</h2>
-              <span className={`ml-auto text-[9px] uppercase tracking-wider font-extrabold px-2.5 py-0.5 rounded-full border ${rolePres.badgeClassName}`}>
-                {rolePres.label}
-              </span>
             </div>
             <p className="text-xs text-text-muted mb-4">Actions réservées à votre rôle sur la plateforme.</p>
 
-            {privilegedActions.length > 0 ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                {privilegedActions.map(({ label, desc, icon: Icon, color, page }) => (
-                  <button
-                    key={label + page}
-                    onClick={() => navigate?.(page)}
-                    className="flex items-center gap-3 p-4 rounded-2xl border transition-all text-left group hover:-translate-y-0.5"
-                    style={{ background: `${color}0D`, borderColor: `${color}30` }}
-                  >
-                    <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0" style={{ background: `${color}1A`, border: `1px solid ${color}40` }}>
-                      <Icon className="w-5 h-5" style={{ color }} />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-xs font-bold text-text-primary">{label}</p>
-                      <p className="text-[10px] text-text-muted">{desc}</p>
-                    </div>
-                    <ArrowRight className="w-3.5 h-3.5 text-text-muted group-hover:translate-x-0.5 transition-transform shrink-0" />
-                  </button>
-                ))}
-              </div>
-            ) : (
-              <div className="flex items-start gap-3 p-4 rounded-2xl bg-white/3 border border-white/8">
-                <div className="w-9 h-9 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center shrink-0">
-                  <Lock className="w-4 h-4 text-emerald-400" />
-                </div>
-                <p className="text-xs text-text-secondary leading-relaxed">
-                  Votre compte <strong className="text-text-primary">{rolePres.label}</strong> donne accès aux candidatures, inscriptions et adhésions.
-                  Les privilèges <strong className="text-text-primary">Chercheur</strong> et <strong className="text-text-primary">Mentor</strong> (publication, modération, gestion de club) sont attribués par l'administration.
-                </p>
-              </div>
-            )}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {privilegedActions.map(({ label, desc, icon: Icon, color, page }) => (
+                <button
+                  key={label + page}
+                  onClick={() => navigate?.(page)}
+                  className="flex items-center gap-3 p-4 rounded-2xl border transition-all text-left group hover:-translate-y-0.5"
+                  style={{ background: `${color}0D`, borderColor: `${color}30` }}
+                >
+                  <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0" style={{ background: `${color}1A`, border: `1px solid ${color}40` }}>
+                    <Icon className="w-5 h-5" style={{ color }} />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-xs font-bold text-text-primary">{label}</p>
+                    <p className="text-[10px] text-text-muted">{desc}</p>
+                  </div>
+                  <ArrowRight className="w-3.5 h-3.5 text-text-muted group-hover:translate-x-0.5 transition-transform shrink-0" />
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* ── Section Mes Clubs ── */}
+        <div className="glass-panel rounded-3xl p-6 border border-white/5 bg-bg-secondary/60 backdrop-blur-xl">
+          <div className="flex items-center justify-between mb-5">
+            <div className="flex items-center gap-2.5">
+              <Users className="w-4 h-4 text-fieri-blue" />
+              <h2 className="text-base font-extrabold text-text-primary tracking-tight">Mes CITE</h2>
+            </div>
+            <button
+              onClick={() => navigate?.('clubs')}
+              className="flex items-center gap-1 text-[11px] font-bold text-fieri-blue hover:text-fieri-blue/80 transition-colors"
+            >
+              Voir tout <ChevronRight className="w-3.5 h-3.5" />
+            </button>
           </div>
 
-          {/* ── Section Mes Clubs ── */}
-          <div className="glass-panel rounded-3xl p-6 border border-white/5 bg-bg-secondary/60 backdrop-blur-xl">
-            <div className="flex items-center justify-between mb-5">
-              <div className="flex items-center gap-2.5">
-                <Users className="w-4 h-4 text-fieri-blue" />
-                <h2 className="text-base font-extrabold text-text-primary tracking-tight">Mes CITE</h2>
+          {joinedClubs.length === 0 ? (
+            <div className="text-center py-10 flex flex-col items-center gap-3">
+              <div className="w-12 h-12 rounded-2xl bg-white/5 border border-white/8 flex items-center justify-center">
+                <Users className="w-5 h-5 text-text-muted" />
               </div>
+              <p className="text-sm text-text-secondary">
+                {clubsCount > 0
+                  ? `Vous êtes membre de ${clubsCount} club${clubsCount > 1 ? 's' : ''}.`
+                  : "Vous n'avez pas encore rejoint de club."}
+              </p>
               <button
                 onClick={() => navigate?.('clubs')}
-                className="flex items-center gap-1 text-[11px] font-bold text-fieri-blue hover:text-fieri-blue/80 transition-colors"
+                className="px-4 py-2 rounded-xl bg-fieri-blue text-white text-xs font-bold hover:bg-fieri-blue/90 transition-all"
               >
-                Voir tout <ChevronRight className="w-3.5 h-3.5" />
+                {clubsCount > 0 ? 'Voir mes clubs' : 'Explorer les clubs'}
               </button>
             </div>
-
-            {joinedClubs.length === 0 ? (
-              <div className="text-center py-10 flex flex-col items-center gap-3">
-                <div className="w-12 h-12 rounded-2xl bg-white/5 border border-white/8 flex items-center justify-center">
-                  <Users className="w-5 h-5 text-text-muted" />
-                </div>
-                <p className="text-sm text-text-secondary">
-                  {clubsCount > 0
-                    ? `Vous êtes membre de ${clubsCount} club${clubsCount > 1 ? 's' : ''}.`
-                    : "Vous n'avez pas encore rejoint de club."}
-                </p>
-                <button
-                  onClick={() => navigate?.('clubs')}
-                  className="px-4 py-2 rounded-xl bg-fieri-blue text-white text-xs font-bold hover:bg-fieri-blue/90 transition-all"
-                >
-                  {clubsCount > 0 ? 'Voir mes clubs' : 'Explorer les clubs'}
-                </button>
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                {joinedClubs.map((club, i) => {
-                  const meta = CLUB_ICONS[club.id] || { icon: Zap, color: '#1b6fd8' }
-                  const Icon = meta.icon
-                  return (
-                    <motion.div
-                      key={club.id}
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: i * 0.06 }}
-                      className="flex items-center gap-3 p-4 rounded-2xl border hover:bg-white/5 transition-all cursor-pointer group"
-                      style={{
-                        background: `${meta.color}08`,
-                        borderColor: `${meta.color}28`,
-                      }}
-                      onClick={() => navigate?.('clubs')}
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {joinedClubs.map((club, i) => {
+                const meta = CLUB_ICONS[club.id] || { icon: Zap, color: '#1b6fd8' }
+                const Icon = meta.icon
+                return (
+                  <motion.div
+                    key={club.id}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: i * 0.06 }}
+                    className="flex items-center gap-3 p-4 rounded-2xl border hover:bg-white/5 transition-all cursor-pointer group"
+                    style={{
+                      background: `${meta.color}08`,
+                      borderColor: `${meta.color}28`,
+                    }}
+                    onClick={() => navigate?.('clubs')}
+                  >
+                    <div
+                      className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
+                      style={{ background: `${meta.color}1A`, border: `1px solid ${meta.color}40` }}
                     >
-                      <div
-                        className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
-                        style={{ background: `${meta.color}1A`, border: `1px solid ${meta.color}40` }}
-                      >
-                        <Icon className="w-5 h-5" style={{ color: meta.color }} />
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <p className="text-xs font-bold text-text-primary truncate">{club.kicker}</p>
-                        <p className="text-[10px] text-text-muted">{club.membersCount?.toLocaleString('fr-FR')} membres</p>
-                      </div>
-                      <div
-                        className="text-[9px] font-black px-2 py-0.5 rounded-full"
-                        style={{ background: `${meta.color}1A`, color: meta.color }}
-                      >
-                        Membre
-                      </div>
-                    </motion.div>
-                  )
-                })}
-              </div>
-            )}
-          </div>
-
-          {/* ── Accès rapide ── */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-            {[
-              { label: 'Événements', icon: Calendar, page: 'events', color: '#f5a623' },
-              { label: 'Opportunités', icon: Award, page: 'opportunities', color: '#8b5cf6' },
-              { label: 'Portail Étudiant', icon: BookOpen, page: 'student-portal', color: '#10b981' },
-            ].map(({ label, icon: Icon, page, color }) => (
-              <button
-                key={page}
-                onClick={() => navigate?.(page)}
-                className="flex items-center gap-3 p-4 rounded-2xl border border-white/8 bg-white/3 hover:bg-white/8 transition-all text-left group"
-              >
-                <div
-                  className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0"
-                  style={{ background: `${color}18`, border: `1px solid ${color}30` }}
-                >
-                  <Icon className="w-4 h-4" style={{ color }} />
-                </div>
-                <span className="text-xs font-bold text-text-secondary group-hover:text-text-primary transition-colors">{label}</span>
-                <ArrowRight className="w-3.5 h-3.5 text-text-muted ml-auto group-hover:translate-x-0.5 transition-transform" />
-              </button>
-            ))}
-          </div>
+                      <Icon className="w-5 h-5" style={{ color: meta.color }} />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-xs font-bold text-text-primary truncate">{club.kicker}</p>
+                      <p className="text-[10px] text-text-muted">{club.membersCount?.toLocaleString('fr-FR')} membres</p>
+                    </div>
+                    <div
+                      className="text-[9px] font-black px-2 py-0.5 rounded-full"
+                      style={{ background: `${meta.color}1A`, color: meta.color }}
+                    >
+                      Membre
+                    </div>
+                  </motion.div>
+                )
+              })}
+            </div>
+          )}
         </div>
 
-        {/* ── Colonne latérale : Notifications ── */}
-        <aside className="lg:col-span-1">
-          <NotificationsCenter navigate={navigate} onDataChange={loadData} />
-        </aside>
+        {/* ── Accès rapide (adapté au rôle) ── */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          {quickLinks.map(({ label, icon: Icon, page, color }) => (
+            <button
+              key={page}
+              onClick={() => navigate?.(page)}
+              className="flex items-center gap-3 p-4 rounded-2xl border border-white/8 bg-white/3 hover:bg-white/8 transition-all text-left group"
+            >
+              <div
+                className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0"
+                style={{ background: `${color}18`, border: `1px solid ${color}30` }}
+              >
+                <Icon className="w-4 h-4" style={{ color }} />
+              </div>
+              <span className="text-xs font-bold text-text-secondary group-hover:text-text-primary transition-colors">{label}</span>
+              <ArrowRight className="w-3.5 h-3.5 text-text-muted ml-auto group-hover:translate-x-0.5 transition-transform" />
+            </button>
+          ))}
+        </div>
 
       </div>
     </div>

@@ -9,7 +9,6 @@ import {
   Newspaper,
   CalendarDays,
   Contact,
-  Building2,
   Shield,
   Trophy,
   HeartHandshake,
@@ -36,9 +35,19 @@ const ACTIVE_ALIAS = {
 
 /**
  * Sidebar — navigation PRINCIPALE de l'espace connecté (app-shell).
- * Regroupe les sections et n'affiche que ce à quoi l'utilisateur a droit :
- * une capacité absente = un item (voire un groupe entier) INVISIBLE.
- * La visibilité vient exclusivement de `can()` / `hasMinRole()` — aucun rôle en dur.
+ *
+ * ── NETTOYAGE RBAC (v2) ──
+ * Chaque item a un `show` piloté STRICTEMENT par `can()` / `hasMinRole()`.
+ * On distingue clairement les rôles :
+ *
+ *   ÉTUDIANT (simple)     → Dashboard, Actualités, Événements, Formations, Annuaire, Aide
+ *   ÉTUDIANT CHERCHEUR    → + Projets, Opportunités, Mon profil, Challenges
+ *   RESPONSABLE (de club) → + Mon espace CITE, Soutiens & Trésorerie
+ *   ADMIN                 → + Console admin, Exclusions & Attestations
+ *
+ * Un étudiant chercheur N'EST PAS un responsable de club.
+ * Un responsable N'EST PAS un admin.
+ * Seul ce qui est pertinent pour le rôle est affiché → sidebar épurée.
  */
 export default function Sidebar({
   currentPage,
@@ -50,53 +59,60 @@ export default function Sidebar({
   mobileOpen = false,
   setMobileOpen
 }) {
-  const { can, hasMinRole } = useAuth()
+  const { can, hasMinRole, isAnyClubResponsible, isChefUniversitaire, isTreasurer } = useAuth()
 
-  // Sections groupées. `show` porte le contrôle d'accès ; un groupe sans item
-  // visible n'est pas rendu du tout (ex. « Administration » pour un non-admin).
-  const groups = useMemo(() => ([
-    {
-      label: 'Mon espace',
-      items: [
-        { id: 'dashboard', label: 'Tableau de bord', icon: LayoutDashboard, show: true },
-        { id: 'profile', label: 'Mon profil', icon: UserRound, params: { researcherId: 'me' }, show: hasMinRole('CHERCHEUR') },
-      ],
-    },
-    {
-      label: 'Recherche',
-      items: [
-        { id: 'projects', label: 'Projets', icon: FolderGit2, show: true },
-        { id: 'clubs', label: 'CITE', icon: Users, show: true },
-        { id: 'espace-cite', label: 'Mon espace CITE', icon: LayoutList, show: true },
-        { id: 'workshops', label: 'Formations', icon: GraduationCap, show: true },
-        { id: 'opportunities', label: 'Opportunités', icon: Briefcase, show: true },
-      ],
-    },
-    {
-      label: 'Communauté',
-      items: [
-        { id: 'news', label: 'Actualités', icon: Newspaper, show: true },
-        { id: 'events', label: 'Événements', icon: CalendarDays, show: true },
-        { id: 'challenges', label: 'Challenges & Hackathons', icon: Trophy, show: true },
-        { id: 'soutiens', label: 'Soutiens & Trésorerie', icon: HeartHandshake, show: true },
-        { id: 'researchers', label: 'Annuaire', icon: Contact, show: true },
-        { id: 'cite', label: 'Gouvernance', icon: Building2, show: true },
-      ],
-    },
-    {
-      label: 'Administration',
-      items: [
-        { id: 'admin', label: 'Console admin', icon: Shield, show: can('admin:access') },
-        {
-          id: 'gouvernance',
-          label: 'Exclusions & Attestations',
-          icon: ShieldCheck,
-          show: can('admin:access') || user?.universityPost?.post === 'CHEF_UNIVERSITAIRE',
-        },
-      ],
-    },
-  ].map(g => ({ ...g, items: g.items.filter(i => i.show) }))
-    .filter(g => g.items.length > 0)), [can, hasMinRole])
+  // ── Navigation groupée, filtrée par rôle ──
+  // Un groupe sans item visible n'est pas rendu du tout.
+  const groups = useMemo(() => {
+    const userRole = user?.role?.toUpperCase() || 'ETUDIANT'
+    const isResponsable = isAnyClubResponsible?.() || userRole === 'RESPONSABLE'
+    const isChercheur = hasMinRole('CHERCHEUR')
+    const isAdminUser = can('admin:access')
+    const canManageGouvernance = isAdminUser || isChefUniversitaire?.()
+
+    return [
+      // ── Espace personnel (tout le monde) ──
+      {
+        label: null, // pas de label de groupe = section compacte en haut
+        items: [
+          { id: 'dashboard', label: 'Tableau de bord', icon: LayoutDashboard, show: true },
+          { id: 'profile', label: 'Mon profil', icon: UserRound, params: { researcherId: 'me' }, show: isChercheur },
+        ],
+      },
+      // ── Découverte (visible par tous, items filtrés) ──
+      {
+        label: 'Communauté',
+        items: [
+          { id: 'news', label: 'Actualités', icon: Newspaper, show: true },
+          { id: 'events', label: 'Événements', icon: CalendarDays, show: true },
+          { id: 'challenges', label: 'Challenges & Hackathons', icon: Trophy, show: isChercheur },
+          { id: 'soutiens', label: 'Soutiens & Trésorerie', icon: HeartHandshake, show: isResponsable || isTreasurer?.() || isAdminUser },
+          { id: 'researchers', label: 'Annuaire', icon: Contact, show: true },
+        ],
+      },
+      // ── Recherche & Production (chercheurs et au-dessus) ──
+      {
+        label: 'Recherche',
+        items: [
+          { id: 'projects', label: 'Projets', icon: FolderGit2, show: isChercheur },
+          { id: 'workshops', label: 'Formations', icon: GraduationCap, show: true },
+          { id: 'opportunities', label: 'Opportunités', icon: Briefcase, show: isChercheur },
+          { id: 'clubs', label: 'CITE', icon: Users, show: true },
+          { id: 'espace-cite', label: 'Mon espace CITE', icon: LayoutList, show: isResponsable },
+        ],
+      },
+      // ── Administration (admin + chef universitaire) ──
+      {
+        label: 'Administration',
+        items: [
+          { id: 'admin', label: 'Console admin', icon: Shield, show: isAdminUser },
+          { id: 'gouvernance', label: 'Exclusions & Attestations', icon: ShieldCheck, show: canManageGouvernance },
+        ],
+      },
+    ]
+      .map(g => ({ ...g, items: g.items.filter(i => i.show) }))
+      .filter(g => g.items.length > 0)
+  }, [can, hasMinRole, user, isAnyClubResponsible, isChefUniversitaire, isTreasurer])
 
   const isActive = (id) => currentPage === id || ACTIVE_ALIAS[currentPage] === id
 
@@ -189,9 +205,9 @@ export default function Sidebar({
 
         {/* Navigation groupée */}
         <nav className="relative z-10 flex-1 overflow-y-auto overflow-x-hidden py-3 px-2.5 flex flex-col gap-4">
-          {groups.map((group) => (
-            <div key={group.label} className="flex flex-col gap-1">
-              {!collapsed && (
+          {groups.map((group, gi) => (
+            <div key={group.label || `g-${gi}`} className="flex flex-col gap-1">
+              {!collapsed && group.label && (
                 <span className="px-2.5 mb-0.5 text-[9px] font-black uppercase tracking-[0.2em] text-text-muted/70">
                   {group.label}
                 </span>
