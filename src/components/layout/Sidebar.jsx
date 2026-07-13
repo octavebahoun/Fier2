@@ -62,7 +62,7 @@ export default function Sidebar({
       label: 'Recherche',
       items: [
         { id: 'projects', label: 'Projets', icon: FolderGit2, show: true },
-        { id: 'clubs', label: 'Clubs', icon: Users, show: true },
+        { id: 'clubs', label: 'CITE', icon: Users, show: true },
         { id: 'workshops', label: 'Formations', icon: GraduationCap, show: true },
         { id: 'opportunities', label: 'Opportunités', icon: Briefcase, show: true },
       ],
@@ -73,7 +73,7 @@ export default function Sidebar({
         { id: 'news', label: 'Actualités', icon: Newspaper, show: true },
         { id: 'events', label: 'Événements', icon: CalendarDays, show: true },
         { id: 'researchers', label: 'Annuaire', icon: Contact, show: true },
-        { id: 'cite', label: 'La Cité', icon: Building2, show: true },
+        { id: 'cite', label: 'Gouvernance', icon: Building2, show: true },
       ],
     },
     {

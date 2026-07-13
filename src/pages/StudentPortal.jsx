@@ -19,7 +19,7 @@ const CLUB_ICONS = {
 const HUB_SECTIONS = [
   {
     id: 'clubs',
-    title: 'Clubs de Recherche',
+    title: 'CITE de Recherche',
     desc: 'Rejoignez nos 6 clubs thématiques et collaborez avec des chercheurs passionnés.',
     color: '#6C4CF1',
     features: ['6 pôles scientifiques', 'Adhésion en un clic', 'Accents distinctifs'],
@@ -80,7 +80,7 @@ export default function StudentPortal({ navigate }) {
             </span>
           </div>
           <h1 className="text-4xl md:text-5xl font-extrabold text-text-primary tracking-tight">
-            Espace <span className="text-gradient-blue">Étudiant & Clubs</span>
+            Espace <span className="text-gradient-blue">Étudiant & CITE</span>
           </h1>
           <p className="text-sm text-text-secondary leading-relaxed max-w-2xl">
             Explorez les clubs de recherche, inscrivez-vous aux ateliers académiques et
@@ -160,7 +160,7 @@ export default function StudentPortal({ navigate }) {
                 <div className="flex items-center gap-3">
                   <Users className="w-5 h-5 text-fieri-blue" />
                   <h2 className="text-lg font-black tracking-tight text-text-primary">
-                    Clubs populaires
+                    CITE populaires
                   </h2>
                 </div>
                 <button

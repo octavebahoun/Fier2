@@ -139,7 +139,7 @@ export default function Dashboard({ navigate }) {
           {/* Stats rapides */}
           <div className="grid grid-cols-3 gap-4">
             <StatCard
-              label="Clubs rejoints"
+              label="CITE rejointes"
               value={clubsCount}
               icon={Users}
               color="#1b6fd8"
@@ -210,7 +210,7 @@ export default function Dashboard({ navigate }) {
             <div className="flex items-center justify-between mb-5">
               <div className="flex items-center gap-2.5">
                 <Users className="w-4 h-4 text-fieri-blue" />
-                <h2 className="text-base font-extrabold text-text-primary tracking-tight">Mes Clubs</h2>
+                <h2 className="text-base font-extrabold text-text-primary tracking-tight">Mes CITE</h2>
               </div>
               <button
                 onClick={() => navigate?.('clubs')}

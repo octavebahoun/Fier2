@@ -94,7 +94,7 @@ export default function CommandPalette({ navigate }) {
     },
     {
       id: 'nav-clubs',
-      label: 'Naviguer vers les Clubs Scientifiques',
+      label: 'Naviguer vers les CITE Scientifiques',
       category: 'Navigation',
       icon: Compass,
       action: () => {

@@ -141,10 +141,10 @@ export default function Navbar({
               <div className="flex items-center gap-1">
                 {[
                   { id: 'home', label: 'Accueil' },
-                  { id: 'cite', label: 'Cité' },
+                  { id: 'cite', label: 'Gouvernance' },
                   { id: 'projects', label: 'Institut' },
                   { id: 'workshops', label: 'Formations' },
-                  { id: 'clubs', label: 'Clubs' },
+                  { id: 'clubs', label: 'CITE' },
                   { id: 'opportunities', label: 'Opportunités' },
                   { id: 'news', label: 'Actualités & Événements' }
                 ].map((link) => {
@@ -322,10 +322,10 @@ export default function Navbar({
               <div className="flex flex-col gap-1.5 relative z-10">
                 {[
                   { id: 'home', label: 'Accueil', desc: 'Page principale' },
-                  { id: 'cite', label: 'Cité', desc: 'Notre campus' },
+                  { id: 'cite', label: 'Gouvernance', desc: 'Notre campus' },
                   { id: 'projects', label: 'Institut', desc: 'Nos projets scientifiques' },
                   { id: 'workshops', label: 'Académie', desc: 'Formations et cours' },
-                  { id: 'clubs', label: 'Clubs', desc: 'Clubs de recherche' },
+                  { id: 'clubs', label: 'CITE', desc: 'CITE de recherche' },
                   { id: 'opportunities', label: 'Opportunités', desc: 'Offres & Recrutement' },
                   { id: 'news', label: 'Actualités & Événements', desc: 'Publications et concours' }
                 ].map((link) => {

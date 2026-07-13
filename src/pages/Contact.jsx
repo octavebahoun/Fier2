@@ -43,7 +43,7 @@ const FAQ_ITEMS = [
   {
     id: 'faq-1',
     question: 'Comment rejoindre un club de recherche FIERI ?',
-    answer: 'Rendez-vous sur la page Clubs Scientifiques, sélectionnez le club qui correspond à votre domaine et cliquez sur "Rejoindre le pôle". Votre candidature sera automatiquement validée si vous êtes membre connecté.'
+    answer: 'Rendez-vous sur la page CITE Scientifiques, sélectionnez la CITE qui correspond à votre domaine et cliquez sur "Rejoindre le pôle". Votre candidature sera automatiquement validée si vous êtes membre connecté.'
   },
   {
     id: 'faq-2',

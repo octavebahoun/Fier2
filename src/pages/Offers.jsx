@@ -276,7 +276,7 @@ export default function Offers({ navigate }) {
             Offres & Exclusivités
           </h1>
           <p className="text-text-secondary text-sm leading-relaxed">
-            Profitez des avantages exclusifs, réductions de loyer, bourses d'adhésion et subventions négociés pour les membres de la Cité FIERI auprès de nos partenaires sociaux.
+            Profitez des avantages exclusifs, réductions de loyer, bourses d'adhésion et subventions négociés pour les membres de la CITE FIERI auprès de nos partenaires sociaux.
           </p>
         </div>
 
@@ -292,7 +292,7 @@ export default function Offers({ navigate }) {
       {/* Social Partners Directory Section */}
       <div className="flex flex-col gap-4 relative z-10">
         <h3 className="text-xs font-black uppercase tracking-wider text-text-secondary">
-          Nos partenaires sociaux à la Cité FIERI
+          Nos partenaires sociaux à la CITE FIERI
         </h3>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {[
@@ -612,7 +612,7 @@ export default function Offers({ navigate }) {
                   Proposer une exclusivité partenaire
                 </h3>
                 <p className="text-xs text-text-secondary leading-relaxed">
-                  Renseignez les détails de l'avantage social proposé aux membres de la Cité FIERI.
+                  Renseignez les détails de l'avantage social proposé aux membres de la CITE FIERI.
                 </p>
               </div>
 
