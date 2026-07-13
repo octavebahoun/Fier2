@@ -2,7 +2,8 @@ import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Calendar, MapPin, Users, Trophy, ChevronDown, ChevronUp,
-  Radio, X, Clock, CheckCircle2, Zap, ExternalLink
+  Radio, X, Clock, CheckCircle2, Zap, ExternalLink,
+  ListChecks, Megaphone, Loader2
 } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext.jsx';
 import { useAuthGate } from '@/context/AuthGateContext.jsx';
@@ -131,8 +132,110 @@ function LiveModal({ event, onClose }) {
   );
 }
 
+// ─── Registrants Modal ────────────────────────────────────────────────────────
+function RegistrantsModal({ state, onClose }) {
+  return (
+    <AnimatePresence>
+      {state && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm pointer-events-auto"
+          onClick={(e) => e.target === e.currentTarget && onClose()}
+        >
+          <motion.div
+            initial={{ scale: 0.9, opacity: 0, y: 20 }}
+            animate={{ scale: 1, opacity: 1, y: 0 }}
+            exit={{ scale: 0.9, opacity: 0, y: 20 }}
+            transition={{ ease: [0.16, 1, 0.3, 1], duration: 0.35 }}
+            className="relative glass-panel bg-bg-secondary/95 border border-border-subtle rounded-2xl shadow-2xl
+              w-full max-w-lg mx-4 overflow-hidden pointer-events-auto max-h-[80vh] flex flex-col"
+          >
+            {/* Header */}
+            <div className="flex items-center justify-between px-5 py-4 border-b border-border-subtle">
+              <div className="flex items-center gap-3 min-w-0">
+                <span className="p-1.5 rounded-lg bg-accent-primary/15 border border-accent-primary/30">
+                  <ListChecks size={16} className="text-accent-primary" />
+                </span>
+                <div className="min-w-0">
+                  <h3 className="text-text-primary font-semibold text-sm truncate">Inscrits</h3>
+                  {state.event && (
+                    <p className="text-xs text-text-secondary truncate">{state.event.title}</p>
+                  )}
+                </div>
+              </div>
+              <button
+                id="registrants-modal-close"
+                onClick={onClose}
+                className="p-1.5 rounded-lg hover:bg-white/10 text-text-secondary hover:text-text-primary
+                  transition-colors cursor-pointer pointer-events-auto"
+              >
+                <X size={18} />
+              </button>
+            </div>
+
+            {/* Body */}
+            <div className="px-5 py-4 overflow-y-auto">
+              {state.loading && (
+                <div className="flex items-center justify-center gap-2 py-8 text-text-secondary text-sm">
+                  <Loader2 size={16} className="animate-spin" />
+                  Chargement des inscrits…
+                </div>
+              )}
+
+              {state.error && (
+                <div className="py-6 text-center text-sm text-red-300">
+                  {state.error}
+                </div>
+              )}
+
+              {state.data && !state.loading && (
+                <>
+                  <p className="text-xs text-text-secondary mb-3">
+                    <span className="text-text-primary font-bold">{state.data.count ?? state.data.registrants?.length ?? 0}</span> inscrit(s)
+                  </p>
+                  {state.data.registrants?.length === 0 ? (
+                    <div className="py-6 text-center text-sm text-text-secondary">
+                      Aucun inscrit pour le moment.
+                    </div>
+                  ) : (
+                    <ul className="flex flex-col gap-2">
+                      {state.data.registrants.map((r) => (
+                        <li key={r.memberId}
+                          className="flex items-center justify-between gap-3 px-3 py-2 rounded-xl
+                            bg-white/5 border border-border-subtle">
+                          <div className="min-w-0">
+                            <p className="text-sm text-text-primary font-medium truncate">{r.name}</p>
+                            <p className="text-xs text-text-secondary truncate">{r.email}</p>
+                          </div>
+                          {r.status && (
+                            <span className="text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full
+                              bg-white/10 text-text-secondary whitespace-nowrap">{r.status}</span>
+                          )}
+                          {r.attended && (
+                            <span className="inline-flex items-center gap-1 text-[10px] uppercase tracking-wider
+                              px-2 py-0.5 rounded-full bg-emerald-500/20 border border-emerald-500/40
+                              text-emerald-300 whitespace-nowrap">
+                              <CheckCircle2 size={10} /> Présent
+                            </span>
+                          )}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </>
+              )}
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+}
+
 // ─── Event Card ──────────────────────────────────────────────────────────────
-function EventCard({ event, user, onRegister, onLiveAccess, isRegistering }) {
+function EventCard({ event, user, onRegister, onLiveAccess, isRegistering, canManage, onViewRegistrants, onPublishSocial, isPublishing }) {
   const [timelineOpen, setTimelineOpen] = React.useState(false);
 
   return (
@@ -268,6 +371,39 @@ function EventCard({ event, user, onRegister, onLiveAccess, isRegistering }) {
             Rejoindre le Live
           </button>
         )}
+
+        {/* Management actions — only for authorized roles (RESP_COMM / CHEF_UNIV / organisateur) */}
+        {canManage && (
+          <>
+            <button
+              id={`registrants-btn-${event.id}`}
+              onClick={() => onViewRegistrants(event)}
+              className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold
+                bg-white/5 border border-border-subtle text-text-primary hover:bg-white/10
+                hover:border-accent-primary/50 transition-all duration-200 active:scale-95 cursor-pointer"
+            >
+              <ListChecks size={15} className="text-accent-primary" />
+              Voir les inscrits
+            </button>
+
+            <button
+              id={`publish-btn-${event.id}`}
+              onClick={() => onPublishSocial(event)}
+              disabled={isPublishing === event.id}
+              className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold
+                bg-accent-primary text-white hover:bg-accent-primary/90 transition-all duration-200
+                active:scale-95 shadow-lg shadow-accent-primary/20 cursor-pointer disabled:opacity-60
+                disabled:cursor-not-allowed"
+            >
+              {isPublishing === event.id ? (
+                <Loader2 size={15} className="animate-spin" />
+              ) : (
+                <Megaphone size={15} />
+              )}
+              Publier
+            </button>
+          </>
+        )}
       </div>
     </motion.article>
   );
@@ -275,12 +411,15 @@ function EventCard({ event, user, onRegister, onLiveAccess, isRegistering }) {
 
 // ─── Main Events Page ─────────────────────────────────────────────────────────
 export default function Events({ navigate }) {
-  const { user } = useAuth();
+  const { user, can, isAdmin } = useAuth();
   const { promptLogin } = useAuthGate();
+  const [tab, setTab] = React.useState('upcoming'); // 'upcoming' | 'history'
   const [events, setEvents] = React.useState([]);
   const [isLoading, setIsLoading] = React.useState(true);
   const [isRegistering, setIsRegistering] = React.useState(null);
+  const [isPublishing, setIsPublishing] = React.useState(null);
   const [activeLiveEvent, setActiveLiveEvent] = React.useState(null);
+  const [registrantsModal, setRegistrantsModal] = React.useState(null);
   const [toast, setToast] = React.useState(null);
 
   // App.jsx fournit navigate à toutes les pages; Events ne route pas directement.
@@ -291,15 +430,40 @@ export default function Events({ navigate }) {
     setTimeout(() => setToast(null), 4000);
   };
 
-  // Load events on mount
+  // Droit de gestion d'un événement : ADMIN, RESP_COMM / CHEF_UNIV (rôle ou post),
+  // ou producteur de contenu (fallback large — le backend reste l'arbitre final).
+  const canManageEvent = React.useMemo(() => {
+    if (!user) return false;
+    if (isAdmin()) return true;
+    if (can('news:submit')) return true;
+    const posts = user.universityPosts || user.posts || [];
+    if (Array.isArray(posts)) {
+      return posts.some((p) => {
+        const v = (typeof p === 'string' ? p : p?.post || p?.postType || '').toUpperCase();
+        return ['RESP_COMMUNICATION', 'CHEF_UNIVERSITAIRE', 'RESP_COMM', 'CHEF_UNIV'].includes(v);
+      });
+    }
+    return false;
+  }, [user, can, isAdmin]);
+
+  // Load events on mount / tab change
   React.useEffect(() => {
     const loadEvents = async () => {
-      const res = await api.events.getAll();
-      if (res.success) setEvents(res.data);
-      setIsLoading(false);
+      setIsLoading(true);
+      try {
+        const res = tab === 'upcoming'
+          ? await api.events.getAll()
+          : await api.events.getHistory();
+        if (res.success) setEvents(res.data || []);
+        else showToast(res.message || 'Erreur lors du chargement des événements.', 'error');
+      } catch (err) {
+        showToast(err?.serverMessage || "Impossible de charger les événements.", 'error');
+      } finally {
+        setIsLoading(false);
+      }
     };
     loadEvents();
-  }, []);
+  }, [tab]);
 
   // Handle event registration
   const handleRegister = async (eventId) => {
@@ -335,6 +499,43 @@ export default function Events({ navigate }) {
     }
     // Access granted
     setActiveLiveEvent(event);
+  };
+
+  // Open the "registrants" modal and fetch the list (RESP_COMM / CHEF_UNIV / organisateur)
+  const handleViewRegistrants = async (event) => {
+    setRegistrantsModal({ event, loading: true, data: null, error: null });
+    try {
+      const res = await api.events.getRegistrants(event.id);
+      if (res.success) {
+        setRegistrantsModal((m) => ({ ...m, loading: false, data: res.data }));
+      } else {
+        setRegistrantsModal((m) => ({ ...m, loading: false, error: res.message || 'Erreur de chargement.' }));
+      }
+    } catch (err) {
+      setRegistrantsModal((m) => ({
+        ...m,
+        loading: false,
+        error: err?.serverMessage || "Accès refusé ou erreur serveur.",
+      }));
+    }
+  };
+
+  // Publish the event on social networks (RESP_COMM / CHEF_UNIV) — OAuth mockée
+  const handlePublishSocial = async (event) => {
+    setIsPublishing(event.id);
+    try {
+      const res = await api.events.publishSocial(event.id);
+      if (res.success) {
+        const msg = res.data?.message || res.message || 'Événement publié sur les réseaux sociaux.';
+        showToast(msg, 'success');
+      } else {
+        showToast(res.message || 'Échec de la publication.', 'error');
+      }
+    } catch (err) {
+      showToast(err?.serverMessage || "Publication impossible pour le moment.", 'error');
+    } finally {
+      setIsPublishing(null);
+    }
   };
 
   // Stats derived from data
@@ -401,6 +602,35 @@ export default function Events({ navigate }) {
           </div>
         </motion.div>
 
+        {/* ── Tabs : À venir / Historique ── */}
+        <div className="flex items-center gap-1 mt-10 mb-12 p-1 rounded-2xl
+          bg-bg-secondary/60 border border-border-subtle w-fit">
+          {[
+            { key: 'upcoming', label: 'À venir' },
+            { key: 'history', label: 'Historique' },
+          ].map((t) => {
+            const active = tab === t.key;
+            return (
+              <button
+                key={t.key}
+                id={`tab-${t.key}`}
+                onClick={() => setTab(t.key)}
+                className={`relative px-5 py-2 rounded-xl text-sm font-semibold transition-colors
+                  cursor-pointer ${active ? 'text-white' : 'text-text-secondary hover:text-text-primary'}`}
+              >
+                {active && (
+                  <motion.span
+                    layoutId="events-tab-pill"
+                    className="absolute inset-0 rounded-xl bg-accent-primary shadow-lg shadow-accent-primary/20"
+                    transition={{ ease: [0.16, 1, 0.3, 1], duration: 0.3 }}
+                  />
+                )}
+                <span className="relative z-10">{t.label}</span>
+              </button>
+            );
+          })}
+        </div>
+
         {/* ── Loading State ── */}
         {isLoading && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -439,6 +669,10 @@ export default function Events({ navigate }) {
                       onRegister={handleRegister}
                       onLiveAccess={handleLiveAccess}
                       isRegistering={isRegistering}
+                      canManage={canManageEvent}
+                      onViewRegistrants={handleViewRegistrants}
+                      onPublishSocial={handlePublishSocial}
+                      isPublishing={isPublishing}
                     />
                   ))}
                 </div>
@@ -462,6 +696,10 @@ export default function Events({ navigate }) {
                       onRegister={handleRegister}
                       onLiveAccess={handleLiveAccess}
                       isRegistering={isRegistering}
+                      canManage={canManageEvent}
+                      onViewRegistrants={handleViewRegistrants}
+                      onPublishSocial={handlePublishSocial}
+                      isPublishing={isPublishing}
                     />
                   ))}
                 </div>
@@ -490,6 +728,12 @@ export default function Events({ navigate }) {
       <LiveModal
         event={activeLiveEvent}
         onClose={() => setActiveLiveEvent(null)}
+      />
+
+      {/* Registrants Modal */}
+      <RegistrantsModal
+        state={registrantsModal}
+        onClose={() => setRegistrantsModal(null)}
       />
 
       {/* Toast */}

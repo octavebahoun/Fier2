@@ -749,7 +749,7 @@ function CountriesView({ countries, query, setQuery, onCountrySelect, onGlobalGo
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <Metric icon={Globe2} label="Pays disponibles" value={countries.length} />
         <Metric icon={GraduationCap} label="Universités" value={totalUniversities} />
-        <Metric icon={Users} label="Clubs ouverts" value={totalClubs} />
+        <Metric icon={Users} label="CITE ouvertes" value={totalClubs} />
       </div>
 
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
@@ -892,7 +892,7 @@ function UniversityView({ university, clubs, query, setQuery, onClubSelect, onUn
         metrics={[`${university.clubs.length} club(s)`, `${university.leaders.length} responsable(s)`]}
       />
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-        <h2 className="text-2xl font-black">Clubs FIERI de l’université</h2>
+        <h2 className="text-2xl font-black">CITE FIERI de l’université</h2>
         <SearchBox value={query} onChange={setQuery} placeholder="Rechercher un club..." />
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">

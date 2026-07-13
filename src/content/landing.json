@@ -5,13 +5,13 @@
     "description": "Le FIERI rassemble les esprits les plus brillants de la recherche scientifique et de l'ingénierie pour transformer des concepts théoriques ambitieux en innovations industrielles concrètes.",
     "badge": "Lab-to-Market v3.0 · Pôle d'Excellence Actif",
     "ctaPrimary": "Nous rejoindre",
-    "ctaSecondary": "Intégrer notre Cité"
+    "ctaSecondary": "Intégrer notre CITE"
   },
   "decouvrir": {
     "tag": "01 — NOUS DÉCOUVRIR",
-    "title": "La Cité de l'excellence scientifique et de la R&D appliquée",
+    "title": "La CITE de l'excellence scientifique et de la R&D appliquée",
     "description": "Le Front International des Étudiants et Chercheurs (FIERI) est un écosystème d'innovation ouvert aux esprits brillants. Notre ambition est de fédérer les compétences en ingénierie et en recherche pour faire émerger des innovations technologiques, physiques et logicielles de premier plan.",
-    "cta": "Découvrir la Cité"
+    "cta": "Découvrir la CITE"
   },
   "organisation": {
     "tag": "02 — NOTRE ORGANISATION",
@@ -20,7 +20,7 @@
     "entities": [
       {
         "id": "CF_01",
-        "name": "La Cité FIERI",
+        "name": "La CITE FIERI",
         "desc": "L'incubateur de terrain déployé au cœur des universités. C'est l'espace d'expérimentation collective, de prototypage rapide et de préparation aux grands concours mondiaux d'innovation."
       },
       {
@@ -85,7 +85,7 @@
         "value": "5000+"
       },
       {
-        "label": "Clubs R&D universitaires",
+        "label": "CITE R&D universitaires",
         "value": "6"
       },
       {
@@ -99,8 +99,8 @@
     ]
   },
   "clubs": {
-    "tag": "— CLUBS EN VEDETTE —",
-    "title": "Nos clubs en vedette",
+    "tag": "— NOS CITE —",
+    "title": "Explorez toutes nos CITE",
     "items": [
       {
         "kicker": "Robotique et Automatisation",
@@ -170,35 +170,41 @@
       }
     ]
   },
-  "evenements": {
-    "tag": "07 — APPEL À PARTICIPATION",
-    "title": "Propulsez votre talent scientifique au niveau supérieur",
-    "blocks": [
+  "journal": {
+    "tag": "08 — JOURNAL FIERI",
+    "title": "Le Journal : bootcamps, ateliers & offres",
+    "cards": []
+  },
+  "programmes": {
+    "tag": "— NOS PROGRAMMES —",
+    "title": "Nos Programmes",
+    "description": "Engagez-vous au cœur de la communauté FIERI à travers nos programmes d'ambassadeurs, de bénévolat et d'accompagnement scientifique.",
+    "items": [
       {
-        "title": "Hackathons & Challenges",
-        "description": "Participez à nos compétitions scientifiques intenses et confrontez vos idées à des problématiques industrielles réelles.",
-        "ctaLabel": "S'inscrire au prochain challenge"
+        "icon": "ambassador",
+        "title": "Programme Ambassadeur",
+        "desc": "Portez les valeurs de l'excellence scientifique et représentez la CITE FIERI au sein des universités et des écosystèmes d'innovation.",
+        "cta": "Rejoindre le Programme",
+        "route": "paf"
       },
       {
-        "title": "Ateliers d'Ingénierie",
-        "description": "Apprenez en manipulant directement avec des ingénieurs professionnels au cours de bootcamps thématiques intenses.",
-        "ctaLabel": "Voir les ateliers à venir"
+        "icon": "volunteer",
+        "title": "Bénévolat FIERI",
+        "desc": "Contribuez concrètement aux opérations terrain, événements et projets R&D aux côtés de nos chercheurs.",
+        "cta": "Devenir bénévole",
+        "route": "contact"
       },
       {
-        "title": "Rencontres de l'Innovation",
-        "description": "Rejoignez nos débats académiques, tables rondes et hackathons pour enrichir votre réseau technologique.",
-        "ctaLabel": "Consulter l'agenda"
+        "icon": "mentor",
+        "title": "Mentorat & Accompagnement",
+        "desc": "Transmettez votre expertise et accompagnez la prochaine génération de talents scientifiques et d'ingénieurs.",
+        "cta": "Nous contacter",
+        "route": "contact"
       }
     ]
   },
-  "paf": {
-    "tag": "— PROGRAMME AMBASSADEUR FIERI —",
-    "title": "Devenez Ambassadeur FIERI",
-    "description": "Un programme d'élite pour porter les valeurs de l'excellence scientifique et représenter la Cité FIERI au sein des universités et des écosystèmes d'innovation.",
-    "cta": "Rejoindre le Programme"
-  },
   "partenaires": {
-    "tag": "09 — NOS PARTENAIRES",
+    "tag": "09 — PARTENAIRES COMMERCIAUX",
     "title": "Ils soutiennent l'excellence scientifique du FIERI",
     "logos": [
       {

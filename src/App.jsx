@@ -28,6 +28,10 @@ import Auth from './pages/Auth.jsx'
 import Opportunities from './pages/Opportunities.jsx'
 import Admin from './pages/Admin.jsx'
 import PAF from './pages/PAF.jsx'
+import Gouvernance from './pages/Gouvernance.jsx'
+import EspaceCITE from './pages/EspaceCITE.jsx'
+import Challenges from './pages/Challenges.jsx'
+import Soutiens from './pages/Soutiens.jsx'
 
 // ─── Route-wrappers : injectent les paramètres d'URL dans les pages qui en ont
 // besoin, sans modifier les pages elles-mêmes. ────────────────────────────────
@@ -139,6 +143,29 @@ function App() {
         <Route path="/events" element={<Events navigate={navigate} />} />
         <Route path="/opportunities" element={<Opportunities navigate={navigate} />} />
         <Route path="/paf" element={<PAF navigate={navigate} />} />
+
+        {/* Gouvernance (exclusion + attestations) — Chef Universitaire / ADMIN */}
+        <Route
+          path="/gouvernance"
+          element={
+            <ProtectedRoute minRole="ETUDIANT">
+              <Gouvernance navigate={navigate} />
+            </ProtectedRoute>
+          }
+        />
+        {/* Espace CITE (membre) — tableau de bord club */}
+        <Route
+          path="/espace-cite"
+          element={
+            <ProtectedRoute minRole="ETUDIANT">
+              <EspaceCITE navigate={navigate} />
+            </ProtectedRoute>
+          }
+        />
+        {/* Challenges & Hackathons */}
+        <Route path="/challenges" element={<Challenges navigate={navigate} />} />
+        {/* Soutiens & Trésorerie (don + soutien matériel + grand livre) */}
+        <Route path="/soutiens" element={<Soutiens navigate={navigate} />} />
         {/* Aide / Contact */}
         <Route path="/help" element={<Contact navigate={navigate} />} />
         <Route path="/contact" element={<Contact navigate={navigate} />} />

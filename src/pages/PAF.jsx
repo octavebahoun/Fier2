@@ -7,7 +7,7 @@ export default function PAF({ navigate }) {
     { icon: <Users className="w-5 h-5" />, title: "Réseau d'excellence", desc: "Intégrez un cercle de talents sélectionnés parmi les meilleurs chercheurs et ingénieurs." },
     { icon: <Target className="w-5 h-5" />, title: "Missions stratégiques", desc: "Représentez FIERI dans les universités, salons et événements d'innovation." },
     { icon: <Trophy className="w-5 h-5" />, title: "Accès prioritaire", desc: "Bénéficiez d'un accès exclusif aux laboratoires, formations et ressources R&D." },
-    { icon: <Globe className="w-5 h-5" />, title: "Visibilité internationale", desc: "Portez la voix de la Cité FIERI sur la scène scientifique mondiale." }
+    { icon: <Globe className="w-5 h-5" />, title: "Visibilité internationale", desc: "Portez la voix de la CITE FIERI sur la scène scientifique mondiale." }
   ];
 
   return (
@@ -29,7 +29,7 @@ export default function PAF({ navigate }) {
             Programme Ambassadeur FIERI
           </h1>
           <p className="text-text-secondary text-base md:text-lg font-light leading-relaxed max-w-2xl mx-auto">
-            Un programme d'élite pour les talents qui souhaitent porter les valeurs de l'excellence scientifique et devenir les ambassadeurs de la Cité FIERI.
+            Un programme d'élite pour les talents qui souhaitent porter les valeurs de l'excellence scientifique et devenir les ambassadeurs de la CITE FIERI.
           </p>
         </motion.div>
 

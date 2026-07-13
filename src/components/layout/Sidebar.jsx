@@ -11,6 +11,10 @@ import {
   Contact,
   Building2,
   Shield,
+  Trophy,
+  HeartHandshake,
+  ShieldCheck,
+  LayoutList,
   LifeBuoy,
   LogOut,
   ChevronsLeft,
@@ -62,7 +66,8 @@ export default function Sidebar({
       label: 'Recherche',
       items: [
         { id: 'projects', label: 'Projets', icon: FolderGit2, show: true },
-        { id: 'clubs', label: 'Clubs', icon: Users, show: true },
+        { id: 'clubs', label: 'CITE', icon: Users, show: true },
+        { id: 'espace-cite', label: 'Mon espace CITE', icon: LayoutList, show: true },
         { id: 'workshops', label: 'Formations', icon: GraduationCap, show: true },
         { id: 'opportunities', label: 'Opportunités', icon: Briefcase, show: true },
       ],
@@ -72,14 +77,22 @@ export default function Sidebar({
       items: [
         { id: 'news', label: 'Actualités', icon: Newspaper, show: true },
         { id: 'events', label: 'Événements', icon: CalendarDays, show: true },
+        { id: 'challenges', label: 'Challenges & Hackathons', icon: Trophy, show: true },
+        { id: 'soutiens', label: 'Soutiens & Trésorerie', icon: HeartHandshake, show: true },
         { id: 'researchers', label: 'Annuaire', icon: Contact, show: true },
-        { id: 'cite', label: 'La Cité', icon: Building2, show: true },
+        { id: 'cite', label: 'Gouvernance', icon: Building2, show: true },
       ],
     },
     {
       label: 'Administration',
       items: [
         { id: 'admin', label: 'Console admin', icon: Shield, show: can('admin:access') },
+        {
+          id: 'gouvernance',
+          label: 'Exclusions & Attestations',
+          icon: ShieldCheck,
+          show: can('admin:access') || user?.universityPost?.post === 'CHEF_UNIVERSITAIRE',
+        },
       ],
     },
   ].map(g => ({ ...g, items: g.items.filter(i => i.show) }))

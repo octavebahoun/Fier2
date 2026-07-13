@@ -218,7 +218,7 @@ export default function News({ navigate }) {
               Actualités & Publications
             </h1>
             <p className="text-sm md:text-base text-text-secondary mt-3 max-w-2xl">
-              Suivez les percées technologiques de nos chercheurs, les comptes-rendus de R&D des clubs scientifiques et les annonces de la Cité Fieri.
+              Suivez les percées technologiques de nos chercheurs, les comptes-rendus de R&D des CITE scientifiques et les annonces de la CITE Fieri.
             </p>
           </div>
 

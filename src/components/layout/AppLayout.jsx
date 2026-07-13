@@ -212,7 +212,7 @@ export default function AppLayout({
                     <li><button onClick={() => navigate('news')} className="text-xs text-text-secondary hover:text-text-primary transition-colors text-left cursor-pointer">Actualités</button></li>
                     <li><button onClick={() => navigate('workshops')} className="text-xs text-text-secondary hover:text-text-primary transition-colors text-left cursor-pointer">Ateliers & Formations</button></li>
                     <li><button onClick={() => navigate('events')} className="text-xs text-text-secondary hover:text-text-primary transition-colors text-left cursor-pointer">Événements</button></li>
-                    <li><button onClick={() => navigate('clubs')} className="text-xs text-text-secondary hover:text-text-primary transition-colors text-left cursor-pointer">Clubs Scientifiques</button></li>
+                    <li><button onClick={() => navigate('clubs')} className="text-xs text-text-secondary hover:text-text-primary transition-colors text-left cursor-pointer">CITE Scientifiques</button></li>
                   </ul>
                 </div>
 

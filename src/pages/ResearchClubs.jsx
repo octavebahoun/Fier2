@@ -529,7 +529,7 @@ export default function ResearchClubs({ navigate }) {
             </div>
 
             <h1 className="text-text-primary font-extrabold text-4xl md:text-5xl leading-tight">
-              Clubs de Recherche
+              CITE de Recherche
             </h1>
             <p className="text-text-secondary text-lg max-w-2xl mx-auto leading-relaxed">
               Rejoignez l'une de nos{' '}
