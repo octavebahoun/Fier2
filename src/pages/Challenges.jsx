@@ -409,7 +409,7 @@ function HackathonCard({ hackathon }) {
 
 // ───────────────────────────── Main Page ─────────────────────────────
 export default function Challenges({ navigate }) {
-  const { user, can, isAdmin } = useAuth();
+  const { user, isAdmin, isClubResponsible } = useAuth();
   const [clubs, setClubs] = useState([]);
   const [clubId, setClubId] = useState(null);
   const [challenges, setChallenges] = useState([]);
@@ -434,7 +434,9 @@ export default function Challenges({ navigate }) {
 
   const [toast, setToast] = useState(null);
 
-  const isManager = can('club:manage');
+  // Gérer un challenge est réservé au RESPONSABLE du club sélectionné (ou ADMIN),
+  // aligné sur l'autorisation réelle du backend — plus un simple niveau de rôle.
+  const isManager = isClubResponsible(clubId);
   const isMember = !!user;
 
   // ── Charger les clubs + sélection par défaut ──

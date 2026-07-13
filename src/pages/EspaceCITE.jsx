@@ -104,7 +104,7 @@ function SectionCard({ icon: Icon, title, subtitle, children, accent = '#6C4CF1'
 
 // ───────────────────────────── EspaceCITE Page ──────────────────────────────
 export default function EspaceCITE({ navigate }) {
-  const { user, can, hasMinRole } = useAuth();
+  const { user, isClubResponsible } = useAuth();
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -123,12 +123,9 @@ export default function EspaceCITE({ navigate }) {
 
   const [toast, setToast] = useState(null);
 
-  // Droits de gestion du club (Responsable / Mentor+ / Admin).
-  const isClubManager =
-    !!user &&
-    (can('club:manage') ||
-      hasMinRole(2) ||
-      user.role?.toUpperCase() === 'RESPONSABLE');
+  // Gérer la Cité (activités, recensement, rapports) est réservé au RESPONSABLE
+  // du club sélectionné (ou ADMIN) — aligné sur l'autorisation réelle du backend.
+  const isClubManager = isClubResponsible(clubId);
 
   // ── Chargement du tableau de bord ──
   const loadDashboard = async () => {
