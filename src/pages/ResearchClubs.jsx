@@ -517,7 +517,7 @@ export default function ResearchClubs({ navigate }) {
         />
       </div>
 
-      <div className="relative z-10 max-w-[92rem] mx-auto w-full py-16 px-6 md:px-12 lg:px-24">
+      <div className="relative z-10 max-w-[92rem] mx-auto w-full py-16 px-6 md:px-12 lg:px-12">
 
         {/* ── Hero Section ── */}
         <FadeInWhenVisible direction="up" delay={0}>

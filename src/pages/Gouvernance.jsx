@@ -331,7 +331,7 @@ export default function Gouvernance({ navigate }) {
         <div className="absolute top-1/2 -right-60 w-[500px] h-[500px] rounded-full opacity-[0.05] blur-[120px]" style={{ background: 'radial-gradient(circle, #e05a2b, transparent)' }} />
       </div>
 
-      <div className="relative z-10 max-w-[92rem] mx-auto w-full py-16 px-6 md:px-12 lg:px-24">
+      <div className="relative z-10 max-w-[92rem] mx-auto w-full py-16 px-6 md:px-12 lg:px-12">
         {/* Hero */}
         <FadeInWhenVisible direction="up" delay={0}>
           <div className="mb-12 space-y-4">

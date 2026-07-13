@@ -86,7 +86,7 @@ export default function ResearchClubsSection({ clubs, navigate }) {
   return (
     <section
       id="clubs"
-      className="py-24 px-6 md:px-12 lg:px-24 border-b border-border-subtle bg-bg-secondary/10 relative overflow-hidden"
+      className="py-24 px-6 md:px-12 lg:px-12 border-b border-border-subtle bg-bg-secondary/10 relative overflow-hidden"
     >
       {/* Ambient halos */}
       <div className="absolute top-1/3 right-10 w-[400px] h-[400px] rounded-full bg-radial from-accent-primary/22 to-transparent blur-[120px] pointer-events-none" />

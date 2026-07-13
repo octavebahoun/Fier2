@@ -552,7 +552,7 @@ export default function Events({ navigate }) {
           bg-emerald-500/5 blur-[100px]" />
       </div>
 
-      <div className="relative z-10 max-w-[92rem] mx-auto w-full py-24 px-6 md:px-12 lg:px-24">
+      <div className="relative z-10 max-w-[92rem] mx-auto w-full py-24 px-6 md:px-12 lg:px-12">
 
         {/* ── Hero Section ── */}
         <motion.div

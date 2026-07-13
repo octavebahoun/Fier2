@@ -66,7 +66,7 @@ export default function StudentPortal({ navigate }) {
   }, [userId])
 
   return (
-    <div className="max-w-[88rem] mx-auto w-full py-28 px-6 md:px-12 lg:px-24 relative min-h-screen">
+    <div className="max-w-[88rem] mx-auto w-full py-28 px-6 md:px-12 lg:px-12 relative min-h-screen">
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[60rem] h-[30rem] halo-radial pointer-events-none opacity-40 z-0" />
 
       <div className="relative z-10">

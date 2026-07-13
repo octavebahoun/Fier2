@@ -35,7 +35,7 @@ export default function MissionsSection({ mission }) {
   };
 
   return (
-    <section id="missions" className="py-24 px-6 md:px-12 lg:px-24 border-b border-border-subtle bg-bg-secondary/15 relative overflow-hidden">
+    <section id="missions" className="py-24 px-6 md:px-12 lg:px-12 border-b border-border-subtle bg-bg-secondary/15 relative overflow-hidden">
       {/* Background radial cosmic glows */}
       <div className="absolute top-[25%] right-[15%] w-[45vw] h-[45vw] rounded-full bg-radial from-fieri-blue/15 to-transparent blur-[120px] pointer-events-none z-0" />
       <div className="absolute bottom-[25%] left-[15%] w-[45vw] h-[45vw] rounded-full bg-radial from-accent-tertiary/12 to-transparent blur-[120px] pointer-events-none z-0" />

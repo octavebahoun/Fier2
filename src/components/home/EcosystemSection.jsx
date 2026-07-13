@@ -4,7 +4,7 @@ import FadeInWhenVisible from './FadeInWhenVisible.jsx';
 
 export default function EcosystemSection({ decouvrir }) {
   return (
-    <section id="decouvrir" className="py-24 px-6 md:px-12 lg:px-24 border-b border-border-subtle dot-grid relative">
+    <section id="decouvrir" className="py-24 px-6 md:px-12 lg:px-12 border-b border-border-subtle dot-grid relative">
       {/* Glow Spots */}
       <div className="absolute top-1/2 left-10 w-96 h-96 rounded-full bg-radial from-accent-primary/24 to-transparent blur-[100px] pointer-events-none" />
       <div className="absolute top-[10%] right-[5%] w-[40vw] h-[40vw] max-w-[450px] rounded-full bg-radial from-fieri-blue/26 to-transparent blur-[120px] pointer-events-none z-0" />

@@ -52,7 +52,7 @@ export default function ContactSection({ contact }) {
   };
 
   return (
-    <section id="contact" className="py-24 px-6 md:px-12 lg:px-24 bg-bg-secondary/5 border-b border-border-subtle relative">
+    <section id="contact" className="py-24 px-6 md:px-12 lg:px-12 bg-bg-secondary/5 border-b border-border-subtle relative">
       {/* Glow Spots */}
       <div className="absolute bottom-0 left-1/3 w-[300px] h-[300px] rounded-full bg-radial from-accent-primary/24 to-transparent blur-[100px] pointer-events-none" />
       <div className="absolute top-[20%] right-[10%] w-[35vw] h-[35vw] max-w-[400px] rounded-full bg-radial from-fieri-blue/28 to-transparent blur-[100px] pointer-events-none z-0" />

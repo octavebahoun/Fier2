@@ -17,7 +17,7 @@ export default function VisionSection({ vision }) {
   };
 
   return (
-    <section id="vision" className="py-24 px-6 md:px-12 lg:px-24 border-b border-border-subtle dot-grid relative overflow-hidden bg-bg-primary">
+    <section id="vision" className="py-24 px-6 md:px-12 lg:px-12 border-b border-border-subtle dot-grid relative overflow-hidden bg-bg-primary">
       {/* Glow spots */}
       <div className="absolute top-[40%] left-[20%] w-[45vw] h-[45vw] rounded-full bg-radial from-fieri-blue/18 to-transparent blur-[120px] pointer-events-none z-0" />
       <div className="absolute bottom-[20%] right-[10%] w-[35vw] h-[35vw] rounded-full bg-radial from-accent-tertiary/12 to-transparent blur-[100px] pointer-events-none z-0" />

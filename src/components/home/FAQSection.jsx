@@ -7,7 +7,7 @@ export default function FAQSection({ faq }) {
   const [expandedFaqIndex, setExpandedFaqIndex] = useState(null);
 
   return (
-    <section id="faq" className="py-24 px-6 md:px-12 lg:px-24 border-b border-border-subtle dot-grid relative overflow-hidden">
+    <section id="faq" className="py-24 px-6 md:px-12 lg:px-12 border-b border-border-subtle dot-grid relative overflow-hidden">
       {/* Glow Spots */}
       <div className="absolute top-1/3 right-[5%] w-[40vw] h-[40vw] max-w-[450px] rounded-full bg-radial from-accent-secondary/22 to-transparent blur-[110px] pointer-events-none z-0" />
       <div className="absolute bottom-1/3 left-[5%] w-[40vw] h-[40vw] max-w-[450px] rounded-full bg-radial from-fieri-blue/26 to-transparent blur-[110px] pointer-events-none z-0" />

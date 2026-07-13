@@ -12,7 +12,7 @@ const TYPE_ICONS = {
 
 export default function PartnersSection({ partenaires }) {
   return (
-    <section id="partenaires" className="py-24 px-6 md:px-12 lg:px-24 border-b border-border-subtle bg-bg-secondary/5 relative overflow-hidden">
+    <section id="partenaires" className="py-24 px-6 md:px-12 lg:px-12 border-b border-border-subtle bg-bg-secondary/5 relative overflow-hidden">
       {/* Glow ambient background spot */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[70vw] h-[25vw] rounded-full bg-radial from-accent-primary/8 to-transparent blur-[120px] pointer-events-none z-0" />
 

@@ -6,7 +6,7 @@ import heroBg from '../../assets/hero.webp';
 
 export default function HeroSection({ hero, navigate }) {
   return (
-    <section id="hero" className="relative min-h-[92vh] flex items-center justify-center pt-24 px-6 md:px-12 lg:px-24 blueprint-grid border-b border-border-subtle overflow-hidden">
+    <section id="hero" className="relative min-h-[92vh] flex items-center justify-center pt-24 px-6 md:px-12 lg:px-12 blueprint-grid border-b border-border-subtle overflow-hidden">
       {/* Vignette gradients to ensure extreme readability & premium cosmic ambiance */}
       <div className="absolute inset-0 bg-gradient-to-t from-bg-primary via-bg-primary/75 to-bg-primary/35 z-0" />
       <div className="absolute inset-0 bg-radial from-transparent via-bg-primary/10 to-bg-primary/90 z-0" />

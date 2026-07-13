@@ -4,7 +4,7 @@ import FadeInWhenVisible from './FadeInWhenVisible.jsx';
 
 export default function PillarsSection({ mission }) {
   return (
-    <section className="py-24 px-6 md:px-12 lg:px-24 border-b border-border-subtle bg-bg-secondary/20 relative">
+    <section className="py-24 px-6 md:px-12 lg:px-12 border-b border-border-subtle bg-bg-secondary/20 relative">
       {/* Glow Spots */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[50vw] h-[50vw] max-w-[600px] rounded-full bg-radial from-fieri-blue/26 to-transparent blur-[120px] pointer-events-none z-0" />
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[55vw] h-[55vw] max-w-[650px] rounded-full bg-radial from-accent-primary/24 to-transparent blur-[130px] pointer-events-none z-0" />

@@ -33,7 +33,7 @@ export default function OrgSection({ organisation, navigate }) {
   };
 
   return (
-    <section id="organisation" className="py-24 px-6 md:px-12 lg:px-24 border-b border-border-subtle relative bg-bg-primary dot-grid">
+    <section id="organisation" className="py-24 px-6 md:px-12 lg:px-12 border-b border-border-subtle relative bg-bg-primary dot-grid">
       {/* Background Ambience halos */}
       <div className="absolute top-[35%] left-[50%] -translate-x-1/2 w-[60vw] h-[30vw] rounded-full bg-radial from-accent-primary/8 to-transparent blur-[120px] pointer-events-none z-0" />
 

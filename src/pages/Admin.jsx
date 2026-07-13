@@ -132,7 +132,7 @@ export default function Admin({ navigate }) {
   }
 
   return (
-    <div className="max-w-[92rem] mx-auto w-full py-24 px-6 md:px-12 lg:px-24">
+    <div className="max-w-[92rem] mx-auto w-full py-24 px-6 md:px-12 lg:px-12">
       {/* En-tête */}
       <div className="flex flex-col gap-2 mb-10">
         <div className="flex items-center gap-3">

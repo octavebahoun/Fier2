@@ -597,7 +597,7 @@ export default function Challenges({ navigate }) {
           style={{ background: 'radial-gradient(circle, #e05a2b, transparent)' }} />
       </div>
 
-      <div className="relative z-10 max-w-[92rem] mx-auto w-full py-16 px-6 md:px-12 lg:px-24">
+      <div className="relative z-10 max-w-[92rem] mx-auto w-full py-16 px-6 md:px-12 lg:px-12">
         <div className="mb-10 space-y-4">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest bg-fieri-blue/10 text-fieri-blue border border-fieri-blue/25">
             <Trophy className="w-3.5 h-3.5" />

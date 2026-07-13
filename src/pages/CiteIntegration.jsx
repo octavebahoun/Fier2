@@ -536,7 +536,7 @@ export default function CiteIntegration({ navigate }) {
       <div className="absolute top-10 left-1/2 -translate-x-1/2 w-[80vw] h-[80vw] max-w-[900px] max-h-[900px] rounded-full bg-radial from-accent-primary/18 to-transparent blur-[100px] pointer-events-none" />
       <div className="absolute bottom-0 right-0 w-[42vw] h-[42vw] rounded-full bg-radial from-accent-tertiary/12 to-transparent blur-[90px] pointer-events-none" />
 
-      <section className="relative z-10 max-w-[92rem] mx-auto w-full px-6 md:px-12 lg:px-24 py-10 md:py-14">
+      <section className="relative z-10 max-w-[92rem] mx-auto w-full px-6 md:px-12 lg:px-12 py-10 md:py-14">
         <div className="flex flex-col gap-8">
           <header className="flex flex-col gap-8 lg:flex-row lg:items-start lg:justify-between">
             <div className="max-w-2xl lg:max-w-[45%]">

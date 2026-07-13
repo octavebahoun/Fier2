@@ -118,7 +118,7 @@ function ProfileSkeleton() {
     <motion.div
       animate={{ opacity: [0.3, 0.7, 0.3] }}
       transition={{ repeat: Infinity, duration: 1.5, ease: "easeInOut" }}
-      className="max-w-[88rem] mx-auto w-full py-24 px-6 md:px-12 lg:px-24 flex flex-col gap-12"
+      className="max-w-[88rem] mx-auto w-full py-24 px-6 md:px-12 lg:px-12 flex flex-col gap-12"
     >
       {/* Back button */}
       <div className="h-10 bg-white/5 rounded-xl w-36" />
@@ -271,7 +271,7 @@ export default function ResearcherProfile({ navigate, researcherId }) {
   const publications = MOCK_PUBLICATIONS[researcher?.id] || []
 
   return (
-    <div className="max-w-[88rem] mx-auto w-full py-24 px-6 md:px-12 lg:px-24 relative min-h-screen">
+    <div className="max-w-[88rem] mx-auto w-full py-24 px-6 md:px-12 lg:px-12 relative min-h-screen">
       {/* Toast Alert */}
       <AnimatePresence>
         {toast && <Toast message={toast} onClose={() => setToast(null)} />}

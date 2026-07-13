@@ -62,7 +62,7 @@ export default function Projects({ navigate }) {
   };
 
   return (
-    <div className="max-w-[88rem] mx-auto w-full py-24 px-6 md:px-12 lg:px-24 flex flex-col gap-12 relative min-h-screen">
+    <div className="max-w-[88rem] mx-auto w-full py-24 px-6 md:px-12 lg:px-12 flex flex-col gap-12 relative min-h-screen">
       
       {/* Decorative cosmic glows */}
       <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[500px] h-[500px] bg-fieri-blue/5 rounded-full blur-[140px] pointer-events-none" />

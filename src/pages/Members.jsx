@@ -151,7 +151,7 @@ export default function Members({ navigate }) {
   }
 
   return (
-    <div className="max-w-[88rem] mx-auto w-full py-24 px-6 md:px-12 lg:px-24 relative blueprint-grid min-h-screen">
+    <div className="max-w-[88rem] mx-auto w-full py-24 px-6 md:px-12 lg:px-12 relative blueprint-grid min-h-screen">
       {/* Background Star Radial Aura */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[60rem] h-[30rem] halo-radial pointer-events-none opacity-50 z-0" />
 

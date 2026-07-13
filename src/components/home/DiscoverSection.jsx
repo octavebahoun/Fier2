@@ -5,7 +5,7 @@ import FadeInWhenVisible from './FadeInWhenVisible.jsx';
 
 export default function DiscoverSection({ decouvrir, navigate }) {
   return (
-    <section id="decouvrir" className="py-24 px-6 md:px-12 lg:px-24 border-b border-border-subtle relative overflow-hidden bg-bg-primary dot-grid">
+    <section id="decouvrir" className="py-24 px-6 md:px-12 lg:px-12 border-b border-border-subtle relative overflow-hidden bg-bg-primary dot-grid">
       {/* Glow Ambient Spots */}
       <div className="absolute top-[20%] left-[-10%] w-[45vw] h-[45vw] rounded-full bg-radial from-fieri-blue/20 to-transparent blur-[120px] pointer-events-none z-0" />
       <div className="absolute bottom-[20%] right-[-10%] w-[35vw] h-[35vw] rounded-full bg-radial from-accent-secondary/15 to-transparent blur-[100px] pointer-events-none z-0" />
