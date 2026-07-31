@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
   ShieldCheck, FileBadge, UserX, Check, X, AlertCircle, Loader2,
   ChevronDown, Send, CheckCircle2, Inbox, Sparkles, GraduationCap, Award,
-  Upload, PenTool, FileCheck
+  Upload, PenTool, FileCheck, Users
 } from 'lucide-react';
 import api from '../services/api.js';
 import { useAuth } from '../context/AuthContext.jsx';
