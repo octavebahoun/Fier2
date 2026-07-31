@@ -85,13 +85,13 @@ body.light-theme {
   --color-border-glow: rgba(31, 95, 168, 0.24);
   --color-grid-line: rgba(17, 24, 39, 0.045);
 
-  /* Surfaces des panneaux à fond inline (voir --panel-glass sur body) */
-  --panel-glass: rgba(255, 255, 255, 0.9);
+  /* Surfaces des panneaux à fond solide mat (pas de transparence) */
+  --panel-glass: #FFFFFF;
   --panel-glass-strong: #FFFFFF;
 
-  /* Effet « verre » désactivé en clair : surface mate, sans flou agressif */
-  --glass-bg: rgba(255, 255, 255, 0.88);
-  --glass-bg-hover: rgba(255, 255, 255, 0.96);
+  /* Effet « verre » totalement désactivé : fond 100% opaque mat */
+  --glass-bg: #FFFFFF;
+  --glass-bg-hover: #F8FAFD;
   --glass-blur: none;
   --glass-border: #D8E1EC;
   --glass-border-hover: rgba(31, 95, 168, 0.28);
@@ -108,18 +108,18 @@ body.light-theme {
 
 /* Global resets and layouts */
 body {
-  /* Fonds des panneaux à style inline, pilotés par thème (dark par défaut) */
-  --panel-glass: rgba(13, 17, 32, 0.65);
-  --panel-glass-strong: rgba(13, 17, 32, 0.95);
+  /* Fonds des panneaux opaques solides (dark par défaut) */
+  --panel-glass: #0D1120;
+  --panel-glass-strong: #0D1120;
 
-  /* Effet « verre » de .glass-panel, piloté par thème (dark par défaut) */
-  --glass-bg: rgba(13, 17, 32, 0.7);
-  --glass-bg-hover: rgba(15, 22, 42, 0.85);
-  --glass-blur: blur(16px);
-  --glass-border: rgba(255, 255, 255, 0.06);
+  /* Fond opaque mat 100% sans transparence ni flou */
+  --glass-bg: #0D1120;
+  --glass-bg-hover: #111827;
+  --glass-blur: none;
+  --glass-border: rgba(255, 255, 255, 0.08);
   --glass-border-hover: rgba(27, 111, 216, 0.35);
-  --glass-shadow: 0 4px 30px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.05);
-  --glass-shadow-hover: 0 12px 40px rgba(27, 111, 216, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  --glass-shadow: 0 4px 20px rgba(0, 0, 0, 0.45);
+  --glass-shadow-hover: 0 8px 30px rgba(27, 111, 216, 0.18);
 
   background-color: var(--color-bg-primary);
   color: var(--color-text-primary);
@@ -198,14 +198,19 @@ body.light-theme {
   background: rgba(255, 255, 255, 0.2);
 }
 
-/* Utility animations and custom glass effects.
-   Piloté par variables (mécanisme des tokens) → change proprement selon le thème
-   sans dépendre de la cascade des layers Tailwind. */
+/* Neutralisation systématique globale du glassmorphisme et des effets de transparence */
+*,
+*::before,
+*::after {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
 .glass-panel {
-  background: var(--glass-bg);
-  backdrop-filter: var(--glass-blur);
-  -webkit-backdrop-filter: var(--glass-blur);
-  border: 1px solid var(--glass-border);
+  background-color: var(--glass-bg) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  border: 1px solid var(--glass-border) !important;
   box-shadow: var(--glass-shadow);
   transition:
     background-color 0.2s ease,
@@ -215,10 +220,44 @@ body.light-theme {
 }
 
 .glass-panel:hover {
-  border-color: var(--glass-border-hover);
-  background: var(--glass-bg-hover);
+  border-color: var(--glass-border-hover) !important;
+  background-color: var(--glass-bg-hover) !important;
   box-shadow: var(--glass-shadow-hover);
   transform: translateY(-3px);
+}
+
+/* Neutralisation des classes utilitaires de flou et de semi-transparence */
+[class*="backdrop-blur"] {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+.bg-bg-secondary\/60,
+.bg-bg-secondary\/70,
+.bg-bg-secondary\/80,
+.bg-bg-secondary\/85,
+.bg-bg-secondary\/90,
+.bg-bg-secondary\/95,
+.bg-bg-secondary\/98,
+.bg-bg-secondary\/30,
+.bg-bg-secondary\/40,
+.bg-bg-secondary\/45,
+.bg-bg-secondary\/50 {
+  background-color: var(--color-bg-secondary) !important;
+}
+
+.bg-bg-primary\/40,
+.bg-bg-primary\/60,
+.bg-bg-primary\/80,
+.bg-bg-primary\/90 {
+  background-color: var(--color-bg-primary) !important;
+}
+
+.bg-bg-tertiary\/40,
+.bg-bg-tertiary\/60,
+.bg-bg-tertiary\/80,
+.bg-bg-tertiary\/90 {
+  background-color: var(--color-bg-tertiary) !important;
 }
 
 .text-gradient-blue {

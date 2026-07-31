@@ -134,81 +134,6 @@ const citeData = {
           ]
         }
       ]
-    },
-    {
-      id: 'cote-ivoire',
-      name: 'Côte d’Ivoire',
-      flag: 'CI',
-      region: 'Afrique de l’Ouest',
-      summary: 'Déploiement orienté concours, prototypage et clubs scientifiques campus.',
-      bureau: [
-        { name: 'Yao K.', role: 'Coordinateur national', contact: 'yao@fieri.org' },
-        { name: 'Prisca N.', role: 'Responsable communication', contact: 'communication.ci@fieri.org' }
-      ],
-      universities: [
-        {
-          id: 'ufhb',
-          name: 'Université Félix Houphouët-Boigny',
-          city: 'Abidjan',
-          leaders: [
-            { name: 'Mariam C.', role: 'Responsable universitaire', contact: '+225 07 00 00 00 12' }
-          ],
-          clubs: [
-            {
-              id: 'energie-ufhb',
-              name: 'Club Éco-Énergie',
-              domain: 'Micro-réseaux, solaire, efficacité énergétique',
-              members: 63,
-              activity: 'Prototype de mini-station solaire intelligente.',
-              decision: 'Orienter les projets vers les besoins d’électrification locale.',
-              textile: 'Maillot vert profond avec symbole énergie FIERI.',
-              chief: {
-                name: 'Ibrahim S.',
-                role: 'Responsable du club',
-                phone: '+225 07 11 22 33 44',
-                email: 'energie.ufhb@fieri.org'
-              }
-            }
-          ]
-        }
-      ]
-    },
-    {
-      id: 'senegal',
-      name: 'Sénégal',
-      flag: 'SN',
-      region: 'Afrique de l’Ouest',
-      summary: 'Antenne en structuration autour des universités et des laboratoires étudiants.',
-      bureau: [
-        { name: 'Fatou G.', role: 'Représentante nationale', contact: 'fatou@fieri.org' }
-      ],
-      universities: [
-        {
-          id: 'ucad',
-          name: 'Université Cheikh Anta Diop',
-          city: 'Dakar',
-          leaders: [
-            { name: 'Oumar L.', role: 'Responsable universitaire', contact: '+221 77 000 00 00' }
-          ],
-          clubs: [
-            {
-              id: 'iot-ucad',
-              name: 'Club IoT & Systèmes Embarqués',
-              domain: 'Capteurs, réseaux, edge computing',
-              members: 36,
-              activity: 'Montage de capteurs connectés pour suivi environnemental.',
-              decision: 'Lancer un kit d’apprentissage IoT pour nouveaux membres.',
-              textile: 'T-shirt bleu électrique avec motif capteurs connectés.',
-              chief: {
-                name: 'Awa N.',
-                role: 'Responsable du club',
-                phone: '+221 76 45 90 12',
-                email: 'iot.ucad@fieri.org'
-              }
-            }
-          ]
-        }
-      ]
     }
   ]
 };
@@ -222,8 +147,7 @@ const getInitialJoinForm = () => ({
 });
 
 const countryFallbacks = {
-  'Bénin': { flag: '🇧🇯', region: 'Afrique de l’Ouest', summary: 'Cité pilote FIERI avec des clubs universitaires orientés innovation utile.' },
-  'Côte d’Ivoire': { flag: '🇨🇮', region: 'Afrique de l’Ouest', summary: 'Déploiement orienté concours, prototypage et clubs scientifiques campus.' }
+  'Bénin': { flag: '🇧🇯', region: 'Afrique de l’Ouest', summary: 'Cité pilote FIERI avec des clubs universitaires orientés innovation utile.' }
 };
 
 const universityFallbacks = {
@@ -330,21 +254,67 @@ export default function CiteIntegration({ navigate }) {
     }
   }, [selectedClubId]);
 
+  // Reconstruct global governance dynamically from members
+  const globalGovernance = useMemo(() => {
+    const globalFounders = members.filter(
+      (m) => m.isEmblematic || (m.role === 'ADMIN' && !m.countryPost && !m.universityPost)
+    );
+
+    if (globalFounders.length > 0) {
+      return {
+        founders: globalFounders.map((m) => ({
+          name: `${m.firstName} ${m.lastName}`,
+          role: m.isEmblematic ? 'Fondateur / Membre Émblématique' : 'Administrateur International',
+          country: getMemberLocation(m).country?.name || 'International',
+          bio: m.bio || `Leader de la communauté FIERI. (${m.email})`
+        })),
+        board: [
+          'Présidence internationale',
+          'Secrétariat général',
+          'Coordination des cités nationales',
+          'Direction innovation & recherche',
+          'Communication institutionnelle'
+        ]
+      };
+    }
+
+    return {
+      founders: [
+        {
+          name: 'Présidence & Bureau International',
+          role: 'En attente de nomination',
+          country: 'International',
+          bio: 'Les nominations pour la gouvernance mondiale sont en cours de validation.',
+          pending: true
+        }
+      ],
+      board: [
+        'Présidence internationale (En attente)',
+        'Secrétariat général (En attente)',
+        'Coordination des cités nationales',
+        'Direction innovation & recherche'
+      ]
+    };
+  }, [members, branchesMap, universitiesMap, rawCountries]);
+
   // Helper to resolve a member's location within the country/university/branch hierarchy
   const getMemberLocation = (member) => {
+    if (!member || member.branchId == null) {
+      return { branch: null, university: null, country: null };
+    }
     let memberBranch = null;
     let memberUni = null;
     let memberCountry = null;
 
-    for (const [uniId, bList] of Object.entries(branchesMap)) {
-      const foundBranch = (bList || []).find(b => b.id === member.branchId);
+    for (const bList of Object.values(branchesMap)) {
+      const foundBranch = (bList || []).find((b) => Number(b.id) === Number(member.branchId));
       if (foundBranch) {
         memberBranch = foundBranch;
-        for (const [cId, uList] of Object.entries(universitiesMap)) {
-          const foundUni = (uList || []).find(u => u.id === foundBranch.universityId);
+        for (const uList of Object.values(universitiesMap)) {
+          const foundUni = (uList || []).find((u) => Number(u.id) === Number(foundBranch.universityId));
           if (foundUni) {
             memberUni = foundUni;
-            memberCountry = rawCountries.find(c => c.id === foundUni.countryId);
+            memberCountry = rawCountries.find((c) => Number(c.id) === Number(foundUni.countryId));
             break;
           }
         }
@@ -356,14 +326,18 @@ export default function CiteIntegration({ navigate }) {
 
   // Reconstruct the full hierarchical data model
   const countries = useMemo(() => {
-    return rawCountries.map(c => {
-      const fallback = countryFallbacks[c.name] || { flag: '🌐', region: 'Afrique', summary: 'Cité de recherche et d\'innovation FIERI.' };
-      
+    return rawCountries.map((c) => {
+      const fallback = countryFallbacks[c.name] || {
+        flag: '🌐',
+        region: 'Afrique',
+        summary: 'Cité de recherche et d\'innovation FIERI.'
+      };
+
       const unisList = universitiesMap[c.id] || [];
-      const countryUnis = unisList.map(u => {
+      const countryUnis = unisList.map((u) => {
         const uFallback = universityFallbacks[u.name] || { city: 'Campus' };
-        
-        const uniClubs = clubs.map(club => {
+
+        const uniClubs = clubs.map((club) => {
           const clubFallback = clubFallbacks[club.id] || {
             domain: club.discipline || 'Recherche scientifique',
             activity: club.description || 'Activités du pôle R&D.',
@@ -377,15 +351,35 @@ export default function CiteIntegration({ navigate }) {
             members: club.memberCount || 0,
             activity: clubFallback.activity,
             decision: clubFallback.decision,
-            textile: clubFallback.textile
+            textile: clubFallback.textile,
+            responsibleId: club.responsibleId,
+            responsible: club.responsible
           };
         });
 
+        // University leaders: RESPONSABLE, MENTOR, CHEF_UNIVERSITAIRE or universityPost (excluding simple ETUDIANT)
         const leaders = members
-          .filter(m => (m.role === 'RESPONSABLE' || m.role === 'MENTOR') && getMemberLocation(m).university?.id === u.id)
-          .map(m => ({
+          .filter((m) => {
+            if (m.role === 'ETUDIANT') return false;
+            const loc = getMemberLocation(m);
+            return (
+              (m.role === 'RESPONSABLE' ||
+                m.role === 'MENTOR' ||
+                m.role === 'CHEF_UNIVERSITAIRE' ||
+                m.universityPost?.universityId === u.id) &&
+              (loc.university?.id === u.id || (!loc.university && m.role === 'RESPONSABLE'))
+            );
+          })
+          .map((m) => ({
+            id: m.id,
             name: `${m.firstName} ${m.lastName}`,
-            role: m.role === 'MENTOR' ? 'Mentor Universitaire' : 'Responsable Universitaire',
+            role:
+              m.universityPost?.post ||
+              (m.role === 'MENTOR'
+                ? 'Mentor Universitaire'
+                : m.role === 'CHEF_UNIVERSITAIRE'
+                ? 'Chef Universitaire'
+                : 'Responsable Universitaire'),
             contact: m.email
           }));
 
@@ -393,18 +387,36 @@ export default function CiteIntegration({ navigate }) {
           id: u.id,
           name: u.name,
           city: uFallback.city,
-          leaders: leaders.length ? leaders : [
-            { name: 'Dr. Nadège B.', role: 'Responsable universitaire', contact: 'contact@fieri.org' }
-          ],
+          leaders: leaders.length
+            ? leaders
+            : [
+                {
+                  name: 'Direction Universitaire',
+                  role: 'En attente de nomination',
+                  contact: 'Postes universitaires non encore attribués.',
+                  pending: true
+                }
+              ],
           clubs: uniClubs
         };
       });
 
+      // National bureau: ADMIN or member with countryPost for country c (excluding simple ETUDIANT)
       const bureau = members
-        .filter(m => m.role === 'ADMIN' && getMemberLocation(m).country?.id === c.id)
-        .map(m => ({
+        .filter((m) => {
+          if (m.role === 'ETUDIANT') return false;
+          const loc = getMemberLocation(m);
+          return (
+            (m.role === 'ADMIN' || m.countryPost?.countryId === c.id) &&
+            (loc.country?.id === c.id || m.role === 'ADMIN')
+          );
+        })
+        .map((m) => ({
+          id: m.id,
           name: `${m.firstName} ${m.lastName}`,
-          role: 'Membre du Bureau National',
+          role:
+            m.countryPost?.post ||
+            (m.role === 'ADMIN' ? 'Administrateur National' : 'Membre du Bureau National'),
           contact: m.email
         }));
 
@@ -414,9 +426,16 @@ export default function CiteIntegration({ navigate }) {
         flag: fallback.flag,
         region: fallback.region,
         summary: fallback.summary,
-        bureau: bureau.length ? bureau : [
-          { name: 'Arielle H.', role: 'Présidente nationale', contact: 'arielle@fieri.org' }
-        ],
+        bureau: bureau.length
+          ? bureau
+          : [
+              {
+                name: 'Bureau National',
+                role: 'En attente de nomination',
+                contact: 'Direction nationale non attribuée dans la base de données.',
+                pending: true
+              }
+            ],
         universities: countryUnis
       };
     });
@@ -425,26 +444,44 @@ export default function CiteIntegration({ navigate }) {
   // Selected entities based on selection hooks
   const selectedCountry = countries.find((country) => country.id === selectedCountryId);
   const selectedUniversity = selectedCountry?.universities.find((university) => university.id === selectedUniversityId);
-  
+
   // Decorate selectedClub with dynamic details and chief loaded from backend
   const selectedClub = useMemo(() => {
     if (!selectedUniversity) return null;
     const basicClub = selectedUniversity.clubs.find((club) => club.id === selectedClubId);
     if (!basicClub) return null;
 
-    // Resolve chief
     let chief = null;
-    if (selectedClubDetail && selectedClubDetail.members) {
-      const foundChief = selectedClubDetail.members.find(m => m.role === 'RESPONSABLE') ||
-                         selectedClubDetail.members.find(m => m.role === 'CHEF_DE_PROJET') ||
-                         selectedClubDetail.members.find(m => m.role === 'ADMIN') ||
-                         selectedClubDetail.members[0];
-      if (foundChief) {
-        const fullInfo = members.find(m => m.id === foundChief.id);
+    if (basicClub.responsible) {
+      chief = {
+        name: `${basicClub.responsible.firstName} ${basicClub.responsible.lastName}`,
+        role: 'Responsable du Club',
+        phone: '+229 01 00 00 00',
+        email: 'contact@fieri.org'
+      };
+    } else if (basicClub.responsibleId) {
+      const respMember = members.find((m) => m.id === basicClub.responsibleId);
+      if (respMember && respMember.role !== 'ETUDIANT') {
+        chief = {
+          name: `${respMember.firstName} ${respMember.lastName}`,
+          role: 'Responsable du Club',
+          phone: respMember.phone || '+229 01 00 00 00',
+          email: respMember.email
+        };
+      }
+    }
+
+    if (!chief && selectedClubDetail && selectedClubDetail.members) {
+      const foundChief =
+        selectedClubDetail.members.find((m) => m.role === 'RESPONSABLE') ||
+        selectedClubDetail.members.find((m) => m.role === 'CHEF_DE_PROJET') ||
+        selectedClubDetail.members.find((m) => m.role === 'ADMIN');
+      if (foundChief && foundChief.role !== 'ETUDIANT') {
+        const fullInfo = members.find((m) => m.id === foundChief.id);
         chief = {
           name: `${foundChief.firstName} ${foundChief.lastName}`,
           role: foundChief.role === 'RESPONSABLE' ? 'Responsable du Club' : 'Chef de projet / Référent',
-          phone: fullInfo?.phone || '+229 01 00 00 00 00',
+          phone: fullInfo?.phone || '+229 01 00 00 00',
           email: fullInfo?.email || foundChief.email || ''
         };
       }
@@ -454,10 +491,11 @@ export default function CiteIntegration({ navigate }) {
       ...basicClub,
       members: selectedClubDetail?.members?.length ?? basicClub.members,
       chief: chief || {
-        name: 'Christ M.',
-        role: 'Responsable du club',
-        phone: '+229 01 67 45 21 09',
-        email: 'robotique.uac@fieri.org'
+        name: 'En attente de nomination',
+        role: 'Responsable non désigné',
+        phone: 'En attente',
+        email: 'En attente',
+        pending: true
       }
     };
   }, [selectedUniversity, selectedClubId, selectedClubDetail, members]);
@@ -610,8 +648,8 @@ export default function CiteIntegration({ navigate }) {
                   <GovernanceView
                     title="Fondateurs et gouvernance globale"
                     subtitle="Équipe internationale qui porte la vision, la coordination et l’expansion de la FIERI."
-                    people={citeData.globalGovernance.founders}
-                    board={citeData.globalGovernance.board}
+                    people={globalGovernance.founders}
+                    board={globalGovernance.board}
                     onBack={goCountries}
                   />
                 )}

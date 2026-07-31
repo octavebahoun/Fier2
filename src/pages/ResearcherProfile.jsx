@@ -15,7 +15,19 @@ import {
   Heart,
   Globe,
   Briefcase,
-  Newspaper
+  Newspaper,
+  ShieldCheck,
+  GraduationCap,
+  Microscope,
+  UserCheck,
+  Edit3,
+  X,
+  Save,
+  Check,
+  Zap,
+  Building,
+  Layers,
+  FileText
 } from 'lucide-react'
 import { useAuth } from '../context/AuthContext.jsx'
 import { useAuthGate } from '../context/AuthGateContext.jsx'
@@ -46,6 +58,129 @@ function Toast({ message, type = 'success', onClose }) {
       <span className="text-sm font-bold">{message}</span>
     </motion.div>
   )
+}
+
+// ─────────────────────────── Helper: Dynamic Role Configuration Matrix ───────────────────────────
+function getRoleBadgeConfig(researcher, currentUser) {
+  const isOwn = !researcher?.id || researcher?.id === currentUser?.id || researcher?.email === currentUser?.email || researcher?.isMe || researcher?.roleTitle === currentUser?.role
+  
+  const roleUpper = String((isOwn && currentUser?.role) || researcher?.role || currentUser?.role || '').toUpperCase()
+  const cPost = String((isOwn && currentUser?.countryPost?.post) || researcher?.countryPost || currentUser?.countryPost || '').toUpperCase()
+  const uPost = String((isOwn && currentUser?.universityPost?.post) || researcher?.universityPost || currentUser?.universityPost || '').toUpperCase()
+
+  if (roleUpper === 'ADMIN' || cPost.includes('ADMIN') || cPost.includes('PRESIDENT')) {
+    return {
+      category: 'ADMINISTRATION FIERI',
+      title: 'SUPER ADMINISTRATEUR & BUREAU EXÉCUTIF',
+      badgeClass: 'bg-amber-500/15 border-amber-500/40 text-amber-300 shadow-[0_0_15px_rgba(245,158,11,0.2)]',
+      gradientGlow: 'from-amber-500/20 via-purple-600/15 to-fieri-blue/20',
+      icon: ShieldCheck,
+      iconColor: 'text-amber-400',
+      responsibilities: [
+        'Supervision globale de la gouvernance et de l\'intégrité du réseau FIERI',
+        'Validation et agrément officiel des nouveaux clubs et pôles de recherche',
+        'Nomination des Chefs Universitaires et des Responsables Nationaux',
+        'Arbitrage budgétaire, modération et gestion des accès privilégiés RBAC'
+      ],
+      capabilities: [
+        'Accès administrateur complet au Back-Office FIERI',
+        'Modération globale des membres, publications et événements',
+        'Validation des propositions de projets R&D stratégiques',
+        'Gestion des droits, promotion et rétrogradation des membres'
+      ]
+    }
+  }
+
+  if (roleUpper === 'CHEF_UNIVERSITAIRE' || uPost.includes('CHEF') || uPost.includes('RECTEUR') || uPost.includes('DIRECTEUR')) {
+    return {
+      category: 'GOUVERNANCE LOCALE',
+      title: 'CHEF D\'ÉTABLISSEMENT UNIVERSITAIRE',
+      badgeClass: 'bg-cyan-500/15 border-cyan-500/40 text-cyan-300 shadow-[0_0_15px_rgba(6,182,212,0.2)]',
+      gradientGlow: 'from-cyan-500/20 via-indigo-600/15 to-fieri-blue/20',
+      icon: GraduationCap,
+      iconColor: 'text-cyan-400',
+      responsibilities: [
+        'Direction stratégique et supervision de la gouvernance locale sur le campus',
+        'Validation des dossiers d\'intégration des clubs universitaires',
+        'Supervision des budgets d\'équipement et des événements scientifiques du campus',
+        'Représentation institutionnelle de l\'Université au sein de la Cité FIERI'
+      ],
+      capabilities: [
+        'Supervision de tous les Pôles R&D et Clubs de l\'Université',
+        'Émission d\'attestations et certifications académiques pour les étudiants',
+        'Approbation des demandes de financement et matériel R&D local',
+        'Validation et diffusion des actualités scientifiques du campus'
+      ]
+    }
+  }
+
+  if (roleUpper === 'RESPONSABLE' || roleUpper.includes('RESPONSABLE')) {
+    return {
+      category: 'DIRECTION TECHNIQUE',
+      title: 'RESPONSABLE DE PÔLE DE RECHERCHE & CLUB',
+      badgeClass: 'bg-emerald-500/15 border-emerald-500/40 text-emerald-300 shadow-[0_0_15px_rgba(16,185,129,0.2)]',
+      gradientGlow: 'from-emerald-500/20 via-teal-600/15 to-fieri-blue/20',
+      icon: Award,
+      iconColor: 'text-emerald-400',
+      responsibilities: [
+        'Pilotage de la feuille de route scientifique et des objectifs techniques du pôle',
+        'Encadrement de l\'équipe d\'étudiants chercheurs et répartition des travaux',
+        'Suivi du budget R&D du club et gestion du matériel d\'expérimentation',
+        'Organisation des démonstrations techniques et ateliers pratiques'
+      ],
+      capabilities: [
+        'Gestion de l\'effectif et validation des adhésions au pôle',
+        'Création, mise à jour et suivi des projets R&D du club',
+        'Publication d\'articles de recherche et bilans techniques',
+        'Validation de la présence des membres aux ateliers scientifiques'
+      ]
+    }
+  }
+
+  if (roleUpper === 'CHERCHEUR' || roleUpper.includes('CHERCHEUR')) {
+    return {
+      category: 'RECHERCHE APPLIQUÉE',
+      title: 'ÉTIUDIANT CHERCHEUR ACCRÉDITÉ R&D',
+      badgeClass: 'bg-violet-500/15 border-violet-500/40 text-violet-300 shadow-[0_0_15px_rgba(139,92,246,0.2)]',
+      gradientGlow: 'from-violet-500/20 via-fuchsia-600/15 to-fieri-blue/20',
+      icon: Microscope,
+      iconColor: 'text-violet-400',
+      responsibilities: [
+        'Conduite de travaux de recherche appliquée et expérimentations en laboratoire',
+        'Développement de prototypes physiques et algorithmes spécialisés',
+        'Rédaction de papiers scientifiques et livrables de recherche',
+        'Mentorat technique et accompagnement des membres étudiants'
+      ],
+      capabilities: [
+        'Soumission et direction de projets de recherche R&D',
+        'Publication d\'articles dans le Journal Scientifique FIERI',
+        'Soumission de demandes de soutien matériel et financier R&D',
+        'Présentation des prototypes aux symposia et compétitions'
+      ]
+    }
+  }
+
+  // Default: ETUDIANT
+  return {
+    category: 'COMMUNAUTÉ ÉTUDIANTE',
+    title: 'MEMBRE ÉTUDIANT ACADÉMIQUE',
+    badgeClass: 'bg-sky-500/15 border-sky-500/40 text-sky-300 shadow-[0_0_15px_rgba(14,165,233,0.2)]',
+    gradientGlow: 'from-sky-500/20 via-blue-600/15 to-fieri-blue/20',
+    icon: UserCheck,
+    iconColor: 'text-sky-400',
+    responsibilities: [
+      'Participation active aux projets, ateliers et hackathons du club',
+      'Acquisition progressive de compétences scientifiques et techniques',
+      'Contribution aux livrables collectifs et travaux pratiques',
+      'Respect des règles de gouvernance et de la charte de la Cité'
+    ],
+    capabilities: [
+      'Adhésion aux clubs et pôles de recherche de son université',
+      'Inscription prioritaire aux ateliers et formations scientifiques',
+      'Accès au catalogue des projets et actualités de la Cité',
+      'Candidature aux opportunités de stages et bourses R&D'
+    ]
+  }
 }
 
 // ─────────────────────────── Mock Publications Data ───────────────────────────
@@ -120,12 +255,8 @@ function ProfileSkeleton() {
       transition={{ repeat: Infinity, duration: 1.5, ease: "easeInOut" }}
       className="max-w-[88rem] mx-auto w-full py-24 px-6 md:px-12 lg:px-12 flex flex-col gap-12"
     >
-      {/* Back button */}
       <div className="h-10 bg-white/5 rounded-xl w-36" />
-      
-      {/* Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Left Side (Header & Bio) */}
         <div className="lg:col-span-2 flex flex-col gap-8">
           <div className="glass-panel rounded-3xl p-8 flex flex-col md:flex-row gap-8 border border-white/5">
             <div className="w-32 h-32 rounded-3xl bg-white/10 shrink-0" />
@@ -135,31 +266,18 @@ function ProfileSkeleton() {
               <div className="h-4 bg-white/5 rounded-md w-2/3" />
             </div>
           </div>
-          
           <div className="glass-panel rounded-3xl p-8 flex flex-col gap-4 border border-white/5">
             <div className="h-6 bg-white/10 rounded-md w-1/4" />
             <div className="space-y-2">
               <div className="h-4 bg-white/5 rounded-md w-full" />
               <div className="h-4 bg-white/5 rounded-md w-5/6" />
-              <div className="h-4 bg-white/5 rounded-md w-4/5" />
             </div>
           </div>
         </div>
-        
-        {/* Right Side (Stats & Action Panel) */}
         <div className="flex flex-col gap-8">
           <div className="glass-panel rounded-3xl p-8 flex flex-col gap-6 border border-white/5">
             <div className="h-6 bg-white/10 rounded-md w-1/2 mx-auto" />
             <div className="h-10 bg-white/10 rounded-2xl w-full" />
-            <div className="h-12 bg-white/15 rounded-2xl w-full" />
-          </div>
-          
-          <div className="glass-panel rounded-3xl p-8 flex flex-col gap-6 border border-white/5">
-            <div className="h-6 bg-white/10 rounded-md w-1/3" />
-            <div className="space-y-4">
-              <div className="h-14 bg-white/5 rounded-2xl w-full" />
-              <div className="h-14 bg-white/5 rounded-2xl w-full" />
-            </div>
           </div>
         </div>
       </div>
@@ -179,6 +297,21 @@ export default function ResearcherProfile({ navigate, researcherId }) {
   const [followLoading, setFollowLoading] = useState(false)
   const [toast, setToast] = useState(null)
 
+  // Profile Edit Modal state
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false)
+  const [editSaving, setEditSaving] = useState(false)
+  const [editValues, setEditValues] = useState({
+    name: '',
+    email: '',
+    university: '',
+    roleTitle: '',
+    bio: '',
+    specialties: '',
+    avatar: '',
+    portfolioUrl: '',
+    cvUrl: ''
+  })
+
   // Fetch researcher details
   useEffect(() => {
     let active = true
@@ -191,22 +324,30 @@ export default function ResearcherProfile({ navigate, researcherId }) {
 
       try {
         setIsLoading(true)
-        // Sentinel 'me' → profil du chercheur connecté, résolu côté session
-        // (évite le mismatch entre user.id numérique et l'id 'me-<id>' du dépôt).
         const res = researcherId === 'me'
           ? await api.researchers.getMe()
           : await api.researchers.getById(researcherId)
+          
         if (active) {
           if (res.success && res.data) {
-            setResearcher(res.data)
-            const fCount = res.data.followersCount ?? res.data.stars ?? 0
-            setFollowersCount(fCount)
-            
-            // Le backend n'expose pas la liste des abonnés (count seulement) :
-            // on ne peut pas déduire l'état « je suis abonné » depuis le détail.
-            // Activation optimiste gérée via toggleFollow.
+            const data = res.data
+            setResearcher(data)
+            setFollowersCount(data.followersCount ?? data.stars ?? 0)
             setIsFollowing(false)
             setError(null)
+
+            // Populate edit values
+            setEditValues({
+              name: data.name || '',
+              email: data.email || user?.email || '',
+              university: data.university || '',
+              roleTitle: data.role || '',
+              bio: data.bio || '',
+              specialties: Array.isArray(data.specialties) ? data.specialties.join(', ') : (data.specialties || ''),
+              avatar: data.avatar || '',
+              portfolioUrl: data.portfolioUrl || '',
+              cvUrl: data.cvUrl || ''
+            })
           } else {
             setError(res.message || "Impossible de charger le profil.")
           }
@@ -238,13 +379,9 @@ export default function ResearcherProfile({ navigate, researcherId }) {
     try {
       const res = await api.researchers.toggleFollow(researcher.id, user.id)
       if (res.success && res.data) {
-        // Toggle local state
-        const updated = res.data
         const nextFollowing = !isFollowing
         setIsFollowing(nextFollowing)
         setFollowersCount(c => nextFollowing ? c + 1 : Math.max(0, c - 1))
-        
-        // Show success toast
         setToast(
           nextFollowing 
             ? `Vous suivez désormais ${researcher.name} !` 
@@ -261,11 +398,59 @@ export default function ResearcherProfile({ navigate, researcherId }) {
     }
   }
 
-  // Check if viewing own profile
-  const isOwnProfile = user && researcher && String(researcher.id) === String(user.id)
+  // Check if current user has edit rights for this profile
+  const isOwnProfile = user && researcher && (
+    String(researcher.id) === String(user.id) || 
+    researcherId === 'me' || 
+    String(user.email || '').toLowerCase() === String(researcher.email || '').toLowerCase()
+  )
+  const canEdit = isOwnProfile || (user && (user.role === 'ADMIN' || user.role === 'ADMINISTRATEUR'))
 
-  // Get custom mock publications list
-  const publications = MOCK_PUBLICATIONS[researcher?.id] || []
+  // Save profile changes via inline modal
+  const handleSaveProfile = async (e) => {
+    e.preventDefault()
+    if (editSaving) return
+    setEditSaving(true)
+
+    try {
+      const payload = {
+        name: editValues.name.trim(),
+        email: editValues.email.trim(),
+        university: editValues.university.trim(),
+        role: editValues.roleTitle.trim(),
+        bio: editValues.bio,
+        specialties: editValues.specialties
+          .split(',')
+          .map(s => s.trim())
+          .filter(Boolean),
+        avatarUrl: editValues.avatar.trim(),
+        portfolioUrl: editValues.portfolioUrl.trim(),
+        cvUrl: editValues.cvUrl.trim()
+      }
+
+      const res = await api.researchers.updateMe(payload)
+      if (res?.success || res?.data) {
+        const updated = res.data || { ...researcher, ...payload, avatar: payload.avatarUrl }
+        setResearcher(updated)
+        setIsEditModalOpen(false)
+        setToast("Profil mis à jour avec succès !")
+      } else {
+        setToast(res?.message || "Erreur lors de la mise à jour du profil.")
+      }
+    } catch (err) {
+      console.error(err)
+      setToast("Une erreur s'est produite lors de l'enregistrement.")
+    } finally {
+      setEditSaving(false)
+    }
+  }
+
+  // Publications list from real researcher data
+  const publications = researcher?.publications || []
+
+  // Role Configuration
+  const roleConfig = researcher ? getRoleBadgeConfig(researcher, user) : null
+  const RoleIcon = roleConfig?.icon || Award
 
   return (
     <div className="max-w-[88rem] mx-auto w-full py-24 px-6 md:px-12 lg:px-12 relative min-h-screen">
@@ -276,13 +461,7 @@ export default function ResearcherProfile({ navigate, researcherId }) {
 
       <AnimatePresence>
         {isLoading ? (
-          <motion.div
-            key="profile-skeleton"
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -12 }}
-            transition={{ duration: 0.2, ease: "easeInOut" }}
-          >
+          <motion.div key="profile-skeleton" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
             <ProfileSkeleton />
           </motion.div>
         ) : error || !researcher ? (
@@ -290,316 +469,597 @@ export default function ResearcherProfile({ navigate, researcherId }) {
             key="profile-error"
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -12 }}
-            transition={{ duration: 0.2, ease: "easeInOut" }}
             className="max-w-2xl mx-auto w-full py-32 px-6 flex flex-col items-center justify-center text-center gap-8"
           >
-            <div className="w-20 h-20 rounded-full bg-rose-500/10 border border-rose-500/25 flex items-center justify-center text-rose-400 animate-pulse">
+            <div className="w-20 h-20 rounded-full bg-rose-500/10 border border-rose-500/25 flex items-center justify-center text-rose-400">
               <Lock className="w-8 h-8" />
             </div>
             <div className="space-y-3">
               <h2 className="text-2xl font-black tracking-tight text-text-primary">Profil Inaccessible</h2>
               <p className="text-sm text-text-secondary max-w-md">
-                {error || "Ce chercheur n'est pas ou plus référencé dans l'annuaire de recherche FIERI."}
+                {error || "Ce profil n'est pas accessible dans l'annuaire FIERI."}
               </p>
             </div>
             <button
               onClick={() => navigate('researchers')}
-              className="px-6 py-3 rounded-2xl text-xs font-bold text-white bg-fieri-blue hover:bg-fieri-blue/90 shadow-lg shadow-fieri-blue/20 transition-all cursor-pointer flex items-center gap-2"
+              className="px-6 py-3 rounded-2xl text-xs font-bold text-white bg-fieri-blue hover:bg-fieri-blue/90 shadow-lg cursor-pointer flex items-center gap-2"
             >
               <ArrowLeft className="w-4 h-4" />
               Retourner à l'annuaire
             </button>
           </motion.div>
         ) : (
-          /* Page wrapper with smooth motion entry */
+          /* Page wrapper */
           <motion.div
             key="profile-content"
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -12 }}
-            transition={{ duration: 0.2, ease: "easeInOut" }}
+            transition={{ duration: 0.2 }}
             className="flex flex-col gap-10"
           >
-        {/* Navigation & Kicker */}
-        <div className="flex flex-col gap-3">
-          <button
-            onClick={() => navigate('researchers')}
-            className="group flex items-center gap-2.5 text-xs font-black tracking-widest uppercase text-text-muted hover:text-fieri-blue transition-colors cursor-pointer w-fit"
-            aria-label="Retourner à l'annuaire de la communauté"
-          >
-            <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-            Retour à l'annuaire
-          </button>
-          
-          <div className="flex items-center gap-2 mt-2">
-            <span className="text-[10px] font-black tracking-[0.25em] uppercase text-fieri-blue">
-              PROFIL ACADÉMIQUE R&D
-            </span>
-            <span className="w-1.5 h-1.5 rounded-full bg-fieri-blue/30" />
-            <span className="text-[10px] font-bold text-text-muted uppercase">
-              {researcher.pole}
-            </span>
-          </div>
-        </div>
-
-        {/* Bento Grid Layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
-          
-          {/* LEFT COLUMN: Header & Bio (Spans 2 columns) */}
-          <div className="lg:col-span-2 flex flex-col gap-8">
-            
-            {/* 1. Header Identity Bento Cell */}
-            <div className="glass-panel rounded-3xl p-8 md:p-10 flex flex-col md:flex-row gap-8 items-center md:items-start relative overflow-hidden border border-white/5 shadow-xl group">
-              {/* Soft cosmic glow background on hover */}
-              <div className="absolute -inset-px bg-gradient-to-r from-fieri-blue/5 to-[#8B5CF6]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-3xl pointer-events-none" />
-              
-              {/* Photo Avatar */}
-              <div className="relative shrink-0">
-                <img
-                  src={researcher.avatar}
-                  alt={researcher.name}
-                  className="w-28 h-28 md:w-32 md:h-32 rounded-3xl object-cover border-2 border-white/10 group-hover:border-fieri-blue/40 transition-colors shadow-lg"
-                />
-                {(followersCount > 150) && (
-                  <span className="absolute -bottom-1 -right-1 w-6 h-6 rounded-xl bg-fieri-blue border border-bg-secondary flex items-center justify-center shadow-md">
-                    <Sparkles className="w-3.5 h-3.5 text-white" />
+            {/* Top Bar Navigation & Edit Trigger */}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div className="flex flex-col gap-2">
+                <button
+                  onClick={() => navigate('researchers')}
+                  className="group flex items-center gap-2 text-xs font-black tracking-widest uppercase text-text-muted hover:text-fieri-blue transition-colors cursor-pointer w-fit"
+                >
+                  <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
+                  Retour à l'annuaire
+                </button>
+                <div className="flex items-center gap-2.5 mt-1">
+                  <span className="text-[10px] font-black tracking-[0.25em] uppercase text-fieri-blue">
+                    {roleConfig.category}
                   </span>
-                )}
+                  <span className="w-1.5 h-1.5 rounded-full bg-fieri-blue/30" />
+                  <span className="text-[10px] font-bold text-text-muted uppercase">
+                    {researcher.pole || 'Pôle R&D'}
+                  </span>
+                </div>
               </div>
 
-              {/* Bio Meta text */}
-              <div className="flex flex-col gap-4 text-center md:text-left flex-grow">
-                <div className="space-y-1">
-                  <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-3 justify-center md:justify-start">
-                    <h1 className="text-2xl md:text-3xl font-black text-text-primary tracking-tight">
-                      {researcher.name}
-                    </h1>
-                    {researcher.publicationsCount >= 10 && (
-                      <span className="w-fit mx-auto md:mx-0 inline-flex items-center gap-1 text-[9px] font-black uppercase text-amber-400 bg-amber-400/10 px-2 py-0.5 rounded-md border border-amber-400/20">
-                        <Award className="w-3 h-3 shrink-0" /> Élite R&D
-                      </span>
-                    )}
+              {/* Direct Profile Edit Button */}
+              {canEdit && (
+                <button
+                  onClick={() => setIsEditModalOpen(true)}
+                  className="px-5 py-3 rounded-2xl bg-fieri-blue/15 hover:bg-fieri-blue border border-fieri-blue/30 hover:border-fieri-blue text-fieri-blue hover:text-white font-black text-xs tracking-wide transition-all shadow-lg hover:shadow-[0_0_20px_rgba(108,76,241,0.3)] flex items-center justify-center gap-2.5 cursor-pointer shrink-0"
+                >
+                  <Edit3 className="w-4 h-4" />
+                  <span>Modifier mon profil</span>
+                </button>
+              )}
+            </div>
+
+            {/* Main Bento Grid */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+              
+              {/* LEFT COLUMN: Main Profile Info & Role Matrix (Spans 2 columns) */}
+              <div className="lg:col-span-2 flex flex-col gap-8">
+                
+                {/* 1. Header Identity Bento Cell with Custom Role Glow */}
+                <div className="glass-panel rounded-3xl p-8 md:p-10 flex flex-col md:flex-row gap-8 items-center md:items-start relative overflow-hidden border border-white/10 shadow-2xl group">
+                  {/* Custom Background Radial Glow according to Role */}
+                  <div className={`absolute -inset-px bg-gradient-to-r ${roleConfig.gradientGlow} opacity-60 group-hover:opacity-100 transition-opacity duration-500 rounded-3xl pointer-events-none`} />
+
+                  {/* Photo Avatar */}
+                  <div className="relative shrink-0 z-10">
+                    <img
+                      src={researcher.avatar}
+                      alt={researcher.name}
+                      className="w-32 h-32 md:w-36 md:h-36 rounded-3xl object-cover border-2 border-white/15 shadow-2xl"
+                    />
+                    <span className="absolute -bottom-2 -right-2 p-2 rounded-2xl bg-bg-secondary border border-white/10 shadow-lg">
+                      <RoleIcon className={`w-5 h-5 ${roleConfig.iconColor}`} />
+                    </span>
                   </div>
-                  <p className="text-sm font-bold text-fieri-blue tracking-wide">
-                    {researcher.role}
+
+                  {/* Bio Meta & Badges */}
+                  <div className="flex flex-col gap-4 text-center md:text-left flex-grow z-10">
+                    <div className="space-y-2">
+                      {/* Role Badge Pill */}
+                      <div className="flex flex-wrap items-center justify-center md:justify-start gap-2">
+                        <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-xl text-[10px] font-black uppercase tracking-wider border ${roleConfig.badgeClass}`}>
+                          <RoleIcon className="w-3.5 h-3.5" />
+                          {roleConfig.title}
+                        </span>
+                        {isOwnProfile && (
+                          <span className="inline-flex items-center gap-1 text-[9px] font-bold uppercase text-emerald-400 bg-emerald-500/10 px-2.5 py-0.5 rounded-lg border border-emerald-500/20">
+                            Votre Compte
+                          </span>
+                        )}
+                      </div>
+
+                      <h1 className="text-2xl md:text-4xl font-black text-text-primary tracking-tight">
+                        {researcher.name}
+                      </h1>
+                      <p className="text-sm font-bold text-fieri-blue tracking-wide">
+                        {researcher.role || roleConfig.shortRole}
+                      </p>
+                    </div>
+
+                    <div className="flex flex-col gap-2 text-xs text-text-secondary font-medium">
+                      <div className="flex items-center gap-2 justify-center md:justify-start">
+                        <Briefcase className="w-4 h-4 text-text-muted shrink-0" />
+                        <span>{researcher.university || 'Université d\'Abomey-Calavi (EPAC)'}</span>
+                      </div>
+                      <div className="flex items-center gap-2 justify-center md:justify-start">
+                        <Globe className="w-4 h-4 text-text-muted shrink-0" />
+                        <span className="capitalize">{researcher.pole || 'Pôle R&D'}</span>
+                      </div>
+                    </div>
+
+                    {/* Specialties Tags */}
+                    <div className="flex flex-wrap gap-2 justify-center md:justify-start pt-2">
+                      {researcher.specialties?.map((tag, idx) => (
+                        <span
+                          key={idx}
+                          className="text-[10px] font-bold text-text-primary bg-white/5 border border-white/10 px-3 py-1 rounded-xl shadow-sm"
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                {/* 2. SPECIFIC ROLE MATRIX BENTO CELL (Attributions & Prérogatives) */}
+                <div className="glass-panel rounded-3xl p-8 md:p-10 border border-white/10 shadow-xl relative flex flex-col gap-6 overflow-hidden">
+                  <div className="flex items-center justify-between">
+                    <h2 className="text-lg font-black tracking-tight text-text-primary flex items-center gap-2.5">
+                      <ShieldCheck className={`w-5 h-5 ${roleConfig.iconColor}`} />
+                      Attributions & Prérogatives du Rôle
+                    </h2>
+                    <span className={`text-[10px] font-black uppercase px-2.5 py-1 rounded-lg border ${roleConfig.badgeClass}`}>
+                      Accréditation FIERI
+                    </span>
+                  </div>
+
+                  <div className="h-px bg-white/5 w-full" />
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {/* Responsabilités Clés */}
+                    <div className="space-y-4 bg-white/3 border border-white/5 p-5 rounded-2xl">
+                      <h3 className="text-xs font-black uppercase tracking-wider text-text-muted flex items-center gap-2">
+                        <Check className="w-4 h-4 text-emerald-400" />
+                        Missions & Responsabilités
+                      </h3>
+                      <ul className="space-y-2.5">
+                        {roleConfig.responsibilities.map((resp, idx) => (
+                          <li key={idx} className="flex items-start gap-2 text-xs text-text-secondary font-medium leading-relaxed">
+                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 mt-1.5 shrink-0" />
+                            <span>{resp}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+
+                    {/* Fonctionnalités & Capacités Actives */}
+                    <div className="space-y-4 bg-white/3 border border-white/5 p-5 rounded-2xl">
+                      <h3 className="text-xs font-black uppercase tracking-wider text-text-muted flex items-center gap-2">
+                        <Zap className="w-4 h-4 text-fieri-blue" />
+                        Capacités & Habilitations Plateforme
+                      </h3>
+                      <ul className="space-y-2.5">
+                        {roleConfig.capabilities.map((cap, idx) => (
+                          <li key={idx} className="flex items-start gap-2 text-xs text-text-secondary font-medium leading-relaxed">
+                            <span className="w-1.5 h-1.5 rounded-full bg-fieri-blue mt-1.5 shrink-0" />
+                            <span>{cap}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+
+                {/* 3. Biography Bento Cell */}
+                <div className="glass-panel rounded-3xl p-8 md:p-10 border border-white/10 shadow-lg relative flex flex-col gap-5">
+                  <h2 className="text-lg font-black tracking-tight text-text-primary flex items-center gap-2">
+                    <Activity className="w-5 h-5 text-fieri-blue" />
+                    Biographie & Orientation R&D
+                  </h2>
+                  <div className="h-px bg-white/5 w-full" />
+                  <p className="text-sm text-text-secondary leading-relaxed font-medium">
+                    {researcher.bio || "Aucune biographie rédigée. Ce membre participe activement aux projets et initiatives scientifiques au sein de l'alliance FIERI."}
                   </p>
                 </div>
+                
+              </div>
 
-                <div className="flex flex-col gap-2.5 text-xs text-text-secondary font-medium mt-1">
-                  <div className="flex items-center gap-2 justify-center md:justify-start">
-                    <Briefcase className="w-4 h-4 text-text-muted shrink-0" />
-                    <span>{researcher.university}</span>
+              {/* RIGHT COLUMN: Follow Status, Stats & Links */}
+              <div className="flex flex-col gap-8">
+                
+                {/* 1. Subscription Actions Bento Cell */}
+                <div className="glass-panel rounded-3xl p-8 border border-white/10 shadow-xl relative flex flex-col gap-6 text-center">
+                  <div className="flex flex-col items-center gap-1 relative z-10">
+                    <Users className="w-8 h-8 text-fieri-blue mb-1" />
+                    <span className="text-4xl font-black text-text-primary tracking-tight">
+                      {followersCount}
+                    </span>
+                    <span className="text-xs font-black tracking-widest text-text-muted uppercase">
+                      Abonnés FIERI
+                    </span>
                   </div>
-                  <div className="flex items-center gap-2 justify-center md:justify-start">
-                    <Globe className="w-4 h-4 text-text-muted shrink-0" />
-                    <span className="capitalize">{researcher.pole}</span>
+
+                  <div className="h-px bg-white/5 w-full my-1" />
+
+                  <div className="relative z-10 flex flex-col gap-3">
+                    {isOwnProfile ? (
+                      <button
+                        onClick={() => setIsEditModalOpen(true)}
+                        className="w-full py-3.5 rounded-2xl text-xs font-bold bg-fieri-blue/15 border border-fieri-blue/30 text-fieri-blue hover:bg-fieri-blue hover:text-white transition-all flex items-center justify-center gap-2 cursor-pointer shadow-md"
+                      >
+                        <Edit3 className="w-4 h-4" />
+                        Gérer mon profil
+                      </button>
+                    ) : user ? (
+                      <button
+                        onClick={handleFollowToggle}
+                        disabled={followLoading}
+                        className={`w-full py-3.5 rounded-2xl text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer shadow-md ${
+                          isFollowing
+                            ? 'bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/30 text-rose-400'
+                            : 'bg-fieri-blue hover:bg-fieri-blue/90 text-white shadow-[0_0_20px_rgba(108,76,241,0.3)]'
+                        }`}
+                      >
+                        {followLoading ? (
+                          <span className="w-4 h-4 rounded-full border-2 border-current border-t-transparent animate-spin" />
+                        ) : isFollowing ? (
+                          <>
+                            <Heart className="w-4 h-4 fill-current" />
+                            Se désabonner
+                          </>
+                        ) : (
+                          <>
+                            <Heart className="w-4 h-4" />
+                            S'abonner
+                          </>
+                        )}
+                      </button>
+                    ) : (
+                      <div className="space-y-3">
+                        <button
+                          disabled
+                          className="w-full py-3.5 rounded-2xl text-xs font-bold bg-white/5 border border-white/5 text-text-muted opacity-60 flex items-center justify-center gap-2 cursor-not-allowed"
+                        >
+                          <Lock className="w-3.5 h-3.5" />
+                          S'abonner
+                        </button>
+                        <p className="text-[10px] font-bold text-rose-400 bg-rose-500/5 border border-rose-500/10 py-2 px-3 rounded-xl leading-relaxed">
+                          L'abonnement aux flux scientifiques est réservé aux membres connectés de l'alliance FIERI.
+                        </p>
+                      </div>
+                    )}
                   </div>
                 </div>
 
-                {/* Specialties Tags */}
-                <div className="flex flex-wrap gap-2 justify-center md:justify-start pt-2">
-                  {researcher.specialties?.map((tag, idx) => (
-                    <span
+                {/* 2. Scientific Work Stats Bento Cell */}
+                <div className="glass-panel rounded-3xl p-8 border border-white/10 shadow-lg relative flex flex-col gap-5">
+                  <h3 className="text-sm font-black tracking-widest text-text-muted uppercase flex items-center gap-2">
+                    <BookOpen className="w-4 h-4 text-fieri-blue" />
+                    Indicateurs Clés
+                  </h3>
+                  
+                  <div className="flex flex-col gap-3.5">
+                    <div className="flex justify-between items-center bg-white/3 border border-white/5 p-4 rounded-2xl">
+                      <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 rounded-xl bg-fieri-blue/15 flex items-center justify-center text-fieri-blue">
+                          <BookOpen className="w-4 h-4" />
+                        </div>
+                        <span className="text-xs font-bold text-text-secondary">Publications</span>
+                      </div>
+                      <span className="text-base font-black text-text-primary">{researcher.publicationsCount || publications.length}</span>
+                    </div>
+
+                    <div className="flex justify-between items-center bg-white/3 border border-white/5 p-4 rounded-2xl">
+                      <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 rounded-xl bg-emerald-500/15 flex items-center justify-center text-emerald-400">
+                          <Star className="w-4 h-4" />
+                        </div>
+                        <span className="text-xs font-bold text-text-secondary">Projets R&D</span>
+                      </div>
+                      <span className="text-base font-black text-text-primary">{researcher.projectsCount || 1}</span>
+                    </div>
+
+                    <div className="flex justify-between items-center bg-white/3 border border-white/5 p-4 rounded-2xl">
+                      <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 rounded-xl bg-amber-500/15 flex items-center justify-center text-amber-400">
+                          <Award className="w-4 h-4" />
+                        </div>
+                        <span className="text-xs font-bold text-text-secondary">Votes de confiance</span>
+                      </div>
+                      <span className="text-base font-black text-text-primary">{researcher.stars || 42}</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* External links */}
+                {(researcher.portfolioUrl || researcher.cvUrl) && (
+                  <div className="glass-panel rounded-3xl p-6 border border-white/10 shadow-lg flex flex-col gap-3">
+                    <h3 className="text-xs font-black tracking-wider text-text-muted uppercase mb-1">
+                      Liens Externes & Portfolio
+                    </h3>
+                    {researcher.portfolioUrl && (
+                      <a
+                        href={researcher.portfolioUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center justify-between p-3.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-bold text-text-primary transition-all group"
+                      >
+                        <span className="flex items-center gap-2">
+                          <Globe className="w-4 h-4 text-fieri-blue" />
+                          Portfolio / Site web
+                        </span>
+                        <ExternalLink className="w-3.5 h-3.5 text-text-muted group-hover:text-fieri-blue transition-colors" />
+                      </a>
+                    )}
+                    {researcher.cvUrl && (
+                      <a
+                        href={researcher.cvUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center justify-between p-3.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-bold text-text-primary transition-all group"
+                      >
+                        <span className="flex items-center gap-2">
+                          <FileText className="w-4 h-4 text-emerald-400" />
+                          CV & Portfolio Académique
+                        </span>
+                        <ExternalLink className="w-3.5 h-3.5 text-text-muted group-hover:text-emerald-400 transition-colors" />
+                      </a>
+                    )}
+                  </div>
+                )}
+
+              </div>
+
+            </div>
+
+            {/* BOTTOM ROW: Scientific Publications Section */}
+            {publications.length > 0 && (
+              <div className="glass-panel rounded-3xl p-8 md:p-10 border border-white/10 shadow-xl relative flex flex-col gap-6">
+                <div className="flex justify-between items-center">
+                  <h3 className="text-lg font-black tracking-tight text-text-primary flex items-center gap-2.5">
+                    <Newspaper className="w-5 h-5 text-fieri-blue" />
+                    Publications Récentes de Recherche
+                  </h3>
+                  <span className="text-xs font-bold text-text-muted">
+                    {publications.length} documents répertoriés
+                  </span>
+                </div>
+                
+                <div className="h-px bg-white/5 w-full" />
+                
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  {publications.map((pub, idx) => (
+                    <div
                       key={idx}
-                      className="text-[10px] font-bold text-text-primary bg-white/5 border border-white/10 px-3 py-1 rounded-xl shadow-sm"
+                      className="bg-white/3 hover:bg-white/5 border border-white/5 hover:border-fieri-blue/20 p-5 rounded-2xl flex flex-col justify-between gap-5 transition-all group/card shadow-sm"
                     >
-                      {tag}
-                    </span>
+                      <div className="space-y-2">
+                        <div className="flex justify-between items-start gap-2">
+                          <span className="text-[9px] font-black uppercase tracking-wider text-fieri-blue bg-fieri-blue/10 px-2 py-0.5 rounded-md border border-fieri-blue/10">
+                            {pub.year}
+                          </span>
+                          <span className="text-[10px] font-bold text-text-muted">
+                            {pub.citations} Citations
+                          </span>
+                        </div>
+                        <h4 className="text-xs font-bold text-text-primary leading-relaxed group-hover/card:text-fieri-blue transition-colors">
+                          {pub.title}
+                        </h4>
+                      </div>
+                      
+                      <div className="flex justify-between items-center gap-2 pt-2 border-t border-white/5">
+                        <span className="text-[10px] font-medium text-text-secondary truncate pr-3">
+                          {pub.journal}
+                        </span>
+                        <a
+                          href={pub.link || "#"}
+                          className="text-text-muted hover:text-fieri-blue transition-colors cursor-pointer shrink-0"
+                          aria-label={`Ouvrir la publication : ${pub.title}`}
+                        >
+                          <ExternalLink className="w-3.5 h-3.5" />
+                        </a>
+                      </div>
+                    </div>
                   ))}
                 </div>
               </div>
-            </div>
-
-            {/* 2. Biography Bento Cell */}
-            <div className="glass-panel rounded-3xl p-8 md:p-10 border border-white/5 shadow-lg relative flex flex-col gap-5">
-              <h2 className="text-lg font-black tracking-tight text-text-primary flex items-center gap-2">
-                <Activity className="w-5 h-5 text-fieri-blue" />
-                Biographie & Recherches
-              </h2>
-              <div className="h-px bg-white/5 w-full" />
-              <p className="text-sm text-text-secondary leading-relaxed font-medium">
-                {researcher.bio || "Aucune biographie disponible pour ce chercheur. Les contributions de recherche scientifique au sein de la plateforme FIERI seront publiées très prochainement."}
-              </p>
-              <p className="text-sm text-text-secondary leading-relaxed font-medium">
-                Ses travaux participent activement aux efforts d'indépendance technologique et d'autonomie scientifique locale portés par les clubs académiques FIERI. Ses pôles de prédilection gravitent autour du prototypage physique robuste, du codage bas-niveau résilient et de l'intégration intelligente.
-              </p>
-            </div>
-            
-          </div>
-
-          {/* RIGHT COLUMN: Follow Status & Statistics Bento Panel */}
-          <div className="flex flex-col gap-8">
-            
-            {/* 1. Subscription Actions Bento Cell */}
-            <div className="glass-panel rounded-3xl p-8 border border-white/5 shadow-xl relative flex flex-col gap-6 overflow-hidden text-center">
-              {/* Inner cosmic gradient ring */}
-              <div className="absolute top-0 left-1/2 -translate-x-1/2 w-48 h-48 bg-fieri-blue/10 blur-[60px] rounded-full pointer-events-none" />
-
-              {/* Followers Stat Counter */}
-              <div className="flex flex-col items-center gap-1 relative z-10">
-                <Users className="w-7 h-7 text-fieri-blue mb-1" />
-                <span className="text-4xl font-black text-text-primary tracking-tight">
-                  {followersCount}
-                </span>
-                <span className="text-xs font-black tracking-widest text-text-muted uppercase">
-                  Abonnés FIERI
-                </span>
-              </div>
-
-              <div className="h-px bg-white/5 w-full my-1" />
-
-              {/* Follow Toggle Dynamic Button with Gating Matrix */}
-              <div className="relative z-10 flex flex-col gap-3">
-                {isOwnProfile ? (
-                  <div className="py-3 px-4 rounded-2xl bg-fieri-blue/5 border border-fieri-blue/10 text-center">
-                    <p className="text-[10px] font-bold text-fieri-blue/70">C'est votre profil</p>
-                  </div>
-                ) : user ? (
-                  // LOGGED IN: Active follow toggle
-                  <button
-                    onClick={handleFollowToggle}
-                    disabled={followLoading}
-                    className={`w-full py-3.5 rounded-2xl text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer shadow-md ${
-                      isFollowing
-                        ? 'bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/30 text-rose-400'
-                        : 'bg-fieri-blue hover:bg-fieri-blue/90 text-white hover:shadow-[0_0_20px_rgba(108,76,241,0.3)]'
-                    }`}
-                  >
-                    {followLoading ? (
-                      <span className="w-4 h-4 rounded-full border-2 border-current border-t-transparent animate-spin" />
-                    ) : isFollowing ? (
-                      <>
-                        <Heart className="w-4 h-4 fill-current" />
-                        Se désabonner
-                      </>
-                    ) : (
-                      <>
-                        <Heart className="w-4 h-4" />
-                        S'abonner
-                      </>
-                    )}
-                  </button>
-                ) : (
-                  // ANONYMOUS: Gated button
-                  <div className="space-y-3">
-                    <button
-                      disabled
-                      className="w-full py-3.5 rounded-2xl text-xs font-bold bg-white/5 border border-white/5 text-text-muted opacity-60 flex items-center justify-center gap-2 cursor-not-allowed"
-                    >
-                      <Lock className="w-3.5 h-3.5" />
-                      S'abonner
-                    </button>
-                    <p className="text-[10px] font-bold text-rose-400 bg-rose-500/5 border border-rose-500/10 py-2 px-3 rounded-xl leading-relaxed">
-                      L'abonnement aux flux scientifiques est réservé aux membres connectés de l'alliance FIERI.
-                    </p>
-                  </div>
-                )}
-              </div>
-            </div>
-
-            {/* 2. Scientific Work Stats Bento Cell */}
-            <div className="glass-panel rounded-3xl p-8 border border-white/5 shadow-lg relative flex flex-col gap-5">
-              <h3 className="text-sm font-black tracking-widest text-text-muted uppercase flex items-center gap-2">
-                <BookOpen className="w-4 h-4 text-fieri-blue" />
-                Indicateurs Clés
-              </h3>
-              
-              <div className="flex flex-col gap-4">
-                {/* Stat item 1 */}
-                <div className="flex justify-between items-center bg-white/3 border border-white/5 p-4 rounded-2xl">
-                  <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-xl bg-fieri-blue/15 flex items-center justify-center text-fieri-blue">
-                      <BookOpen className="w-4 h-4" />
-                    </div>
-                    <span className="text-xs font-bold text-text-secondary">Publications</span>
-                  </div>
-                  <span className="text-base font-black text-text-primary">{researcher.publicationsCount}</span>
-                </div>
-
-                {/* Stat item 2 */}
-                <div className="flex justify-between items-center bg-white/3 border border-white/5 p-4 rounded-2xl">
-                  <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-xl bg-emerald-500/15 flex items-center justify-center text-emerald-400">
-                      <Star className="w-4 h-4" />
-                    </div>
-                    <span className="text-xs font-bold text-text-secondary">Projets R&D</span>
-                  </div>
-                  <span className="text-base font-black text-text-primary">{researcher.projectsCount}</span>
-                </div>
-
-                {/* Stat item 3 */}
-                <div className="flex justify-between items-center bg-white/3 border border-white/5 p-4 rounded-2xl">
-                  <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-xl bg-amber-500/15 flex items-center justify-center text-amber-400">
-                      <Award className="w-4 h-4" />
-                    </div>
-                    <span className="text-xs font-bold text-text-secondary">Votes de confiance</span>
-                  </div>
-                  <span className="text-base font-black text-text-primary">{researcher.stars}</span>
-                </div>
-              </div>
-            </div>
-
-          </div>
-
-        </div>
-
-        {/* BOTTOM ROW: Scientific Publications Bento Section */}
-        {publications.length > 0 && (
-          <div className="glass-panel rounded-3xl p-8 md:p-10 border border-white/5 shadow-xl relative flex flex-col gap-6">
-            <div className="flex justify-between items-center">
-              <h3 className="text-lg font-black tracking-tight text-text-primary flex items-center gap-2.5">
-                <Newspaper className="w-5 h-5 text-fieri-blue" />
-                Publications Récentes de Recherche
-              </h3>
-              <span className="text-xs font-bold text-text-muted">
-                {publications.length} documents répertoriés
-              </span>
-            </div>
-            
-            <div className="h-px bg-white/5 w-full" />
-            
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {publications.map((pub, idx) => (
-                <div
-                  key={idx}
-                  className="bg-white/3 hover:bg-white/5 border border-white/5 hover:border-fieri-blue/20 p-5 rounded-2xl flex flex-col justify-between gap-5 transition-all group/card shadow-sm"
-                >
-                  <div className="space-y-2">
-                    <div className="flex justify-between items-start gap-2">
-                      <span className="text-[9px] font-black uppercase tracking-wider text-fieri-blue bg-fieri-blue/10 px-2 py-0.5 rounded-md border border-fieri-blue/10">
-                        {pub.year}
-                      </span>
-                      <span className="text-[10px] font-bold text-text-muted">
-                        {pub.citations} Citations
-                      </span>
-                    </div>
-                    <h4 className="text-xs font-bold text-text-primary leading-relaxed group-hover/card:text-fieri-blue transition-colors">
-                      {pub.title}
-                    </h4>
-                  </div>
-                  
-                  <div className="flex justify-between items-center gap-2 pt-2 border-t border-white/5">
-                    <span className="text-[10px] font-medium text-text-secondary truncate pr-3">
-                      {pub.journal}
-                    </span>
-                    <a
-                      href={pub.link}
-                      className="text-text-muted hover:text-fieri-blue transition-colors cursor-pointer shrink-0"
-                      aria-label={`Ouvrir la publication : ${pub.title}`}
-                    >
-                      <ExternalLink className="w-3.5 h-3.5" />
-                    </a>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
+            )}
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* ─────────────────────────── INLINE PROFILE EDIT MODAL ─────────────────────────── */}
+      <AnimatePresence>
+        {isEditModalOpen && (
+          <div className="fixed inset-0 z-[120] flex items-center justify-center p-4 sm:p-6 overflow-y-auto">
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsEditModalOpen(false)}
+              className="fixed inset-0 bg-black/75 backdrop-blur-md"
+            />
+
+            {/* Modal Box */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              className="relative w-full max-w-3xl glass-panel rounded-3xl border border-white/10 p-6 md:p-8 shadow-2xl z-10 max-h-[90vh] overflow-y-auto bg-bg-secondary/95"
+            >
+              {/* Header */}
+              <div className="flex items-center justify-between border-b border-white/10 pb-4 mb-6">
+                <div className="flex items-center gap-3">
+                  <div className="p-2.5 rounded-xl bg-fieri-blue/15 border border-fieri-blue/30 text-fieri-blue">
+                    <Edit3 className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <h2 className="text-xl font-extrabold text-text-primary">Modifier mon Profil</h2>
+                    <p className="text-xs text-text-secondary">Mettez à jour vos informations publiques et vos préférences</p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => setIsEditModalOpen(false)}
+                  className="p-2 rounded-xl bg-white/5 hover:bg-white/10 text-text-muted hover:text-white transition-colors cursor-pointer"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+
+              {/* Form */}
+              <form onSubmit={handleSaveProfile} className="space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  
+                  {/* Nom complet */}
+                  <div className="space-y-2">
+                    <label className="text-xs font-bold text-text-secondary">Nom complet</label>
+                    <input
+                      type="text"
+                      required
+                      value={editValues.name}
+                      onChange={(e) => setEditValues(v => ({ ...v, name: e.target.value }))}
+                      className="w-full px-4 py-3 rounded-2xl bg-white/5 border border-white/10 text-sm text-text-primary focus:outline-none focus:border-fieri-blue"
+                      placeholder="Ex: Dr. Samuel ADANLOKONON"
+                    />
+                  </div>
+
+                  {/* Email */}
+                  <div className="space-y-2">
+                    <label className="text-xs font-bold text-text-secondary">Email académique</label>
+                    <input
+                      type="email"
+                      required
+                      value={editValues.email}
+                      onChange={(e) => setEditValues(v => ({ ...v, email: e.target.value }))}
+                      className="w-full px-4 py-3 rounded-2xl bg-white/5 border border-white/10 text-sm text-text-primary focus:outline-none focus:border-fieri-blue"
+                      placeholder="vous@exemple.com"
+                    />
+                  </div>
+
+                  {/* Université */}
+                  <div className="space-y-2">
+                    <label className="text-xs font-bold text-text-secondary">Université / Établissement</label>
+                    <input
+                      type="text"
+                      value={editValues.university}
+                      onChange={(e) => setEditValues(v => ({ ...v, university: e.target.value }))}
+                      className="w-full px-4 py-3 rounded-2xl bg-white/5 border border-white/10 text-sm text-text-primary focus:outline-none focus:border-fieri-blue"
+                      placeholder="Ex: Université d'Abomey-Calavi (EPAC)"
+                    />
+                  </div>
+
+                  {/* Titre / Rôle */}
+                  <div className="space-y-2">
+                    <label className="text-xs font-bold text-text-secondary">Titre / Rôle scientifique</label>
+                    <input
+                      type="text"
+                      value={editValues.roleTitle}
+                      onChange={(e) => setEditValues(v => ({ ...v, roleTitle: e.target.value }))}
+                      className="w-full px-4 py-3 rounded-2xl bg-white/5 border border-white/10 text-sm text-text-primary focus:outline-none focus:border-fieri-blue"
+                      placeholder="Ex: Responsable du Pôle IA"
+                    />
+                  </div>
+
+                </div>
+
+                {/* Photo de profil avec Preview */}
+                <div className="space-y-2">
+                  <label className="text-xs font-bold text-text-secondary">Photo de profil (URL d'image)</label>
+                  <div className="flex items-center gap-4">
+                    <img
+                      src={editValues.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80'}
+                      alt="Aperçu"
+                      className="w-14 h-14 rounded-2xl object-cover border border-white/10 shrink-0"
+                    />
+                    <input
+                      type="url"
+                      value={editValues.avatar}
+                      onChange={(e) => setEditValues(v => ({ ...v, avatar: e.target.value }))}
+                      className="w-full px-4 py-3 rounded-2xl bg-white/5 border border-white/10 text-sm text-text-primary focus:outline-none focus:border-fieri-blue"
+                      placeholder="https://images.unsplash.com/..."
+                    />
+                  </div>
+                </div>
+
+                {/* Spécialités */}
+                <div className="space-y-2">
+                  <label className="text-xs font-bold text-text-secondary">Spécialités (séparées par des virgules)</label>
+                  <input
+                    type="text"
+                    value={editValues.specialties}
+                    onChange={(e) => setEditValues(v => ({ ...v, specialties: e.target.value }))}
+                    className="w-full px-4 py-3 rounded-2xl bg-white/5 border border-white/10 text-sm text-text-primary focus:outline-none focus:border-fieri-blue"
+                    placeholder="Deep Learning, ROS 2, Embedded IoT"
+                  />
+                </div>
+
+                {/* Bio */}
+                <div className="space-y-2">
+                  <label className="text-xs font-bold text-text-secondary">Biographie & Travaux R&D</label>
+                  <textarea
+                    rows={4}
+                    value={editValues.bio}
+                    onChange={(e) => setEditValues(v => ({ ...v, bio: e.target.value }))}
+                    className="w-full px-4 py-3 rounded-2xl bg-white/5 border border-white/10 text-sm text-text-primary focus:outline-none focus:border-fieri-blue resize-none"
+                    placeholder="Présentez brièvement vos axes de recherche et contributions..."
+                  />
+                </div>
+
+                {/* Portfolio & CV */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <label className="text-xs font-bold text-text-secondary">Site web / Portfolio (URL)</label>
+                    <input
+                      type="url"
+                      value={editValues.portfolioUrl}
+                      onChange={(e) => setEditValues(v => ({ ...v, portfolioUrl: e.target.value }))}
+                      className="w-full px-4 py-3 rounded-2xl bg-white/5 border border-white/10 text-sm text-text-primary focus:outline-none focus:border-fieri-blue"
+                      placeholder="https://mon-portfolio.com"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-xs font-bold text-text-secondary">CV académique (URL)</label>
+                    <input
+                      type="url"
+                      value={editValues.cvUrl}
+                      onChange={(e) => setEditValues(v => ({ ...v, cvUrl: e.target.value }))}
+                      className="w-full px-4 py-3 rounded-2xl bg-white/5 border border-white/10 text-sm text-text-primary focus:outline-none focus:border-fieri-blue"
+                      placeholder="https://mon-cv.pdf"
+                    />
+                  </div>
+                </div>
+
+                {/* Submit Actions */}
+                <div className="flex items-center justify-end gap-3 pt-4 border-t border-white/10">
+                  <button
+                    type="button"
+                    onClick={() => setIsEditModalOpen(false)}
+                    className="px-5 py-3 rounded-2xl text-xs font-bold text-text-muted hover:text-white bg-white/5 hover:bg-white/10 transition-colors cursor-pointer"
+                  >
+                    Annuler
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={editSaving}
+                    className="px-6 py-3 rounded-2xl text-xs font-black text-white bg-fieri-blue hover:bg-fieri-blue/90 shadow-lg shadow-fieri-blue/20 transition-all flex items-center gap-2 cursor-pointer disabled:opacity-50"
+                  >
+                    {editSaving ? (
+                      <span className="w-4 h-4 rounded-full border-2 border-white border-t-transparent animate-spin" />
+                    ) : (
+                      <Save className="w-4 h-4" />
+                    )}
+                    <span>{editSaving ? 'Enregistrement...' : 'Enregistrer les modifications'}</span>
+                  </button>
+                </div>
+
+              </form>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
     </div>
   )
 }

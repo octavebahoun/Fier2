@@ -321,7 +321,14 @@ export const api = {
 
     // GET /universities/:id/deletion-requests — Chef Universitaire.
     listDeletionRequests: (universityId) =>
-      get(`/universities/${universityId}/deletion-requests`)
+      get(`/universities/${universityId}/deletion-requests`),
+
+    // POST /members/:id/toggle-emblematic — Chef Universitaire / ADMIN.
+    toggleEmblematic: (memberId, isEmblematic) =>
+      post(`/members/${memberId}/toggle-emblematic`, { isEmblematic }),
+
+    // GET /emblematic-figures — Figures emblématiques de la communauté.
+    getEmblematicFigures: () => get('/emblematic-figures')
   },
 
   // ── 16. ATTESTATIONS & CERTIFICATS ───────────────────────────────────────
@@ -431,6 +438,9 @@ export const api = {
   support: {
     // POST /support/initiate-financial — don Genius Pay (public).
     initiateFinancial: (dto) => post(`/support/initiate-financial`, dto),
+
+    // POST /support/:id/confirm-mock-payment — confirmation mock (démo jury).
+    confirmMockPayment: (id) => post(`/support/${id}/confirm-mock-payment`),
 
     // POST /support/submit-physical — déclaration soutien matériel (public).
     submitPhysical: (dto) => post(`/support/submit-physical`, dto),

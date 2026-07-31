@@ -432,7 +432,7 @@ export default function ProjectDetail({ navigate, projectId }) {
                   Campagne de Financement
                 </div>
                 <h3 className="text-xl font-black text-text-primary leading-tight">
-                  Budget & Soutien Fictif
+                  Budget & Financement Co-opératif
                 </h3>
               </div>
 

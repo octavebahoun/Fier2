@@ -271,7 +271,7 @@ export default function Projects({ navigate }) {
                         <div className="flex justify-between items-center text-[10px] font-bold text-text-secondary">
                           <span className="flex items-center gap-1.5">
                             <Coins className="w-3.5 h-3.5 text-fieri-blue" />
-                            {p.supportersCount} soutiens fictifs
+                            {p.supportersCount} soutien(s)
                           </span>
                           <span>{p.budgetRaised} $ / {budgetGoal} $ ({budgetPercentage}%)</span>
                         </div>

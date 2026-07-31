@@ -1,8 +1,26 @@
-import { useEffect, useState, useCallback } from 'react'
-import { Menu, Search, Sun, Moon, Bell } from 'lucide-react'
+// eslint-disable-next-line no-unused-vars
+import React, { useEffect, useState, useCallback, useRef } from 'react'
+import {
+  Menu,
+  Search,
+  Sun,
+  Moon,
+  Bell,
+  User,
+  ChevronDown,
+  LogOut,
+  Shield,
+  ShieldCheck,
+  HeartHandshake,
+  LayoutList,
+  Edit3,
+  ExternalLink,
+  Award
+} from 'lucide-react'
 import RoleBadge from '../RoleBadge.jsx'
 import NotificationsModal from './NotificationsModal.jsx'
 import { useTheme } from '../../context/useTheme.js'
+import { useAuth } from '../../context/AuthContext.jsx'
 import api from '../../services/api.js'
 
 // Libellés lisibles pour la barre supérieure (titre de la section courante).
@@ -30,14 +48,32 @@ const PAGE_TITLES = {
 }
 
 /**
- * TopBar — barre supérieure fine de l'espace connecté (app-shell).
- * Décalée à droite de la sidebar. Contient : ouverture menu (mobile), titre de
- * section, recherche (palette ⌘K), thème, notifications (modal) et pastille de rôle.
+ * TopBar — barre supérieure de l'espace connecté (app-shell).
+ * Contient : ouverture menu (mobile), titre de section, recherche (⌘K),
+ * thème, notifications et le Badge de Rôle + Menu Utilisateur Interactif.
  */
-export default function TopBar({ currentPage, navigate, user, collapsed, onOpenMobile }) {
+export default function TopBar({ currentPage, navigate, user, handleLogout, collapsed, onOpenMobile }) {
   const { theme, toggleTheme } = useTheme()
+  const { can, hasMinRole, isAnyClubResponsible, isChefUniversitaire, isTreasurer, isSecretary, logout } = useAuth()
+  
   const [unreadCount, setUnreadCount] = useState(0)
   const [notifOpen, setNotifOpen] = useState(false)
+  const [userMenuOpen, setUserMenuOpen] = useState(false)
+  const menuRef = useRef(null)
+
+  // Disconnect handler fallback
+  const onLogout = handleLogout || logout
+
+  // Close menu on outside click
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (menuRef.current && !menuRef.current.contains(e.target)) {
+        setUserMenuOpen(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [])
 
   const loadUnread = useCallback(async () => {
     try {
@@ -66,6 +102,16 @@ export default function TopBar({ currentPage, navigate, user, collapsed, onOpenM
   }, [loadUnread])
 
   const title = PAGE_TITLES[currentPage] || 'FIERI Research'
+  const initials = `${user?.firstName?.[0] ?? ''}${user?.lastName?.[0] ?? ''}`.toUpperCase() || 'U'
+
+  // Role permissions
+  const userRole = user?.role?.toUpperCase() || 'ETUDIANT'
+  const isResponsable = isAnyClubResponsible?.() || userRole === 'RESPONSABLE'
+  const isChercheur = hasMinRole('CHERCHEUR')
+  const isAdminUser = can('admin:access')
+  const isChef = isChefUniversitaire?.()
+  const isTreas = isTreasurer?.()
+  const isSec = isSecretary?.()
 
   return (
     <>
@@ -111,7 +157,7 @@ export default function TopBar({ currentPage, navigate, user, collapsed, onOpenM
             {theme === 'dark' ? <Sun className="w-4 h-4" aria-hidden="true" /> : <Moon className="w-4 h-4" aria-hidden="true" />}
           </button>
 
-          {/* Notifications — ouvre la MODAL au lieu de naviguer vers le dashboard */}
+          {/* Notifications */}
           <button
             onClick={() => setNotifOpen(true)}
             className="relative p-2 rounded-lg text-text-secondary hover:text-text-primary hover:bg-white/5 border border-transparent hover:border-border-subtle transition-all cursor-pointer"
@@ -126,24 +172,166 @@ export default function TopBar({ currentPage, navigate, user, collapsed, onOpenM
             )}
           </button>
 
-          {/* Pastille de rôle (identité rapide) */}
-          <button
-            onClick={() => navigate('dashboard')}
-            className="flex items-center gap-2 pl-1.5 cursor-pointer"
-            title={`${user?.firstName ?? ''} ${user?.lastName ?? ''}`.trim()}
-            aria-label="Ouvrir le tableau de bord"
+          {/* ─────────────────────────── BADGE DE RÔLE ET DROPDOWN INTERACTIF (HAUT DROITE) ─────────────────────────── */}
+          <div
+            ref={menuRef}
+            className="relative"
+            onMouseEnter={() => setUserMenuOpen(true)}
+            onMouseLeave={() => setUserMenuOpen(false)}
           >
-            <div className="w-8 h-8 rounded-full bg-accent-primary/20 border border-accent-primary/30 flex items-center justify-center shrink-0">
-              <span className="text-text-primary font-bold text-[11px]">
-                {`${user?.firstName?.[0] ?? ''}${user?.lastName?.[0] ?? ''}`.toUpperCase() || 'U'}
-              </span>
-            </div>
-            <RoleBadge
-              role={user?.role}
-              variant="pill"
-              className="hidden sm:inline text-[8.5px] uppercase tracking-wider font-extrabold px-2.5 py-0.5 rounded-full border shrink-0"
-            />
-          </button>
+            <button
+              onClick={() => setUserMenuOpen(prev => !prev)}
+              className="flex items-center gap-2 py-1 px-2 rounded-2xl hover:bg-white/5 border border-transparent hover:border-white/10 transition-all cursor-pointer"
+              aria-expanded={userMenuOpen}
+              aria-label="Menu du rôle et profil utilisateur"
+            >
+              {/* Avatar Pictogramme */}
+              <div className="w-8 h-8 rounded-full bg-fieri-blue/20 border border-fieri-blue/40 flex items-center justify-center shrink-0 shadow-md">
+                <span className="text-white font-black text-[11px]">
+                  {initials}
+                </span>
+              </div>
+
+              {/* Badge de Rôle Principal (Visible en permanence dans le header à droite) */}
+              <div className="hidden sm:flex flex-col items-start text-left">
+                <RoleBadge
+                  role={user?.role}
+                  variant="pill"
+                  className="text-[8.5px] uppercase tracking-wider font-extrabold px-2.5 py-0.5 rounded-full border shrink-0"
+                />
+              </div>
+
+              <ChevronDown className={`w-3.5 h-3.5 text-text-muted transition-transform duration-200 ${userMenuOpen ? 'rotate-180 text-fieri-blue' : ''}`} />
+            </button>
+
+            {/* Menu Déroulant (Survol / Clic) */}
+            {userMenuOpen && (
+              <div
+                className="absolute right-0 top-full mt-2 w-72 glass-panel rounded-3xl p-4 border border-white/10 shadow-2xl bg-bg-secondary/95 backdrop-blur-2xl z-50 animate-in fade-in slide-in-from-top-2 duration-150"
+              >
+                {/* Entête Utilisateur & Badges de Rôle */}
+                <div className="p-3 bg-white/3 border border-white/5 rounded-2xl mb-3 flex flex-col gap-2">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-2xl bg-fieri-blue/20 border border-fieri-blue/40 flex items-center justify-center shrink-0">
+                      <span className="text-fieri-blue font-black text-sm">{initials}</span>
+                    </div>
+                    <div className="flex flex-col min-w-0">
+                      <span className="text-xs font-black text-text-primary truncate">
+                        {user?.firstName} {user?.lastName}
+                      </span>
+                      <span className="text-[10px] font-medium text-text-muted truncate">
+                        {user?.email}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Badges de Spécification des Rôles */}
+                  <div className="flex flex-wrap gap-1.5 pt-1 border-t border-white/5 mt-1">
+                    <RoleBadge
+                      role={user?.role}
+                      variant="text"
+                      className="text-[9px] uppercase tracking-wider font-black"
+                    />
+                    {isChef && (
+                      <span className="text-[8.5px] font-black uppercase text-cyan-300 bg-cyan-500/15 px-2 py-0.5 rounded-md border border-cyan-500/30">
+                        Chef Univ.
+                      </span>
+                    )}
+                    {isSec && (
+                      <span className="text-[8.5px] font-black uppercase text-emerald-300 bg-emerald-500/15 px-2 py-0.5 rounded-md border border-emerald-500/30">
+                        Secrétaire (Trésorerie & Rapports)
+                      </span>
+                    )}
+                    {isTreas && !isSec && (
+                      <span className="text-[8.5px] font-black uppercase text-emerald-300 bg-emerald-500/15 px-2 py-0.5 rounded-md border border-emerald-500/30">
+                        Trésorier
+                      </span>
+                    )}
+                  </div>
+                </div>
+
+                {/* Liens Connexes au Rôle */}
+                <div className="space-y-1">
+                  <span className="px-2 text-[9px] font-black uppercase tracking-widest text-text-muted">
+                    Accès Privilégiés & Rôle
+                  </span>
+
+                  {/* Mon Profil */}
+                  <button
+                    onClick={() => { navigate('profile', { researcherId: 'me' }); setUserMenuOpen(false); }}
+                    className="w-full px-3 py-2 rounded-xl text-xs font-bold text-text-secondary hover:text-text-primary hover:bg-white/5 flex items-center gap-2.5 transition-colors text-left cursor-pointer"
+                  >
+                    <User className="w-4 h-4 text-fieri-blue" />
+                    <span>Mon Profil</span>
+                  </button>
+
+                  {/* Éditer mon profil */}
+                  <button
+                    onClick={() => { navigate('profile', { researcherId: 'me' }); setUserMenuOpen(false); }}
+                    className="w-full px-3 py-2 rounded-xl text-xs font-bold text-text-secondary hover:text-text-primary hover:bg-white/5 flex items-center gap-2.5 transition-colors text-left cursor-pointer"
+                  >
+                    <Edit3 className="w-4 h-4 text-violet-400" />
+                    <span>Éditer mes informations</span>
+                  </button>
+
+                  {/* Mon Espace CITE */}
+                  {(isResponsable || isSec) && (
+                    <button
+                      onClick={() => { navigate('espace-cite'); setUserMenuOpen(false); }}
+                      className="w-full px-3 py-2 rounded-xl text-xs font-bold text-text-secondary hover:text-text-primary hover:bg-white/5 flex items-center gap-2.5 transition-colors text-left cursor-pointer"
+                    >
+                      <LayoutList className="w-4 h-4 text-emerald-400" />
+                      <span>Mon Espace CITE (Rapports & Club)</span>
+                    </button>
+                  )}
+
+                  {/* Soutiens & Trésorerie */}
+                  {(isResponsable || isTreas || isSec || isChef || isAdminUser) && (
+                    <button
+                      onClick={() => { navigate('soutiens'); setUserMenuOpen(false); }}
+                      className="w-full px-3 py-2 rounded-xl text-xs font-bold text-text-secondary hover:text-text-primary hover:bg-white/5 flex items-center gap-2.5 transition-colors text-left cursor-pointer"
+                    >
+                      <HeartHandshake className="w-4 h-4 text-amber-400" />
+                      <span>Soutiens & Trésorerie</span>
+                    </button>
+                  )}
+
+                  {/* Gouvernance / Exclusions / Validation des Rapports */}
+                  {(isAdminUser || isChef) && (
+                    <button
+                      onClick={() => { navigate('gouvernance'); setUserMenuOpen(false); }}
+                      className="w-full px-3 py-2 rounded-xl text-xs font-bold text-text-secondary hover:text-text-primary hover:bg-white/5 flex items-center gap-2.5 transition-colors text-left cursor-pointer"
+                    >
+                      <ShieldCheck className="w-4 h-4 text-cyan-400" />
+                      <span>Gouvernance & Validation</span>
+                    </button>
+                  )}
+
+                  {/* Console d'Administration */}
+                  {isAdminUser && (
+                    <button
+                      onClick={() => { navigate('admin'); setUserMenuOpen(false); }}
+                      className="w-full px-3 py-2 rounded-xl text-xs font-bold text-text-secondary hover:text-text-primary hover:bg-white/5 flex items-center gap-2.5 transition-colors text-left cursor-pointer"
+                    >
+                      <Shield className="w-4 h-4 text-rose-400" />
+                      <span>Console d'Administration</span>
+                    </button>
+                  )}
+                </div>
+
+                <div className="h-px bg-white/5 my-2" />
+
+                {/* Déconnexion */}
+                <button
+                  onClick={() => { onLogout?.(); setUserMenuOpen(false); }}
+                  className="w-full px-3 py-2 rounded-xl text-xs font-bold text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 flex items-center gap-2.5 transition-colors text-left cursor-pointer"
+                >
+                  <LogOut className="w-4 h-4" />
+                  <span>Se déconnecter</span>
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       </header>
 

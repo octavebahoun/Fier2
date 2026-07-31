@@ -1,4 +1,5 @@
-import { useMemo } from 'react'
+// eslint-disable-next-line no-unused-vars
+import React, { useMemo, useState } from 'react'
 import {
   LayoutDashboard,
   UserRound,
@@ -18,10 +19,13 @@ import {
   LogOut,
   ChevronsLeft,
   ChevronsRight,
-  X
+  ChevronDown,
+  X,
+  Sparkles,
+  Layers,
+  Award
 } from 'lucide-react'
 import { useAuth } from '../../context/AuthContext.jsx'
-import RoleBadge from '../RoleBadge.jsx'
 
 // Mappe les pages « détail » vers l'item de menu parent pour l'état actif.
 const ACTIVE_ALIAS = {
@@ -34,20 +38,8 @@ const ACTIVE_ALIAS = {
 }
 
 /**
- * Sidebar — navigation PRINCIPALE de l'espace connecté (app-shell).
- *
- * ── NETTOYAGE RBAC (v2) ──
- * Chaque item a un `show` piloté STRICTEMENT par `can()` / `hasMinRole()`.
- * On distingue clairement les rôles :
- *
- *   ÉTUDIANT (simple)     → Dashboard, Actualités, Événements, Formations, Annuaire, Aide
- *   ÉTUDIANT CHERCHEUR    → + Projets, Opportunités, Mon profil, Challenges
- *   RESPONSABLE (de club) → + Mon espace CITE, Soutiens & Trésorerie
- *   ADMIN                 → + Console admin, Exclusions & Attestations
- *
- * Un étudiant chercheur N'EST PAS un responsable de club.
- * Un responsable N'EST PAS un admin.
- * Seul ce qui est pertinent pour le rôle est affiché → sidebar épurée.
+ * Sidebar — navigation ÉPURÉE & ACCORDION EXPANDABLE de l'espace connecté.
+ * Les sessions (Communauté, Recherche, Administration) sont désormais des boutons extensibles.
  */
 export default function Sidebar({
   currentPage,
@@ -61,8 +53,22 @@ export default function Sidebar({
 }) {
   const { can, hasMinRole, isAnyClubResponsible, isChefUniversitaire, isTreasurer } = useAuth()
 
+  // Tracking open/closed state of accordion sessions
+  const [openGroups, setOpenGroups] = useState({
+    'Personnel': true,
+    'Communauté': true,
+    'Recherche': true,
+    'Administration': true
+  })
+
+  const toggleGroup = (groupLabel) => {
+    setOpenGroups(prev => ({
+      ...prev,
+      [groupLabel]: !prev[groupLabel]
+    }))
+  }
+
   // ── Navigation groupée, filtrée par rôle ──
-  // Un groupe sans item visible n'est pas rendu du tout.
   const groups = useMemo(() => {
     const userRole = user?.role?.toUpperCase() || 'ETUDIANT'
     const isResponsable = isAnyClubResponsible?.() || userRole === 'RESPONSABLE'
@@ -71,39 +77,47 @@ export default function Sidebar({
     const canManageGouvernance = isAdminUser || isChefUniversitaire?.()
 
     return [
-      // ── Espace personnel (tout le monde) ──
+      // ── Espace personnel ──
       {
-        label: null, // pas de label de groupe = section compacte en haut
+        id: 'Personnel',
+        label: 'Mon Espace',
+        icon: Sparkles,
         items: [
           { id: 'dashboard', label: 'Tableau de bord', icon: LayoutDashboard, show: true },
           { id: 'profile', label: 'Mon profil', icon: UserRound, params: { researcherId: 'me' }, show: isChercheur },
         ],
       },
-      // ── Découverte (visible par tous, items filtrés) ──
+      // ── Communauté ──
       {
+        id: 'Communauté',
         label: 'Communauté',
+        icon: Users,
         items: [
           { id: 'news', label: 'Actualités', icon: Newspaper, show: true },
           { id: 'events', label: 'Événements', icon: CalendarDays, show: true },
           { id: 'challenges', label: 'Challenges & Hackathons', icon: Trophy, show: isChercheur },
           { id: 'soutiens', label: 'Soutiens & Trésorerie', icon: HeartHandshake, show: isResponsable || isTreasurer?.() || isAdminUser },
-          { id: 'researchers', label: 'Annuaire', icon: Contact, show: true },
+          { id: 'researchers', label: 'Annuaire Chercheurs', icon: Contact, show: true },
         ],
       },
-      // ── Recherche & Production (chercheurs et au-dessus) ──
+      // ── Recherche & Production ──
       {
-        label: 'Recherche',
+        id: 'Recherche',
+        label: 'Recherche & R&D',
+        icon: Layers,
         items: [
-          { id: 'projects', label: 'Projets', icon: FolderGit2, show: isChercheur },
+          { id: 'projects', label: 'Projets R&D', icon: FolderGit2, show: isChercheur },
           { id: 'workshops', label: 'Formations', icon: GraduationCap, show: true },
           { id: 'opportunities', label: 'Opportunités', icon: Briefcase, show: isChercheur },
-          { id: 'clubs', label: 'CITE', icon: Users, show: true },
+          { id: 'clubs', label: 'Clubs CITE', icon: Users, show: true },
           { id: 'espace-cite', label: 'Mon espace CITE', icon: LayoutList, show: isResponsable },
         ],
       },
-      // ── Administration (admin + chef universitaire) ──
+      // ── Administration ──
       {
+        id: 'Administration',
         label: 'Administration',
+        icon: Shield,
         items: [
           { id: 'admin', label: 'Console admin', icon: Shield, show: isAdminUser },
           { id: 'gouvernance', label: 'Exclusions & Attestations', icon: ShieldCheck, show: canManageGouvernance },
@@ -120,8 +134,6 @@ export default function Sidebar({
     navigate(item.id, item.params || {})
     setMobileOpen?.(false)
   }
-
-  const initials = `${user?.firstName?.[0] ?? ''}${user?.lastName?.[0] ?? ''}`.toUpperCase() || 'U'
 
   return (
     <>
@@ -142,7 +154,7 @@ export default function Sidebar({
         aria-label="Navigation principale"
       >
         {/* Glow décoratif */}
-        <div className="absolute top-1/4 left-0 w-full h-1/2 pointer-events-none bg-accent-primary/5 blur-[40px] z-0" />
+        <div className="absolute top-1/4 left-0 w-full h-1/2 pointer-events-none bg-fieri-blue/5 blur-[40px] z-0" />
 
         {/* En-tête : marque + toggle */}
         <div className="relative z-10 flex items-center justify-between h-16 px-4 shrink-0 border-b border-border-subtle/60">
@@ -152,7 +164,7 @@ export default function Sidebar({
             title="Tableau de bord"
             aria-label="Aller au tableau de bord"
           >
-            <div className="w-8 h-8 shrink-0 flex items-center justify-center rounded-lg bg-accent-primary/20 border border-accent-primary/40 group-hover:border-fieri-blue/60 transition-colors">
+            <div className="w-8 h-8 shrink-0 flex items-center justify-center rounded-lg bg-fieri-blue/20 border border-fieri-blue/40 group-hover:border-fieri-blue/60 transition-colors shadow-md">
               <span className="text-fieri-blue text-xs font-black">F</span>
             </div>
             {!collapsed && (
@@ -182,78 +194,83 @@ export default function Sidebar({
           )}
         </div>
 
-        {/* Bloc utilisateur */}
-        <div className={`relative z-10 shrink-0 border-b border-border-subtle/50 ${collapsed ? 'px-2 py-3' : 'px-4 py-3.5'}`}>
-          <div className={`flex items-center gap-2.5 ${collapsed ? 'justify-center' : ''}`}>
-            <div className="w-9 h-9 shrink-0 rounded-full bg-accent-primary/20 border border-accent-primary/30 flex items-center justify-center">
-              <span className="text-text-primary font-bold text-xs">{initials}</span>
-            </div>
-            {!collapsed && (
-              <div className="flex flex-col min-w-0">
-                <span className="text-xs font-bold text-text-primary truncate">
-                  {user?.firstName} {user?.lastName}
-                </span>
-                <RoleBadge
-                  role={user?.role}
-                  variant="text"
-                  className="text-[8.5px] uppercase tracking-wider font-extrabold self-start"
-                />
-              </div>
-            )}
-          </div>
-        </div>
+        {/* ─────────────────────────── NAVIGATION PAR SESSIONS ACCORDÉONS (BOUTONS EXTENSIBLES) ─────────────────────────── */}
+        <nav className="relative z-10 flex-1 overflow-y-auto overflow-x-hidden py-5 px-3 flex flex-col gap-6">
+          {groups.map((group) => {
+            const isOpen = openGroups[group.id] ?? true
+            const hasActiveChild = group.items.some(i => isActive(i.id))
 
-        {/* Navigation groupée */}
-        <nav className="relative z-10 flex-1 overflow-y-auto overflow-x-hidden py-3 px-2.5 flex flex-col gap-4">
-          {groups.map((group, gi) => (
-            <div key={group.label || `g-${gi}`} className="flex flex-col gap-1">
-              {!collapsed && group.label && (
-                <span className="px-2.5 mb-0.5 text-[9px] font-black uppercase tracking-[0.2em] text-text-muted/70">
-                  {group.label}
-                </span>
-              )}
-              {group.items.map((item) => {
-                const Icon = item.icon
-                const active = isActive(item.id)
-                return (
+            return (
+              <div key={group.id} className="flex flex-col gap-2">
+                
+                {/* Session Extensible Button Header (non replié) */}
+                {!collapsed ? (
                   <button
-                    key={item.id}
-                    onClick={() => go(item)}
-                    title={collapsed ? item.label : undefined}
-                    aria-label={collapsed ? item.label : undefined}
-                    aria-current={active ? 'page' : undefined}
-                    className={`relative w-full h-9 rounded-lg flex items-center transition-all duration-200 cursor-pointer
-                      ${collapsed ? 'justify-center px-0' : 'px-2.5 gap-3'}
-                      ${active
-                        ? 'bg-accent-primary/20 border border-accent-primary/30 text-text-primary'
-                        : 'border border-transparent text-text-secondary hover:text-text-primary hover:bg-white/5'}`}
+                    onClick={() => toggleGroup(group.id)}
+                    className={`w-full px-3 py-2 flex items-center justify-between text-[10px] font-black uppercase tracking-[0.2em] transition-all cursor-pointer rounded-xl border ${
+                      hasActiveChild 
+                        ? 'text-fieri-blue bg-fieri-blue/10 border-fieri-blue/20 shadow-sm' 
+                        : 'text-text-muted hover:text-text-primary bg-white/[0.03] hover:bg-white/[0.07] border-white/5'
+                    }`}
                   >
-                    <Icon className={`w-[18px] h-[18px] shrink-0 ${active ? 'text-fieri-blue' : ''}`} aria-hidden="true" />
-                    {!collapsed && (
-                      <span className="text-xs font-semibold tracking-wide whitespace-nowrap truncate">{item.label}</span>
-                    )}
-                    {active && (
-                      <span className={`absolute rounded-full bg-accent-secondary shadow-[0_0_8px_rgba(245,166,35,0.7)] ${
-                        collapsed ? 'top-1.5 right-1.5 w-1.5 h-1.5' : 'right-2.5 w-1.5 h-1.5'
-                      }`} />
-                    )}
+                    <span className="flex items-center gap-2.5">
+                      <group.icon className="w-3.5 h-3.5 text-fieri-blue/80" />
+                      <span>{group.label}</span>
+                    </span>
+                    <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${isOpen ? 'rotate-180 text-fieri-blue' : ''}`} />
                   </button>
-                )
-              })}
-            </div>
-          ))}
+                ) : (
+                  <div className="h-px bg-white/5 my-1" />
+                )}
+
+                {/* Contenu de la session (Boutons de navigation) */}
+                {(isOpen || collapsed) && (
+                  <div className="flex flex-col gap-1.5 pl-1">
+                    {group.items.map((item) => {
+                      const Icon = item.icon
+                      const active = isActive(item.id)
+                      return (
+                        <button
+                          key={item.id}
+                          onClick={() => go(item)}
+                          title={collapsed ? item.label : undefined}
+                          aria-label={collapsed ? item.label : undefined}
+                          aria-current={active ? 'page' : undefined}
+                          className={`relative w-full h-10 rounded-xl flex items-center transition-all duration-200 cursor-pointer
+                            ${collapsed ? 'justify-center px-0' : 'px-3 gap-3'}
+                            ${active
+                              ? 'bg-fieri-blue/15 border border-fieri-blue/30 text-text-primary shadow-sm font-bold'
+                              : 'border border-transparent text-text-secondary hover:text-text-primary hover:bg-white/5 font-medium'}`}
+                        >
+                          <Icon className={`w-[17px] h-[17px] shrink-0 ${active ? 'text-fieri-blue' : 'text-text-muted'}`} aria-hidden="true" />
+                          {!collapsed && (
+                            <span className="text-xs tracking-wide whitespace-nowrap truncate">{item.label}</span>
+                          )}
+                          {active && (
+                            <span className={`absolute rounded-full bg-fieri-blue shadow-[0_0_8px_rgba(108,76,241,0.8)] ${
+                              collapsed ? 'top-2 right-2 w-1.5 h-1.5' : 'right-3 w-1.5 h-1.5'
+                            }`} />
+                          )}
+                        </button>
+                      )
+                    })}
+                  </div>
+                )}
+              </div>
+            )
+          })}
         </nav>
 
-        {/* Pied : aide, déplier, déconnexion */}
+        {/* Pied de Sidebar épuré */}
         <div className="relative z-10 shrink-0 border-t border-border-subtle/60 p-2.5 flex flex-col gap-1">
           <button
             onClick={() => go({ id: 'contact' })}
             title={collapsed ? 'Aide & Contact' : undefined}
             aria-label={collapsed ? 'Aide & Contact' : undefined}
-            className={`w-full h-9 rounded-lg flex items-center transition-all cursor-pointer text-text-secondary hover:text-text-primary hover:bg-white/5 border border-transparent
+            className={`w-full h-9 rounded-xl flex items-center transition-all cursor-pointer text-text-secondary hover:text-text-primary hover:bg-white/5 border border-transparent
               ${collapsed ? 'justify-center px-0' : 'px-2.5 gap-3'}`}
           >
-            <LifeBuoy className="w-[18px] h-[18px] shrink-0" aria-hidden="true" />
+            <LifeBuoy className="w-[17px] h-[17px] shrink-0 text-text-muted" aria-hidden="true" />
             {!collapsed && <span className="text-xs font-semibold tracking-wide">Aide & Contact</span>}
           </button>
 
@@ -262,9 +279,9 @@ export default function Sidebar({
               onClick={() => setCollapsed?.(false)}
               title="Déplier la barre"
               aria-label="Déplier la barre latérale"
-              className="hidden md:flex w-full h-9 rounded-lg items-center justify-center text-text-muted hover:text-text-primary hover:bg-white/5 border border-transparent transition-all cursor-pointer"
+              className="hidden md:flex w-full h-9 rounded-xl items-center justify-center text-text-muted hover:text-text-primary hover:bg-white/5 border border-transparent transition-all cursor-pointer"
             >
-              <ChevronsRight className="w-[18px] h-[18px]" aria-hidden="true" />
+              <ChevronsRight className="w-[17px] h-[17px]" aria-hidden="true" />
             </button>
           )}
 
@@ -272,10 +289,10 @@ export default function Sidebar({
             onClick={handleLogout}
             title={collapsed ? 'Se déconnecter' : undefined}
             aria-label={collapsed ? 'Se déconnecter' : undefined}
-            className={`w-full h-9 rounded-lg flex items-center transition-all cursor-pointer text-red-400 hover:text-red-300 hover:bg-red-500/10 border border-transparent hover:border-red-500/20
+            className={`w-full h-9 rounded-xl flex items-center transition-all cursor-pointer text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 border border-transparent hover:border-rose-500/20
               ${collapsed ? 'justify-center px-0' : 'px-2.5 gap-3'}`}
           >
-            <LogOut className="w-[18px] h-[18px] shrink-0" aria-hidden="true" />
+            <LogOut className="w-[17px] h-[17px] shrink-0 text-rose-400" aria-hidden="true" />
             {!collapsed && <span className="text-xs font-semibold tracking-wide">Déconnexion</span>}
           </button>
         </div>

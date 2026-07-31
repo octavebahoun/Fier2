@@ -151,6 +151,42 @@ export function normalizeOpportunity(o) {
   }
 }
 
+const DEFAULT_PROJECT_IMAGES = [
+  'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1000&q=80', // Circuit / Microelectronics
+  'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1000&q=80', // AI / Abstract Nodes
+  'https://images.unsplash.com/photo-1485827404703-89b55fcc595e?auto=format&fit=crop&w=1000&q=80', // Robotics / Cybernetics
+  'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=1000&q=80', // Embedded Systems / IoT
+  'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=1000&q=80', // Web / Cloud Architecture
+  'https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=1000&q=80', // Energy / Climate Tech
+];
+
+function getProjectImage(p) {
+  if (p.image) return p.image;
+  if (p.imageUrl) return p.imageUrl;
+  
+  const titleLower = ((p.title || '') + ' ' + (p.summary || '') + ' ' + (p.clubName || '')).toLowerCase();
+  if (titleLower.includes('ia') || titleLower.includes('pathologi') || titleLower.includes('intelligence') || titleLower.includes('visio') || titleLower.includes('deep')) {
+    return 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1000&q=80';
+  }
+  if (titleLower.includes('robot') || titleLower.includes('ros') || titleLower.includes('rover') || titleLower.includes('autonom')) {
+    return 'https://images.unsplash.com/photo-1485827404703-89b55fcc595e?auto=format&fit=crop&w=1000&q=80';
+  }
+  if (titleLower.includes('web') || titleLower.includes('cloud') || titleLower.includes('plateform') || titleLower.includes('app') || titleLower.includes('logiciel')) {
+    return 'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=1000&q=80';
+  }
+  if (titleLower.includes('electroni') || titleLower.includes('capteur') || titleLower.includes('iot') || titleLower.includes('embarq') || titleLower.includes('carte')) {
+    return 'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1000&q=80';
+  }
+  if (titleLower.includes('froid') || titleLower.includes('clima') || titleLower.includes('solaire') || titleLower.includes('btp') || titleLower.includes('thermiq') || titleLower.includes('energi')) {
+    return 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=1000&q=80';
+  }
+
+  const str = String(p.id || p.title || 'fieri');
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) hash = (hash * 31 + str.charCodeAt(i)) >>> 0;
+  return DEFAULT_PROJECT_IMAGES[hash % DEFAULT_PROJECT_IMAGES.length];
+}
+
 /**
  * Projet R&D. Backend : { id, title, summary, status, clubId, stars, starred,
  * budgetRaised, technologies }. Détail : + { description, team }.
@@ -173,7 +209,7 @@ export function normalizeProject(p) {
     author: authorName(p.author),
     authorId: authorId(p.author),
     clubName: p.clubName ?? '',
-    image: p.image ?? null
+    image: getProjectImage(p)
   }
 }
 

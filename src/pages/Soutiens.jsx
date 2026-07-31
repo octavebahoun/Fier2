@@ -163,7 +163,7 @@ function FinancialForm({ universityId, setUniversityId, universities, user, setT
         </div>
         <div>
           <h3 className="text-text-primary font-bold text-lg">Soutien financier</h3>
-          <p className="text-text-secondary text-xs">Paiement sécurisé via Genius Pay</p>
+          <p className="text-text-secondary text-xs">Paiement sécurisé via Genius Pay (Passerelle simulée pour le jury)</p>
         </div>
       </div>
 
@@ -658,6 +658,35 @@ export default function Soutiens({ navigate }) {
   useEffect(() => {
     if (userUniversityId) setUniversityId((prev) => prev ?? userUniversityId);
   }, [userUniversityId]);
+
+  // Traitement automatique du retour de simulation de paiement (Genius Pay Mock)
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const isMock = params.get('mock_payment');
+    const offerId = params.get('offerId');
+    if (isMock && offerId) {
+      api.support
+        .confirmMockPayment(offerId)
+        .then((res) => {
+          if (res?.success) {
+            const formatted = res.amount ? `${Number(res.amount).toLocaleString('fr-FR')} FCFA` : '';
+            setToast({
+              message: `Paiement Genius Pay validé ! Don de ${formatted} crédité à la trésorerie.`,
+              type: 'success',
+            });
+          }
+        })
+        .catch((err) => {
+          setToast({
+            message: err?.serverMessage || err?.message || 'Erreur lors de la validation du paiement simulé.',
+            type: 'error',
+          });
+        })
+        .finally(() => {
+          window.history.replaceState({}, document.title, window.location.pathname);
+        });
+    }
+  }, []);
 
   // La trésorerie n'est visible que pour le Trésorier / Chef Universitaire / ADMIN.
   const showTreasury = isTreasurer();

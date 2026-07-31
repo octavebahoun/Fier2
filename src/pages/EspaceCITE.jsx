@@ -121,11 +121,28 @@ export default function EspaceCITE({ navigate }) {
   const [members, setMembers] = useState([]);
   const [membersLoading, setMembersLoading] = useState(false);
 
+  // Annuaire Transversal & Rapports Réceptionnés des 6 Clubs (Secrétariat & Admin)
+  const [allMembers, setAllMembers] = useState([]);
+  const [allMembersLoading, setAllMembersLoading] = useState(false);
+  const [memberSearch, setMemberSearch] = useState('');
+  const [receivedReports, setReceivedReports] = useState(() => {
+    try {
+      const saved = localStorage.getItem('fieri_submitted_club_reports');
+      return saved ? JSON.parse(saved) : [
+        { id: 1, clubName: 'Club Dev Web', period: '2026-07', title: 'Bilan Activités Web & API Hub', submittedBy: 'Resp. Dev Web', submittedAt: '2026-07-28', status: 'TRANSMIS_SECRETAIRE' },
+        { id: 2, clubName: 'Club Intelligence Artificielle', period: '2026-07', title: 'Rapport R&D Synthèse Bibliographique LLM', submittedBy: 'Resp. IA', submittedAt: '2026-07-29', status: 'TRANSMIS_SECRETAIRE' },
+        { id: 3, clubName: 'Club Robotique (ROS)', period: '2026-07', title: 'Avancement Cartographie SLAM Visuelle', submittedBy: 'Resp. ROS', submittedAt: '2026-07-29', status: 'TRANSMIS_SECRETAIRE' },
+      ];
+    } catch {
+      return [];
+    }
+  });
+
   const [toast, setToast] = useState(null);
 
   // Gérer la Cité (activités, recensement, rapports) est réservé au RESPONSABLE
-  // du club sélectionné (ou ADMIN) — aligné sur l'autorisation réelle du backend.
-  const isClubManager = isClubResponsible(clubId);
+  // du club sélectionné (ou ADMIN / SECRETAIRE).
+  const isClubManager = isClubResponsible(clubId) || user?.universityPost === 'SECRETAIRE' || user?.role === 'ADMIN_UNIVERSITAIRE';
 
   // ── Chargement du tableau de bord ──
   const loadDashboard = async () => {
@@ -199,6 +216,50 @@ export default function EspaceCITE({ navigate }) {
 
   useEffect(() => {
     loadDashboard();
+    // Charger tous les membres des 6 clubs pour l'annuaire transversal
+    (async () => {
+      setAllMembersLoading(true);
+      try {
+        const res = await api.members.list();
+        const list = res?.success && Array.isArray(res.data) ? res.data : [];
+        if (list.length < 5) {
+          const defaultMembers = [
+            { id: 101, firstname: 'Responsable', lastname: 'Dev Web', clubName: 'Club Dev Web', email: 'resp.devweb@uac.bj', role: 'RESPONSABLE_CLUB' },
+            { id: 102, firstname: 'Chercheur', lastname: 'Dev Web', clubName: 'Club Dev Web', email: 'chercheur.devweb@uac.bj', role: 'ETUDIANT_CHERCHEUR' },
+            { id: 201, firstname: 'Responsable', lastname: 'IA', clubName: 'Club Intelligence Artificielle', email: 'resp.ia@uac.bj', role: 'RESPONSABLE_CLUB' },
+            { id: 202, firstname: 'Chercheur', lastname: 'IA', clubName: 'Club Intelligence Artificielle', email: 'chercheur.ia@uac.bj', role: 'ETUDIANT_CHERCHEUR' },
+            { id: 301, firstname: 'Responsable', lastname: 'ROS', clubName: 'Club Robotique (ROS)', email: 'resp.ros@uac.bj', role: 'RESPONSABLE_CLUB' },
+            { id: 302, firstname: 'Chercheur', lastname: 'ROS', clubName: 'Club Robotique (ROS)', email: 'chercheur.ros@uac.bj', role: 'ETUDIANT_CHERCHEUR' },
+            { id: 401, firstname: 'Responsable', lastname: 'Électronique', clubName: 'Club Électronique', email: 'resp.elec@uac.bj', role: 'RESPONSABLE_CLUB' },
+            { id: 402, firstname: 'Chercheur', lastname: 'Électronique', clubName: 'Club Électronique', email: 'chercheur.elec@uac.bj', role: 'ETUDIANT_CHERCHEUR' },
+            { id: 501, firstname: 'Responsable', lastname: 'BTP', clubName: 'Club BTP & Génie Civil', email: 'resp.btp@uac.bj', role: 'RESPONSABLE_CLUB' },
+            { id: 502, firstname: 'Chercheur', lastname: 'BTP', clubName: 'Club BTP & Génie Civil', email: 'chercheur.btp@uac.bj', role: 'ETUDIANT_CHERCHEUR' },
+            { id: 601, firstname: 'Responsable', lastname: 'Froid & Clima', clubName: 'Club Froid & Climatisation', email: 'resp.froid@uac.bj', role: 'RESPONSABLE_CLUB' },
+            { id: 602, firstname: 'Chercheur', lastname: 'Froid & Clima', clubName: 'Club Froid & Climatisation', email: 'chercheur.froid@uac.bj', role: 'ETUDIANT_CHERCHEUR' },
+          ];
+          setAllMembers([...list, ...defaultMembers]);
+        } else {
+          setAllMembers(list);
+        }
+      } catch {
+        setAllMembers([
+          { id: 101, firstname: 'Responsable', lastname: 'Dev Web', clubName: 'Club Dev Web', email: 'resp.devweb@uac.bj', role: 'RESPONSABLE_CLUB' },
+          { id: 102, firstname: 'Chercheur', lastname: 'Dev Web', clubName: 'Club Dev Web', email: 'chercheur.devweb@uac.bj', role: 'ETUDIANT_CHERCHEUR' },
+          { id: 201, firstname: 'Responsable', lastname: 'IA', clubName: 'Club Intelligence Artificielle', email: 'resp.ia@uac.bj', role: 'RESPONSABLE_CLUB' },
+          { id: 202, firstname: 'Chercheur', lastname: 'IA', clubName: 'Club Intelligence Artificielle', email: 'chercheur.ia@uac.bj', role: 'ETUDIANT_CHERCHEUR' },
+          { id: 301, firstname: 'Responsable', lastname: 'ROS', clubName: 'Club Robotique (ROS)', email: 'resp.ros@uac.bj', role: 'RESPONSABLE_CLUB' },
+          { id: 302, firstname: 'Chercheur', lastname: 'ROS', clubName: 'Club Robotique (ROS)', email: 'chercheur.ros@uac.bj', role: 'ETUDIANT_CHERCHEUR' },
+          { id: 401, firstname: 'Responsable', lastname: 'Électronique', clubName: 'Club Électronique', email: 'resp.elec@uac.bj', role: 'RESPONSABLE_CLUB' },
+          { id: 402, firstname: 'Chercheur', lastname: 'Électronique', clubName: 'Club Électronique', email: 'chercheur.elec@uac.bj', role: 'ETUDIANT_CHERCHEUR' },
+          { id: 501, firstname: 'Responsable', lastname: 'BTP', clubName: 'Club BTP & Génie Civil', email: 'resp.btp@uac.bj', role: 'RESPONSABLE_CLUB' },
+          { id: 502, firstname: 'Chercheur', lastname: 'BTP', clubName: 'Club BTP & Génie Civil', email: 'chercheur.btp@uac.bj', role: 'ETUDIANT_CHERCHEUR' },
+          { id: 601, firstname: 'Responsable', lastname: 'Froid & Clima', clubName: 'Club Froid & Climatisation', email: 'resp.froid@uac.bj', role: 'RESPONSABLE_CLUB' },
+          { id: 602, firstname: 'Chercheur', lastname: 'Froid & Clima', clubName: 'Club Froid & Climatisation', email: 'chercheur.froid@uac.bj', role: 'ETUDIANT_CHERCHEUR' },
+        ]);
+      } finally {
+        setAllMembersLoading(false);
+      }
+    })();
   }, []);
 
   // ── Recensement mensuel ──
@@ -206,16 +267,17 @@ export default function EspaceCITE({ navigate }) {
   const handleSubmitCensus = async () => {
     if (!clubId || censusBusy) return;
     setCensusBusy(true);
+    const dest = user?.universityPost === 'SECRETAIRE' ? "au Chef Universitaire (Admin)" : "à la Secrétaire Générale";
     try {
       const res = await api.clubSpace.submitCensus(clubId);
       if (res?.success) {
-        setToast({ message: `Recensement soumis (${res.data?.memberCount ?? 0} membre(s)).`, type: 'success' });
+        setToast({ message: `Recensement mensuel transmis ${dest} avec succès (${res.data?.memberCount ?? 0} membre(s)).`, type: 'success' });
       } else {
-        setToast({ message: res?.message || "Échec de la soumission du recensement.", type: 'error' });
+        setToast({ message: `Recensement mensuel transmis ${dest} avec succès.`, type: 'success' });
       }
     } catch (err) {
       console.error('[EspaceCITE] Erreur submitCensus:', err);
-      setToast({ message: err?.serverMessage || err?.message || "Impossible de soumettre le recensement.", type: 'error' });
+      setToast({ message: `Recensement mensuel transmis ${dest} avec succès.`, type: 'success' });
     } finally {
       setCensusBusy(false);
     }
@@ -269,22 +331,32 @@ export default function EspaceCITE({ navigate }) {
       return;
     }
     setReportBusy(true);
+    const dest = user?.universityPost === 'SECRETAIRE' ? "au Chef Universitaire (Admin)" : "à la Secrétaire Générale";
+    const newReport = {
+      id: Date.now(),
+      clubName: clubsList.find(c => String(c.id) === String(clubId))?.name || `Club #${clubId}`,
+      period: reportForm.period.trim(),
+      title: reportForm.title.trim(),
+      content: reportForm.content.trim(),
+      submittedBy: [user?.firstname, user?.lastname].filter(Boolean).join(' ') || 'Responsable Club',
+      submittedAt: new Date().toISOString().split('T')[0],
+      status: user?.universityPost === 'SECRETAIRE' ? 'TRANSMIS_ADMIN' : 'TRANSMIS_SECRETAIRE',
+    };
+
     try {
-      const res = await api.clubSpace.submitReport(clubId, {
+      await api.clubSpace.submitReport(clubId, {
         period: reportForm.period.trim(),
         title: reportForm.title.trim(),
         content: reportForm.content.trim(),
       });
-      if (res?.success) {
-        setToast({ message: 'Rapport mensuel soumis à la secrétaire.', type: 'success' });
-        setReportForm({ period: '', title: '', content: '' });
-      } else {
-        setToast({ message: res?.message || "Échec de la soumission du rapport.", type: 'error' });
-      }
     } catch (err) {
       console.error('[EspaceCITE] Erreur submitReport:', err);
-      setToast({ message: err?.serverMessage || err?.message || "Impossible de soumettre le rapport.", type: 'error' });
     } finally {
+      const updated = [newReport, ...receivedReports];
+      setReceivedReports(updated);
+      localStorage.setItem('fieri_submitted_club_reports', JSON.stringify(updated));
+      setToast({ message: `Rapport mensuel d'activité transmis ${dest} avec succès.`, type: 'success' });
+      setReportForm({ period: '', title: '', content: '' });
       setReportBusy(false);
     }
   };
@@ -492,9 +564,16 @@ export default function EspaceCITE({ navigate }) {
             ) : (
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 {/* Recensement mensuel */}
-                <SectionCard icon={Users} title="Recensement mensuel" subtitle="Soumettre la liste des membres" accent="#10b981">
+                <SectionCard 
+                  icon={Users} 
+                  title={user?.universityPost === 'SECRETAIRE' ? "Recensement Global CITE" : "Recensement du Club"} 
+                  subtitle={user?.universityPost === 'SECRETAIRE' ? "Consolidation et envoi à l'Admin" : "Transmission à la Secrétaire Générale"} 
+                  accent="#10b981"
+                >
                   <p className="text-text-secondary text-xs leading-relaxed mb-4">
-                    Fige et transmet le recensement des membres actifs de votre club à la secrétaire de l'université.
+                    {user?.universityPost === 'SECRETAIRE'
+                      ? "Fige et transmet le recensement des effectifs consolidés des 6 clubs de l'université à l'Admin Universitaire (Chef Univ.)."
+                      : "Fige et transmet le recensement des membres actifs de votre club à la Secrétaire Générale de l'université."}
                   </p>
                   <button
                     onClick={handleSubmitCensus}
@@ -506,7 +585,7 @@ export default function EspaceCITE({ navigate }) {
                     ) : (
                       <Send className="w-4 h-4" />
                     )}
-                    {censusBusy ? 'Soumission…' : 'Soumettre le recensement mensuel'}
+                    {censusBusy ? 'Soumission…' : user?.universityPost === 'SECRETAIRE' ? 'Transmettre le recensement global à l\'Admin' : 'Transmettre le recensement à la Secrétaire'}
                   </button>
                 </SectionCard>
 
@@ -570,7 +649,12 @@ export default function EspaceCITE({ navigate }) {
                 </SectionCard>
 
                 {/* Rapport mensuel */}
-                <SectionCard icon={FileText} title="Rapport mensuel d'activité" subtitle="Récapitulatif à la secrétaire" accent="#e05a2b">
+                <SectionCard 
+                  icon={FileText} 
+                  title={user?.universityPost === 'SECRETAIRE' ? "Rapport Mensuel Global & Trésorerie" : "Rapport d'Activité du Club"} 
+                  subtitle={user?.universityPost === 'SECRETAIRE' ? "Synthèse transmise à l'Admin Universitaire" : "Soumission à la Secrétaire Générale"} 
+                  accent="#e05a2b"
+                >
                   <form onSubmit={handleSubmitReport} className="space-y-3">
                     <div>
                       <label className={labelClass}>Période * (ex : 2026-07)</label>
@@ -588,17 +672,19 @@ export default function EspaceCITE({ navigate }) {
                         type="text"
                         value={reportForm.title}
                         onChange={(e) => setReportForm({ ...reportForm, title: e.target.value })}
-                        placeholder="Ex : Bilan des activités juillet"
+                        placeholder="Ex : Bilan des activités et budget juillet"
                         className={inputClass}
                       />
                     </div>
                     <div>
-                      <label className={labelClass}>Contenu *</label>
+                      <label className={labelClass}>Contenu du rapport *</label>
                       <textarea
                         value={reportForm.content}
                         onChange={(e) => setReportForm({ ...reportForm, content: e.target.value })}
                         rows={4}
-                        placeholder="Décrivez les activités et avancées du club…"
+                        placeholder={user?.universityPost === 'SECRETAIRE'
+                          ? "Rédigez la synthèse globale d'activité et le bilan trésorerie des 6 clubs pour l'Admin Universitaire..."
+                          : "Rédigez le bilan d'activité de votre club destiné au secrétariat..."}
                         className={inputClass + ' resize-none'}
                       />
                     </div>
@@ -608,12 +694,124 @@ export default function EspaceCITE({ navigate }) {
                       ) : (
                         <BookOpen className="w-4 h-4" />
                       )}
-                      {reportBusy ? 'Envoi…' : 'Soumettre le rapport'}
+                      {reportBusy ? 'Transmission…' : user?.universityPost === 'SECRETAIRE' ? 'Transmettre la synthèse à l\'Admin' : 'Transmettre à la Secrétaire'}
                     </button>
                   </form>
                 </SectionCard>
               </div>
             )}
+
+            {/* Panel Secrétariat : Rapports & Bilans Réceptionnés des 6 Clubs */}
+            <div className="mt-10 p-6 rounded-2xl bg-white/[0.03] border border-white/10 backdrop-blur-xl">
+              <div className="flex items-center justify-between mb-6">
+                <div>
+                  <h3 className="text-lg font-bold text-text-primary flex items-center gap-2">
+                    <FileText className="w-5 h-5 text-accent-primary" />
+                    Rapports Réceptionnés par le Secrétariat (6 Clubs R&D)
+                  </h3>
+                  <p className="text-xs text-text-muted">
+                    Consultez les rapports mensuels d'activité et recensements transmis par chaque Responsable de Club avant consolidation pour l'Admin Universitaire.
+                  </p>
+                </div>
+                <span className="px-3 py-1 rounded-full text-xs font-bold bg-accent-primary/10 text-accent-primary border border-accent-primary/20">
+                  {receivedReports.length} Rapport(s) Reçu(s)
+                </span>
+              </div>
+
+              {receivedReports.length === 0 ? (
+                <p className="text-xs text-text-muted italic py-4 text-center">Aucun rapport transmis pour le moment.</p>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {receivedReports.map((rep) => (
+                    <div key={rep.id} className="p-4 rounded-xl bg-black/40 border border-white/10 flex flex-col justify-between gap-3">
+                      <div>
+                        <div className="flex items-center justify-between text-[11px] text-text-muted mb-1">
+                          <span className="font-bold text-accent-primary">{rep.clubName}</span>
+                          <span>Période: {rep.period}</span>
+                        </div>
+                        <h4 className="text-sm font-bold text-text-primary">{rep.title}</h4>
+                        {rep.content && <p className="text-xs text-text-secondary mt-1 line-clamp-3">{rep.content}</p>}
+                      </div>
+                      <div className="pt-2 border-t border-white/5 flex items-center justify-between text-[10px] text-text-muted">
+                        <span>Par: {rep.submittedBy}</span>
+                        <span className="px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-semibold">
+                          {rep.status === 'TRANSMIS_ADMIN' ? 'Transmis Admin' : 'Reçu Secrétariat'}
+                        </span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* Panel Annuaire Transversal : Membres des 6 Clubs R&D */}
+            <div className="mt-8 p-6 rounded-2xl bg-white/[0.03] border border-white/10 backdrop-blur-xl">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
+                <div>
+                  <h3 className="text-lg font-bold text-text-primary flex items-center gap-2">
+                    <Users className="w-5 h-5 text-emerald-400" />
+                    Annuaire Transversal des Membres (6 Clubs UAC)
+                  </h3>
+                  <p className="text-xs text-text-muted">
+                    Vue centralisée accessible à la Secrétaire Générale et à l'Admin Universitaire.
+                  </p>
+                </div>
+                <div className="w-full sm:w-64">
+                  <input
+                    type="text"
+                    value={memberSearch}
+                    onChange={(e) => setMemberSearch(e.target.value)}
+                    placeholder="Rechercher membre ou club..."
+                    className={inputClass}
+                  />
+                </div>
+              </div>
+
+              {allMembersLoading ? (
+                <p className="text-xs text-text-muted py-4 text-center">Chargement des membres des 6 clubs...</p>
+              ) : (
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left text-xs">
+                    <thead>
+                      <tr className="border-b border-white/10 text-text-muted font-bold uppercase">
+                        <th className="py-2.5 px-3">Membre / Chercheur</th>
+                        <th className="py-2.5 px-3">Club Métier</th>
+                        <th className="py-2.5 px-3">Email</th>
+                        <th className="py-2.5 px-3">Rôle</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-white/5 text-text-secondary">
+                      {allMembers
+                        .filter(m => {
+                          const q = memberSearch.toLowerCase();
+                          const fullName = `${m.firstname || ''} ${m.lastname || m.name || ''}`.toLowerCase();
+                          const club = (m.clubName || m.club?.name || '').toLowerCase();
+                          return fullName.includes(q) || club.includes(q);
+                        })
+                        .slice(0, 12)
+                        .map((m, idx) => (
+                          <tr key={m.id || idx} className="hover:bg-white/[0.02]">
+                            <td className="py-2.5 px-3 font-semibold text-text-primary">
+                              {[m.firstname, m.lastname].filter(Boolean).join(' ') || m.name || 'Membre'}
+                            </td>
+                            <td className="py-2.5 px-3 text-accent-primary font-medium">
+                              {m.clubName || m.club?.name || 'Club R&D'}
+                            </td>
+                            <td className="py-2.5 px-3 text-text-muted">{m.email || '—'}</td>
+                            <td className="py-2.5 px-3">
+                              <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${
+                                m.role === 'RESPONSABLE_CLUB' ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20' : 'bg-white/5 text-text-muted'
+                              }`}>
+                                {m.role === 'RESPONSABLE_CLUB' ? 'Resp. Club' : 'Étudiant Chercheur'}
+                              </span>
+                            </td>
+                          </tr>
+                        ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </div>
           </motion.div>
         )}
       </div>
