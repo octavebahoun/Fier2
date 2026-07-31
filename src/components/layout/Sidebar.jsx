@@ -53,19 +53,11 @@ export default function Sidebar({
 }) {
   const { can, hasMinRole, isAnyClubResponsible, isChefUniversitaire, isTreasurer, isSecretary } = useAuth()
 
-  // Tracking open/closed state of accordion sessions
-  const [openGroups, setOpenGroups] = useState({
-    'Personnel': true,
-    'Communauté': true,
-    'Recherche': true,
-    'Administration': true
-  })
+  // Tracking single open group for accordion behavior (closed by default)
+  const [openGroupId, setOpenGroupId] = useState(null)
 
-  const toggleGroup = (groupLabel) => {
-    setOpenGroups(prev => ({
-      ...prev,
-      [groupLabel]: !prev[groupLabel]
-    }))
+  const toggleGroup = (groupId) => {
+    setOpenGroupId(prev => (prev === groupId ? null : groupId))
   }
 
   // ── Navigation groupée, filtrée par rôle ──
@@ -198,7 +190,7 @@ export default function Sidebar({
         {/* ─────────────────────────── NAVIGATION PAR SESSIONS ACCORDÉONS (BOUTONS EXTENSIBLES) ─────────────────────────── */}
         <nav className="relative z-10 flex-1 overflow-y-auto overflow-x-hidden py-5 px-3 flex flex-col gap-6">
           {groups.map((group) => {
-            const isOpen = openGroups[group.id] ?? true
+            const isOpen = openGroupId === group.id
             const hasActiveChild = group.items.some(i => isActive(i.id))
 
             return (
