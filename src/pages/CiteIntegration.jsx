@@ -147,15 +147,54 @@ const getInitialJoinForm = () => ({
 });
 
 const countryFallbacks = {
-  'Bénin': { flag: '🇧🇯', region: 'Afrique de l’Ouest', summary: 'Cité pilote FIERI avec des clubs universitaires orientés innovation utile.' }
+  'Bénin': { flag: '🇧🇯', region: 'Afrique de l’Ouest', summary: 'Cité pilote FIERI avec des clubs universitaires orientés innovation utile.' },
+  'Benin': { flag: '🇧🇯', region: 'Afrique de l’Ouest', summary: 'Cité pilote FIERI avec des clubs universitaires orientés innovation utile.' }
 };
 
 const universityFallbacks = {
   'Université d\'Abomey-Calavi': { city: 'Abomey-Calavi' },
+  'Université d\'Abomey-Calavi (UAC)': { city: 'Abomey-Calavi' },
+  'UAC': { city: 'Abomey-Calavi' },
   'ENEAM': { city: 'Cotonou' }
 };
 
 const clubFallbacks = {
+  'club-btp': {
+    domain: 'Génie Civil, Éco-matériaux, Structure',
+    activity: 'Conception de briques écologiques et tests de résistance.',
+    decision: 'Priorité aux matériaux biosourcés durables pour les infrastructures locales.',
+    textile: 'Polo gris anthracite avec insigne Génie Civil FIERI.'
+  },
+  'club-devweb': {
+    domain: 'Informatique, Cloud & Web Apps',
+    activity: 'Développement d’applications web communautaires et serveurs cloud.',
+    decision: 'Adopter l’open-source et le Serverless pour les projets étudiants.',
+    textile: 'T-shirt bleu nuit avec motif binaire et logo FIERI Tech.'
+  },
+  'club-electronique': {
+    domain: 'Électronique embarquée & IoT',
+    activity: 'Prototypage de cartes capteurs microcontrôleurs et IoT.',
+    decision: 'Développer des capteurs agricoles autonomes et à faible consommation.',
+    textile: 'Sweat à capuche noir avec schéma de circuit imprimé FIERI.'
+  },
+  'club-froid': {
+    domain: 'Génie Thermique & Frigorifique',
+    activity: 'Dimensionnement de chambres froides solaires pour la conservation.',
+    decision: 'Favoriser les fluides frigorigènes écologiques et la chaîne du froid solaire.',
+    textile: 'Polo blanc et bleu cyan avec insigne Thermique FIERI.'
+  },
+  'club-ia': {
+    domain: 'Intelligence Artificielle & Data Science',
+    activity: 'Workshops sur la vision par ordinateur et le NLP appliqués aux langues locales.',
+    decision: 'Créer une banque de datasets africains open data pour les chercheurs.',
+    textile: 'T-shirt bleu électrique avec symbole réseau de neurones FIERI.'
+  },
+  'club-ros': {
+    domain: 'Robotique, Mécatronique & ROS',
+    activity: 'Atelier rovers autonomes, cinématique et initiation à ROS 2.',
+    decision: 'Concevoir des robots légers d’aide à la récolte et au tri.',
+    textile: 'Tricot bleu marine avec motif engrenages & ROS FIERI.'
+  },
   'club-1': {
     domain: 'Robotique, IA embarquée, mécatronique',
     activity: 'Atelier rover autonome et initiation ROS.',
