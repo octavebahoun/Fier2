@@ -235,9 +235,9 @@ export default function CiteIntegration({ navigate }) {
     try {
       setLoading(true);
       const [countryRes, clubsRes, membersRes] = await Promise.all([
-        api.org.getCountries(),
-        api.clubs.getAll(),
-        api.members.list({ limit: 100 })
+        api.org.getCountries().catch(() => ({ success: false, data: [] })),
+        api.clubs.getAll().catch(() => ({ success: false, data: [] })),
+        api.members.list({ limit: 100 }).catch(() => ({ success: false, data: [] }))
       ]);
 
       const countriesList = countryRes.success ? (countryRes.data || []) : [];
