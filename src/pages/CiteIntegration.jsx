@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import {
   ArrowLeft,
@@ -293,6 +293,33 @@ export default function CiteIntegration({ navigate }) {
     }
   }, [selectedClubId]);
 
+  // Helper to resolve a member's location within the country/university/branch hierarchy
+  const getMemberLocation = useCallback((member) => {
+    if (!member || member.branchId == null) {
+      return { branch: null, university: null, country: null };
+    }
+    let memberBranch = null;
+    let memberUni = null;
+    let memberCountry = null;
+
+    for (const bList of Object.values(branchesMap)) {
+      const foundBranch = (bList || []).find((b) => Number(b.id) === Number(member.branchId));
+      if (foundBranch) {
+        memberBranch = foundBranch;
+        for (const uList of Object.values(universitiesMap)) {
+          const foundUni = (uList || []).find((u) => Number(u.id) === Number(foundBranch.universityId));
+          if (foundUni) {
+            memberUni = foundUni;
+            memberCountry = rawCountries.find((c) => Number(c.id) === Number(foundUni.countryId));
+            break;
+          }
+        }
+        break;
+      }
+    }
+    return { branch: memberBranch, university: memberUni, country: memberCountry };
+  }, [branchesMap, universitiesMap, rawCountries]);
+
   // Reconstruct global governance dynamically from members
   const globalGovernance = useMemo(() => {
     const globalFounders = members.filter(
@@ -334,34 +361,7 @@ export default function CiteIntegration({ navigate }) {
         'Direction innovation & recherche'
       ]
     };
-  }, [members, branchesMap, universitiesMap, rawCountries]);
-
-  // Helper to resolve a member's location within the country/university/branch hierarchy
-  const getMemberLocation = (member) => {
-    if (!member || member.branchId == null) {
-      return { branch: null, university: null, country: null };
-    }
-    let memberBranch = null;
-    let memberUni = null;
-    let memberCountry = null;
-
-    for (const bList of Object.values(branchesMap)) {
-      const foundBranch = (bList || []).find((b) => Number(b.id) === Number(member.branchId));
-      if (foundBranch) {
-        memberBranch = foundBranch;
-        for (const uList of Object.values(universitiesMap)) {
-          const foundUni = (uList || []).find((u) => Number(u.id) === Number(foundBranch.universityId));
-          if (foundUni) {
-            memberUni = foundUni;
-            memberCountry = rawCountries.find((c) => Number(c.id) === Number(foundUni.countryId));
-            break;
-          }
-        }
-        break;
-      }
-    }
-    return { branch: memberBranch, university: memberUni, country: memberCountry };
-  };
+  }, [members, getMemberLocation]);
 
   // Reconstruct the full hierarchical data model
   const countries = useMemo(() => {
