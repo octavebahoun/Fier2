@@ -412,29 +412,29 @@ body.light-theme .glass-panel {
   color: var(--color-text-primary);
 }
 
-/* Voiles translucides utilisés en dark → surfaces calmes en clair. */
+/* Surfaces en mode clair 100% OPAQUES et SOLIDES MATS (0% transparence) */
 body.light-theme [class*="bg-white/"] {
-  background-color: rgba(241, 245, 249, 0.82) !important;
+  background-color: #F1F5F9 !important;
 }
 
 body.light-theme [class*="hover:bg-white/"]:hover {
-  background-color: rgba(226, 232, 240, 0.9) !important;
+  background-color: #E2E8F0 !important;
 }
 
 body.light-theme [class*="bg-black/"] {
-  background-color: rgba(15, 23, 42, 0.42) !important;
+  background-color: #E2E8F0 !important;
 }
 
 body.light-theme [class*="bg-bg-primary/"] {
-  background-color: rgba(245, 247, 251, 0.86) !important;
+  background-color: #F5F7FB !important;
 }
 
 body.light-theme [class*="bg-bg-secondary/"] {
-  background-color: rgba(255, 255, 255, 0.9) !important;
+  background-color: #FFFFFF !important;
 }
 
 body.light-theme [class*="bg-bg-tertiary/"] {
-  background-color: rgba(238, 243, 248, 0.9) !important;
+  background-color: #EEF3F8 !important;
 }
 
 body.light-theme [class*="bg-slate-950/"],
@@ -442,7 +442,7 @@ body.light-theme [class*="bg-slate-900/"],
 body.light-theme [class*="bg-[#090d1a]"],
 body.light-theme [class*="bg-[#080B14]"],
 body.light-theme [class*="bg-[#080b14]"] {
-  background-color: rgba(255, 255, 255, 0.96) !important;
+  background-color: #FFFFFF !important;
   color: var(--color-text-primary) !important;
 }
 
@@ -529,7 +529,7 @@ body.light-theme .halo-radial {
 body.light-theme input,
 body.light-theme select,
 body.light-theme textarea {
-  background-color: rgba(255, 255, 255, 0.9);
+  background-color: #FFFFFF !important;
   color: var(--color-text-primary);
   border-color: var(--color-border-subtle);
 }
