@@ -51,7 +51,7 @@ export default function Sidebar({
   mobileOpen = false,
   setMobileOpen
 }) {
-  const { can, hasMinRole, isAnyClubResponsible, isChefUniversitaire, isTreasurer } = useAuth()
+  const { can, hasMinRole, isAnyClubResponsible, isChefUniversitaire, isTreasurer, isSecretary } = useAuth()
 
   // Tracking open/closed state of accordion sessions
   const [openGroups, setOpenGroups] = useState({
