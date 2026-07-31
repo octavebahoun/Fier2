@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
   ClipboardList, FolderKanban, Users, FileText, Send, AlertCircle,
   CheckCircle, X, ChevronRight, Calendar, UserPlus, BookOpen,
+  ChevronDown, ChevronUp, Star, ShieldCheck, Check, Clock
 } from 'lucide-react';
 import api from '../services/api.js';
 import { useAuth } from '../context/AuthContext.jsx';
@@ -69,6 +70,33 @@ const formatDate = (iso) => {
   }
 };
 
+const formatRoleBadge = (m) => {
+  const post = m.universityPost?.post || m.universityPost || '';
+  const role = m.role || '';
+  const email = m.email || '';
+
+  if (post === 'SECRETAIRE' || role === 'SECRETAIRE') {
+    return { label: 'Secrétaire Générale', className: 'bg-purple-500/10 text-purple-400 border border-purple-500/20' };
+  }
+  if (post === 'CHEF_UNIVERSITAIRE' || role === 'CHEF_UNIVERSITAIRE' || role === 'ADMIN_UNIVERSITAIRE') {
+    return { label: 'Chef Universitaire', className: 'bg-rose-500/10 text-rose-400 border border-rose-500/20' };
+  }
+  if (role === 'ADMIN') {
+    return { label: 'Administrateur', className: 'bg-rose-500/10 text-rose-400 border border-rose-500/20' };
+  }
+  if (
+    role === 'RESPONSABLE_CLUB' ||
+    role === 'RESPONSABLE' ||
+    (m.responsibleClubIds && m.responsibleClubIds.length > 0) ||
+    email.toLowerCase().includes('resp.') ||
+    m.isClubResponsible
+  ) {
+    return { label: 'Responsable de Club', className: 'bg-amber-500/10 text-amber-400 border border-amber-500/20' };
+  }
+
+  return { label: 'Étudiant Chercheur', className: 'bg-white/5 text-text-muted border border-white/10' };
+};
+
 // ───────────────────────────── Section Card ────────────────────────────────
 function SectionCard({ icon: Icon, title, subtitle, children, accent = '#6C4CF1' }) {
   return (
@@ -112,16 +140,33 @@ export default function EspaceCITE({ navigate }) {
   const [assignedActivities, setAssignedActivities] = useState([]);
   const [projects, setProjects] = useState([]);
 
-  // Sélection de club (si l'utilisateur n'a pas de clubId direct).
-  const [clubId, setClubId] = useState(user?.clubId || '');
+  // Rôle d'administration centrale (Secrétariat & Chef Universitaire)
+  const isSecretaryOrAdmin =
+    user?.universityPost === 'SECRETAIRE' ||
+    user?.universityPost === 'CHEF_UNIVERSITAIRE' ||
+    user?.role === 'ADMIN_UNIVERSITAIRE' ||
+    user?.role === 'ADMIN' ||
+    user?.role === 'CHEF_UNIVERSITAIRE';
+
+  // Détermination du club de l'utilisateur
+  const userAssignedClubId = user?.clubId || (user?.responsibleClubIds && user.responsibleClubIds[0]) || '';
+  const [clubId, setClubId] = useState(userAssignedClubId);
   const [clubsList, setClubsList] = useState([]);
   const [clubLoading, setClubLoading] = useState(false);
 
-  // Membres du club (pour le sélecteur d'activité).
+  // Membres du club
   const [members, setMembers] = useState([]);
   const [membersLoading, setMembersLoading] = useState(false);
 
-  // Annuaire Transversal & Rapports Réceptionnés des 6 Clubs (Secrétariat & Admin)
+  // Demandes d'adhésion en attente pour le club
+  const [pendingRequests, setPendingRequests] = useState([]);
+  const [pendingLoading, setPendingLoading] = useState(false);
+
+  // Accordéon des autres clubs
+  const [showOtherClubs, setShowOtherClubs] = useState(false);
+  const [joiningClubId, setJoiningClubId] = useState(null);
+
+  // Annuaire Transversal & Rapports Réceptionnés des 6 Clubs (Reservé Secrétariat / Admin)
   const [allMembers, setAllMembers] = useState([]);
   const [allMembersLoading, setAllMembersLoading] = useState(false);
   const [memberSearch, setMemberSearch] = useState('');
@@ -140,9 +185,8 @@ export default function EspaceCITE({ navigate }) {
 
   const [toast, setToast] = useState(null);
 
-  // Gérer la Cité (activités, recensement, rapports) est réservé au RESPONSABLE
-  // du club sélectionné (ou ADMIN / SECRETAIRE).
-  const isClubManager = isClubResponsible(clubId) || user?.universityPost === 'SECRETAIRE' || user?.role === 'ADMIN_UNIVERSITAIRE';
+  // Est responsable du club sélectionné
+  const isClubManager = isClubResponsible(clubId) || isSecretaryOrAdmin;
 
   // ── Chargement du tableau de bord ──
   const loadDashboard = async () => {
@@ -154,7 +198,6 @@ export default function EspaceCITE({ navigate }) {
         setAssignedActivities(Array.isArray(res.data.assignedActivities) ? res.data.assignedActivities : []);
         setProjects(Array.isArray(res.data.projects) ? res.data.projects : []);
       } else if (res?.success && (res.assignedActivities || res.projects)) {
-        // Tolérance à une forme alternative de réponse.
         setAssignedActivities(Array.isArray(res.assignedActivities) ? res.assignedActivities : []);
         setProjects(Array.isArray(res.projects) ? res.projects : []);
       } else {
@@ -171,19 +214,21 @@ export default function EspaceCITE({ navigate }) {
     }
   };
 
-  // ── Chargement de la liste des clubs (si pas de clubId) ──
+  // ── Chargement de la liste de tous les clubs ──
   useEffect(() => {
-    if (user?.clubId) {
-      setClubId(user.clubId);
-      return;
-    }
     (async () => {
       setClubLoading(true);
       try {
         const res = await api.clubs.getAll();
         const list = res?.success && Array.isArray(res.data) ? res.data : [];
         setClubsList(list);
-        if (list.length > 0 && !clubId) setClubId(list[0].id);
+        if (list.length > 0 && !clubId) {
+          if (userAssignedClubId) {
+            setClubId(userAssignedClubId);
+          } else {
+            setClubId(list[0].id);
+          }
+        }
       } catch (err) {
         console.error('[EspaceCITE] Erreur clubs.getAll:', err);
         setClubsList([]);
@@ -191,11 +236,18 @@ export default function EspaceCITE({ navigate }) {
         setClubLoading(false);
       }
     })();
-  }, [user?.clubId]);
+  }, [userAssignedClubId]);
 
-  // ── Chargement de la liste des membres du club (pour le sélecteur) ──
+  // Sync clubId quand user change
   useEffect(() => {
-    if (!isClubManager || !clubId) {
+    if (userAssignedClubId && !isSecretaryOrAdmin) {
+      setClubId(userAssignedClubId);
+    }
+  }, [userAssignedClubId, isSecretaryOrAdmin]);
+
+  // ── Chargement des membres du club ──
+  useEffect(() => {
+    if (!clubId) {
       setMembers([]);
       return;
     }
@@ -212,11 +264,37 @@ export default function EspaceCITE({ navigate }) {
         setMembersLoading(false);
       }
     })();
-  }, [isClubManager, clubId]);
+  }, [clubId]);
+
+  // ── Chargement des demandes d'adhésion en attente ──
+  const loadPendingRequests = async () => {
+    if (!clubId || !isClubManager) return;
+    setPendingLoading(true);
+    try {
+      const res = await api.memberships.getPendingRequests(clubId);
+      if (res?.success && Array.isArray(res.data)) {
+        setPendingRequests(res.data);
+      } else {
+        setPendingRequests([]);
+      }
+    } catch (err) {
+      console.error('[EspaceCITE] Erreur getPendingRequests:', err);
+      setPendingRequests([]);
+    } finally {
+      setPendingLoading(false);
+    }
+  };
 
   useEffect(() => {
+    if (isClubManager && clubId) {
+      loadPendingRequests();
+    }
+  }, [isClubManager, clubId]);
+
+  // ── Chargement global pour le Secrétariat / Admin ──
+  useEffect(() => {
+    if (!isSecretaryOrAdmin) return;
     loadDashboard();
-    // Charger tous les membres des 6 clubs pour l'annuaire transversal
     (async () => {
       setAllMembersLoading(true);
       try {
@@ -242,25 +320,69 @@ export default function EspaceCITE({ navigate }) {
           setAllMembers(list);
         }
       } catch {
-        setAllMembers([
-          { id: 101, firstname: 'Responsable', lastname: 'Dev Web', clubName: 'Club Dev Web', email: 'resp.devweb@uac.bj', role: 'RESPONSABLE_CLUB' },
-          { id: 102, firstname: 'Chercheur', lastname: 'Dev Web', clubName: 'Club Dev Web', email: 'chercheur.devweb@uac.bj', role: 'ETUDIANT_CHERCHEUR' },
-          { id: 201, firstname: 'Responsable', lastname: 'IA', clubName: 'Club Intelligence Artificielle', email: 'resp.ia@uac.bj', role: 'RESPONSABLE_CLUB' },
-          { id: 202, firstname: 'Chercheur', lastname: 'IA', clubName: 'Club Intelligence Artificielle', email: 'chercheur.ia@uac.bj', role: 'ETUDIANT_CHERCHEUR' },
-          { id: 301, firstname: 'Responsable', lastname: 'ROS', clubName: 'Club Robotique (ROS)', email: 'resp.ros@uac.bj', role: 'RESPONSABLE_CLUB' },
-          { id: 302, firstname: 'Chercheur', lastname: 'ROS', clubName: 'Club Robotique (ROS)', email: 'chercheur.ros@uac.bj', role: 'ETUDIANT_CHERCHEUR' },
-          { id: 401, firstname: 'Responsable', lastname: 'Électronique', clubName: 'Club Électronique', email: 'resp.elec@uac.bj', role: 'RESPONSABLE_CLUB' },
-          { id: 402, firstname: 'Chercheur', lastname: 'Électronique', clubName: 'Club Électronique', email: 'chercheur.elec@uac.bj', role: 'ETUDIANT_CHERCHEUR' },
-          { id: 501, firstname: 'Responsable', lastname: 'BTP', clubName: 'Club BTP & Génie Civil', email: 'resp.btp@uac.bj', role: 'RESPONSABLE_CLUB' },
-          { id: 502, firstname: 'Chercheur', lastname: 'BTP', clubName: 'Club BTP & Génie Civil', email: 'chercheur.btp@uac.bj', role: 'ETUDIANT_CHERCHEUR' },
-          { id: 601, firstname: 'Responsable', lastname: 'Froid & Clima', clubName: 'Club Froid & Climatisation', email: 'resp.froid@uac.bj', role: 'RESPONSABLE_CLUB' },
-          { id: 602, firstname: 'Chercheur', lastname: 'Froid & Clima', clubName: 'Club Froid & Climatisation', email: 'chercheur.froid@uac.bj', role: 'ETUDIANT_CHERCHEUR' },
-        ]);
+        setAllMembers([]);
       } finally {
         setAllMembersLoading(false);
       }
     })();
-  }, []);
+  }, [isSecretaryOrAdmin]);
+
+  // Initial load dashboard for regular users
+  useEffect(() => {
+    if (!isSecretaryOrAdmin) {
+      loadDashboard();
+    }
+  }, [isSecretaryOrAdmin]);
+
+  // ── Validation / Refus Adhésions ──
+  const handleApproveRequest = async (reqId) => {
+    try {
+      const res = await api.memberships.approve(reqId);
+      if (res?.success) {
+        setToast({ message: 'Demande d\'adhésion approuvée avec succès !', type: 'success' });
+        loadPendingRequests();
+        // Recharger membres
+        const mRes = await api.clubSpace.membersList(clubId);
+        if (mRes?.success && mRes.data?.members) setMembers(mRes.data.members);
+      } else {
+        setToast({ message: res?.message || 'Erreur lors de la validation.', type: 'error' });
+      }
+    } catch (err) {
+      setToast({ message: 'Erreur lors de la validation.', type: 'error' });
+    }
+  };
+
+  const handleRejectRequest = async (reqId) => {
+    try {
+      const res = await api.memberships.reject(reqId, 'Candidature non retenue');
+      if (res?.success) {
+        setToast({ message: 'Demande d\'adhésion refusée.', type: 'warning' });
+        loadPendingRequests();
+      } else {
+        setToast({ message: res?.message || 'Erreur lors du refus.', type: 'error' });
+      }
+    } catch (err) {
+      setToast({ message: 'Erreur lors du refus.', type: 'error' });
+    }
+  };
+
+  // ── Demander à rejoindre un autre club ──
+  const handleJoinClub = async (targetClubId) => {
+    if (joiningClubId) return;
+    setJoiningClubId(targetClubId);
+    try {
+      const res = await api.memberships.requestJoin(targetClubId, { id: user?.id });
+      if (res?.success) {
+        setToast({ message: 'Demande d\'adhésion transmise au responsable du club avec succès.', type: 'success' });
+      } else {
+        setToast({ message: res?.message || 'Demande déjà envoyée ou erreur.', type: 'warning' });
+      }
+    } catch (err) {
+      setToast({ message: 'Impossible d\'envoyer la demande d\'adhésion.', type: 'error' });
+    } finally {
+      setJoiningClubId(null);
+    }
+  };
 
   // ── Recensement mensuel ──
   const [censusBusy, setCensusBusy] = useState(false);
@@ -367,7 +489,7 @@ export default function EspaceCITE({ navigate }) {
   const btnPrimary =
     'flex items-center justify-center gap-2 w-full py-2.5 rounded-xl text-sm font-bold text-white bg-fieri-blue hover:bg-fieri-blue/85 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-fieri-blue disabled:opacity-50 disabled:cursor-not-allowed';
 
-  const activeProjects = projects.filter((p) => !p.status || p.status === 'ACTIVE');
+  const selectedClubObj = clubsList.find(c => String(c.id) === String(clubId));
 
   return (
     <main id="espace-cite" className="min-h-screen">
@@ -378,36 +500,40 @@ export default function EspaceCITE({ navigate }) {
           style={{ background: 'radial-gradient(circle, #6C4CF1, transparent)' }}
         />
         <div
-          className="absolute top-1/2 -right-60 w-[500px] h-[500px] rounded-full opacity-[0.05] blur-[120px]"
+          className="absolute top-1/2 -right-40 w-[500px] h-[500px] rounded-full opacity-[0.04] blur-[100px]"
           style={{ background: 'radial-gradient(circle, #e05a2b, transparent)' }}
         />
       </div>
 
-      <div className="relative z-10 max-w-[92rem] mx-auto w-full py-16 px-6 md:px-12 lg:px-12">
-        {/* En-tête */}
-        <div className="mb-12 space-y-4">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest bg-fieri-blue/10 text-fieri-blue border border-fieri-blue/25">
-            <FolderKanban className="w-3.5 h-3.5" />
-            Espace membre · CITE
+      <div className="relative z-10 max-w-[90rem] mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Header Espace CITE */}
+        <div className="mb-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <div>
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-accent-primary/10 border border-accent-primary/20 text-accent-primary text-xs font-bold uppercase tracking-wider mb-2">
+              <ClipboardList className="w-3.5 h-3.5" />
+              FIERI Community OS — CITE R&D
+            </div>
+            <h1 className="text-3xl font-extrabold text-text-primary tracking-tight">
+              {isSecretaryOrAdmin ? "Espace Administration CITE" : (selectedClubObj?.name || "Espace Club de Recherche CITE")}
+            </h1>
+            <p className="text-text-muted text-sm mt-1">
+              {isSecretaryOrAdmin
+                ? "Coordination centrale et supervision des 6 clubs de recherche universitaire."
+                : "Espace réservé à la gestion des membres, projets, activités et rapports de votre club."}
+            </p>
           </div>
-          <h1 className="text-text-primary font-extrabold text-4xl md:text-5xl leading-tight">
-            Mon espace CITE
-          </h1>
-          <p className="text-text-secondary text-lg max-w-2xl leading-relaxed">
-            Retrouvez vos activités assignées, vos projets en cours et les outils de gestion de votre club de recherche.
-          </p>
 
-          {/* Sélecteur de club (si pas de clubId direct) */}
-          {!user?.clubId && (
-            <div className="flex items-center gap-3 pt-2">
-              <label className={labelClass + ' mb-0'}>Club CITE</label>
+          {/* Sélecteur de club pour Secrétariat & Admin */}
+          {isSecretaryOrAdmin && (
+            <div className="flex items-center gap-3 bg-white/[0.03] p-3 rounded-2xl border border-white/10">
+              <label className={labelClass + ' mb-0 shrink-0'}>Club Supervisé :</label>
               {clubLoading ? (
                 <span className="text-sm text-text-muted">Chargement…</span>
               ) : (
                 <select
                   value={clubId}
                   onChange={(e) => setClubId(e.target.value)}
-                  className={inputClass + ' w-auto min-w-[200px]'}
+                  className={inputClass + ' w-auto min-w-[220px] font-bold text-accent-primary'}
                 >
                   <option value="">Sélectionner un club…</option>
                   {clubsList.map((c) => (
@@ -442,132 +568,126 @@ export default function EspaceCITE({ navigate }) {
         )}
 
         {!loading && (
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {/* ── Mes activités assignées ── */}
-            <SectionCard icon={ClipboardList} title="Mes activités assignées" subtitle="Tâches qui vous ont été confiées" accent="#6C4CF1">
-              {assignedActivities.length === 0 ? (
-                <div className="flex flex-col items-center justify-center py-10 text-center">
-                  <ClipboardList className="w-8 h-8 text-text-muted/50 mb-3" />
-                  <p className="text-sm text-text-muted">Aucune activité assignée pour le moment.</p>
-                </div>
-              ) : (
-                <div className="space-y-3 max-h-[420px] overflow-y-auto pr-1">
-                  {assignedActivities.map((a) => {
-                    const badge = statusBadge(a.status);
-                    return (
-                      <motion.div
-                        key={a.id}
-                        initial={{ opacity: 0, y: 8 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        whileHover={{ y: -4 }}
-                        className="p-4 rounded-xl bg-white/[0.02] border border-white/5"
-                      >
-                        <div className="flex items-start justify-between gap-3">
-                          <h3 className="text-text-primary font-semibold text-sm leading-snug">{a.title}</h3>
-                          <span className={`text-[10px] font-bold uppercase tracking-wide px-2 py-0.5 rounded-full border shrink-0 ${badge.className}`}>
+          <div className="space-y-8">
+            {/* VUE MEMBRES & RESPONSABLES DU CLUB ACTIF */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              {/* ── 1. Liste des membres actifs du club ── */}
+              <SectionCard icon={Users} title="Membres du Club" subtitle="Chercheurs et responsables inscrits" accent="#10b981">
+                {membersLoading ? (
+                  <p className="text-xs text-text-muted py-6 text-center">Chargement des membres du club...</p>
+                ) : members.length === 0 ? (
+                  <div className="py-8 text-center text-xs text-text-muted">
+                    Aucun membre inscrit dans ce club pour le moment.
+                  </div>
+                ) : (
+                  <div className="space-y-2.5 max-h-[360px] overflow-y-auto pr-1">
+                    {members.map((m, idx) => {
+                      const badge = formatRoleBadge(m);
+                      return (
+                        <div key={m.memberId || m.id || idx} className="p-3 rounded-xl bg-white/[0.02] border border-white/5 flex items-center justify-between gap-3">
+                          <div className="min-w-0">
+                            <p className="text-xs font-bold text-text-primary truncate">
+                              {m.name || [m.firstName, m.lastName].filter(Boolean).join(' ') || 'Membre'}
+                            </p>
+                            <p className="text-[11px] text-text-muted truncate">{m.email || 'Pas d\'email'}</p>
+                          </div>
+                          <span className={`px-2 py-0.5 rounded text-[10px] font-extrabold uppercase shrink-0 ${badge.className}`}>
                             {badge.label}
                           </span>
                         </div>
-                        {a.description && (
-                          <p className="text-text-secondary text-xs mt-1.5 leading-relaxed">{a.description}</p>
-                        )}
-                        <div className="flex items-center gap-3 mt-2 text-[11px] text-text-muted">
-                          {a.dueDate && (
-                            <span className="flex items-center gap-1">
-                              <Calendar className="w-3 h-3" /> {formatDate(a.dueDate)}
-                            </span>
-                          )}
-                          {a.club?.name && (
-                            <span className="flex items-center gap-1">
-                              <FolderKanban className="w-3 h-3" /> {a.club.name}
-                            </span>
-                          )}
-                        </div>
-                      </motion.div>
-                    );
-                  })}
-                </div>
-              )}
-            </SectionCard>
+                      );
+                    })}
+                  </div>
+                )}
+              </SectionCard>
 
-            {/* ── Mes projets en cours ── */}
-            <SectionCard icon={FolderKanban} title="Mes projets en cours" subtitle="Projets de recherche actifs" accent="#e05a2b">
-              {projects.length === 0 ? (
-                <div className="flex flex-col items-center justify-center py-10 text-center">
-                  <FolderKanban className="w-8 h-8 text-text-muted/50 mb-3" />
-                  <p className="text-sm text-text-muted">Vous ne participez à aucun projet pour l'instant.</p>
-                </div>
-              ) : (
-                <div className="space-y-3 max-h-[420px] overflow-y-auto pr-1">
-                  {projects.map((p) => {
-                    const badge = statusBadge(p.status);
-                    return (
-                      <motion.div
-                        key={p.id}
-                        initial={{ opacity: 0, y: 8 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        whileHover={{ y: -4 }}
-                        className="p-4 rounded-xl bg-white/[0.02] border border-white/5"
-                      >
-                        <div className="flex items-start justify-between gap-3">
-                          <h3 className="text-text-primary font-semibold text-sm leading-snug">{p.title}</h3>
-                          <span className={`text-[10px] font-bold uppercase tracking-wide px-2 py-0.5 rounded-full border shrink-0 ${badge.className}`}>
-                            {badge.label}
+              {/* ── 2. Demandes d'adhésion en attente (si Responsable) ── */}
+              <SectionCard icon={UserPlus} title="Validation des Adhésions" subtitle="Candidatures en attente" accent="#f59e0b">
+                {pendingLoading ? (
+                  <p className="text-xs text-text-muted py-6 text-center">Vérification des demandes...</p>
+                ) : pendingRequests.length === 0 ? (
+                  <div className="py-8 text-center text-xs text-text-muted">
+                    <CheckCircle className="w-6 h-6 text-emerald-400/50 mx-auto mb-2" />
+                    Aucune candidature en attente de validation.
+                  </div>
+                ) : (
+                  <div className="space-y-3 max-h-[360px] overflow-y-auto pr-1">
+                    {pendingRequests.map((req) => (
+                      <div key={req.id} className="p-3.5 rounded-xl bg-amber-500/5 border border-amber-500/20 flex flex-col gap-2">
+                        <div className="flex items-start justify-between">
+                          <div>
+                            <p className="text-xs font-bold text-text-primary">
+                              {[req.user?.firstname, req.user?.lastname].filter(Boolean).join(' ') || req.user?.email || 'Chercheur'}
+                            </p>
+                            <p className="text-[10px] text-text-muted">{req.user?.email}</p>
+                          </div>
+                          <span className="px-2 py-0.5 rounded text-[9px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">
+                            En Attente
                           </span>
                         </div>
-                        <div className="flex items-center gap-2 mt-2">
-                          {p.role && (
-                            <span className="text-[10px] font-bold uppercase tracking-wide px-2 py-0.5 rounded-full bg-fieri-blue/10 border border-fieri-blue/30 text-fieri-blue">
-                              {p.role === 'OWNER' ? 'Responsable' : 'Suivi'}
+                        <div className="flex items-center gap-2 pt-2 border-t border-amber-500/10">
+                          <button
+                            onClick={() => handleApproveRequest(req.id)}
+                            className="flex-1 py-1.5 rounded-lg bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-[11px] font-bold hover:bg-emerald-500/30 transition-colors flex items-center justify-center gap-1"
+                          >
+                            <Check className="w-3.5 h-3.5" /> Approuver
+                          </button>
+                          <button
+                            onClick={() => handleRejectRequest(req.id)}
+                            className="flex-1 py-1.5 rounded-lg bg-rose-500/20 text-rose-300 border border-rose-500/30 text-[11px] font-bold hover:bg-rose-500/30 transition-colors flex items-center justify-center gap-1"
+                          >
+                            <X className="w-3.5 h-3.5" /> Refuser
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </SectionCard>
+
+              {/* ── 3. Projets en cours du club ── */}
+              <SectionCard icon={FolderKanban} title="Projets R&D du Club" subtitle="Travaux de recherche actifs" accent="#e05a2b">
+                {projects.length === 0 ? (
+                  <div className="flex flex-col items-center justify-center py-10 text-center">
+                    <FolderKanban className="w-8 h-8 text-text-muted/50 mb-3" />
+                    <p className="text-xs text-text-muted">Aucun projet actif pour ce club.</p>
+                  </div>
+                ) : (
+                  <div className="space-y-3 max-h-[360px] overflow-y-auto pr-1">
+                    {projects.map((p) => {
+                      const badge = statusBadge(p.status);
+                      return (
+                        <div key={p.id} className="p-3.5 rounded-xl bg-white/[0.02] border border-white/5">
+                          <div className="flex items-start justify-between gap-3">
+                            <h3 className="text-text-primary font-semibold text-xs leading-snug">{p.title}</h3>
+                            <span className={`text-[9px] font-bold uppercase tracking-wide px-2 py-0.5 rounded-full border shrink-0 ${badge.className}`}>
+                              {badge.label}
                             </span>
-                          )}
+                          </div>
                           {navigate && (
                             <button
                               onClick={() => navigate('project-detail', { projectId: p.id })}
-                              className="flex items-center gap-1 text-xs text-accent-primary hover:underline underline-offset-2 transition-all ml-auto"
+                              className="flex items-center gap-1 text-[11px] text-accent-primary hover:underline underline-offset-2 transition-all mt-2 ml-auto"
                             >
                               Ouvrir <ChevronRight className="w-3 h-3" />
                             </button>
                           )}
                         </div>
-                      </motion.div>
-                    );
-                  })}
-                </div>
-              )}
-            </SectionCard>
-          </div>
-        )}
-
-        {/* ── Zone Responsable de CITE ── */}
-        {!loading && isClubManager && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-            className="mt-8"
-          >
-            <div className="flex items-center gap-3 mb-5">
-              <div className="flex items-center justify-center w-11 h-11 rounded-xl bg-amber-500/10 border border-amber-500/40">
-                <UserPlus className="w-5 h-5 text-amber-400" />
-              </div>
-              <div>
-                <h2 className="text-text-primary font-extrabold text-2xl">Responsable de CITE</h2>
-                <p className="text-text-muted text-xs">Outils de gestion et de déclaration de votre club</p>
-              </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </SectionCard>
             </div>
 
-            {!clubId ? (
-              <div className="p-6 rounded-2xl bg-white/[0.03] border border-white/8 text-center text-text-muted text-sm">
-                Sélectionnez un club pour accéder aux outils de gestion.
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* ── SECTION EXCLUSIVE RESPONSABLE : OUILS DE DECLARATION & TACHES ── */}
+            {isClubManager && (
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 pt-4 border-t border-white/10">
                 {/* Recensement mensuel */}
                 <SectionCard 
                   icon={Users} 
-                  title={user?.universityPost === 'SECRETAIRE' ? "Recensement Global CITE" : "Recensement du Club"} 
-                  subtitle={user?.universityPost === 'SECRETAIRE' ? "Consolidation et envoi à l'Admin" : "Transmission à la Secrétaire Générale"} 
+                  title={user?.universityPost === 'SECRETAIRE' ? "Recensement Global CITE" : "Recensement Mensuel"} 
+                  subtitle={user?.universityPost === 'SECRETAIRE' ? "Consolidation et transmission à l'Admin" : "Transmission à la Secrétaire Générale"} 
                   accent="#10b981"
                 >
                   <p className="text-text-secondary text-xs leading-relaxed mb-4">
@@ -585,12 +705,12 @@ export default function EspaceCITE({ navigate }) {
                     ) : (
                       <Send className="w-4 h-4" />
                     )}
-                    {censusBusy ? 'Soumission…' : user?.universityPost === 'SECRETAIRE' ? 'Transmettre le recensement global à l\'Admin' : 'Transmettre le recensement à la Secrétaire'}
+                    {censusBusy ? 'Soumission…' : user?.universityPost === 'SECRETAIRE' ? 'Transmettre le recensement global' : 'Transmettre à la Secrétaire'}
                   </button>
                 </SectionCard>
 
-                {/* Nouvelle activité assignée */}
-                <SectionCard icon={ClipboardList} title="Nouvelle activité assignée" subtitle="Attribuer une tâche à un membre" accent="#6C4CF1">
+                {/* Assignation d'activité */}
+                <SectionCard icon={ClipboardList} title="Assigner une Activité" subtitle="Attribuer une tâche à un membre" accent="#6C4CF1">
                   <form onSubmit={handleCreateActivity} className="space-y-3">
                     <div>
                       <label className={labelClass}>Titre *</label>
@@ -598,7 +718,7 @@ export default function EspaceCITE({ navigate }) {
                         type="text"
                         value={activityForm.title}
                         onChange={(e) => setActivityForm({ ...activityForm, title: e.target.value })}
-                        placeholder="Ex : Préparer la présentation"
+                        placeholder="Ex : Synthèse du livre blanc"
                         className={inputClass}
                       />
                     </div>
@@ -612,21 +732,11 @@ export default function EspaceCITE({ navigate }) {
                       >
                         <option value="">{membersLoading ? 'Chargement…' : 'Sélectionner un membre…'}</option>
                         {members.map((m) => (
-                          <option key={m.memberId} value={m.memberId}>
-                            {m.name}{m.email ? ` (${m.email})` : ''}
+                          <option key={m.memberId || m.id} value={m.memberId || m.id}>
+                            {m.name || [m.firstName, m.lastName].filter(Boolean).join(' ')}{m.email ? ` (${m.email})` : ''}
                           </option>
                         ))}
                       </select>
-                    </div>
-                    <div>
-                      <label className={labelClass}>Description</label>
-                      <textarea
-                        value={activityForm.description}
-                        onChange={(e) => setActivityForm({ ...activityForm, description: e.target.value })}
-                        rows={2}
-                        placeholder="Détails de la tâche…"
-                        className={inputClass + ' resize-none'}
-                      />
                     </div>
                     <div>
                       <label className={labelClass}>Échéance</label>
@@ -648,11 +758,11 @@ export default function EspaceCITE({ navigate }) {
                   </form>
                 </SectionCard>
 
-                {/* Rapport mensuel */}
+                {/* Rapport mensuel d'activité */}
                 <SectionCard 
                   icon={FileText} 
-                  title={user?.universityPost === 'SECRETAIRE' ? "Rapport Mensuel Global & Trésorerie" : "Rapport d'Activité du Club"} 
-                  subtitle={user?.universityPost === 'SECRETAIRE' ? "Synthèse transmise à l'Admin Universitaire" : "Soumission à la Secrétaire Générale"} 
+                  title={user?.universityPost === 'SECRETAIRE' ? "Rapport Mensuel Global" : "Rapport d'Activité du Club"} 
+                  subtitle={user?.universityPost === 'SECRETAIRE' ? "Synthèse transmise au Chef Universitaire" : "Soumission à la Secrétaire Générale"} 
                   accent="#e05a2b"
                 >
                   <form onSubmit={handleSubmitReport} className="space-y-3">
@@ -672,7 +782,7 @@ export default function EspaceCITE({ navigate }) {
                         type="text"
                         value={reportForm.title}
                         onChange={(e) => setReportForm({ ...reportForm, title: e.target.value })}
-                        placeholder="Ex : Bilan des activités et budget juillet"
+                        placeholder="Ex : Bilan mensuel R&D"
                         className={inputClass}
                       />
                     </div>
@@ -681,10 +791,10 @@ export default function EspaceCITE({ navigate }) {
                       <textarea
                         value={reportForm.content}
                         onChange={(e) => setReportForm({ ...reportForm, content: e.target.value })}
-                        rows={4}
+                        rows={3}
                         placeholder={user?.universityPost === 'SECRETAIRE'
-                          ? "Rédigez la synthèse globale d'activité et le bilan trésorerie des 6 clubs pour l'Admin Universitaire..."
-                          : "Rédigez le bilan d'activité de votre club destiné au secrétariat..."}
+                          ? "Synthèse d'activité des 6 clubs..."
+                          : "Bilan d'activité du club..."}
                         className={inputClass + ' resize-none'}
                       />
                     </div>
@@ -694,125 +804,197 @@ export default function EspaceCITE({ navigate }) {
                       ) : (
                         <BookOpen className="w-4 h-4" />
                       )}
-                      {reportBusy ? 'Transmission…' : user?.universityPost === 'SECRETAIRE' ? 'Transmettre la synthèse à l\'Admin' : 'Transmettre à la Secrétaire'}
+                      {reportBusy ? 'Transmission…' : user?.universityPost === 'SECRETAIRE' ? 'Transmettre au Chef Univ.' : 'Transmettre à la Secrétaire'}
                     </button>
                   </form>
                 </SectionCard>
               </div>
             )}
 
-            {/* Panel Secrétariat : Rapports & Bilans Réceptionnés des 6 Clubs */}
-            <div className="mt-10 p-6 rounded-2xl bg-white/[0.03] border border-white/10 backdrop-blur-xl">
-              <div className="flex items-center justify-between mb-6">
-                <div>
-                  <h3 className="text-lg font-bold text-text-primary flex items-center gap-2">
-                    <FileText className="w-5 h-5 text-accent-primary" />
-                    Rapports Réceptionnés par le Secrétariat (6 Clubs R&D)
-                  </h3>
-                  <p className="text-xs text-text-muted">
-                    Consultez les rapports mensuels d'activité et recensements transmis par chaque Responsable de Club avant consolidation pour l'Admin Universitaire.
-                  </p>
+            {/* ── ACCORDÉON DES AUTRES CLUBS : REJOINDRE LES AUTRES CLUBS ── */}
+            <div className="pt-6 border-t border-white/10">
+              <button
+                onClick={() => setShowOtherClubs(!showOtherClubs)}
+                className="w-full p-4 rounded-2xl bg-white/[0.03] border border-white/10 hover:bg-white/[0.06] transition-all flex items-center justify-between group cursor-pointer"
+              >
+                <div className="flex items-center gap-3 text-left">
+                  <div className="w-10 h-10 rounded-xl bg-accent-primary/10 border border-accent-primary/20 flex items-center justify-center text-accent-primary group-hover:scale-105 transition-transform">
+                    <Star className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <h3 className="text-base font-extrabold text-text-primary">Découvrir / Rejoindre d'autres clubs de la CITE</h3>
+                    <p className="text-xs text-text-muted">Explorez les 5 autres domaines d'innovation R&D et postulez en un clic.</p>
+                  </div>
                 </div>
-                <span className="px-3 py-1 rounded-full text-xs font-bold bg-accent-primary/10 text-accent-primary border border-accent-primary/20">
-                  {receivedReports.length} Rapport(s) Reçu(s)
-                </span>
-              </div>
+                <div className="flex items-center gap-2 text-xs font-bold text-accent-primary">
+                  <span>{showOtherClubs ? "Masquer" : "Afficher les clubs"}</span>
+                  {showOtherClubs ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+                </div>
+              </button>
 
-              {receivedReports.length === 0 ? (
-                <p className="text-xs text-text-muted italic py-4 text-center">Aucun rapport transmis pour le moment.</p>
-              ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {receivedReports.map((rep) => (
-                    <div key={rep.id} className="p-4 rounded-xl bg-black/40 border border-white/10 flex flex-col justify-between gap-3">
-                      <div>
-                        <div className="flex items-center justify-between text-[11px] text-text-muted mb-1">
-                          <span className="font-bold text-accent-primary">{rep.clubName}</span>
-                          <span>Période: {rep.period}</span>
-                        </div>
-                        <h4 className="text-sm font-bold text-text-primary">{rep.title}</h4>
-                        {rep.content && <p className="text-xs text-text-secondary mt-1 line-clamp-3">{rep.content}</p>}
-                      </div>
-                      <div className="pt-2 border-t border-white/5 flex items-center justify-between text-[10px] text-text-muted">
-                        <span>Par: {rep.submittedBy}</span>
-                        <span className="px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-semibold">
-                          {rep.status === 'TRANSMIS_ADMIN' ? 'Transmis Admin' : 'Reçu Secrétariat'}
-                        </span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-
-            {/* Panel Annuaire Transversal : Membres des 6 Clubs R&D */}
-            <div className="mt-8 p-6 rounded-2xl bg-white/[0.03] border border-white/10 backdrop-blur-xl">
-              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
-                <div>
-                  <h3 className="text-lg font-bold text-text-primary flex items-center gap-2">
-                    <Users className="w-5 h-5 text-emerald-400" />
-                    Annuaire Transversal des Membres (6 Clubs UAC)
-                  </h3>
-                  <p className="text-xs text-text-muted">
-                    Vue centralisée accessible à la Secrétaire Générale et à l'Admin Universitaire.
-                  </p>
-                </div>
-                <div className="w-full sm:w-64">
-                  <input
-                    type="text"
-                    value={memberSearch}
-                    onChange={(e) => setMemberSearch(e.target.value)}
-                    placeholder="Rechercher membre ou club..."
-                    className={inputClass}
-                  />
-                </div>
-              </div>
-
-              {allMembersLoading ? (
-                <p className="text-xs text-text-muted py-4 text-center">Chargement des membres des 6 clubs...</p>
-              ) : (
-                <div className="overflow-x-auto">
-                  <table className="w-full text-left text-xs">
-                    <thead>
-                      <tr className="border-b border-white/10 text-text-muted font-bold uppercase">
-                        <th className="py-2.5 px-3">Membre / Chercheur</th>
-                        <th className="py-2.5 px-3">Club Métier</th>
-                        <th className="py-2.5 px-3">Email</th>
-                        <th className="py-2.5 px-3">Rôle</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-white/5 text-text-secondary">
-                      {allMembers
-                        .filter(m => {
-                          const q = memberSearch.toLowerCase();
-                          const fullName = `${m.firstname || ''} ${m.lastname || m.name || ''}`.toLowerCase();
-                          const club = (m.clubName || m.club?.name || '').toLowerCase();
-                          return fullName.includes(q) || club.includes(q);
-                        })
-                        .slice(0, 12)
-                        .map((m, idx) => (
-                          <tr key={m.id || idx} className="hover:bg-white/[0.02]">
-                            <td className="py-2.5 px-3 font-semibold text-text-primary">
-                              {[m.firstname, m.lastname].filter(Boolean).join(' ') || m.name || 'Membre'}
-                            </td>
-                            <td className="py-2.5 px-3 text-accent-primary font-medium">
-                              {m.clubName || m.club?.name || 'Club R&D'}
-                            </td>
-                            <td className="py-2.5 px-3 text-text-muted">{m.email || '—'}</td>
-                            <td className="py-2.5 px-3">
-                              <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${
-                                m.role === 'RESPONSABLE_CLUB' ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20' : 'bg-white/5 text-text-muted'
-                              }`}>
-                                {m.role === 'RESPONSABLE_CLUB' ? 'Resp. Club' : 'Étudiant Chercheur'}
-                              </span>
-                            </td>
-                          </tr>
+              <AnimatePresence>
+                {showOtherClubs && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: 'auto' }}
+                    exit={{ opacity: 0, height: 0 }}
+                    transition={{ duration: 0.3 }}
+                    className="overflow-hidden mt-4"
+                  >
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                      {clubsList
+                        .filter(c => String(c.id) !== String(clubId))
+                        .map((c) => (
+                          <div key={c.id} className="p-4 rounded-2xl bg-bg-secondary/80 border border-white/10 flex flex-col justify-between gap-4">
+                            <div>
+                              <div className="flex items-center justify-between mb-2">
+                                <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-accent-primary/10 text-accent-primary border border-accent-primary/20">
+                                  Club R&D
+                                </span>
+                              </div>
+                              <h4 className="text-sm font-extrabold text-text-primary">{c.name || c.title}</h4>
+                              <p className="text-xs text-text-muted mt-1 leading-relaxed line-clamp-2">
+                                {c.description || "Club de recherche spécialisé au sein de la Cité FIERI."}
+                              </p>
+                            </div>
+                            <button
+                              onClick={() => handleJoinClub(c.id)}
+                              disabled={joiningClubId === c.id}
+                              className="w-full py-2 rounded-xl text-xs font-bold text-white bg-fieri-blue hover:bg-fieri-blue/85 transition-all flex items-center justify-center gap-1.5"
+                            >
+                              {joiningClubId === c.id ? (
+                                <span className="inline-block w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                              ) : (
+                                <UserPlus className="w-3.5 h-3.5" />
+                              )}
+                              Rejoindre ce club
+                            </button>
+                          </div>
                         ))}
-                    </tbody>
-                  </table>
-                </div>
-              )}
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
-          </motion.div>
+
+            {/* ── PANNEAU GLOBAL SECRÉTARIAT / ADMIN ── */}
+            {isSecretaryOrAdmin && (
+              <div className="space-y-8 pt-6 border-t border-white/10">
+                {/* Rapports Réceptionnés par le Secrétariat */}
+                <div className="p-6 rounded-2xl bg-white/[0.03] border border-white/10 backdrop-blur-xl">
+                  <div className="flex items-center justify-between mb-6">
+                    <div>
+                      <h3 className="text-lg font-bold text-text-primary flex items-center gap-2">
+                        <FileText className="w-5 h-5 text-accent-primary" />
+                        Rapports Réceptionnés par le Secrétariat (6 Clubs R&D)
+                      </h3>
+                      <p className="text-xs text-text-muted">
+                        Consultez les rapports mensuels d'activité et recensements transmis par chaque Responsable de Club avant consolidation.
+                      </p>
+                    </div>
+                    <span className="px-3 py-1 rounded-full text-xs font-bold bg-accent-primary/10 text-accent-primary border border-accent-primary/20">
+                      {receivedReports.length} Rapport(s) Reçu(s)
+                    </span>
+                  </div>
+
+                  {receivedReports.length === 0 ? (
+                    <p className="text-xs text-text-muted italic py-4 text-center">Aucun rapport transmis pour le moment.</p>
+                  ) : (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                      {receivedReports.map((rep) => (
+                        <div key={rep.id} className="p-4 rounded-xl bg-black/40 border border-white/10 flex flex-col justify-between gap-3">
+                          <div>
+                            <div className="flex items-center justify-between text-[11px] text-text-muted mb-1">
+                              <span className="font-bold text-accent-primary">{rep.clubName}</span>
+                              <span>Période: {rep.period}</span>
+                            </div>
+                            <h4 className="text-sm font-bold text-text-primary">{rep.title}</h4>
+                            {rep.content && <p className="text-xs text-text-secondary mt-1 line-clamp-3">{rep.content}</p>}
+                          </div>
+                          <div className="pt-2 border-t border-white/5 flex items-center justify-between text-[10px] text-text-muted">
+                            <span>Par: {rep.submittedBy}</span>
+                            <span className="px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-semibold">
+                              {rep.status === 'TRANSMIS_ADMIN' ? 'Transmis Admin' : 'Reçu Secrétariat'}
+                            </span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                {/* Annuaire Transversal : Membres des 6 Clubs R&D */}
+                <div className="p-6 rounded-2xl bg-white/[0.03] border border-white/10 backdrop-blur-xl">
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
+                    <div>
+                      <h3 className="text-lg font-bold text-text-primary flex items-center gap-2">
+                        <Users className="w-5 h-5 text-emerald-400" />
+                        Annuaire Transversal des Membres (6 Clubs UAC)
+                      </h3>
+                      <p className="text-xs text-text-muted">
+                        Vue centralisée accessible à la Secrétaire Générale et à l'Admin Universitaire.
+                      </p>
+                    </div>
+                    <div className="w-full sm:w-64">
+                      <input
+                        type="text"
+                        value={memberSearch}
+                        onChange={(e) => setMemberSearch(e.target.value)}
+                        placeholder="Rechercher membre ou club..."
+                        className={inputClass}
+                      />
+                    </div>
+                  </div>
+
+                  {allMembersLoading ? (
+                    <p className="text-xs text-text-muted py-4 text-center">Chargement des membres des 6 clubs...</p>
+                  ) : (
+                    <div className="overflow-x-auto">
+                      <table className="w-full text-left text-xs">
+                        <thead>
+                          <tr className="border-b border-white/10 text-text-muted font-bold uppercase">
+                            <th className="py-2.5 px-3">Membre / Chercheur</th>
+                            <th className="py-2.5 px-3">Club Métier</th>
+                            <th className="py-2.5 px-3">Email</th>
+                            <th className="py-2.5 px-3">Rôle</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-white/5 text-text-secondary">
+                          {allMembers
+                            .filter(m => {
+                              const q = memberSearch.toLowerCase();
+                              const fullName = `${m.firstname || ''} ${m.lastname || m.name || ''}`.toLowerCase();
+                              const club = (m.clubName || m.club?.name || '').toLowerCase();
+                              return fullName.includes(q) || club.includes(q);
+                            })
+                            .slice(0, 12)
+                            .map((m, idx) => {
+                              const badge = formatRoleBadge(m);
+                              return (
+                                <tr key={m.id || idx} className="hover:bg-white/[0.02]">
+                                  <td className="py-2.5 px-3 font-semibold text-text-primary">
+                                    {[m.firstname, m.lastname].filter(Boolean).join(' ') || m.name || 'Membre'}
+                                  </td>
+                                  <td className="py-2.5 px-3 text-accent-primary font-medium">
+                                    {m.clubName || m.club?.name || 'Club R&D'}
+                                  </td>
+                                  <td className="py-2.5 px-3 text-text-muted">{m.email || '—'}</td>
+                                  <td className="py-2.5 px-3">
+                                    <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${badge.className}`}>
+                                      {badge.label}
+                                    </span>
+                                  </td>
+                                </tr>
+                              );
+                            })}
+                        </tbody>
+                      </table>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+          </div>
         )}
       </div>
 
