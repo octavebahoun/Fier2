@@ -75,9 +75,10 @@ export default function Sidebar({
     const isChercheur = hasMinRole('CHERCHEUR')
     const isAdminUser = can('admin:access')
     const canManageGouvernance = isAdminUser || isChefUniversitaire?.()
+    const isSecr = isSecretary?.()
 
     return [
-      // ── Espace personnel ──
+      // 1. Mon Espace
       {
         id: 'Personnel',
         label: 'Mon Espace',
@@ -87,46 +88,46 @@ export default function Sidebar({
           { id: 'profile', label: 'Mon profil', icon: UserRound, params: { researcherId: 'me' }, show: isChercheur },
         ],
       },
-      // ── Communauté ──
+      // 2. Secrétariat & Gouvernance
       {
-        id: 'Communauté',
-        label: 'Communauté',
-        icon: Users,
+        id: 'Gouvernance',
+        label: 'Gouvernance & Secrétariat',
+        icon: Shield,
         items: [
-          { id: 'news', label: 'Actualités', icon: Newspaper, show: true },
-          { id: 'events', label: 'Événements', icon: CalendarDays, show: true },
-          { id: 'challenges', label: 'Challenges & Hackathons', icon: Trophy, show: isChercheur },
-          { id: 'soutiens', label: 'Soutiens & Trésorerie', icon: HeartHandshake, show: isResponsable || isTreasurer?.() || isAdminUser },
-          { id: 'researchers', label: 'Annuaire Chercheurs', icon: Contact, show: true },
+          { id: 'gouvernance', label: 'Attestations & Exclusions', icon: ShieldCheck, show: canManageGouvernance },
+          { id: 'espace-cite', label: 'Secrétariat & Rapports CITE', icon: LayoutList, show: isResponsable || isSecr || isAdminUser },
+          { id: 'soutiens', label: 'Soutiens & Trésorerie', icon: HeartHandshake, show: isResponsable || isTreasurer?.() || isSecr || isAdminUser },
+          { id: 'admin', label: 'Console globale admin', icon: Shield, show: isAdminUser },
         ],
       },
-      // ── Recherche & Production ──
+      // 3. Recherche & Production
       {
         id: 'Recherche',
         label: 'Recherche & R&D',
         icon: Layers,
         items: [
           { id: 'projects', label: 'Projets R&D', icon: FolderGit2, show: isChercheur },
-          { id: 'workshops', label: 'Formations', icon: GraduationCap, show: true },
-          { id: 'opportunities', label: 'Opportunités', icon: Briefcase, show: isChercheur },
-          { id: 'clubs', label: 'Clubs CITE', icon: Users, show: true },
-          { id: 'espace-cite', label: 'Mon espace CITE', icon: LayoutList, show: isResponsable },
+          { id: 'workshops', label: 'Formations & Ateliers', icon: GraduationCap, show: true },
+          { id: 'opportunities', label: 'Opportunités Recherche', icon: Briefcase, show: isChercheur },
+          { id: 'clubs', label: 'Clubs CITE UAC', icon: Users, show: true },
         ],
       },
-      // ── Administration ──
+      // 4. Communauté & Annuaire
       {
-        id: 'Administration',
-        label: 'Administration',
-        icon: Shield,
+        id: 'Communauté',
+        label: 'Communauté & Réseau',
+        icon: Users,
         items: [
-          { id: 'admin', label: 'Console admin', icon: Shield, show: isAdminUser },
-          { id: 'gouvernance', label: 'Exclusions & Attestations', icon: ShieldCheck, show: canManageGouvernance },
+          { id: 'news', label: 'Actualités', icon: Newspaper, show: true },
+          { id: 'events', label: 'Événements', icon: CalendarDays, show: true },
+          { id: 'challenges', label: 'Challenges & Hackathons', icon: Trophy, show: isChercheur },
+          { id: 'researchers', label: 'Annuaire Chercheurs', icon: Contact, show: true },
         ],
       },
     ]
       .map(g => ({ ...g, items: g.items.filter(i => i.show) }))
       .filter(g => g.items.length > 0)
-  }, [can, hasMinRole, user, isAnyClubResponsible, isChefUniversitaire, isTreasurer])
+  }, [can, hasMinRole, user, isAnyClubResponsible, isChefUniversitaire, isTreasurer, isSecretary])
 
   const isActive = (id) => currentPage === id || ACTIVE_ALIAS[currentPage] === id
 

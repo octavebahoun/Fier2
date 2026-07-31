@@ -23,6 +23,29 @@ import { useTheme } from '../../context/useTheme.js'
 import { useAuth } from '../../context/AuthContext.jsx'
 import api from '../../services/api.js'
 
+const BREADCRUMB_MAP = {
+  dashboard: 'Mon Espace',
+  profile: 'Mon Espace',
+  'researcher-profile-edit': 'Mon Espace',
+  admin: 'Gouvernance',
+  gouvernance: 'Gouvernance',
+  'espace-cite': 'Gouvernance',
+  soutiens: 'Gouvernance',
+  projects: 'Recherche & R&D',
+  'project-detail': 'Recherche & R&D',
+  clubs: 'Recherche & R&D',
+  'club-detail': 'Recherche & R&D',
+  workshops: 'Recherche & R&D',
+  opportunities: 'Recherche & R&D',
+  news: 'Communauté',
+  'news-detail': 'Communauté',
+  events: 'Communauté',
+  challenges: 'Communauté',
+  researchers: 'Communauté',
+  contact: 'Support',
+  'student-portal': 'Portail',
+}
+
 // Libellés lisibles pour la barre supérieure (titre de la section courante).
 const PAGE_TITLES = {
   dashboard: 'Tableau de bord',
@@ -130,8 +153,23 @@ export default function TopBar({ currentPage, navigate, user, handleLogout, coll
             <Menu className="w-5 h-5" />
           </button>
 
-          {/* Titre de section */}
-          <h1 className="text-sm font-extrabold text-text-primary tracking-tight truncate">{title}</h1>
+          {/* Fil d'Ariane & Titre de section */}
+          <div className="flex items-center gap-2 text-xs text-text-muted min-w-0">
+            <span 
+              onClick={() => navigate('dashboard')}
+              className="hidden sm:inline-block font-bold text-text-secondary hover:text-fieri-blue cursor-pointer transition-colors"
+            >
+              FIERI Hub
+            </span>
+            <span className="hidden sm:inline-block text-text-muted/60">/</span>
+            {BREADCRUMB_MAP[currentPage] && (
+              <>
+                <span className="hidden md:inline-block font-medium text-text-muted">{BREADCRUMB_MAP[currentPage]}</span>
+                <span className="hidden md:inline-block text-text-muted/60">/</span>
+              </>
+            )}
+            <h1 className="text-xs sm:text-sm font-black text-text-primary tracking-tight truncate">{title}</h1>
+          </div>
 
           <div className="flex-1" />
 
