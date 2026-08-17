@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   ChevronLeft,
@@ -9,7 +9,7 @@ import {
   Rocket,
   Tag,
   Newspaper,
-  Loader2
+
 } from 'lucide-react';
 import api from '../../services/api.js';
 

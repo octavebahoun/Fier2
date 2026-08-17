@@ -1,4 +1,3 @@
-import React from 'react';
 
 export default function WireframeSVG({ type, accentColor = '#1B6FD8' }) {
   switch (type) {

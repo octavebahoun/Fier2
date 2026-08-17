@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import {
   GraduationCap, Users, Calendar, BookOpen, ArrowRight,
@@ -58,7 +58,7 @@ export default function StudentPortal({ navigate }) {
         if (res.success) {
           setClubs(Array.isArray(res.data) ? res.data.slice(0, 3) : []);
         }
-      } catch (err) {
+      } catch {
         setClubs([]);
       }
     };

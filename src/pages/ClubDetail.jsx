@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import { ArrowLeft, Users, GraduationCap, Check, LogIn } from 'lucide-react'
 import { api } from '../services/api.js'
@@ -28,7 +28,7 @@ export default function ClubDetail({ navigate, clubId }) {
     }
   }
 
-  useEffect(() => { load() /* eslint-disable-next-line react-hooks/exhaustive-deps */ }, [clubId])
+  useEffect(() => { load()   }, [clubId])
 
   const handleJoinToggle = async () => {
     if (!user) { promptLogin('Connectez-vous pour rejoindre ce club.'); return }

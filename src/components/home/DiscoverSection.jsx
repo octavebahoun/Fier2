@@ -1,9 +1,8 @@
-import React from 'react';
 import { Compass } from 'lucide-react';
 import { motion } from 'framer-motion';
 import FadeInWhenVisible from './FadeInWhenVisible.jsx';
 
-export default function DiscoverSection({ decouvrir, navigate }) {
+export default function DiscoverSection({ decouvrir }) {
   return (
     <section id="decouvrir" className="py-24 px-6 md:px-12 lg:px-12 border-b border-border-subtle relative overflow-hidden bg-bg-primary dot-grid">
       {/* Glow Ambient Spots */}

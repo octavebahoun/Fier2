@@ -6,7 +6,7 @@ import {
   Shield, Briefcase, PenSquare, UserCog, Lock, FolderGit2, GraduationCap
 } from 'lucide-react'
 import { api } from '../../services/api.js'
-import { useAuth, getRolePresentation, ROLE_PRESENTATION } from '../../context/AuthContext.jsx'
+import { useAuth, getRolePresentation } from '../../context/AuthContext.jsx'
 
 const CLUB_ICONS = {
   'club-1': { icon: Cpu,       color: '#e05a2b' },
@@ -51,13 +51,11 @@ function StatCard({ label, value, icon: Icon, color, onClick }) {
  * • L'accès rapide s'adapte au rôle (pas de liens inutiles pour un étudiant simple).
  */
 export default function Dashboard({ navigate }) {
-  const { user, isResearcher, isAdmin, isMentor, hasMinRole, can, isAnyClubResponsible } = useAuth()
-  const userId = user?.id ?? null
+  const { user, isResearcher, isAdmin, isMentor, isAnyClubResponsible } = useAuth()
 
   const isChercheur = isResearcher?.()
   const isAdminUser = isAdmin?.()
   const isResponsable = isAnyClubResponsible?.()
-  const userRole = user?.role?.toUpperCase() || 'ETUDIANT'
 
   // Actions réservées selon le rôle — chaque entrée n'apparaît que si `show` est vrai.
   const privilegedActions = [
@@ -97,7 +95,7 @@ export default function Dashboard({ navigate }) {
         setNotifCount(notifRes.data.filter(n => !n.read).length)
       }
     } catch { /* pas de notifications si l'appel échoue */ }
-  }, [userId, user])
+  }, [])
 
   useEffect(() => {
     loadData()

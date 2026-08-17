@@ -14,8 +14,7 @@ import {
   HeartHandshake,
   LayoutList,
   Edit3,
-  ExternalLink,
-  Award
+
 } from 'lucide-react'
 import RoleBadge from '../RoleBadge.jsx'
 import NotificationsModal from './NotificationsModal.jsx'
@@ -77,7 +76,7 @@ const PAGE_TITLES = {
  */
 export default function TopBar({ currentPage, navigate, user, handleLogout, collapsed, onOpenMobile }) {
   const { theme, toggleTheme } = useTheme()
-  const { can, hasMinRole, isAnyClubResponsible, isChefUniversitaire, isTreasurer, isSecretary, logout } = useAuth()
+  const { can, isAnyClubResponsible, isChefUniversitaire, isTreasurer, isSecretary, logout } = useAuth()
   
   const [unreadCount, setUnreadCount] = useState(0)
   const [notifOpen, setNotifOpen] = useState(false)
@@ -130,7 +129,6 @@ export default function TopBar({ currentPage, navigate, user, handleLogout, coll
   // Role permissions
   const userRole = user?.role?.toUpperCase() || 'ETUDIANT'
   const isResponsable = isAnyClubResponsible?.() || userRole === 'RESPONSABLE'
-  const isChercheur = hasMinRole('CHERCHEUR')
   const isAdminUser = can('admin:access')
   const isChef = isChefUniversitaire?.()
   const isTreas = isTreasurer?.()

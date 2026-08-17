@@ -1,6 +1,4 @@
-import React from 'react';
 import { Compass, GraduationCap, LayoutDashboard, Sparkles, ArrowRight } from 'lucide-react';
-import { motion } from 'framer-motion';
 import FadeInWhenVisible from './FadeInWhenVisible.jsx';
 
 export default function OrgSection({ organisation, navigate }) {

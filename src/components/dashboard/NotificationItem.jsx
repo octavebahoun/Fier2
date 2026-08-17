@@ -1,4 +1,3 @@
-import React from 'react'
 
 export default function NotificationItem({ notification, onMarkRead, onClick }) {
   const { id, title, body, text, read, createdAt, date } = notification || {}

@@ -7,7 +7,6 @@ import {
   Users,
   Award,
   CheckCircle,
-  Sparkles,
   Lock,
   ExternalLink,
   Star,
@@ -25,8 +24,6 @@ import {
   Save,
   Check,
   Zap,
-  Building,
-  Layers,
   FileText
 } from 'lucide-react'
 import { useAuth } from '../context/AuthContext.jsx'
@@ -181,70 +178,6 @@ function getRoleBadgeConfig(researcher, currentUser) {
       'Candidature aux opportunités de stages et bourses R&D'
     ]
   }
-}
-
-// ─────────────────────────── Mock Publications Data ───────────────────────────
-const MOCK_PUBLICATIONS = {
-  r1: [
-    {
-      title: "Optimisation du SLAM visuel monoculaire pour la navigation autonome en intérieur",
-      journal: "Revue Africaine d'Automatique et Robotique",
-      year: "2025",
-      citations: 28
-    },
-    {
-      title: "Intégration hybride ROS/AI dans la cartographie d'environnements texturés et changeants",
-      journal: "IEEE Xplore Fieri Symposium",
-      year: "2026",
-      citations: 12
-    },
-    {
-      title: "Robotique mobile et souveraineté logicielle : Enjeux industriels en Afrique de l'Ouest",
-      journal: "Working Paper FIERI",
-      year: "2024",
-      citations: 45
-    }
-  ],
-  r2: [
-    {
-      title: "Réseaux de capteurs LoRaWAN auto-alimentés en milieu tropical : Analyse de résilience",
-      journal: "Journal of IoT & Cyber-Physical Systems",
-      year: "2025",
-      citations: 94
-    },
-    {
-      title: "Protocole MAC à faible consommation d'énergie pour la télédétection des micro-climats",
-      journal: "International Conference on Embedded Networks",
-      year: "2026",
-      citations: 37
-    },
-    {
-      title: "IoT et Agriculture de précision : Conception d'un gateway multicouche autonome",
-      journal: "FIERI Journal of Applied Science",
-      year: "2024",
-      citations: 82
-    }
-  ],
-  r3: [
-    {
-      title: "Deep Learning compressé pour la vision embarquée (Edge AI) : Comparaison d'architectures",
-      journal: "Revue de l'Intelligence Artificielle FIERI",
-      year: "2025",
-      citations: 18
-    },
-    {
-      title: "Détection précoce des pathologies foliaires par réseaux de neurones convolutifs légers",
-      journal: "Symposium Africain sur les Sciences de l'IA",
-      year: "2026",
-      citations: 9
-    },
-    {
-      title: "Traitement d'images satellitaires haute résolution : Analyse du stress hydrique périphérique",
-      journal: "Journal de Vision Appliquée",
-      year: "2024",
-      citations: 31
-    }
-  ]
 }
 
 // ─────────────────────────── Skeleton Loading Component ───────────────────────────
@@ -914,8 +847,9 @@ export default function ResearcherProfile({ navigate, researcherId }) {
                   
                   {/* Nom complet */}
                   <div className="space-y-2">
-                    <label className="text-xs font-bold text-text-secondary">Nom complet</label>
+                    <label htmlFor="edit-name" className="text-xs font-bold text-text-secondary">Nom complet</label>
                     <input
+                      id="edit-name"
                       type="text"
                       required
                       value={editValues.name}
@@ -927,8 +861,9 @@ export default function ResearcherProfile({ navigate, researcherId }) {
 
                   {/* Email */}
                   <div className="space-y-2">
-                    <label className="text-xs font-bold text-text-secondary">Email académique</label>
+                    <label htmlFor="edit-email" className="text-xs font-bold text-text-secondary">Email académique</label>
                     <input
+                      id="edit-email"
                       type="email"
                       required
                       value={editValues.email}
@@ -940,8 +875,9 @@ export default function ResearcherProfile({ navigate, researcherId }) {
 
                   {/* Université */}
                   <div className="space-y-2">
-                    <label className="text-xs font-bold text-text-secondary">Université / Établissement</label>
+                    <label htmlFor="edit-university" className="text-xs font-bold text-text-secondary">Université / Établissement</label>
                     <input
+                      id="edit-university"
                       type="text"
                       value={editValues.university}
                       onChange={(e) => setEditValues(v => ({ ...v, university: e.target.value }))}
@@ -952,8 +888,9 @@ export default function ResearcherProfile({ navigate, researcherId }) {
 
                   {/* Titre / Rôle */}
                   <div className="space-y-2">
-                    <label className="text-xs font-bold text-text-secondary">Titre / Rôle scientifique</label>
+                    <label htmlFor="edit-role" className="text-xs font-bold text-text-secondary">Titre / Rôle scientifique</label>
                     <input
+                      id="edit-role"
                       type="text"
                       value={editValues.roleTitle}
                       onChange={(e) => setEditValues(v => ({ ...v, roleTitle: e.target.value }))}
@@ -966,7 +903,7 @@ export default function ResearcherProfile({ navigate, researcherId }) {
 
                 {/* Photo de profil avec Preview */}
                 <div className="space-y-2">
-                  <label className="text-xs font-bold text-text-secondary">Photo de profil (URL d'image)</label>
+                  <label htmlFor="edit-avatar" className="text-xs font-bold text-text-secondary">Photo de profil (URL d'image)</label>
                   <div className="flex items-center gap-4">
                     <img
                       src={editValues.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80'}
@@ -974,6 +911,7 @@ export default function ResearcherProfile({ navigate, researcherId }) {
                       className="w-14 h-14 rounded-2xl object-cover border border-white/10 shrink-0"
                     />
                     <input
+                      id="edit-avatar"
                       type="url"
                       value={editValues.avatar}
                       onChange={(e) => setEditValues(v => ({ ...v, avatar: e.target.value }))}
@@ -985,8 +923,9 @@ export default function ResearcherProfile({ navigate, researcherId }) {
 
                 {/* Spécialités */}
                 <div className="space-y-2">
-                  <label className="text-xs font-bold text-text-secondary">Spécialités (séparées par des virgules)</label>
+                  <label htmlFor="edit-specialties" className="text-xs font-bold text-text-secondary">Spécialités (séparées par des virgules)</label>
                   <input
+                    id="edit-specialties"
                     type="text"
                     value={editValues.specialties}
                     onChange={(e) => setEditValues(v => ({ ...v, specialties: e.target.value }))}
@@ -997,8 +936,9 @@ export default function ResearcherProfile({ navigate, researcherId }) {
 
                 {/* Bio */}
                 <div className="space-y-2">
-                  <label className="text-xs font-bold text-text-secondary">Biographie & Travaux R&D</label>
+                  <label htmlFor="edit-bio" className="text-xs font-bold text-text-secondary">Biographie & Travaux R&D</label>
                   <textarea
+                    id="edit-bio"
                     rows={4}
                     value={editValues.bio}
                     onChange={(e) => setEditValues(v => ({ ...v, bio: e.target.value }))}
@@ -1010,8 +950,9 @@ export default function ResearcherProfile({ navigate, researcherId }) {
                 {/* Portfolio & CV */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <label className="text-xs font-bold text-text-secondary">Site web / Portfolio (URL)</label>
+                    <label htmlFor="edit-portfolio" className="text-xs font-bold text-text-secondary">Site web / Portfolio (URL)</label>
                     <input
+                      id="edit-portfolio"
                       type="url"
                       value={editValues.portfolioUrl}
                       onChange={(e) => setEditValues(v => ({ ...v, portfolioUrl: e.target.value }))}
@@ -1020,8 +961,9 @@ export default function ResearcherProfile({ navigate, researcherId }) {
                     />
                   </div>
                   <div className="space-y-2">
-                    <label className="text-xs font-bold text-text-secondary">CV académique (URL)</label>
+                    <label htmlFor="edit-cv" className="text-xs font-bold text-text-secondary">CV académique (URL)</label>
                     <input
+                      id="edit-cv"
                       type="url"
                       value={editValues.cvUrl}
                       onChange={(e) => setEditValues(v => ({ ...v, cvUrl: e.target.value }))}

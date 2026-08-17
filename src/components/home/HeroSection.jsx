@@ -1,5 +1,3 @@
-import React from 'react';
-import { motion } from 'framer-motion';
 import { ArrowRight, ChevronRight } from 'lucide-react';
 import FadeInWhenVisible from './FadeInWhenVisible.jsx';
 import heroBg from '../../assets/hero.webp';

@@ -1,10 +1,10 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
-  ArrowLeft, Calendar, CheckCircle2, ChevronRight, 
-  Coins, Heart, HelpCircle, Info, Landmark, 
-  MessageSquare, Star, Trophy, Users, X, 
-  Sparkles, ShieldAlert, Check 
+  ArrowLeft, CheckCircle2, ChevronRight, 
+  Coins, Heart,  Info, Landmark, 
+  Star, Trophy, Users, X, 
+  ShieldAlert, Check 
 } from 'lucide-react';
 import { api } from '../services/api';
 import { useAuth } from '../context/AuthContext.jsx';
@@ -102,7 +102,7 @@ export default function ProjectDetail({ navigate, projectId }) {
         } else {
           setError(projectRes.message || "Ce projet R&D n'est pas répertorié ou a été archivé.");
         }
-      } catch (err) {
+      } catch {
         setError("Erreur réseau ou serveur lors du chargement du projet.");
       } finally {
         setIsLoading(false);
@@ -126,7 +126,7 @@ export default function ProjectDetail({ navigate, projectId }) {
       } else {
         setToast(res.message || "Impossible de modifier le statut de suivi.");
       }
-    } catch (err) {
+    } catch {
       setToast("Erreur lors de la modification de votre abonnement au projet.");
     }
   };
@@ -191,7 +191,7 @@ export default function ProjectDetail({ navigate, projectId }) {
       } else {
         setPledgeError(res.message || "Erreur lors de la transaction fictive.");
       }
-    } catch (err) {
+    } catch {
       setPledgeError("Erreur réseau ou serveur lors de la validation du soutien.");
     }
   };

@@ -17,7 +17,7 @@ Plateforme numérique de gestion de la recherche académique — un écosystème
 - Double thème sombre/clair (Cosmique / Aube Cosmique) avec glassmorphism
 - Authentification à 4 rôles (Admin, Chercheur, Étudiant, Invité)
 - Sidebar Chercheur/Admin avec états contracté/déployé
-- API distante (Vercel) + fallback mocké local (`localStorage` préfixé `fieri_`)
+- API backend NestJS : `http://localhost:3000` en développement, Vercel en production (aucun mock réseau)
 - États systématiques : chargement, erreur, vide, validation de formulaire
 - Accessibilité : skip-to-content, focus trap, ARIA, `prefers-reduced-motion`, touch targets ≥44×44px
 
@@ -41,8 +41,8 @@ npm run dev        # http://localhost:5173
 
 ```
 src/
-├── App.jsx              # Routes et état global (SPA sans routeur)
-├── main.jsx             # Point d'entrée, providers (Auth, Data)
+├── App.jsx              # Routes et état global (router dans main.jsx)
+├── main.jsx             # Point d'entrée, providers (Auth, Data), BrowserRouter
 ├── index.css            # Thèmes (dark/light), animations, glassmorphism
 ├── pages/               # 18 écrans (Home, Projects, Dashboard, Admin…)
 ├── components/
@@ -57,11 +57,15 @@ src/
 │   ├── AuthContext.jsx  # Authentification et rôles
 │   └── DataContext.jsx  # Données globales
 ├── services/
-│   ├── api.js           # Wrapper réseau (API distante → fallback mock)
-│   ├── mockDb.js        # Base mockée localStorage
+│   ├── api.js           # Wrapper réseau (API backend NestJS)
+│   ├── adapters.js      # Normalisation des réponses backend
 │   └── notifications.js
 └── assets/
 ```
+
+## Backend
+
+L'API NestJS + Prisma vit dans [`backend_fieri/`](./backend_fieri/) (dépôt git séparé) : voir [backend_fieri/README.md](./backend_fieri/README.md) pour la stack, le démarrage, les variables d'environnement et le déploiement Vercel.
 
 ## Design system
 

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion';
 import { Mail, Phone, MapPin, Send, CheckCircle2 } from 'lucide-react';
 import FadeInWhenVisible from './FadeInWhenVisible.jsx';
@@ -39,7 +39,7 @@ export default function ContactSection({ contact }) {
       // Simulate API request or integration
       await new Promise(resolve => setTimeout(resolve, 1000));
       setFormSubmitted(true);
-    } catch (err) {
+    } catch {
       setSubmitError('Une erreur est survenue. Veuillez réessayer.');
     } finally {
       setLoading(false);

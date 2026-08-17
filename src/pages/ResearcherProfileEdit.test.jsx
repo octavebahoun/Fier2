@@ -1,6 +1,5 @@
 /** @vitest-environment jsdom */
 
-import React from 'react'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen, waitFor, cleanup } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
@@ -33,30 +32,36 @@ vi.mock('../context/AuthContext.jsx', () => {
   }
 })
 
-const getMe = vi.fn()
-const updateMe = vi.fn()
+const mockGetMe = vi.fn()
+const mockUpdateMe = vi.fn()
 
+// Le composant importe l'export NOMÉ `api` (et non le default).
 vi.mock('../services/api.js', () => {
   return {
-    default: {
+    api: {
       researchers: {
-        getMe: (...args) => getMe(...args),
-        updateMe: (...args) => updateMe(...args)
+        getMe: (...args) => mockGetMe(...args),
+        updateMe: (...args) => mockUpdateMe(...args)
       }
     }
   }
 })
 
+// Le formulaire vit dans une modale ouverte via « Modifier mon profil ».
+const openEditModal = async () => {
+  await userEvent.click(screen.getByRole('button', { name: /modifier mon profil/i }))
+}
+
 beforeEach(() => {
   cleanup()
   mockNavigate.mockReset()
-  getMe.mockReset()
-  updateMe.mockReset()
+  mockGetMe.mockReset()
+  mockUpdateMe.mockReset()
 })
 
 describe('ResearcherProfileEdit', () => {
   it('pré-remplit le formulaire via GET /researchers/me', async () => {
-    getMe.mockResolvedValue({
+    mockGetMe.mockResolvedValue({
       success: true,
       data: {
         email: 'chercheur@fieri.dev',
@@ -69,8 +74,10 @@ describe('ResearcherProfileEdit', () => {
     render(<ResearcherProfileEdit navigate={mockNavigate} />)
 
     await waitFor(() => {
-      expect(getMe).toHaveBeenCalledTimes(1)
+      expect(mockGetMe).toHaveBeenCalledTimes(1)
     })
+
+    await openEditModal()
 
     expect(screen.getByLabelText(/email/i)).toHaveValue('chercheur@fieri.dev')
     expect(screen.getByLabelText(/université/i)).toHaveValue("Université Polytechnique de Fieri")
@@ -78,12 +85,14 @@ describe('ResearcherProfileEdit', () => {
   })
 
   it("bloque la soumission si l'email est invalide", async () => {
-    getMe.mockResolvedValue({ success: true, data: { email: 'chercheur@fieri.dev', name: 'Chercheur FIERI' } })
-    updateMe.mockResolvedValue({ success: true, data: {} })
+    mockGetMe.mockResolvedValue({ success: true, data: { email: 'chercheur@fieri.dev', name: 'Chercheur FIERI' } })
+    mockUpdateMe.mockResolvedValue({ success: true, data: {} })
 
     render(<ResearcherProfileEdit navigate={mockNavigate} />)
 
-    await waitFor(() => expect(getMe).toHaveBeenCalledTimes(1))
+    await waitFor(() => expect(mockGetMe).toHaveBeenCalledTimes(1))
+
+    await openEditModal()
 
     const emailInput = screen.getByLabelText(/email/i)
     await userEvent.clear(emailInput)
@@ -91,12 +100,13 @@ describe('ResearcherProfileEdit', () => {
 
     await userEvent.click(screen.getByRole('button', { name: /enregistrer/i }))
 
-    expect(await screen.findByText(/email invalide/i)).toBeInTheDocument()
-    expect(updateMe).not.toHaveBeenCalled()
+    // Validation native (type="email") : l'input est invalide et rien n'est soumis.
+    expect(emailInput).toBeInvalid()
+    expect(mockUpdateMe).not.toHaveBeenCalled()
   })
 
   it('soumet via PUT /researchers/me et affiche un toast de succès', async () => {
-    getMe.mockResolvedValue({
+    mockGetMe.mockResolvedValue({
       success: true,
       data: {
         email: 'chercheur@fieri.dev',
@@ -106,7 +116,7 @@ describe('ResearcherProfileEdit', () => {
       }
     })
 
-    updateMe.mockResolvedValue({
+    mockUpdateMe.mockResolvedValue({
       success: true,
       data: {
         email: 'chercheur@fieri.dev',
@@ -116,12 +126,14 @@ describe('ResearcherProfileEdit', () => {
 
     render(<ResearcherProfileEdit navigate={mockNavigate} />)
 
-    await waitFor(() => expect(getMe).toHaveBeenCalledTimes(1))
+    await waitFor(() => expect(mockGetMe).toHaveBeenCalledTimes(1))
+
+    await openEditModal()
 
     await userEvent.type(screen.getByLabelText(/bio/i), 'Nouvelle bio')
     await userEvent.click(screen.getByRole('button', { name: /enregistrer/i }))
 
-    await waitFor(() => expect(updateMe).toHaveBeenCalledTimes(1))
+    await waitFor(() => expect(mockUpdateMe).toHaveBeenCalledTimes(1))
     expect(await screen.findByText(/profil mis à jour/i)).toBeInTheDocument()
   })
 })

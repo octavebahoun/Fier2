@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect, useCallback, useMemo } from 'react';
+import { createContext, useContext, useState, useEffect, useCallback, useMemo } from 'react'
 import api from '../services/api.js';
 
 const AuthContext = createContext(null);
@@ -150,6 +150,14 @@ export function AuthProvider({ children }) {
     return () => { active = false; };
   }, [user]);
 
+  const handleLogout = useCallback(() => {
+    api.auth.logout();
+    setToken(null);
+    setUser(null);
+    localStorage.removeItem('fieri_auth_token');
+    localStorage.removeItem('fieri_user');
+  }, []);
+
   // Restaurer la session utilisateur au démarrage
   useEffect(() => {
     async function restoreSession() {
@@ -184,7 +192,7 @@ export function AuthProvider({ children }) {
       }
     }
     restoreSession();
-  }, []);
+  }, [handleLogout]);
 
   // Enrichit un membre minimal (issu de login/register) avec le profil complet
   // de /members/me (scope de gouvernance). Retombe sur le membre minimal si
@@ -252,14 +260,6 @@ export function AuthProvider({ children }) {
       return { success: false, message, code };
     }
   }, [enrichProfile]);
-
-  const handleLogout = useCallback(() => {
-    api.auth.logout();
-    setToken(null);
-    setUser(null);
-    localStorage.removeItem('fieri_auth_token');
-    localStorage.removeItem('fieri_user');
-  }, []);
 
   // ─── Helpers de Rôles ────────────────────────────────────────────────────
 

@@ -1,6 +1,6 @@
 // eslint-disable-next-line no-unused-vars
 import React, { useState, useEffect, useRef } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion } from 'framer-motion'
 import {
   ChevronLeft,
   ChevronRight,
@@ -9,7 +9,7 @@ import {
   Star,
   Sparkles,
   ArrowRight,
-  UserCheck
+
 } from 'lucide-react'
 import { api } from '../services/api.js'
 

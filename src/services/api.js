@@ -11,6 +11,9 @@ const BASE_URL = typeof window !== 'undefined' && window.location.hostname === '
   ? 'http://localhost:3000'
   : 'https://backend-fieri.vercel.app';
 
+/** Délai maximal d'une requête réseau avant abandon (15 s). */
+const REQUEST_TIMEOUT_MS = 15000;
+
 /** En-têtes HTTP de base + jeton JWT si présent. */
 const getHeaders = () => {
   const token = localStorage.getItem('fieri_auth_token');
@@ -22,30 +25,47 @@ const getHeaders = () => {
 
 /** Exécuteur bas-niveau. Toute réponse non-2xx lève une erreur. */
 const request = async (path, options = {}) => {
-  const response = await fetch(`${BASE_URL}${path}`, {
-    ...options,
-    headers: {
-      ...getHeaders(),
-      ...options.headers
+  // Timeout anti-spinner : on annule le fetch au bout de REQUEST_TIMEOUT_MS et
+  // on lève une erreur 408 exploitable par le mapping existant.
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
+  try {
+    const response = await fetch(`${BASE_URL}${path}`, {
+      ...options,
+      signal: options.signal ?? controller.signal,
+      headers: {
+        ...getHeaders(),
+        ...options.headers
+      }
+    });
+
+    if (!response.ok) {
+      // On tente d'extraire le message d'erreur renvoyé par le backend afin de
+      // pouvoir l'afficher (ex. « email déjà utilisé » sur un 409) plutôt qu'un
+      // message générique. Le statut est attaché à l'erreur pour un mapping fin.
+      let serverMessage = '';
+      try {
+        const body = await response.clone().json();
+        serverMessage = body?.message || body?.error || '';
+      } catch { /* corps non-JSON */ }
+      const err = new Error(serverMessage || `HTTP Error: ${response.status} ${response.statusText}`);
+      err.status = response.status;
+      err.serverMessage = serverMessage;
+      throw err;
     }
-  });
 
-  if (!response.ok) {
-    // On tente d'extraire le message d'erreur renvoyé par le backend afin de
-    // pouvoir l'afficher (ex. « email déjà utilisé » sur un 409) plutôt qu'un
-    // message générique. Le statut est attaché à l'erreur pour un mapping fin.
-    let serverMessage = '';
-    try {
-      const body = await response.clone().json();
-      serverMessage = body?.message || body?.error || '';
-    } catch { /* corps non-JSON */ }
-    const err = new Error(serverMessage || `HTTP Error: ${response.status} ${response.statusText}`);
-    err.status = response.status;
-    err.serverMessage = serverMessage;
+    return await response.json();
+  } catch (err) {
+    // Abandon déclenché par notre timer (et non par un signal de l'appelant).
+    if (err?.name === 'AbortError' && controller.signal.aborted) {
+      const timeoutError = new Error(`La requête a expiré après ${Math.round(REQUEST_TIMEOUT_MS / 1000)} secondes.`);
+      timeoutError.status = 408;
+      throw timeoutError;
+    }
     throw err;
+  } finally {
+    clearTimeout(timer);
   }
-
-  return await response.json();
 };
 
 // Helpers de verbes HTTP — gardent les méthodes ci-dessous concises et lisibles.

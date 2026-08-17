@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   ClipboardList, FolderKanban, Users, FileText, Send, AlertCircle,
-  CheckCircle, X, ChevronRight, Calendar, UserPlus, BookOpen,
-  ChevronDown, ChevronUp, Star, ShieldCheck, Check, Clock
+  CheckCircle, X, ChevronRight,  UserPlus, BookOpen,
+  ChevronDown, ChevronUp, Star, Check
 } from 'lucide-react';
 import api from '../services/api.js';
 import { useAuth } from '../context/AuthContext.jsx';
@@ -60,15 +60,6 @@ const STATUS_META = {
 
 const statusBadge = (status) =>
   STATUS_META[status] || { label: status || '—', className: 'bg-white/5 border-white/10 text-text-muted' };
-
-const formatDate = (iso) => {
-  if (!iso) return '—';
-  try {
-    return new Date(iso).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', year: 'numeric' });
-  } catch {
-    return iso;
-  }
-};
 
 const formatRoleBadge = (m) => {
   const post = m.universityPost?.post || m.universityPost || '';
@@ -137,8 +128,8 @@ export default function EspaceCITE({ navigate }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const [assignedActivities, setAssignedActivities] = useState([]);
   const [projects, setProjects] = useState([]);
+  const [, setAssignedActivities] = useState([]);
 
   // Rôle d'administration centrale (Secrétariat & Chef Universitaire)
   const isSecretaryOrAdmin =
@@ -149,7 +140,7 @@ export default function EspaceCITE({ navigate }) {
     user?.role === 'CHEF_UNIVERSITAIRE';
 
   // Détermination du club de l'utilisateur
-  const userAssignedClubId = user?.clubId || (user?.responsibleClubIds && user.responsibleClubIds[0]) || '';
+  const userAssignedClubId = user?.clubId || (user?.responsibleClubIds && user.responsibleClubIds[0]) || (user?.memberships && user.memberships[0]?.clubId) || '';
   const [clubId, setClubId] = useState(userAssignedClubId);
   const [clubsList, setClubsList] = useState([]);
   const [clubLoading, setClubLoading] = useState(false);
@@ -347,7 +338,7 @@ export default function EspaceCITE({ navigate }) {
       } else {
         setToast({ message: res?.message || 'Erreur lors de la validation.', type: 'error' });
       }
-    } catch (err) {
+    } catch {
       setToast({ message: 'Erreur lors de la validation.', type: 'error' });
     }
   };
@@ -361,7 +352,7 @@ export default function EspaceCITE({ navigate }) {
       } else {
         setToast({ message: res?.message || 'Erreur lors du refus.', type: 'error' });
       }
-    } catch (err) {
+    } catch {
       setToast({ message: 'Erreur lors du refus.', type: 'error' });
     }
   };
@@ -377,7 +368,7 @@ export default function EspaceCITE({ navigate }) {
       } else {
         setToast({ message: res?.message || 'Demande déjà envoyée ou erreur.', type: 'warning' });
       }
-    } catch (err) {
+    } catch {
       setToast({ message: 'Impossible d\'envoyer la demande d\'adhésion.', type: 'error' });
     } finally {
       setJoiningClubId(null);
@@ -811,71 +802,72 @@ export default function EspaceCITE({ navigate }) {
               </div>
             )}
 
-            {/* ── ACCORDÉON DES AUTRES CLUBS : REJOINDRE LES AUTRES CLUBS ── */}
-            <div className="pt-6 border-t border-white/10">
-              <button
-                onClick={() => setShowOtherClubs(!showOtherClubs)}
-                className="w-full p-4 rounded-2xl bg-white/[0.03] border border-white/10 hover:bg-white/[0.06] transition-all flex items-center justify-between group cursor-pointer"
-              >
-                <div className="flex items-center gap-3 text-left">
-                  <div className="w-10 h-10 rounded-xl bg-accent-primary/10 border border-accent-primary/20 flex items-center justify-center text-accent-primary group-hover:scale-105 transition-transform">
-                    <Star className="w-5 h-5" />
-                  </div>
-                  <div>
-                    <h3 className="text-base font-extrabold text-text-primary">Découvrir / Rejoindre d'autres clubs de la CITE</h3>
-                    <p className="text-xs text-text-muted">Explorez les 5 autres domaines d'innovation R&D et postulez en un clic.</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-2 text-xs font-bold text-accent-primary">
-                  <span>{showOtherClubs ? "Masquer" : "Afficher les clubs"}</span>
-                  {showOtherClubs ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
-                </div>
-              </button>
-
-              <AnimatePresence>
-                {showOtherClubs && (
-                  <motion.div
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: 'auto' }}
-                    exit={{ opacity: 0, height: 0 }}
-                    transition={{ duration: 0.3 }}
-                    className="overflow-hidden mt-4"
-                  >
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                      {clubsList
-                        .filter(c => String(c.id) !== String(clubId))
-                        .map((c) => (
-                          <div key={c.id} className="p-4 rounded-2xl bg-bg-secondary/80 border border-white/10 flex flex-col justify-between gap-4">
-                            <div>
-                              <div className="flex items-center justify-between mb-2">
-                                <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-accent-primary/10 text-accent-primary border border-accent-primary/20">
-                                  Club R&D
-                                </span>
-                              </div>
-                              <h4 className="text-sm font-extrabold text-text-primary">{c.name || c.title}</h4>
-                              <p className="text-xs text-text-muted mt-1 leading-relaxed line-clamp-2">
-                                {c.description || "Club de recherche spécialisé au sein de la Cité FIERI."}
-                              </p>
-                            </div>
-                            <button
-                              onClick={() => handleJoinClub(c.id)}
-                              disabled={joiningClubId === c.id}
-                              className="w-full py-2 rounded-xl text-xs font-bold text-white bg-fieri-blue hover:bg-fieri-blue/85 transition-all flex items-center justify-center gap-1.5"
-                            >
-                              {joiningClubId === c.id ? (
-                                <span className="inline-block w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                              ) : (
-                                <UserPlus className="w-3.5 h-3.5" />
-                              )}
-                              Rejoindre ce club
-                            </button>
-                          </div>
-                        ))}
+            {/* ── SECTIONS AUTRES CLUBS : AFFICHÉ UNIQUEMENT SI AUCUN CLUB N'EST ENCORE REJOINTS ── */}
+            {!userAssignedClubId && !isSecretaryOrAdmin && (
+              <div className="pt-6 border-t border-white/10">
+                <button
+                  onClick={() => setShowOtherClubs(!showOtherClubs)}
+                  className="w-full p-4 rounded-2xl bg-white/[0.03] border border-white/10 hover:bg-white/[0.06] transition-all flex items-center justify-between group cursor-pointer"
+                >
+                  <div className="flex items-center gap-3 text-left">
+                    <div className="w-10 h-10 rounded-xl bg-accent-primary/10 border border-accent-primary/20 flex items-center justify-center text-accent-primary group-hover:scale-105 transition-transform">
+                      <Star className="w-5 h-5" />
                     </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
+                    <div>
+                      <h3 className="text-base font-extrabold text-text-primary">Découvrir / Rejoindre un club de la CITE</h3>
+                      <p className="text-xs text-text-muted">Explorez les domaines d'innovation R&D et postulez en un clic.</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2 text-xs font-bold text-accent-primary">
+                    <span>{showOtherClubs ? "Masquer" : "Afficher les clubs"}</span>
+                    {showOtherClubs ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+                  </div>
+                </button>
+
+                <AnimatePresence>
+                  {showOtherClubs && (
+                    <motion.div
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: 'auto' }}
+                      exit={{ opacity: 0, height: 0 }}
+                      transition={{ duration: 0.3 }}
+                      className="overflow-hidden mt-4"
+                    >
+                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        {clubsList
+                          .map((c) => (
+                            <div key={c.id} className="p-4 rounded-2xl bg-bg-secondary/80 border border-white/10 flex flex-col justify-between gap-4">
+                              <div>
+                                <div className="flex items-center justify-between mb-2">
+                                  <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-accent-primary/10 text-accent-primary border border-accent-primary/20">
+                                    Club R&D
+                                  </span>
+                                </div>
+                                <h4 className="text-sm font-extrabold text-text-primary">{c.name || c.title}</h4>
+                                <p className="text-xs text-text-muted mt-1 leading-relaxed line-clamp-2">
+                                  {c.description || "Club de recherche spécialisé au sein de la Cité FIERI."}
+                                </p>
+                              </div>
+                              <button
+                                onClick={() => handleJoinClub(c.id)}
+                                disabled={joiningClubId === c.id}
+                                className="w-full py-2 rounded-xl text-xs font-bold text-white bg-fieri-blue hover:bg-fieri-blue/85 transition-all flex items-center justify-center gap-1.5 cursor-pointer"
+                              >
+                                {joiningClubId === c.id ? (
+                                  <span className="inline-block w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                                ) : (
+                                  <UserPlus className="w-3.5 h-3.5" />
+                                )}
+                                Rejoindre ce club
+                              </button>
+                            </div>
+                          ))}
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            )}
 
             {/* ── PANNEAU GLOBAL SECRÉTARIAT / ADMIN ── */}
             {isSecretaryOrAdmin && (

@@ -1,4 +1,3 @@
-import React from 'react';
 import { Activity, Cpu, Globe2, Award } from 'lucide-react';
 import FadeInWhenVisible from './FadeInWhenVisible.jsx';
 

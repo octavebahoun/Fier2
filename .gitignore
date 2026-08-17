@@ -4,6 +4,7 @@
 **/.env
 **/*.log
 **/venv/
+**/dist/
 .vercel
 inventaire.md
 backend_fieri

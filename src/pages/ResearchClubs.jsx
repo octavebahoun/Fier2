@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Users, CheckCircle, Lock, Cpu, Leaf, Building2,
@@ -104,7 +104,7 @@ function JoinConfirmModal({ club, onConfirm, onCancel }) {
           className="p-4 rounded-xl text-xs text-text-secondary leading-relaxed mb-6 relative z-10"
           style={{ background: `${club.accent}0D`, border: `1px solid ${club.accent}20` }}
         >
-          <p className="font-bold text-text-primary mb-1.5">En demandant votre adhésion, vous vous engagez à :</p>
+<p className="font-bold text-text-primary mb-1.5">En demandant votre adhésion, vous vous engagez à&nbsp;:</p>
           <ul className="list-disc pl-4 space-y-1">
             <li>Participer activement aux activités et réunions du club.</li>
             <li>Respecter les membres et le règlement intérieur.</li>
@@ -400,8 +400,28 @@ export default function ResearchClubs({ navigate }) {
   const [joiningId, setJoiningId] = useState(null);
   const [confirmClub, setConfirmClub] = useState(null); // Club en attente de confirmation
 
-  const joinedCount = clubs.filter((c) => c.joined).length;
-  const totalMembers = clubs.reduce((acc, c) => acc + c.membersCount, 0);
+  const isSecretaryOrAdmin =
+    user?.universityPost === 'SECRETAIRE' ||
+    user?.universityPost === 'CHEF_UNIVERSITAIRE' ||
+    user?.role === 'ADMIN_UNIVERSITAIRE' ||
+    user?.role === 'ADMIN' ||
+    user?.role === 'CHEF_UNIVERSITAIRE' ||
+    isAdmin?.();
+
+  const userAssignedClubId =
+    user?.clubId ||
+    (user?.responsibleClubIds && user.responsibleClubIds[0]) ||
+    (user?.memberships && user.memberships[0]?.clubId) ||
+    '';
+
+  // Si l'utilisateur appartient déjà à un club et n'est pas admin/secrétariat :
+  // IL N'A AUCUNE VUE SUR LES AUTRES CLUBS. Seul son propre club est affiché.
+  const displayClubs = (user && userAssignedClubId && !isSecretaryOrAdmin)
+    ? clubs.filter((c) => String(c.id) === String(userAssignedClubId) || c.joined || c.responsibleId === userId)
+    : clubs;
+
+  const joinedCount = displayClubs.filter((c) => c.joined).length;
+  const totalMembers = displayClubs.reduce((acc, c) => acc + c.membersCount, 0);
 
   // Charger toutes les données (clubs, demandes de l'utilisateur connecté, et demandes en attente pour les managers)
   const loadData = async () => {
@@ -594,7 +614,7 @@ export default function ResearchClubs({ navigate }) {
 
         {/* ── Grille des clubs ── */}
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-          {clubs.map((club, index) => {
+          {displayClubs.map((club, index) => {
             const isPending = myRequests.some(r => r.clubId === club.id && r.status === 'PENDING');
             const isManager = user && (isAdmin() || club.responsibleId === userId);
             const pendingMembers = pendingRequests[club.id] || [];

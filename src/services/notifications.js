@@ -65,7 +65,7 @@ const clearNotifications = async () => {
 // emit updates after operations
 const _wrapEmit = (fn) => async (...args) => {
   const r = await fn(...args)
-  try { _emitUpdate() } catch {}
+  try { _emitUpdate() } catch { /* meilleur effort : on ignore les erreurs d'émission */ }
   return r
 }
 

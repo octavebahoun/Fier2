@@ -1,9 +1,9 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-  Search, Sparkles, Plus, Award, Coins, BookOpen,
+  Search, Sparkles, Plus,   
   User, Mail, FileText, CheckCircle2, X, ShieldAlert,
-  MapPin, Clock, ArrowRight, Briefcase
+  ArrowRight, Briefcase
 } from 'lucide-react';
 import { api } from '../services/api';
 import { useAuth } from '../context/AuthContext.jsx';
@@ -117,6 +117,16 @@ export default function Offers({ navigate }) {
     return opt.type === 'Exclusivités Partenaires' && matchesSearch;
   });
 
+  const closeApplyModal = () => {
+    setSelectedOpportunity(null);
+    if (applyTriggerRef.current) applyTriggerRef.current.focus();
+  };
+
+  const closePublishModal = () => {
+    setIsPublishModalOpen(false);
+    if (publishTriggerRef.current) publishTriggerRef.current.focus();
+  };
+
   // Modal keydowns for Escape closing
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -159,11 +169,6 @@ export default function Offers({ navigate }) {
     });
   };
 
-  const closeApplyModal = () => {
-    setSelectedOpportunity(null);
-    if (applyTriggerRef.current) applyTriggerRef.current.focus();
-  };
-
   const handleApplySubmit = async (e) => {
     e.preventDefault();
     if (!applyForm.name || !applyForm.email || !applyForm.achievements) {
@@ -184,7 +189,7 @@ export default function Offers({ navigate }) {
       } else {
         setApplyError(res.message || "Impossible de soumettre la candidature.");
       }
-    } catch (err) {
+    } catch {
       setApplyError("Erreur réseau ou serveur lors de l'envoi de la candidature.");
     }
   };
@@ -213,11 +218,6 @@ export default function Offers({ navigate }) {
     });
   };
 
-  const closePublishModal = () => {
-    setIsPublishModalOpen(false);
-    if (publishTriggerRef.current) publishTriggerRef.current.focus();
-  };
-
   const handlePublishSubmit = async (e) => {
     e.preventDefault();
     if (!publishForm.title || !publishForm.discipline || !publishForm.description || !publishForm.requirements || !publishForm.salary) {
@@ -243,7 +243,7 @@ export default function Offers({ navigate }) {
       } else {
         setPublishError(res.message || "Erreur lors de la sauvegarde.");
       }
-    } catch (err) {
+    } catch {
       setPublishError("Erreur réseau ou serveur lors de la publication de l'opportunité.");
     }
   };

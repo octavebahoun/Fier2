@@ -1,4 +1,3 @@
-import React from 'react';
 import FadeInWhenVisible from './FadeInWhenVisible.jsx';
 import AnimatedCounter from './AnimatedCounter.jsx';
 

@@ -125,17 +125,6 @@ export default function Members({ navigate }) {
     setUniversityFilter('Toutes')
   }
 
-  // Animation variants
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.08
-      }
-    }
-  }
-
   const cardVariants = {
     hidden: { opacity: 0, y: 24, scale: 0.98 },
     visible: {

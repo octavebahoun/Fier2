@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   HeartHandshake, Wallet, Fingerprint, Send, PlusCircle,
@@ -92,6 +92,9 @@ function FinancialForm({ universityId, setUniversityId, universities, user, setT
   const [loading, setLoading] = useState(false);
   const [univLoading, setUnivLoading] = useState(false);
 
+  const setUniversitiesSafe = (list) => setUniversitiesInternal(list);
+  const [universitiesInternal, setUniversitiesInternal] = useState(universities);
+
   const loadUniversities = useCallback(async () => {
     if (universityId || universities.length) return;
     setUnivLoading(true);
@@ -106,16 +109,13 @@ function FinancialForm({ universityId, setUniversityId, universities, user, setT
       );
       const flat = lists.flat().filter(Boolean);
       if (flat.length) setUniversitiesSafe(flat);
-    } catch (err) {
+    } catch {
       setToast({ message: "Impossible de charger la liste des universités.", type: 'error' });
     } finally {
       setUnivLoading(false);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [universityId, universities.length]);
-
-  const setUniversitiesSafe = (list) => setUniversitiesInternal(list);
-  const [universitiesInternal, setUniversitiesInternal] = useState(universities);
 
   useEffect(() => { loadUniversities(); }, [loadUniversities]);
 
@@ -260,7 +260,7 @@ function PhysicalForm({ universityId, setUniversityId, universities, user, setTo
       );
       const flat = lists.flat().filter(Boolean);
       if (flat.length) setUniversitiesSafe(flat);
-    } catch (err) {
+    } catch {
       setToast({ message: "Impossible de charger la liste des universités.", type: 'error' });
     } finally {
       setUnivLoading(false);
@@ -645,7 +645,7 @@ function TreasurySection({ universityId, setToast }) {
 }
 
 // ─────────────────────────── Page Soutiens ───────────────────────────
-export default function Soutiens({ navigate }) {
+export default function Soutiens() {
   const { user, isTreasurer } = useAuth();
   const [tab, setTab] = useState('financial');
   const [toast, setToast] = useState(null);

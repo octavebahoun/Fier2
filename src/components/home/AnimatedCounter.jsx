@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef } from 'react'
 import { useInView, animate, useReducedMotion } from 'framer-motion';
 
 export default function AnimatedCounter({ value, duration = 1.6 }) {

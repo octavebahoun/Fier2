@@ -1,4 +1,3 @@
-import React from 'react'
 import { getRolePresentation } from '../context/AuthContext.jsx'
 import { Shield, Crown, Briefcase, BookOpen, Award, GraduationCap, User } from 'lucide-react'
 

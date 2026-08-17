@@ -17,5 +17,10 @@ export default defineConfig({
   },
   server: {
     allowedHosts: ['backend-fieri.vercel.app']
+  },
+  test: {
+    environment: 'jsdom',
+    include: ['src/**/*.test.{js,jsx}', 'src/**/*.spec.{js,jsx}'],
+    globals: false
   }
 })

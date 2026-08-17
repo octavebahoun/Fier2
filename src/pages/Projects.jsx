@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useState, useEffect } from 'react'
+import { motion } from 'framer-motion';
 import { 
-  Search, Sparkles, TrendingUp, ArrowRight, 
-  Coins, Users, BookOpen, Star, Plus, 
-  Layers, Lightbulb, Compass, Award
+  Search, Sparkles,  ArrowRight, 
+  Coins,   Star,  
+  Compass, Award
 } from 'lucide-react';
 import { api } from '../services/api';
 

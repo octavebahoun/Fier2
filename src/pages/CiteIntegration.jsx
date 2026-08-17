@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react'
 import { motion } from 'framer-motion';
 import {
   ArrowLeft,
@@ -24,119 +24,6 @@ import citeImage from '../assets/fieri_student_hub.webp';
 import { useAuth } from '../context/AuthContext.jsx';
 import api from '../services/api.js';
 
-const citeData = {
-  globalGovernance: {
-    founders: [
-      {
-        name: 'Precieux K.',
-        role: 'Fondateur principal',
-        country: 'International',
-        bio: 'Vision stratégique, coordination de la cité et développement institutionnel.'
-      },
-      {
-        name: 'Aminata S.',
-        role: 'Co-fondatrice',
-        country: 'Bénin',
-        bio: 'Structuration académique, partenariats universitaires et vie communautaire.'
-      },
-      {
-        name: 'Mickael D.',
-        role: 'Co-fondateur',
-        country: 'Côte d’Ivoire',
-        bio: 'Innovation appliquée, clubs R&D et transfert technologique.'
-      }
-    ],
-    board: [
-      'Présidence internationale',
-      'Secrétariat général',
-      'Coordination des cités nationales',
-      'Direction innovation & recherche',
-      'Communication institutionnelle'
-    ]
-  },
-  countries: [
-    {
-      id: 'benin',
-      name: 'Bénin',
-      flag: 'BJ',
-      region: 'Afrique de l’Ouest',
-      summary: 'Cité pilote FIERI avec des clubs universitaires orientés innovation utile.',
-      bureau: [
-        { name: 'Arielle H.', role: 'Présidente nationale', contact: 'arielle@fieri.org' },
-        { name: 'Joel A.', role: 'Secrétaire national', contact: 'joel@fieri.org' },
-        { name: 'Merveille T.', role: 'Responsable partenariats', contact: 'partenariats.bj@fieri.org' }
-      ],
-      universities: [
-        {
-          id: 'uac',
-          name: 'Université d’Abomey-Calavi',
-          city: 'Abomey-Calavi',
-          leaders: [
-            { name: 'Dr. Nadège B.', role: 'Responsable universitaire', contact: '+229 01 90 00 00 01' },
-            { name: 'Kevin M.', role: 'Coordinateur clubs', contact: 'kevin.uac@fieri.org' }
-          ],
-          clubs: [
-            {
-              id: 'robotique-uac',
-              name: 'Club Robotique & Automatisation',
-              domain: 'Robotique, IA embarquée, mécatronique',
-              members: 74,
-              activity: 'Atelier rover autonome et initiation ROS.',
-              decision: 'Priorité donnée aux prototypes utiles pour l’agriculture locale.',
-              textile: 'Tricot bleu marine avec motif circuit et badge Robotique.',
-              chief: {
-                name: 'Christ M.',
-                role: 'Responsable du club',
-                phone: '+229 01 67 45 21 09',
-                email: 'robotique.uac@fieri.org'
-              }
-            },
-            {
-              id: 'ia-uac',
-              name: 'Club Intelligence Artificielle',
-              domain: 'Machine learning, vision, données',
-              members: 58,
-              activity: 'Session pratique sur la détection d’anomalies par vision.',
-              decision: 'Créer une banque de datasets locaux pour les projets étudiants.',
-              textile: 'T-shirt blanc et bleu avec symbole neural FIERI.',
-              chief: {
-                name: 'Ruth A.',
-                role: 'Responsable du club',
-                phone: '+229 01 61 22 18 35',
-                email: 'ia.uac@fieri.org'
-              }
-            }
-          ]
-        },
-        {
-          id: 'eneam',
-          name: 'ENEAM',
-          city: 'Cotonou',
-          leaders: [
-            { name: 'Cédric F.', role: 'Point focal universitaire', contact: '+229 01 94 22 11 02' }
-          ],
-          clubs: [
-            {
-              id: 'entrepreneuriat-eneam',
-              name: 'Club Innovation & Entrepreneuriat',
-              domain: 'Business model, prototypage, incubation',
-              members: 41,
-              activity: 'Sprint de validation marché pour projets étudiants.',
-              decision: 'Chaque projet doit présenter un usage réel et un modèle simple.',
-              textile: 'Polo noir avec marquage orange FIERI Cité.',
-              chief: {
-                name: 'Sarah D.',
-                role: 'Responsable du club',
-                phone: '+229 01 52 78 49 11',
-                email: 'innovation.eneam@fieri.org'
-              }
-            }
-          ]
-        }
-      ]
-    }
-  ]
-};
 
 const getInitialJoinForm = () => ({
   fullName: '',
@@ -228,7 +115,7 @@ export default function CiteIntegration({ navigate }) {
   const [loading, setLoading] = useState(true);
   
   const [selectedClubDetail, setSelectedClubDetail] = useState(null);
-  const [loadingClubDetail, setLoadingClubDetail] = useState(false);
+  const [, setLoadingClubDetail] = useState(false);
 
   // Load all hierarchy and members from backend
   const loadData = async () => {
@@ -478,7 +365,7 @@ export default function CiteIntegration({ navigate }) {
         universities: countryUnis
       };
     });
-  }, [rawCountries, universitiesMap, branchesMap, clubs, members]);
+  }, [rawCountries, universitiesMap, branchesMap, clubs, members, getMemberLocation]);
 
   // Selected entities based on selection hooks
   const selectedCountry = countries.find((country) => country.id === selectedCountryId);

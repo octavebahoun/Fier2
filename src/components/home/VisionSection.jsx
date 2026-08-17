@@ -1,4 +1,3 @@
-import React from 'react';
 import { Target, Cpu, Lightbulb, GraduationCap } from 'lucide-react';
 import FadeInWhenVisible from './FadeInWhenVisible.jsx';
 

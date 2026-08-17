@@ -23,7 +23,7 @@ import {
   X,
   Sparkles,
   Layers,
-  Award
+
 } from 'lucide-react'
 import { useAuth } from '../../context/AuthContext.jsx'
 

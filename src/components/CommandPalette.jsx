@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
   Search,
@@ -12,7 +12,6 @@ import {
   Compass,
   Calendar,
   HelpCircle,
-  Shield,
   LayoutDashboard
 } from 'lucide-react'
 import { useTheme } from '../context/useTheme.js'

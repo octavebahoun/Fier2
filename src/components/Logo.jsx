@@ -1,4 +1,3 @@
-import React from 'react';
 
 export default function Logo({ className = "h-8" }) {
   return (

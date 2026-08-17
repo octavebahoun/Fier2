@@ -1,9 +1,9 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Trophy, FlaskConical, CalendarDays, Upload, CheckCircle2,
-  AlertCircle, X, ChevronRight, ArrowLeft, Award, Star,
-  Loader2, Lock, Crown
+  AlertCircle, X,  ArrowLeft, Award, Star,
+  Loader2, Crown
 } from 'lucide-react';
 import api from '../services/api.js';
 import { useAuth } from '../context/AuthContext.jsx';
@@ -408,7 +408,7 @@ function HackathonCard({ hackathon }) {
 }
 
 // ───────────────────────────── Main Page ─────────────────────────────
-export default function Challenges({ navigate }) {
+export default function Challenges() {
   const { user, isAdmin, isClubResponsible } = useAuth();
   const [clubs, setClubs] = useState([]);
   const [clubId, setClubId] = useState(null);

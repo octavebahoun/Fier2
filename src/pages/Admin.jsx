@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Shield, CheckCircle, AlertTriangle, Users, BookOpen, 
-  Check, Trash2, Eye, Calendar, User, ChevronDown, ChevronUp 
+  Check, Trash2, Calendar, User, ChevronDown, ChevronUp 
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext.jsx';
 import { api } from '../services/api';
@@ -36,7 +36,7 @@ function Toast({ message, type = 'success', onClose }) {
   );
 }
 
-export default function Admin({ navigate }) {
+export default function Admin() {
   const { user, hasMinRole } = useAuth();
   const [pendingArticles, setPendingArticles] = useState([]);
   const [approvedCount, setApprovedCount] = useState(42); // Default fallback stats

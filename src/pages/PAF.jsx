@@ -1,6 +1,5 @@
-import React from 'react';
 import { motion } from 'framer-motion';
-import { Sparkles, ArrowRight, Target, Users, Trophy, Globe, CheckCircle2, Award } from 'lucide-react';
+import { Sparkles, ArrowRight, Target, Users, Trophy, Globe } from 'lucide-react';
 
 export default function PAF({ navigate }) {
   const perks = [

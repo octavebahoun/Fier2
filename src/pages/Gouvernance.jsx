@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   ShieldCheck, FileBadge, UserX, Check, X, AlertCircle, Loader2,
@@ -74,7 +74,7 @@ function SectionCard({ icon: Icon, title, subtitle, accent, children }) {
 }
 
 // ─────────────────────────── Gouvernance Page ───────────────────────────
-export default function Gouvernance({ navigate }) {
+export default function Gouvernance() {
   const { user, isAdmin } = useAuth();
   const [toast, setToast] = useState(null);
 
@@ -141,9 +141,9 @@ export default function Gouvernance({ navigate }) {
   };
 
   // ── Section 4 : Figures Emblématiques ──
-  const [emblematicFigures, setEmblematicFigures] = useState([]);
   const [loadingEmblematic, setLoadingEmblematic] = useState(false);
   const [togglingId, setTogglingId] = useState(null);
+  const [, setEmblematicFigures] = useState([]);
 
   // ── Section 3 : attestations reçues (indicatif) ──
   const [myCerts, setMyCerts] = useState([]);
