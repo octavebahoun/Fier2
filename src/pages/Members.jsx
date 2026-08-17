@@ -22,27 +22,27 @@ function MemberCardSkeleton() {
     <motion.div
       animate={{ opacity: [0.3, 0.7, 0.3] }}
       transition={{ repeat: Infinity, duration: 1.5, ease: "easeInOut" }}
-      className="glass-panel rounded-3xl p-6 flex flex-col gap-6 border border-white/5"
+      className="glass-panel rounded-3xl p-6 flex flex-col gap-6 border border-border-subtle"
     >
       <div className="flex gap-4 items-start">
-        <div className="w-16 h-16 rounded-2xl bg-white/10 shrink-0" />
+        <div className="w-16 h-16 rounded-2xl bg-bg-tertiary shrink-0" />
         <div className="flex flex-col gap-2 flex-grow">
-          <div className="h-5 bg-white/10 rounded-md w-3/4" />
-          <div className="h-4 bg-white/5 rounded-md w-1/2" />
+          <div className="h-5 bg-bg-tertiary rounded-md w-3/4" />
+          <div className="h-4 bg-bg-tertiary rounded-md w-1/2" />
         </div>
       </div>
       <div className="space-y-2">
-        <div className="h-3 bg-white/5 rounded-md w-full" />
-        <div className="h-3 bg-white/5 rounded-md w-5/6" />
+        <div className="h-3 bg-bg-tertiary rounded-md w-full" />
+        <div className="h-3 bg-bg-tertiary rounded-md w-5/6" />
       </div>
-      <div className="h-px bg-white/5" />
+      <div className="h-px bg-bg-tertiary" />
       <div className="flex flex-wrap gap-2">
-        <div className="h-6 bg-white/15 rounded-full w-16" />
-        <div className="h-6 bg-white/10 rounded-full w-20" />
+        <div className="h-6 bg-border-subtle rounded-full w-16" />
+        <div className="h-6 bg-bg-tertiary rounded-full w-20" />
       </div>
       <div className="flex justify-between items-center gap-3 pt-2">
-        <div className="h-8 bg-white/10 rounded-xl w-24" />
-        <div className="h-8 bg-white/5 rounded-lg w-20" />
+        <div className="h-8 bg-bg-tertiary rounded-xl w-24" />
+        <div className="h-8 bg-bg-tertiary rounded-lg w-20" />
       </div>
     </motion.div>
   )
@@ -147,10 +147,10 @@ export default function Members({ navigate }) {
       {/* Page Header */}
       <div className="flex flex-col gap-4 mb-16 max-w-2xl relative z-10">
         <div className="flex items-center gap-3">
-          <div className="p-2.5 rounded-xl bg-fieri-blue/10 border border-fieri-blue/20 text-fieri-blue">
+          <div className="p-2.5 rounded-xl bg-engine/10 border border-engine/20 text-engine">
             <Users className="w-5 h-5" />
           </div>
-          <span className="text-[10px] font-black tracking-[0.25em] uppercase text-fieri-blue">
+          <span className="text-[11px] font-black tracking-[0.25em] uppercase text-engine">
             COMMUNAUTÉ R&D
           </span>
         </div>
@@ -169,7 +169,7 @@ export default function Members({ navigate }) {
       </div>
 
       {/* Filter Interactive Dashboard */}
-      <div className="glass-panel rounded-3xl p-5 md:p-6 mb-12 flex flex-col gap-4 relative z-10 shadow-xl border border-white/5">
+      <div className="glass-panel rounded-3xl p-5 md:p-6 mb-12 flex flex-col gap-4 relative z-10 shadow-xl border border-border-subtle">
         <div className="flex flex-col lg:flex-row gap-4 items-stretch lg:items-center">
           
           {/* Text input search */}
@@ -180,7 +180,7 @@ export default function Members({ navigate }) {
               placeholder="Rechercher un chercheur par nom..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-11 pr-4 py-3 bg-white/5 border border-white/10 rounded-2xl text-sm text-text-primary focus:outline-none focus:border-fieri-blue/40 focus:ring-1 focus:ring-fieri-blue/30 transition-all placeholder:text-text-muted font-medium"
+              className="w-full pl-11 pr-4 py-3 bg-bg-tertiary border border-border-subtle rounded-2xl text-sm text-text-primary focus:outline-none focus:border-engine/40 focus:ring-1 focus:ring-engine/30 transition-all placeholder:text-text-muted font-medium"
               aria-label="Rechercher par nom"
             />
           </div>
@@ -190,7 +190,7 @@ export default function Members({ navigate }) {
             <select
               value={poleFilter}
               onChange={(e) => setPoleFilter(e.target.value)}
-              className="w-full pl-4 pr-10 py-3 bg-white/5 border border-white/10 rounded-2xl text-sm text-text-primary focus:outline-none focus:border-fieri-blue/40 transition-colors appearance-none cursor-pointer font-medium"
+              className="w-full pl-4 pr-10 py-3 bg-bg-tertiary border border-border-subtle rounded-2xl text-sm text-text-primary focus:outline-none focus:border-engine/40 transition-colors appearance-none cursor-pointer font-medium"
               aria-label="Filtrer par discipline"
             >
               <option value="Toutes" className="bg-bg-secondary text-text-primary">Toutes disciplines</option>
@@ -208,7 +208,7 @@ export default function Members({ navigate }) {
             <select
               value={universityFilter}
               onChange={(e) => setUniversityFilter(e.target.value)}
-              className="w-full pl-4 pr-10 py-3 bg-white/5 border border-white/10 rounded-2xl text-sm text-text-primary focus:outline-none focus:border-fieri-blue/40 transition-colors appearance-none cursor-pointer font-medium"
+              className="w-full pl-4 pr-10 py-3 bg-bg-tertiary border border-border-subtle rounded-2xl text-sm text-text-primary focus:outline-none focus:border-engine/40 transition-colors appearance-none cursor-pointer font-medium"
               aria-label="Filtrer par université ou institution"
             >
               <option value="Toutes" className="bg-bg-secondary text-text-primary">Toutes institutions</option>
@@ -225,7 +225,7 @@ export default function Members({ navigate }) {
           {(searchQuery !== '' || poleFilter !== 'Toutes' || universityFilter !== 'Toutes') && (
             <button
               onClick={handleResetFilters}
-              className="px-5 py-3 rounded-2xl text-xs font-bold text-fieri-blue bg-fieri-blue/10 hover:bg-fieri-blue/20 transition-all flex items-center justify-center gap-2 cursor-pointer grow lg:grow-0"
+              className="px-5 py-3 rounded-2xl text-xs font-bold text-engine bg-engine/10 hover:bg-engine/20 transition-all flex items-center justify-center gap-2 cursor-pointer grow lg:grow-0"
             >
               <RefreshCw className="w-3.5 h-3.5" />
               Réinitialiser
@@ -243,7 +243,7 @@ export default function Members({ navigate }) {
               }
             </span>
             {filteredResearchers.length > 0 && (
-              <span className="flex items-center gap-1.5 font-semibold text-fieri-blue">
+              <span className="flex items-center gap-1.5 font-semibold text-engine">
                 <Sparkles className="w-3.5 h-3.5" />
                 Indexation dynamique FIERI
               </span>
@@ -254,8 +254,8 @@ export default function Members({ navigate }) {
 
       {/* Error State Banner */}
       {error && (
-        <div className="glass-panel border-rose-500/20 bg-rose-500/5 text-rose-400 rounded-3xl p-6 mb-12 flex items-center gap-4 relative z-10">
-          <div className="p-3 rounded-2xl bg-rose-500/10 border border-rose-500/20 shrink-0">
+        <div className="glass-panel border-red-500/20 bg-red-500/5 text-red-400 rounded-3xl p-6 mb-12 flex items-center gap-4 relative z-10">
+          <div className="p-3 rounded-2xl bg-red-500/10 border border-red-500/20 shrink-0">
             <Award className="w-6 h-6 rotate-180" />
           </div>
           <div>
@@ -316,7 +316,7 @@ export default function Members({ navigate }) {
                   <motion.div
                     key={r.id}
                     variants={cardVariants}
-                    className="glass-panel rounded-3xl p-6 flex flex-col gap-6 relative group overflow-hidden cursor-default border border-white/5"
+                    className="glass-panel rounded-3xl p-6 flex flex-col gap-6 relative group overflow-hidden cursor-default border border-border-subtle"
                     style={{ contentVisibility: 'auto' }}
                   >
                     {/* Corner gradient glow halo (UX-DR3) */}
@@ -328,10 +328,10 @@ export default function Members({ navigate }) {
                         <img
                           src={r.avatar}
                           alt={r.name}
-                          className="w-16 h-16 rounded-2xl object-cover border border-white/10 group-hover:border-fieri-blue/40 transition-colors"
+                          className="w-16 h-16 rounded-2xl object-cover border border-border-subtle group-hover:border-engine/40 transition-colors"
                           loading="lazy"
                         />
-                        <span className="absolute -bottom-1 -right-1 w-5 h-5 rounded-lg bg-fieri-blue border border-bg-secondary flex items-center justify-center text-[10px] text-white font-black shadow-md">
+                        <span className="absolute -bottom-1 -right-1 w-5 h-5 rounded-lg bg-engine border border-bg-secondary flex items-center justify-center text-[11px] text-white font-black shadow-md">
                           {r.stars > 200 ? '★' : '👤'}
                         </span>
                       </div>
@@ -351,18 +351,18 @@ export default function Members({ navigate }) {
                       {r.bio}
                     </p>
 
-                    <div className="h-px bg-white/5 relative z-10" />
+                    <div className="h-px bg-bg-tertiary relative z-10" />
 
                     {/* Tags & Specialties (Badges) */}
                     <div className="flex flex-wrap gap-1.5 relative z-10">
-                      <span className="inline-flex items-center gap-1 text-[10px] font-black uppercase text-fieri-blue bg-fieri-blue/10 px-2.5 py-1 rounded-full border border-fieri-blue/20">
+                      <span className="inline-flex items-center gap-1 text-[11px] font-black uppercase text-engine bg-engine/10 px-2.5 py-1 rounded-full border border-engine/20">
                         <Layers className="w-3 h-3 shrink-0" />
                         {r.pole}
                       </span>
                       {specialties.map((spec) => (
                         <span
                           key={spec}
-                          className="inline-flex text-[10px] font-semibold text-text-secondary bg-white/5 px-2.5 py-1 rounded-full border border-white/5 truncate max-w-32"
+                          className="inline-flex text-[11px] font-semibold text-text-secondary bg-bg-tertiary px-2.5 py-1 rounded-full border border-border-subtle truncate max-w-32"
                         >
                           {spec}
                         </span>
@@ -376,7 +376,7 @@ export default function Members({ navigate }) {
                       <div className="flex items-center gap-4">
                         {/* Publications widget */}
                         <div className="flex items-center gap-1.5 text-text-muted" title={`${r.publicationsCount} publications`}>
-                          <BookOpen className="w-3.5 h-3.5 text-fieri-blue/70" />
+                          <BookOpen className="w-3.5 h-3.5 text-engine/70" />
                           <span className="text-xs font-bold text-text-secondary">{r.publicationsCount}</span>
                         </div>
                         {/* Projets widget */}
@@ -394,7 +394,7 @@ export default function Members({ navigate }) {
                       {/* Action Button: Navigate to Public Profile */}
                       <button
                         onClick={() => navigate('profile', { researcherId: r.id })}
-                        className="flex items-center gap-1.5 text-xs font-bold text-fieri-blue hover:text-fieri-blue/80 transition-colors group/btn cursor-pointer py-1.5 px-3 bg-white/5 rounded-xl border border-white/5 hover:border-fieri-blue/20"
+                        className="flex items-center gap-1.5 text-xs font-bold text-engine hover:text-engine/80 transition-colors group/btn cursor-pointer py-1.5 px-3 bg-bg-tertiary rounded-xl border border-border-subtle hover:border-engine/20"
                       >
                         Profil
                         <ExternalLink className="w-3 h-3 group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5 transition-transform duration-200" />
@@ -402,7 +402,7 @@ export default function Members({ navigate }) {
                     </div>
 
                     {/* Academic Institution Footer Label */}
-                    <div className="text-[9px] text-text-muted/65 italic border-t border-white/5 pt-2 flex items-center gap-1 relative z-10">
+                    <div className="text-[11px] text-text-muted/65 italic border-t border-border-subtle pt-2 flex items-center gap-1 relative z-10">
                       <span>Membre académique :</span>
                       <span className="font-bold text-text-muted">{university}</span>
                     </div>
@@ -417,19 +417,19 @@ export default function Members({ navigate }) {
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0 }}
-              className="glass-panel rounded-3xl p-12 text-center max-w-lg mx-auto flex flex-col items-center gap-6 border border-white/5 relative overflow-hidden"
+              className="glass-panel rounded-3xl p-12 text-center max-w-lg mx-auto flex flex-col items-center gap-6 border border-border-subtle relative overflow-hidden"
             >
-              <div className="absolute inset-0 bg-rose-500/5 blur-3xl pointer-events-none -z-10" />
+              <div className="absolute inset-0 bg-red-500/5 blur-3xl pointer-events-none -z-10" />
               
               {/* Scientific Broken Circuit SVG Line Artwork (UX-DR7) */}
-              <div className="w-24 h-24 text-rose-500/30 flex items-center justify-center relative bg-rose-500/5 rounded-full border border-rose-500/10 mb-2">
+              <div className="w-24 h-24 text-red-500/30 flex items-center justify-center relative bg-red-500/5 rounded-full border border-red-500/10 mb-2">
                 <svg className="w-16 h-16 stroke-current stroke-[1.5] fill-none" viewBox="0 0 100 100">
                   <path d="M10,50 L35,50 L45,30 L55,70 L65,50 L90,50" strokeDasharray="4 3" />
-                  <circle cx="50" cy="50" r="12" className="stroke-[2] text-rose-500/70" />
+                  <circle cx="50" cy="50" r="12" className="stroke-[2] text-red-500/70" />
                   <path d="M43,43 L57,57 M57,43 L43,57" className="stroke-[2.5]" />
                   {/* Floating floating electron nodes */}
-                  <circle cx="20" cy="50" r="3" className="fill-current text-rose-500/40" />
-                  <circle cx="80" cy="50" r="3" className="fill-current text-rose-500/40" />
+                  <circle cx="20" cy="50" r="3" className="fill-current text-red-500/40" />
+                  <circle cx="80" cy="50" r="3" className="fill-current text-red-500/40" />
                 </svg>
               </div>
 
@@ -444,7 +444,7 @@ export default function Members({ navigate }) {
 
               <button
                 onClick={handleResetFilters}
-                className="px-6 py-3 rounded-2xl text-xs font-bold text-white bg-fieri-blue hover:bg-fieri-blue/90 shadow-lg shadow-fieri-blue/20 hover:shadow-xl hover:shadow-fieri-blue/30 transition-all flex items-center gap-2 cursor-pointer"
+                className="px-6 py-3 rounded-2xl text-xs font-bold text-white bg-engine hover:bg-engine/90 shadow-lg shadow-engine/20 hover:shadow-xl hover:shadow-engine/30 transition-all flex items-center gap-2 cursor-pointer"
               >
                 <RefreshCw className="w-3.5 h-3.5" />
                 Réinitialiser la recherche

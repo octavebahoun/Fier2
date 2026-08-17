@@ -137,7 +137,7 @@ export default function TopBar({ currentPage, navigate, user, handleLogout, coll
   return (
     <>
       <header
-        className={`fixed top-0 right-0 left-0 z-30 h-16 bg-bg-secondary/85 backdrop-blur-xl border-b border-border-subtle
+        className={`fixed top-0 right-0 left-0 z-30 h-16 bg-bg-primary/85 backdrop-blur-xl border-b border-border-subtle
           transition-[padding] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]
           ${collapsed ? 'md:pl-[76px]' : 'md:pl-64'}`}
       >
@@ -145,17 +145,17 @@ export default function TopBar({ currentPage, navigate, user, handleLogout, coll
           {/* Ouverture du menu (mobile) */}
           <button
             onClick={onOpenMobile}
-            className="md:hidden p-2 -ml-1 rounded-lg text-text-secondary hover:text-text-primary hover:bg-white/5 transition-all cursor-pointer"
+            className="md:hidden p-2 -ml-1 rounded-lg text-text-secondary hover:text-text-primary hover:bg-bg-tertiary transition-all cursor-pointer"
             aria-label="Ouvrir le menu"
           >
             <Menu className="w-5 h-5" />
           </button>
 
           {/* Fil d'Ariane & Titre de section */}
-          <div className="flex items-center gap-2 text-xs text-text-muted min-w-0">
+          <div className="flex items-center gap-2 text-[13px] text-text-muted min-w-0">
             <span 
               onClick={() => navigate('dashboard')}
-              className="hidden sm:inline-block font-bold text-text-secondary hover:text-fieri-blue cursor-pointer transition-colors"
+              className="hidden sm:inline-block font-semibold text-text-secondary hover:text-engine cursor-pointer transition-colors"
             >
               FIERI Hub
             </span>
@@ -166,7 +166,7 @@ export default function TopBar({ currentPage, navigate, user, handleLogout, coll
                 <span className="hidden md:inline-block text-text-muted/60">/</span>
               </>
             )}
-            <h1 className="text-xs sm:text-sm font-black text-text-primary tracking-tight truncate">{title}</h1>
+            <h1 className="text-sm sm:text-[15px] font-bold text-text-primary tracking-tight truncate">{title}</h1>
           </div>
 
           <div className="flex-1" />
@@ -174,19 +174,19 @@ export default function TopBar({ currentPage, navigate, user, handleLogout, coll
           {/* Recherche / palette de commandes */}
           <button
             onClick={() => window.__openPalette?.()}
-            className="flex items-center gap-2 h-9 px-3 rounded-xl border border-border-subtle bg-bg-primary/40 text-text-muted hover:text-text-secondary hover:border-accent-primary/40 transition-all cursor-pointer"
+            className="flex items-center gap-2 h-9 px-3 rounded-lg border border-border-subtle bg-bg-secondary text-text-muted hover:text-text-secondary hover:border-border-strong transition-all cursor-pointer"
             title="Rechercher (⌘K)"
             aria-label="Ouvrir la recherche"
           >
-            <Search className="w-3.5 h-3.5" aria-hidden="true" />
-            <span className="hidden sm:inline text-[11px] font-semibold">Rechercher…</span>
-            <kbd className="hidden md:inline text-[9px] font-bold px-1.5 py-0.5 rounded bg-white/5 border border-border-subtle">⌘K</kbd>
+            <Search className="w-4 h-4" aria-hidden="true" />
+            <span className="hidden sm:inline text-[13px] font-medium">Rechercher…</span>
+            <kbd className="hidden md:inline text-[11px] font-mono font-semibold px-1.5 py-0.5 rounded border border-border-subtle bg-bg-primary">⌘K</kbd>
           </button>
 
           {/* Thème */}
           <button
             onClick={toggleTheme}
-            className="p-2 rounded-lg text-text-secondary hover:text-text-primary hover:bg-white/5 border border-transparent hover:border-border-subtle transition-all cursor-pointer"
+            className="w-9 h-9 flex items-center justify-center rounded-lg text-text-secondary hover:text-text-primary hover:bg-bg-tertiary border border-transparent hover:border-border-subtle transition-all cursor-pointer"
             title={theme === 'dark' ? 'Mode clair' : 'Mode sombre'}
             aria-label={theme === 'dark' ? 'Passer au mode clair' : 'Passer au mode sombre'}
           >
@@ -196,13 +196,13 @@ export default function TopBar({ currentPage, navigate, user, handleLogout, coll
           {/* Notifications */}
           <button
             onClick={() => setNotifOpen(true)}
-            className="relative p-2 rounded-lg text-text-secondary hover:text-text-primary hover:bg-white/5 border border-transparent hover:border-border-subtle transition-all cursor-pointer"
+            className="relative w-9 h-9 flex items-center justify-center rounded-lg text-text-secondary hover:text-text-primary hover:bg-bg-tertiary border border-transparent hover:border-border-subtle transition-all cursor-pointer"
             title="Notifications"
             aria-label={unreadCount > 0 ? `${unreadCount} notification${unreadCount > 1 ? 's' : ''} non lue${unreadCount > 1 ? 's' : ''}` : 'Notifications'}
           >
             <Bell className="w-4 h-4" aria-hidden="true" />
             {unreadCount > 0 && (
-              <span className="absolute -top-0.5 -right-0.5 inline-flex items-center justify-center min-w-[16px] h-4 px-1 rounded-full bg-accent-secondary text-white text-[9px] font-black">
+              <span className="absolute -top-0.5 -right-0.5 inline-flex items-center justify-center min-w-[16px] h-4 px-1 rounded-full bg-ember text-white text-[11px] font-black">
                 {unreadCount > 99 ? '99+' : unreadCount}
               </span>
             )}
@@ -217,13 +217,13 @@ export default function TopBar({ currentPage, navigate, user, handleLogout, coll
           >
             <button
               onClick={() => setUserMenuOpen(prev => !prev)}
-              className="flex items-center gap-2 py-1 px-2 rounded-2xl hover:bg-white/5 border border-transparent hover:border-white/10 transition-all cursor-pointer"
+              className="flex items-center gap-2 py-1 px-2 rounded-lg hover:bg-bg-tertiary border border-transparent hover:border-border-subtle transition-all cursor-pointer"
               aria-expanded={userMenuOpen}
               aria-label="Menu du rôle et profil utilisateur"
             >
               {/* Avatar Pictogramme */}
-              <div className="w-8 h-8 rounded-full bg-fieri-blue/20 border border-fieri-blue/40 flex items-center justify-center shrink-0 shadow-md">
-                <span className="text-white font-black text-[11px]">
+              <div className="w-8 h-8 rounded-full bg-engine/15 border border-engine/40 flex items-center justify-center shrink-0">
+                <span className="text-engine font-bold text-[12px]">
                   {initials}
                 </span>
               </div>
@@ -233,53 +233,53 @@ export default function TopBar({ currentPage, navigate, user, handleLogout, coll
                 <RoleBadge
                   role={user?.role}
                   variant="pill"
-                  className="text-[8.5px] uppercase tracking-wider font-extrabold px-2.5 py-0.5 rounded-full border shrink-0"
+                  className="text-[11px] uppercase tracking-wide font-bold px-2.5 py-1 rounded-full border shrink-0"
                 />
               </div>
 
-              <ChevronDown className={`w-3.5 h-3.5 text-text-muted transition-transform duration-200 ${userMenuOpen ? 'rotate-180 text-fieri-blue' : ''}`} />
+              <ChevronDown className={`w-3.5 h-3.5 text-text-muted transition-transform duration-200 ${userMenuOpen ? 'rotate-180 text-engine' : ''}`} />
             </button>
 
             {/* Menu Déroulant (Survol / Clic) */}
             {userMenuOpen && (
               <div
-                className="absolute right-0 top-full mt-2 w-72 glass-panel rounded-3xl p-4 border border-white/10 shadow-2xl bg-bg-secondary/95 backdrop-blur-2xl z-50 animate-in fade-in slide-in-from-top-2 duration-150"
+                className="absolute right-0 top-full mt-2 w-72 glass-panel rounded-2xl p-4 border border-border-subtle bg-bg-secondary shadow-2xl z-50"
               >
                 {/* Entête Utilisateur & Badges de Rôle */}
-                <div className="p-3 bg-white/3 border border-white/5 rounded-2xl mb-3 flex flex-col gap-2">
+                <div className="p-3 bg-bg-tertiary/60 border border-border-subtle rounded-xl mb-3 flex flex-col gap-2">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-2xl bg-fieri-blue/20 border border-fieri-blue/40 flex items-center justify-center shrink-0">
-                      <span className="text-fieri-blue font-black text-sm">{initials}</span>
+                    <div className="w-10 h-10 rounded-xl bg-engine/15 border border-engine/30 flex items-center justify-center shrink-0">
+                      <span className="text-engine font-bold text-sm">{initials}</span>
                     </div>
                     <div className="flex flex-col min-w-0">
-                      <span className="text-xs font-black text-text-primary truncate">
+                      <span className="text-[13px] font-bold text-text-primary truncate">
                         {user?.firstName} {user?.lastName}
                       </span>
-                      <span className="text-[10px] font-medium text-text-muted truncate">
+                      <span className="text-xs font-medium text-text-muted truncate">
                         {user?.email}
                       </span>
                     </div>
                   </div>
 
                   {/* Badges de Spécification des Rôles */}
-                  <div className="flex flex-wrap gap-1.5 pt-1 border-t border-white/5 mt-1">
+                  <div className="flex flex-wrap gap-1.5 pt-2 border-t border-border-subtle mt-1">
                     <RoleBadge
                       role={user?.role}
                       variant="text"
-                      className="text-[9px] uppercase tracking-wider font-black"
+                      className="text-[11px] uppercase tracking-wide font-bold"
                     />
                     {isChef && (
-                      <span className="text-[8.5px] font-black uppercase text-cyan-300 bg-cyan-500/15 px-2 py-0.5 rounded-md border border-cyan-500/30">
+                      <span className="text-[11px] font-bold uppercase text-cyan-400 bg-cyan-500/15 px-2 py-0.5 rounded border border-cyan-500/30">
                         Chef Univ.
                       </span>
                     )}
                     {isSec && (
-                      <span className="text-[8.5px] font-black uppercase text-emerald-300 bg-emerald-500/15 px-2 py-0.5 rounded-md border border-emerald-500/30">
+                      <span className="text-[11px] font-bold uppercase text-emerald-300 bg-emerald-500/15 px-2 py-0.5 rounded border border-emerald-500/30">
                         Secrétaire (Trésorerie & Rapports)
                       </span>
                     )}
                     {isTreas && !isSec && (
-                      <span className="text-[8.5px] font-black uppercase text-emerald-300 bg-emerald-500/15 px-2 py-0.5 rounded-md border border-emerald-500/30">
+                      <span className="text-[11px] font-bold uppercase text-emerald-300 bg-emerald-500/15 px-2 py-0.5 rounded border border-emerald-500/30">
                         Trésorier
                       </span>
                     )}
@@ -287,26 +287,26 @@ export default function TopBar({ currentPage, navigate, user, handleLogout, coll
                 </div>
 
                 {/* Liens Connexes au Rôle */}
-                <div className="space-y-1">
-                  <span className="px-2 text-[9px] font-black uppercase tracking-widest text-text-muted">
-                    Accès Privilégiés & Rôle
+                <div className="space-y-0.5">
+                  <span className="px-2 text-[11px] font-semibold uppercase tracking-widest text-text-muted eyebrow">
+                    Accès privilégiés
                   </span>
 
                   {/* Mon Profil */}
                   <button
                     onClick={() => { navigate('profile', { researcherId: 'me' }); setUserMenuOpen(false); }}
-                    className="w-full px-3 py-2 rounded-xl text-xs font-bold text-text-secondary hover:text-text-primary hover:bg-white/5 flex items-center gap-2.5 transition-colors text-left cursor-pointer"
+                    className="w-full px-3 py-2 rounded-lg text-[13px] font-semibold text-text-secondary hover:text-text-primary hover:bg-bg-tertiary flex items-center gap-2.5 transition-colors text-left cursor-pointer"
                   >
-                    <User className="w-4 h-4 text-fieri-blue" />
+                    <User className="w-4 h-4 text-engine" />
                     <span>Mon Profil</span>
                   </button>
 
                   {/* Éditer mon profil */}
                   <button
                     onClick={() => { navigate('profile', { researcherId: 'me' }); setUserMenuOpen(false); }}
-                    className="w-full px-3 py-2 rounded-xl text-xs font-bold text-text-secondary hover:text-text-primary hover:bg-white/5 flex items-center gap-2.5 transition-colors text-left cursor-pointer"
+                    className="w-full px-3 py-2 rounded-lg text-[13px] font-semibold text-text-secondary hover:text-text-primary hover:bg-bg-tertiary flex items-center gap-2.5 transition-colors text-left cursor-pointer"
                   >
-                    <Edit3 className="w-4 h-4 text-violet-400" />
+                    <Edit3 className="w-4 h-4 text-text-muted" />
                     <span>Éditer mes informations</span>
                   </button>
 
@@ -314,9 +314,9 @@ export default function TopBar({ currentPage, navigate, user, handleLogout, coll
                   {(isResponsable || isSec) && (
                     <button
                       onClick={() => { navigate('espace-cite'); setUserMenuOpen(false); }}
-                      className="w-full px-3 py-2 rounded-xl text-xs font-bold text-text-secondary hover:text-text-primary hover:bg-white/5 flex items-center gap-2.5 transition-colors text-left cursor-pointer"
+                      className="w-full px-3 py-2 rounded-lg text-[13px] font-semibold text-text-secondary hover:text-text-primary hover:bg-bg-tertiary flex items-center gap-2.5 transition-colors text-left cursor-pointer"
                     >
-                      <LayoutList className="w-4 h-4 text-emerald-400" />
+                      <LayoutList className="w-4 h-4 text-text-muted" />
                       <span>Mon Espace CITE (Rapports & Club)</span>
                     </button>
                   )}
@@ -325,9 +325,9 @@ export default function TopBar({ currentPage, navigate, user, handleLogout, coll
                   {(isResponsable || isTreas || isSec || isChef || isAdminUser) && (
                     <button
                       onClick={() => { navigate('soutiens'); setUserMenuOpen(false); }}
-                      className="w-full px-3 py-2 rounded-xl text-xs font-bold text-text-secondary hover:text-text-primary hover:bg-white/5 flex items-center gap-2.5 transition-colors text-left cursor-pointer"
+                      className="w-full px-3 py-2 rounded-lg text-[13px] font-semibold text-text-secondary hover:text-text-primary hover:bg-bg-tertiary flex items-center gap-2.5 transition-colors text-left cursor-pointer"
                     >
-                      <HeartHandshake className="w-4 h-4 text-amber-400" />
+                      <HeartHandshake className="w-4 h-4 text-ember" />
                       <span>Soutiens & Trésorerie</span>
                     </button>
                   )}
@@ -336,9 +336,9 @@ export default function TopBar({ currentPage, navigate, user, handleLogout, coll
                   {(isAdminUser || isChef) && (
                     <button
                       onClick={() => { navigate('gouvernance'); setUserMenuOpen(false); }}
-                      className="w-full px-3 py-2 rounded-xl text-xs font-bold text-text-secondary hover:text-text-primary hover:bg-white/5 flex items-center gap-2.5 transition-colors text-left cursor-pointer"
+                      className="w-full px-3 py-2 rounded-lg text-[13px] font-semibold text-text-secondary hover:text-text-primary hover:bg-bg-tertiary flex items-center gap-2.5 transition-colors text-left cursor-pointer"
                     >
-                      <ShieldCheck className="w-4 h-4 text-cyan-400" />
+                      <ShieldCheck className="w-4 h-4 text-text-muted" />
                       <span>Gouvernance & Validation</span>
                     </button>
                   )}
@@ -347,20 +347,20 @@ export default function TopBar({ currentPage, navigate, user, handleLogout, coll
                   {isAdminUser && (
                     <button
                       onClick={() => { navigate('admin'); setUserMenuOpen(false); }}
-                      className="w-full px-3 py-2 rounded-xl text-xs font-bold text-text-secondary hover:text-text-primary hover:bg-white/5 flex items-center gap-2.5 transition-colors text-left cursor-pointer"
+                      className="w-full px-3 py-2 rounded-lg text-[13px] font-semibold text-text-secondary hover:text-text-primary hover:bg-bg-tertiary flex items-center gap-2.5 transition-colors text-left cursor-pointer"
                     >
-                      <Shield className="w-4 h-4 text-rose-400" />
+                      <Shield className="w-4 h-4 text-text-muted" />
                       <span>Console d'Administration</span>
                     </button>
                   )}
                 </div>
 
-                <div className="h-px bg-white/5 my-2" />
+                <div className="h-px bg-border-subtle my-2" />
 
                 {/* Déconnexion */}
                 <button
                   onClick={() => { onLogout?.(); setUserMenuOpen(false); }}
-                  className="w-full px-3 py-2 rounded-xl text-xs font-bold text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 flex items-center gap-2.5 transition-colors text-left cursor-pointer"
+                  className="w-full px-3 py-2 rounded-lg text-[13px] font-semibold text-red-400 hover:text-red-300 hover:bg-red-500/10 flex items-center gap-2.5 transition-colors text-left cursor-pointer"
                 >
                   <LogOut className="w-4 h-4" />
                   <span>Se déconnecter</span>

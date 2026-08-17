@@ -13,13 +13,13 @@ export default function NotificationItem({ notification, onMarkRead, onClick }) 
   }
 
   return (
-    <div className={`p-3 rounded-lg border ${read ? 'opacity-60' : 'bg-white/2 border-border-subtle'} mb-2`}> 
+    <div className={`p-3 rounded-lg border ${read ? 'opacity-60' : 'bg-bg-secondary/60 border-border-subtle'} mb-2`}> 
       <div
         onClick={() => onClick && onClick(notification)}
         onKeyDown={handleKeyDown}
         role="button"
         tabIndex={0}
-        className="w-full text-left cursor-pointer focus:outline-none focus:ring-1 focus:ring-accent-primary"
+        className="w-full text-left cursor-pointer focus:outline-none focus:ring-1 focus:ring-engine"
       >
         <div className="flex items-start justify-between gap-2">
           <div>
@@ -34,7 +34,7 @@ export default function NotificationItem({ notification, onMarkRead, onClick }) 
                 e.stopPropagation()
                 onMarkRead && onMarkRead(id)
               }}
-              className="text-xs text-text-secondary hover:text-text-primary focus:outline-none focus:ring-1 focus:ring-accent-primary rounded px-1"
+              className="text-xs text-text-secondary hover:text-text-primary focus:outline-none focus:ring-1 focus:ring-engine rounded px-1"
             >
               Marquer lu
             </button>

@@ -12,9 +12,6 @@ export default function AppLayout({
   navigate,
   user,
   handleLogout,
-  isScrolled,
-  isNavExpanded,
-  setIsNavExpanded,
   mobileMenuOpen,
   setMobileMenuOpen
 }) {
@@ -65,12 +62,12 @@ export default function AppLayout({
   }
 
   return (
-    <div className="min-h-screen flex flex-col relative bg-bg-primary text-text-primary selection:bg-accent-bleue selection:text-white">
+    <div className="min-h-screen flex flex-col relative bg-bg-primary text-text-primary selection:bg-engine selection:text-white">
       {/* Lien d'évitement (a11y) : caché, apparaît au focus clavier pour sauter
           directement au contenu sans re-tabuler toute la navigation. */}
       <a
         href="#main-content"
-        className="sr-only focus:not-sr-only focus:absolute focus:z-[100] focus:top-3 focus:left-3 focus:px-4 focus:py-2 focus:rounded-lg focus:bg-accent-primary focus:text-white focus:font-bold focus:shadow-lg"
+        className="sr-only focus:not-sr-only focus:absolute focus:z-[100] focus:top-3 focus:left-3 focus:px-4 focus:py-2 focus:rounded-lg focus:bg-engine focus:text-white focus:font-bold focus:shadow-lg"
       >
         Aller au contenu principal
       </a>
@@ -103,9 +100,6 @@ export default function AppLayout({
           navigate={navigate}
           user={user}
           handleLogout={handleLogout}
-          isScrolled={isScrolled}
-          isNavExpanded={isNavExpanded}
-          setIsNavExpanded={setIsNavExpanded}
           mobileMenuOpen={mobileMenuOpen}
           setMobileMenuOpen={setMobileMenuOpen}
         />
@@ -138,28 +132,26 @@ export default function AppLayout({
 
         {/* 4. Footer Area */}
         {showFooter && (
-          <footer className="w-full bg-bg-secondary border-t border-border-subtle z-10 py-12 relative shrink-0">
+          <footer className="w-full bg-bg-primary border-t border-border-subtle z-10 py-14 relative shrink-0">
             <div className="max-w-7xl mx-auto px-6 lg:px-12 flex flex-col gap-10 relative z-10">
               <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
                 {/* Column 1: Info and Brand */}
                 <div className="flex flex-col gap-3">
-                  <div className="flex items-center gap-2.5 select-none">
-                    <div className="w-6.5 h-6.5 flex items-center justify-center rounded-lg bg-accent-bleue/20 border border-accent-bleue/40">
-                      <span className="text-fieri-blue text-xs font-black">F</span>
-                    </div>
+                  <div className="flex items-center gap-2.5 select-none text-text-primary">
                     <Logo className="h-5" />
                   </div>
-                  <p className="text-xs text-text-secondary leading-relaxed max-w-xs mt-2">
-                    Plateforme officielle de FIERI Research. Un espace de pointe pour la recherche scientifique, l'innovation technologique et la cooptation académique.
+                  <p className="text-[13px] text-text-secondary leading-relaxed max-w-xs mt-2">
+                    La plateforme officielle de FIERI Research : projets de recherche appliquée,
+                    clubs scientifiques et opportunités R&D.
                   </p>
 
                   {/* Newsletter Form */}
                   <div className="mt-4 flex flex-col gap-2 max-w-xs text-left">
-                    <label htmlFor="footer-newsletter-email" className="text-[10px] font-black tracking-widest text-accent-primary uppercase">
+                    <label htmlFor="footer-newsletter-email" className="eyebrow">
                       Newsletter
                     </label>
                     {newsletterSubscribed ? (
-                      <div className="text-xs text-accent-secondary bg-accent-secondary/10 border border-accent-secondary/20 p-2.5 rounded-lg font-medium" role="status" aria-live="polite">
+                      <div className="text-[13px] text-ember bg-ember/10 border border-ember/25 p-2.5 rounded-lg font-medium" role="status" aria-live="polite">
                         ✓ Abonnement validé avec succès !
                       </div>
                     ) : (
@@ -177,17 +169,17 @@ export default function AppLayout({
                             aria-invalid={!!newsletterError}
                             aria-describedby={newsletterError ? 'footer-newsletter-error' : undefined}
                             onChange={(e) => { setNewsletterEmail(e.target.value); if (newsletterError) setNewsletterError(null); }}
-                            className={`bg-bg-primary/60 border ${newsletterError ? 'border-red-500/50' : 'border-border-subtle hover:border-accent-primary/40'} focus:border-accent-primary rounded-lg px-3 py-2 text-xs text-text-primary placeholder:text-text-muted transition-[border-color,background-color,box-shadow] flex-grow min-w-0`}
+                            className={`bg-bg-secondary border ${newsletterError ? 'border-red-500/60' : 'border-border-subtle hover:border-border-strong focus:border-engine'} rounded-lg px-3 py-2 text-[13px] text-text-primary placeholder:text-text-muted transition-[border-color,background-color,box-shadow] flex-grow min-w-0`}
                           />
                           <button
                             type="submit"
-                            className="min-h-11 min-w-11 bg-accent-primary hover:bg-accent-primary/95 text-text-primary px-3 rounded-lg text-xs font-black transition-[background-color,box-shadow] cursor-pointer shadow-md hover:shadow-accent-primary/20 shrink-0"
+                            className="min-h-11 min-w-11 bg-engine hover:bg-engine-deep text-white px-4 rounded-lg text-[13px] font-bold transition-colors cursor-pointer shrink-0"
                           >
                             OK
                           </button>
                         </div>
                         {newsletterError && (
-                          <span id="footer-newsletter-error" className="text-[10px] text-red-400" role="alert">{newsletterError}</span>
+                          <span id="footer-newsletter-error" className="text-xs text-red-400" role="alert">{newsletterError}</span>
                         )}
                       </form>
                     )}
@@ -196,33 +188,33 @@ export default function AppLayout({
 
                 {/* Column 2: Public Navigation Links */}
                 <div className="flex flex-col gap-3">
-                  <span className="text-xs font-bold tracking-widest text-text-primary uppercase">Plateforme</span>
+                  <span className="eyebrow">Plateforme</span>
                   <ul className="flex flex-col gap-2">
-                    <li><button onClick={() => navigate('home')} className="text-xs text-text-secondary hover:text-text-primary transition-colors text-left cursor-pointer">Accueil Général</button></li>
-                    <li><button onClick={() => navigate('student-portal')} className="text-xs text-text-secondary hover:text-text-primary transition-colors text-left cursor-pointer">Portail Étudiant</button></li>
-                    <li><button onClick={() => navigate('projects')} className="text-xs text-text-secondary hover:text-text-primary transition-colors text-left cursor-pointer">Projets & Brevets</button></li>
-                    <li><button onClick={() => navigate('opportunities')} className="text-xs text-text-secondary hover:text-text-primary transition-colors text-left cursor-pointer">Annonces Recherche</button></li>
+                    <li><button onClick={() => navigate('home')} className="text-[13px] text-text-secondary hover:text-text-primary transition-colors text-left cursor-pointer">Accueil Général</button></li>
+                    <li><button onClick={() => navigate('student-portal')} className="text-[13px] text-text-secondary hover:text-text-primary transition-colors text-left cursor-pointer">Portail Étudiant</button></li>
+                    <li><button onClick={() => navigate('projects')} className="text-[13px] text-text-secondary hover:text-text-primary transition-colors text-left cursor-pointer">Projets & Brevets</button></li>
+                    <li><button onClick={() => navigate('opportunities')} className="text-[13px] text-text-secondary hover:text-text-primary transition-colors text-left cursor-pointer">Annonces Recherche</button></li>
                   </ul>
                 </div>
 
                 {/* Column 3: Community and Academy */}
                 <div className="flex flex-col gap-3">
-                  <span className="text-xs font-bold tracking-widest text-text-primary uppercase">Ressources</span>
+                  <span className="eyebrow">Ressources</span>
                   <ul className="flex flex-col gap-2">
-                    <li><button onClick={() => navigate('news')} className="text-xs text-text-secondary hover:text-text-primary transition-colors text-left cursor-pointer">Actualités</button></li>
-                    <li><button onClick={() => navigate('workshops')} className="text-xs text-text-secondary hover:text-text-primary transition-colors text-left cursor-pointer">Ateliers & Formations</button></li>
-                    <li><button onClick={() => navigate('events')} className="text-xs text-text-secondary hover:text-text-primary transition-colors text-left cursor-pointer">Événements</button></li>
-                    <li><button onClick={() => navigate('clubs')} className="text-xs text-text-secondary hover:text-text-primary transition-colors text-left cursor-pointer">CITE Scientifiques</button></li>
+                    <li><button onClick={() => navigate('news')} className="text-[13px] text-text-secondary hover:text-text-primary transition-colors text-left cursor-pointer">Actualités</button></li>
+                    <li><button onClick={() => navigate('workshops')} className="text-[13px] text-text-secondary hover:text-text-primary transition-colors text-left cursor-pointer">Ateliers & Formations</button></li>
+                    <li><button onClick={() => navigate('events')} className="text-[13px] text-text-secondary hover:text-text-primary transition-colors text-left cursor-pointer">Événements</button></li>
+                    <li><button onClick={() => navigate('clubs')} className="text-[13px] text-text-secondary hover:text-text-primary transition-colors text-left cursor-pointer">CITE Scientifiques</button></li>
                   </ul>
                 </div>
 
                 {/* Column 4: Account and Support */}
                 <div className="flex flex-col gap-3">
-                  <span className="text-xs font-bold tracking-widest text-text-primary uppercase">Espace Privé</span>
+                  <span className="eyebrow">Espace privé</span>
                   <ul className="flex flex-col gap-2">
-                    <li><button onClick={() => navigate(user ? 'dashboard' : 'auth')} className="text-xs text-text-secondary hover:text-text-primary transition-colors text-left cursor-pointer">{user ? 'Mon Dashboard' : 'Se Connecter'}</button></li>
-                    <li><button onClick={() => navigate('researchers')} className="text-xs text-text-secondary hover:text-text-primary transition-colors text-left cursor-pointer">Annuaire des Membres</button></li>
-                    <li><button onClick={() => navigate('contact')} className="text-xs text-text-secondary hover:text-text-primary transition-colors text-left cursor-pointer">Aide & FAQ</button></li>
+                    <li><button onClick={() => navigate(user ? 'dashboard' : 'auth')} className="text-[13px] text-text-secondary hover:text-text-primary transition-colors text-left cursor-pointer">{user ? 'Mon Dashboard' : 'Se Connecter'}</button></li>
+                    <li><button onClick={() => navigate('researchers')} className="text-[13px] text-text-secondary hover:text-text-primary transition-colors text-left cursor-pointer">Annuaire des Membres</button></li>
+                    <li><button onClick={() => navigate('contact')} className="text-[13px] text-text-secondary hover:text-text-primary transition-colors text-left cursor-pointer">Aide & FAQ</button></li>
                   </ul>
                 </div>
               </div>
@@ -235,9 +227,9 @@ export default function AppLayout({
                   © {new Date().getFullYear()} FIERI Research. Tous droits réservés.
                 </span>
                 <div className="flex gap-4">
-                  <span className="text-[10px] text-text-muted hover:text-text-secondary cursor-pointer uppercase tracking-wider">Charte Graphique v1.0</span>
-                  <span className="text-[10px] text-text-muted">•</span>
-                  <span className="text-[10px] text-text-muted hover:text-text-secondary cursor-pointer uppercase tracking-wider">Politique de Confidentialité</span>
+                  <span className="text-xs text-text-muted hover:text-text-secondary cursor-pointer transition-colors">Politique de Confidentialité</span>
+                  <span className="text-xs text-text-muted">•</span>
+                  <span className="text-xs text-text-muted hover:text-text-secondary cursor-pointer transition-colors">Charte Graphique v2</span>
                 </div>
               </div>
             </div>

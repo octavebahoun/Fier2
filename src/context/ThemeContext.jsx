@@ -7,7 +7,8 @@ import { ThemeContext } from './useTheme.js'
  * il vit ici plutôt que d'être remonté dans App puis propagé en props.
  */
 export function ThemeProvider({ children }) {
-  const [theme, setTheme] = useState('light')
+  // Dark = thème de marque par défaut (identité « La Preuve »).
+  const [theme, setTheme] = useState('dark')
 
   // Applique/retire la classe sur <html> et <body> à chaque changement de thème.
   useEffect(() => {

@@ -37,8 +37,8 @@ export function AuthGateProvider({ children }) {
               <button onClick={close} className="absolute top-4 right-4 text-text-muted hover:text-text-primary transition-colors" aria-label="Fermer">
                 <X className="w-4 h-4" />
               </button>
-              <div className="w-12 h-12 rounded-2xl bg-accent-primary/12 border border-accent-primary/25 flex items-center justify-center">
-                <Lock className="w-5 h-5 text-accent-primary" />
+              <div className="w-12 h-12 rounded-2xl bg-engine/12 border border-engine/25 flex items-center justify-center">
+                <Lock className="w-5 h-5 text-engine" />
               </div>
               <div>
                 <h2 className="text-lg font-extrabold text-text-primary">Connexion requise</h2>
@@ -47,7 +47,7 @@ export function AuthGateProvider({ children }) {
                 </p>
               </div>
               <div className="flex flex-col gap-2 mt-1">
-                <button onClick={goToLogin} className="flex items-center justify-center gap-2 py-2.5 rounded-xl bg-accent-primary text-white text-xs font-black uppercase tracking-wider hover:bg-accent-primary/90 transition-all">
+                <button onClick={goToLogin} className="flex items-center justify-center gap-2 py-2.5 rounded-xl bg-engine text-white text-xs font-black uppercase tracking-wider hover:bg-engine/90 transition-all">
                   <LogIn className="w-4 h-4" /> Se connecter
                 </button>
                 <button onClick={goToLogin} className="flex items-center justify-center gap-2 py-2.5 rounded-xl border border-border-subtle text-text-primary text-xs font-bold hover:bg-bg-tertiary transition-all">

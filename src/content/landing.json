@@ -1,11 +1,11 @@
 {
   "hero": {
-    "eyebrow": "FRONT INTERNATIONAL DES ÉTUDIANTS ET CHERCHEURS // FIERI",
-    "title": "Propulsez l'avenir de la recherche scientifique & technologique",
-    "description": "Le FIERI rassemble les esprits les plus brillants de la recherche scientifique et de l'ingénierie pour transformer des concepts théoriques ambitieux en innovations industrielles concrètes.",
-    "badge": "Lab-to-Market v3.0 · Pôle d'Excellence Actif",
-    "ctaPrimary": "Nous rejoindre",
-    "ctaSecondary": "Intégrer notre CITE"
+    "eyebrow": "FIERI — Recherche appliquée · Lab → Market",
+    "title": "Vos idées sortent du labo.",
+    "description": "FIERI réunit étudiants-ingénieurs et chercheurs pour transformer des concepts ambitieux en prototypes, brevets et startups industrielles. Ici, une idée ne reste pas une idée.",
+    "badge": "Pôle d'excellence actif — 6 CITE universitaires",
+    "ctaPrimary": "Rejoindre une CITE",
+    "ctaSecondary": "Voir les projets en cours"
   },
   "decouvrir": {
     "tag": "01 — NOUS DÉCOUVRIR",
@@ -14,82 +14,82 @@
     "cta": "Découvrir la CITE"
   },
   "organisation": {
-    "tag": "02 — NOTRE ORGANISATION",
-    "title": "Une structure unifiée autour de trois grandes entités complémentaires",
-    "subtitle": "Un écosystème synergique conçu pour maximiser l'impact de nos chercheurs",
+    "tag": "01 — Le parcours",
+    "title": "Trois entités, un seul objectif : voir vos projets aboutir",
+    "subtitle": "Chaque étape a une mission précise, de la première soudure au contrat industriel.",
     "entities": [
       {
         "id": "CF_01",
         "name": "La CITE FIERI",
-        "desc": "L'incubateur de terrain déployé au cœur des universités. C'est l'espace d'expérimentation collective, de prototypage rapide et de préparation aux grands concours mondiaux d'innovation."
+        "desc": "L'atelier de terrain au cœur des universités. Vous prototypiez en équipe, vous préparez les concours internationaux, vous apprenez par la pratique — pas par les diapositives."
       },
       {
         "id": "AF_02",
         "name": "L'Académie FIERI",
-        "desc": "Le pôle d'élite pour le développement des compétences. Nous formons les talents aux exigences réelles de la R&D industrielle : systèmes embarqués, IoT, calcul IA et gestion de projet technique."
+        "desc": "Le pôle de formation aux exigences réelles de la R&D : systèmes embarqués, IoT, IA, gestion de projet technique. Les compétences que les industriels recrutent."
       },
       {
         "id": "IF_03",
         "name": "L'Institut FIERI",
-        "desc": "L'organe de transfert de technologie. L'Institut assure la liaison entre les clubs de recherche et l'économie réelle en structurant, finançant et accélérant l'émergence de startups industrielles."
+        "desc": "Le pont vers l'économie réelle. L'Institut structure, finance et accélère vos projets jusqu'au brevet et à la startup industrielle."
       }
     ]
   },
   "mission": {
-    "tag": "03 — NOS MISSIONS",
-    "title": "Les piliers d'action qui orientent nos travaux de recherche",
+    "tag": "02 — Nos piliers",
+    "title": "Quatre engagements concrets envers nos membres",
     "pillars": [
       {
-        "title": "Inspiration Scientifique",
-        "desc": "Cultiver l'audace technique et stimuler le raisonnement scientifique de haut niveau par une pratique concrète et rigoureuse."
+        "title": "Inspiration scientifique",
+        "desc": "De la rigueur et de l'audace technique, cultivées par une pratique concrète — pas par la théorie pour la théorie."
       },
       {
-        "title": "Innovation Pratique",
-        "desc": "Traduire les découvertes théoriques en prototypes et solutions physiques directement adaptées aux besoins de nos communautés."
+        "title": "Innovation pratique",
+        "desc": "Des découvertes traduites en prototypes physiques qui répondent aux besoins réels de nos communautés."
       },
       {
-        "title": "Réseau Collaboratif",
-        "desc": "Bâtir un écosystème intercontinental dynamique reliant étudiants, chercheurs, ingénieurs et industriels."
+        "title": "Réseau collaboratif",
+        "desc": "Une communauté intercontinentale d'étudiants, chercheurs, ingénieurs et industriels qui s'entraident."
       },
       {
-        "title": "Accompagnement d'Élite",
-        "desc": "Prendre en charge les projets d'excellence à chaque étape de leur maturation, de l'idée brute au déploiement commercial."
+        "title": "Accompagnement d'élite",
+        "desc": "Chaque projet d'excellence est suivi de l'idée brute jusqu'au déploiement commercial."
       }
     ]
   },
   "vision": {
-    "tag": "04 — NOTRE VISION",
-    "title": "Bâtir la souveraineté technologique par l'excellence scientifique",
-    "text": "Nous croyons fermement que l'avenir industriel de notre continent repose sur la capacité de ses talents à concevoir et breveter leurs propres solutions technologiques. Le FIERI n'est pas seulement un espace de formation, c'est le catalyseur d'une nouvelle génération de leaders scientifiques prêts à mener la transition industrielle.",
+    "tag": "03 — La vision",
+    "title": "Bâtir notre souveraineté technologique, une invention à la fois",
+    "text": "L'avenir industriel du continent repose sur la capacité de ses talents à concevoir et breveter leurs propres solutions. Le FIERI forme cette génération de leaders scientifiques — ceux qui mèneront la transition industrielle au lieu de la subir.",
     "highlights": [
       {
         "title": "Souveraineté",
-        "desc": "S'affranchir de la dépendance technique en concevant nos propres infrastructures cyber-physiques."
+        "desc": "Concevoir nos propres infrastructures cyber-physiques pour ne plus dépendre de l'extérieur."
       },
       {
-        "title": "Impact Local",
-        "desc": "Résoudre les défis majeurs de nos communautés par des innovations locales (agriculture, énergie, robotique)."
+        "title": "Impact local",
+        "desc": "Résoudre les défis de nos communautés par des innovations locales : agriculture, énergie, robotique."
       },
       {
         "title": "Lab-to-Market",
-        "desc": "Transposer l'excellence académique en succès industriel en accompagnant la création de startups."
+        "desc": "Transformer l'excellence académique en succès industriel, jusqu'à la création de startups."
       }
     ]
   },
   "stats": {
-    "tag": "05 — LE FIERI EN CHIFFRES",
-    "title": "Une dynamique d'impact démontrée",
+    "tag": "Les preuves",
+    "title": "Une dynamique mesurable, pas des promesses",
     "items": [
       {
-        "label": "Membres actifs engagés",
+        "label": "Membres actifs",
         "value": "5000+"
       },
       {
-        "label": "CITE R&D universitaires",
+        "label": "CITE universitaires",
         "value": "6"
       },
       {
-        "label": "Projets technologiques réalisés",
+        "label": "Projets réalisés",
         "value": "120+"
       },
       {
@@ -99,8 +99,8 @@
     ]
   },
   "clubs": {
-    "tag": "— NOS CITE —",
-    "title": "Explorez toutes nos CITE",
+    "tag": "Les CITE",
+    "title": "Choisissez votre atelier de recherche",
     "items": [
       {
         "kicker": "Robotique et Automatisation",
@@ -176,29 +176,29 @@
     "cards": []
   },
   "programmes": {
-    "tag": "— NOS PROGRAMMES —",
-    "title": "Nos Programmes",
-    "description": "Engagez-vous au cœur de la communauté FIERI à travers nos programmes d'ambassadeurs, de bénévolat et d'accompagnement scientifique.",
+    "tag": "Nos programmes",
+    "title": "Des programmes pour avancer, pas pour remplir un CV",
+    "description": "Chaque programme a une sortie concrète : un réseau, une compétence, un financement.",
     "items": [
       {
-        "icon": "ambassador",
-        "title": "Programme Ambassadeur",
-        "desc": "Portez les valeurs de l'excellence scientifique et représentez la CITE FIERI au sein des universités et des écosystèmes d'innovation.",
-        "cta": "Rejoindre le Programme",
-        "route": "paf"
-      },
-      {
-        "icon": "volunteer",
-        "title": "Bénévolat FIERI",
-        "desc": "Contribuez concrètement aux opérations terrain, événements et projets R&D aux côtés de nos chercheurs.",
-        "cta": "Devenir bénévole",
+        "icon": "megaphone",
+        "title": "Ambassadeurs FIERI",
+        "desc": "Représentez la recherche FIERI sur votre campus, organisez des événements et développez votre réseau.",
+        "cta": "Devenir ambassadeur",
         "route": "contact"
       },
       {
-        "icon": "mentor",
-        "title": "Mentorat & Accompagnement",
-        "desc": "Transmettez votre expertise et accompagnez la prochaine génération de talents scientifiques et d'ingénieurs.",
-        "cta": "Nous contacter",
+        "icon": "hand-heart",
+        "title": "Bénévolat technique",
+        "desc": "Encadrez de jeunes chercheurs, animez des ateliers et contribuez aux projets qui comptent.",
+        "cta": "Proposer mon aide",
+        "route": "contact"
+      },
+      {
+        "icon": "user-check",
+        "title": "Mentorat R&D",
+        "desc": "Un mentor industriel suit votre projet pendant 6 mois : revues techniques, orientation, réseau.",
+        "cta": "Trouver un mentor",
         "route": "contact"
       }
     ]
@@ -234,27 +234,27 @@
     ]
   },
   "faq": {
-    "tag": "10 — FOIRE AUX QUESTIONS",
-    "title": "Questions Fréquentes",
+    "tag": "FAQ",
+    "title": "Les questions qu'on nous pose vraiment",
     "questions": [
       {
-        "q": "Qui peut rejoindre un club de recherche FIERI ?",
-        "a": "Tout étudiant, chercheur ou passionné d'ingénierie et de sciences, peu importe son origine académique, à condition de faire preuve de rigueur et d'engagement."
+        "q": "Je suis étudiant en licence, puis-je rejoindre une CITE ?",
+        "a": "Oui. Les CITE sont ouvertes à tous les niveaux : licence, master et doctorat. Vous commencez par les ateliers d'initiation, puis vous intégrez une équipe de projet selon vos compétences."
       },
       {
-        "q": "Les programmes de formation et les clubs sont-ils payants ?",
-        "a": "Non. L'ensemble des cursus technologiques de base, les activités de recherche et l'accès au matériel R&D dans nos clubs sont subventionnés et gratuits pour nos membres."
+        "q": "J'ai une idée de projet. Par où commencer ?",
+        "a": "Présentez-la au responsable de la CITE de votre campus. Si elle est jugée pertinente, vous entrez dans le programme d'accompagnement : cadrage, équipe, budget, puis prototypage."
       },
       {
-        "q": "Comment soumettre un projet technologique personnel ?",
-        "a": "Une fois membre d'un club de recherche, vous pouvez proposer vos innovations lors de nos jurys trimestriels pour bénéficier du programme d'accompagnement complet."
+        "q": "Qu'est-ce que le FIERI m'apporte concrètement ?",
+        "a": "Un atelier équipé, des mentors, des formations, des concours internationaux, un réseau d'industriels — et l'expérience de mener un vrai projet de A à Z. C'est ce que les recruteurs cherchent."
       }
     ]
   },
   "contact": {
-    "tag": "11 — NOUS CONTACTER",
-    "title": "Faisons émerger la recherche de demain",
-    "subtitle": "Vous portez une idée de brevet, souhaitez intégrer nos clubs R&D ou établir un partenariat académique ? Prenez contact avec nous.",
+    "tag": "Contact",
+    "title": "Parlons de votre projet",
+    "subtitle": "Une question, une idée, un partenariat : écrivez-nous, on répond sous 48h.",
     "info": {
       "email": "fieri0024@gmail.com",
       "tel": "+229 41 64 23 55",

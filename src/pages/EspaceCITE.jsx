@@ -17,8 +17,8 @@ function Toast({ message, type = 'success', onClose }) {
 
   const styles = {
     success: 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400',
-    error:   'bg-rose-500/10 border-rose-500/30 text-rose-400',
-    info:    'bg-fieri-blue/10 border-fieri-blue/30 text-fieri-blue',
+    error:   'bg-red-500/10 border-red-500/30 text-red-400',
+    info:    'bg-engine/10 border-engine/30 text-engine',
     warning: 'bg-amber-500/10 border-amber-500/30 text-amber-400',
   };
   const icons = {
@@ -52,14 +52,14 @@ function Toast({ message, type = 'success', onClose }) {
 // ─────────────────────────── Helpers d'affichage ───────────────────────────
 const STATUS_META = {
   TODO:        { label: 'À faire',      className: 'bg-amber-500/10 border-amber-500/30 text-amber-400' },
-  IN_PROGRESS: { label: 'En cours',     className: 'bg-fieri-blue/10 border-fieri-blue/30 text-fieri-blue' },
+  IN_PROGRESS: { label: 'En cours',     className: 'bg-engine/10 border-engine/30 text-engine' },
   DONE:        { label: 'Terminée',     className: 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400' },
   ACTIVE:      { label: 'Actif',        className: 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400' },
-  ARCHIVED:    { label: 'Archivé',      className: 'bg-white/5 border-white/10 text-text-muted' },
+  ARCHIVED:    { label: 'Archivé',      className: 'bg-bg-tertiary border-border-subtle text-text-muted' },
 };
 
 const statusBadge = (status) =>
-  STATUS_META[status] || { label: status || '—', className: 'bg-white/5 border-white/10 text-text-muted' };
+  STATUS_META[status] || { label: status || '—', className: 'bg-bg-tertiary border-border-subtle text-text-muted' };
 
 const formatRoleBadge = (m) => {
   const post = m.universityPost?.post || m.universityPost || '';
@@ -67,13 +67,13 @@ const formatRoleBadge = (m) => {
   const email = m.email || '';
 
   if (post === 'SECRETAIRE' || role === 'SECRETAIRE') {
-    return { label: 'Secrétaire Générale', className: 'bg-purple-500/10 text-purple-400 border border-purple-500/20' };
+    return { label: 'Secrétaire Générale', className: 'bg-engine/10 text-engine border border-engine/20' };
   }
   if (post === 'CHEF_UNIVERSITAIRE' || role === 'CHEF_UNIVERSITAIRE' || role === 'ADMIN_UNIVERSITAIRE') {
-    return { label: 'Chef Universitaire', className: 'bg-rose-500/10 text-rose-400 border border-rose-500/20' };
+    return { label: 'Chef Universitaire', className: 'bg-red-500/10 text-red-400 border border-red-500/20' };
   }
   if (role === 'ADMIN') {
-    return { label: 'Administrateur', className: 'bg-rose-500/10 text-rose-400 border border-rose-500/20' };
+    return { label: 'Administrateur', className: 'bg-red-500/10 text-red-400 border border-red-500/20' };
   }
   if (
     role === 'RESPONSABLE_CLUB' ||
@@ -85,18 +85,18 @@ const formatRoleBadge = (m) => {
     return { label: 'Responsable de Club', className: 'bg-amber-500/10 text-amber-400 border border-amber-500/20' };
   }
 
-  return { label: 'Étudiant Chercheur', className: 'bg-white/5 text-text-muted border border-white/10' };
+  return { label: 'Étudiant Chercheur', className: 'bg-bg-tertiary text-text-muted border border-border-subtle' };
 };
 
 // ───────────────────────────── Section Card ────────────────────────────────
-function SectionCard({ icon: Icon, title, subtitle, children, accent = '#6C4CF1' }) {
+function SectionCard({ icon: Icon, title, subtitle, children, accent = 'var(--color-engine)' }) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
       whileHover={{ y: -4, transition: { duration: 0.2 } }}
-      className="relative rounded-2xl overflow-hidden glass-panel bg-bg-secondary/60 backdrop-blur-xl border border-white/5"
+      className="relative rounded-2xl overflow-hidden glass-panel bg-bg-secondary/60 backdrop-blur-xl border border-border-subtle"
     >
       <div
         className="absolute inset-0 opacity-0 hover:opacity-100 transition-opacity duration-300 pointer-events-none"
@@ -475,32 +475,21 @@ export default function EspaceCITE({ navigate }) {
   };
 
   const inputClass =
-    'w-full px-3 py-2.5 rounded-xl bg-white/5 border border-white/10 text-text-primary text-sm placeholder:text-text-muted focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-primary/50';
+    'w-full px-3 py-2.5 rounded-xl bg-bg-tertiary border border-border-subtle text-text-primary text-sm placeholder:text-text-muted focus:outline-none focus-visible:ring-2 focus-visible:ring-engine/50';
   const labelClass = 'block text-xs font-bold uppercase tracking-wider text-text-muted mb-1.5';
   const btnPrimary =
-    'flex items-center justify-center gap-2 w-full py-2.5 rounded-xl text-sm font-bold text-white bg-fieri-blue hover:bg-fieri-blue/85 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-fieri-blue disabled:opacity-50 disabled:cursor-not-allowed';
+    'flex items-center justify-center gap-2 w-full py-2.5 rounded-xl text-sm font-bold text-white bg-engine hover:bg-engine/85 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-engine disabled:opacity-50 disabled:cursor-not-allowed';
 
   const selectedClubObj = clubsList.find(c => String(c.id) === String(clubId));
 
   return (
     <main id="espace-cite" className="min-h-screen">
-      {/* Halos de fond */}
-      <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden" aria-hidden="true">
-        <div
-          className="absolute -top-40 -left-40 w-[600px] h-[600px] rounded-full opacity-[0.06] blur-[100px]"
-          style={{ background: 'radial-gradient(circle, #6C4CF1, transparent)' }}
-        />
-        <div
-          className="absolute top-1/2 -right-40 w-[500px] h-[500px] rounded-full opacity-[0.04] blur-[100px]"
-          style={{ background: 'radial-gradient(circle, #e05a2b, transparent)' }}
-        />
-      </div>
 
       <div className="relative z-10 max-w-[90rem] mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header Espace CITE */}
         <div className="mb-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div>
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-accent-primary/10 border border-accent-primary/20 text-accent-primary text-xs font-bold uppercase tracking-wider mb-2">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-engine/10 border border-engine/20 text-engine text-xs font-bold uppercase tracking-wider mb-2">
               <ClipboardList className="w-3.5 h-3.5" />
               FIERI Community OS — CITE R&D
             </div>
@@ -516,7 +505,7 @@ export default function EspaceCITE({ navigate }) {
 
           {/* Sélecteur de club pour Secrétariat & Admin */}
           {isSecretaryOrAdmin && (
-            <div className="flex items-center gap-3 bg-white/[0.03] p-3 rounded-2xl border border-white/10">
+            <div className="flex items-center gap-3 bg-white/[0.03] p-3 rounded-2xl border border-border-subtle">
               <label className={labelClass + ' mb-0 shrink-0'}>Club Supervisé :</label>
               {clubLoading ? (
                 <span className="text-sm text-text-muted">Chargement…</span>
@@ -524,7 +513,7 @@ export default function EspaceCITE({ navigate }) {
                 <select
                   value={clubId}
                   onChange={(e) => setClubId(e.target.value)}
-                  className={inputClass + ' w-auto min-w-[220px] font-bold text-accent-primary'}
+                  className={inputClass + ' w-auto min-w-[220px] font-bold text-engine'}
                 >
                   <option value="">Sélectionner un club…</option>
                   {clubsList.map((c) => (
@@ -538,12 +527,12 @@ export default function EspaceCITE({ navigate }) {
 
         {/* Erreur globale */}
         {error && (
-          <div className="mb-8 flex items-center gap-3 p-4 rounded-2xl bg-rose-500/10 border border-rose-500/30 text-sm">
-            <AlertCircle className="w-5 h-5 text-rose-400 shrink-0" />
-            <p className="text-rose-300">{error}</p>
+          <div className="mb-8 flex items-center gap-3 p-4 rounded-2xl bg-red-500/10 border border-red-500/30 text-sm">
+            <AlertCircle className="w-5 h-5 text-red-400 shrink-0" />
+            <p className="text-red-300">{error}</p>
             <button
               onClick={loadDashboard}
-              className="ml-auto px-4 py-1.5 rounded-xl bg-rose-500/20 text-rose-300 text-xs font-bold hover:bg-rose-500/30 transition-colors"
+              className="ml-auto px-4 py-1.5 rounded-xl bg-red-500/20 text-red-300 text-xs font-bold hover:bg-red-500/30 transition-colors"
             >
               Réessayer
             </button>
@@ -553,7 +542,7 @@ export default function EspaceCITE({ navigate }) {
         {/* État de chargement */}
         {loading && (
           <div className="flex items-center justify-center gap-3 py-20 text-text-muted">
-            <span className="inline-block w-5 h-5 border-2 border-accent-primary border-t-transparent rounded-full animate-spin" />
+            <span className="inline-block w-5 h-5 border-2 border-engine border-t-transparent rounded-full animate-spin" />
             <span className="text-sm">Chargement de votre espace…</span>
           </div>
         )}
@@ -563,7 +552,7 @@ export default function EspaceCITE({ navigate }) {
             {/* VUE MEMBRES & RESPONSABLES DU CLUB ACTIF */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               {/* ── 1. Liste des membres actifs du club ── */}
-              <SectionCard icon={Users} title="Membres du Club" subtitle="Chercheurs et responsables inscrits" accent="#10b981">
+              <SectionCard icon={Users} title="Membres du Club" subtitle="Chercheurs et responsables inscrits" accent="var(--color-emerald-500)">
                 {membersLoading ? (
                   <p className="text-xs text-text-muted py-6 text-center">Chargement des membres du club...</p>
                 ) : members.length === 0 ? (
@@ -575,14 +564,14 @@ export default function EspaceCITE({ navigate }) {
                     {members.map((m, idx) => {
                       const badge = formatRoleBadge(m);
                       return (
-                        <div key={m.memberId || m.id || idx} className="p-3 rounded-xl bg-white/[0.02] border border-white/5 flex items-center justify-between gap-3">
+                        <div key={m.memberId || m.id || idx} className="p-3 rounded-xl bg-white/[0.02] border border-border-subtle flex items-center justify-between gap-3">
                           <div className="min-w-0">
                             <p className="text-xs font-bold text-text-primary truncate">
                               {m.name || [m.firstName, m.lastName].filter(Boolean).join(' ') || 'Membre'}
                             </p>
                             <p className="text-[11px] text-text-muted truncate">{m.email || 'Pas d\'email'}</p>
                           </div>
-                          <span className={`px-2 py-0.5 rounded text-[10px] font-extrabold uppercase shrink-0 ${badge.className}`}>
+                          <span className={`px-2 py-0.5 rounded text-[11px] font-extrabold uppercase shrink-0 ${badge.className}`}>
                             {badge.label}
                           </span>
                         </div>
@@ -593,7 +582,7 @@ export default function EspaceCITE({ navigate }) {
               </SectionCard>
 
               {/* ── 2. Demandes d'adhésion en attente (si Responsable) ── */}
-              <SectionCard icon={UserPlus} title="Validation des Adhésions" subtitle="Candidatures en attente" accent="#f59e0b">
+              <SectionCard icon={UserPlus} title="Validation des Adhésions" subtitle="Candidatures en attente" accent="var(--color-ember-soft)">
                 {pendingLoading ? (
                   <p className="text-xs text-text-muted py-6 text-center">Vérification des demandes...</p>
                 ) : pendingRequests.length === 0 ? (
@@ -610,9 +599,9 @@ export default function EspaceCITE({ navigate }) {
                             <p className="text-xs font-bold text-text-primary">
                               {[req.user?.firstname, req.user?.lastname].filter(Boolean).join(' ') || req.user?.email || 'Chercheur'}
                             </p>
-                            <p className="text-[10px] text-text-muted">{req.user?.email}</p>
+                            <p className="text-[11px] text-text-muted">{req.user?.email}</p>
                           </div>
-                          <span className="px-2 py-0.5 rounded text-[9px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">
+                          <span className="px-2 py-0.5 rounded text-[11px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">
                             En Attente
                           </span>
                         </div>
@@ -625,7 +614,7 @@ export default function EspaceCITE({ navigate }) {
                           </button>
                           <button
                             onClick={() => handleRejectRequest(req.id)}
-                            className="flex-1 py-1.5 rounded-lg bg-rose-500/20 text-rose-300 border border-rose-500/30 text-[11px] font-bold hover:bg-rose-500/30 transition-colors flex items-center justify-center gap-1"
+                            className="flex-1 py-1.5 rounded-lg bg-red-500/20 text-red-300 border border-red-500/30 text-[11px] font-bold hover:bg-red-500/30 transition-colors flex items-center justify-center gap-1"
                           >
                             <X className="w-3.5 h-3.5" /> Refuser
                           </button>
@@ -637,7 +626,7 @@ export default function EspaceCITE({ navigate }) {
               </SectionCard>
 
               {/* ── 3. Projets en cours du club ── */}
-              <SectionCard icon={FolderKanban} title="Projets R&D du Club" subtitle="Travaux de recherche actifs" accent="#e05a2b">
+              <SectionCard icon={FolderKanban} title="Projets R&D du Club" subtitle="Travaux de recherche actifs" accent="var(--color-ember)">
                 {projects.length === 0 ? (
                   <div className="flex flex-col items-center justify-center py-10 text-center">
                     <FolderKanban className="w-8 h-8 text-text-muted/50 mb-3" />
@@ -648,17 +637,17 @@ export default function EspaceCITE({ navigate }) {
                     {projects.map((p) => {
                       const badge = statusBadge(p.status);
                       return (
-                        <div key={p.id} className="p-3.5 rounded-xl bg-white/[0.02] border border-white/5">
+                        <div key={p.id} className="p-3.5 rounded-xl bg-white/[0.02] border border-border-subtle">
                           <div className="flex items-start justify-between gap-3">
                             <h3 className="text-text-primary font-semibold text-xs leading-snug">{p.title}</h3>
-                            <span className={`text-[9px] font-bold uppercase tracking-wide px-2 py-0.5 rounded-full border shrink-0 ${badge.className}`}>
+                            <span className={`text-[11px] font-bold uppercase tracking-wide px-2 py-0.5 rounded-full border shrink-0 ${badge.className}`}>
                               {badge.label}
                             </span>
                           </div>
                           {navigate && (
                             <button
                               onClick={() => navigate('project-detail', { projectId: p.id })}
-                              className="flex items-center gap-1 text-[11px] text-accent-primary hover:underline underline-offset-2 transition-all mt-2 ml-auto"
+                              className="flex items-center gap-1 text-[11px] text-engine hover:underline underline-offset-2 transition-all mt-2 ml-auto"
                             >
                               Ouvrir <ChevronRight className="w-3 h-3" />
                             </button>
@@ -673,13 +662,13 @@ export default function EspaceCITE({ navigate }) {
 
             {/* ── SECTION EXCLUSIVE RESPONSABLE : OUILS DE DECLARATION & TACHES ── */}
             {isClubManager && (
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 pt-4 border-t border-white/10">
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 pt-4 border-t border-border-subtle">
                 {/* Recensement mensuel */}
                 <SectionCard 
                   icon={Users} 
                   title={user?.universityPost === 'SECRETAIRE' ? "Recensement Global CITE" : "Recensement Mensuel"} 
                   subtitle={user?.universityPost === 'SECRETAIRE' ? "Consolidation et transmission à l'Admin" : "Transmission à la Secrétaire Générale"} 
-                  accent="#10b981"
+                  accent="var(--color-emerald-500)"
                 >
                   <p className="text-text-secondary text-xs leading-relaxed mb-4">
                     {user?.universityPost === 'SECRETAIRE'
@@ -701,7 +690,7 @@ export default function EspaceCITE({ navigate }) {
                 </SectionCard>
 
                 {/* Assignation d'activité */}
-                <SectionCard icon={ClipboardList} title="Assigner une Activité" subtitle="Attribuer une tâche à un membre" accent="#6C4CF1">
+                <SectionCard icon={ClipboardList} title="Assigner une Activité" subtitle="Attribuer une tâche à un membre" accent="var(--color-engine)">
                   <form onSubmit={handleCreateActivity} className="space-y-3">
                     <div>
                       <label className={labelClass}>Titre *</label>
@@ -754,7 +743,7 @@ export default function EspaceCITE({ navigate }) {
                   icon={FileText} 
                   title={user?.universityPost === 'SECRETAIRE' ? "Rapport Mensuel Global" : "Rapport d'Activité du Club"} 
                   subtitle={user?.universityPost === 'SECRETAIRE' ? "Synthèse transmise au Chef Universitaire" : "Soumission à la Secrétaire Générale"} 
-                  accent="#e05a2b"
+                  accent="var(--color-ember)"
                 >
                   <form onSubmit={handleSubmitReport} className="space-y-3">
                     <div>
@@ -804,13 +793,13 @@ export default function EspaceCITE({ navigate }) {
 
             {/* ── SECTIONS AUTRES CLUBS : AFFICHÉ UNIQUEMENT SI AUCUN CLUB N'EST ENCORE REJOINTS ── */}
             {!userAssignedClubId && !isSecretaryOrAdmin && (
-              <div className="pt-6 border-t border-white/10">
+              <div className="pt-6 border-t border-border-subtle">
                 <button
                   onClick={() => setShowOtherClubs(!showOtherClubs)}
-                  className="w-full p-4 rounded-2xl bg-white/[0.03] border border-white/10 hover:bg-white/[0.06] transition-all flex items-center justify-between group cursor-pointer"
+                  className="w-full p-4 rounded-2xl bg-white/[0.03] border border-border-subtle hover:bg-white/[0.06] transition-all flex items-center justify-between group cursor-pointer"
                 >
                   <div className="flex items-center gap-3 text-left">
-                    <div className="w-10 h-10 rounded-xl bg-accent-primary/10 border border-accent-primary/20 flex items-center justify-center text-accent-primary group-hover:scale-105 transition-transform">
+                    <div className="w-10 h-10 rounded-xl bg-engine/10 border border-engine/20 flex items-center justify-center text-engine group-hover:scale-105 transition-transform">
                       <Star className="w-5 h-5" />
                     </div>
                     <div>
@@ -818,7 +807,7 @@ export default function EspaceCITE({ navigate }) {
                       <p className="text-xs text-text-muted">Explorez les domaines d'innovation R&D et postulez en un clic.</p>
                     </div>
                   </div>
-                  <div className="flex items-center gap-2 text-xs font-bold text-accent-primary">
+                  <div className="flex items-center gap-2 text-xs font-bold text-engine">
                     <span>{showOtherClubs ? "Masquer" : "Afficher les clubs"}</span>
                     {showOtherClubs ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
                   </div>
@@ -836,10 +825,10 @@ export default function EspaceCITE({ navigate }) {
                       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                         {clubsList
                           .map((c) => (
-                            <div key={c.id} className="p-4 rounded-2xl bg-bg-secondary/80 border border-white/10 flex flex-col justify-between gap-4">
+                            <div key={c.id} className="p-4 rounded-2xl bg-bg-secondary/80 border border-border-subtle flex flex-col justify-between gap-4">
                               <div>
                                 <div className="flex items-center justify-between mb-2">
-                                  <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-accent-primary/10 text-accent-primary border border-accent-primary/20">
+                                  <span className="text-[11px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-engine/10 text-engine border border-engine/20">
                                     Club R&D
                                   </span>
                                 </div>
@@ -851,7 +840,7 @@ export default function EspaceCITE({ navigate }) {
                               <button
                                 onClick={() => handleJoinClub(c.id)}
                                 disabled={joiningClubId === c.id}
-                                className="w-full py-2 rounded-xl text-xs font-bold text-white bg-fieri-blue hover:bg-fieri-blue/85 transition-all flex items-center justify-center gap-1.5 cursor-pointer"
+                                className="w-full py-2 rounded-xl text-xs font-bold text-white bg-engine hover:bg-engine/85 transition-all flex items-center justify-center gap-1.5 cursor-pointer"
                               >
                                 {joiningClubId === c.id ? (
                                   <span className="inline-block w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin" />
@@ -871,20 +860,20 @@ export default function EspaceCITE({ navigate }) {
 
             {/* ── PANNEAU GLOBAL SECRÉTARIAT / ADMIN ── */}
             {isSecretaryOrAdmin && (
-              <div className="space-y-8 pt-6 border-t border-white/10">
+              <div className="space-y-8 pt-6 border-t border-border-subtle">
                 {/* Rapports Réceptionnés par le Secrétariat */}
-                <div className="p-6 rounded-2xl bg-white/[0.03] border border-white/10 backdrop-blur-xl">
+                <div className="p-6 rounded-2xl bg-white/[0.03] border border-border-subtle backdrop-blur-xl">
                   <div className="flex items-center justify-between mb-6">
                     <div>
                       <h3 className="text-lg font-bold text-text-primary flex items-center gap-2">
-                        <FileText className="w-5 h-5 text-accent-primary" />
+                        <FileText className="w-5 h-5 text-engine" />
                         Rapports Réceptionnés par le Secrétariat (6 Clubs R&D)
                       </h3>
                       <p className="text-xs text-text-muted">
                         Consultez les rapports mensuels d'activité et recensements transmis par chaque Responsable de Club avant consolidation.
                       </p>
                     </div>
-                    <span className="px-3 py-1 rounded-full text-xs font-bold bg-accent-primary/10 text-accent-primary border border-accent-primary/20">
+                    <span className="px-3 py-1 rounded-full text-xs font-bold bg-engine/10 text-engine border border-engine/20">
                       {receivedReports.length} Rapport(s) Reçu(s)
                     </span>
                   </div>
@@ -894,16 +883,16 @@ export default function EspaceCITE({ navigate }) {
                   ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                       {receivedReports.map((rep) => (
-                        <div key={rep.id} className="p-4 rounded-xl bg-black/40 border border-white/10 flex flex-col justify-between gap-3">
+                        <div key={rep.id} className="p-4 rounded-xl bg-black/40 border border-border-subtle flex flex-col justify-between gap-3">
                           <div>
                             <div className="flex items-center justify-between text-[11px] text-text-muted mb-1">
-                              <span className="font-bold text-accent-primary">{rep.clubName}</span>
+                              <span className="font-bold text-engine">{rep.clubName}</span>
                               <span>Période: {rep.period}</span>
                             </div>
                             <h4 className="text-sm font-bold text-text-primary">{rep.title}</h4>
                             {rep.content && <p className="text-xs text-text-secondary mt-1 line-clamp-3">{rep.content}</p>}
                           </div>
-                          <div className="pt-2 border-t border-white/5 flex items-center justify-between text-[10px] text-text-muted">
+                          <div className="pt-2 border-t border-border-subtle flex items-center justify-between text-[11px] text-text-muted">
                             <span>Par: {rep.submittedBy}</span>
                             <span className="px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-semibold">
                               {rep.status === 'TRANSMIS_ADMIN' ? 'Transmis Admin' : 'Reçu Secrétariat'}
@@ -916,7 +905,7 @@ export default function EspaceCITE({ navigate }) {
                 </div>
 
                 {/* Annuaire Transversal : Membres des 6 Clubs R&D */}
-                <div className="p-6 rounded-2xl bg-white/[0.03] border border-white/10 backdrop-blur-xl">
+                <div className="p-6 rounded-2xl bg-white/[0.03] border border-border-subtle backdrop-blur-xl">
                   <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
                     <div>
                       <h3 className="text-lg font-bold text-text-primary flex items-center gap-2">
@@ -944,7 +933,7 @@ export default function EspaceCITE({ navigate }) {
                     <div className="overflow-x-auto">
                       <table className="w-full text-left text-xs">
                         <thead>
-                          <tr className="border-b border-white/10 text-text-muted font-bold uppercase">
+                          <tr className="border-b border-border-subtle text-text-muted font-bold uppercase">
                             <th className="py-2.5 px-3">Membre / Chercheur</th>
                             <th className="py-2.5 px-3">Club Métier</th>
                             <th className="py-2.5 px-3">Email</th>
@@ -967,12 +956,12 @@ export default function EspaceCITE({ navigate }) {
                                   <td className="py-2.5 px-3 font-semibold text-text-primary">
                                     {[m.firstname, m.lastname].filter(Boolean).join(' ') || m.name || 'Membre'}
                                   </td>
-                                  <td className="py-2.5 px-3 text-accent-primary font-medium">
+                                  <td className="py-2.5 px-3 text-engine font-medium">
                                     {m.clubName || m.club?.name || 'Club R&D'}
                                   </td>
                                   <td className="py-2.5 px-3 text-text-muted">{m.email || '—'}</td>
                                   <td className="py-2.5 px-3">
-                                    <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${badge.className}`}>
+                                    <span className={`px-2 py-0.5 rounded text-[11px] font-bold ${badge.className}`}>
                                       {badge.label}
                                     </span>
                                   </td>

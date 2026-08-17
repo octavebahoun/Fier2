@@ -8,6 +8,7 @@ import {
 import api from '../services/api.js';
 import { useAuth } from '../context/AuthContext.jsx';
 import FadeInWhenVisible from '../components/home/FadeInWhenVisible.jsx';
+import PageHeader from '../components/ui/PageHeader.jsx';
 
 // ───────────────────────────── Toast Component ───────────────────────────────
 function Toast({ message, type = 'success', onClose }) {
@@ -18,8 +19,8 @@ function Toast({ message, type = 'success', onClose }) {
 
   const styles = {
     success: 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400',
-    error:   'bg-rose-500/10 border-rose-500/30 text-rose-400',
-    info:    'bg-fieri-blue/10 border-fieri-blue/30 text-fieri-blue',
+    error:   'bg-red-500/10 border-red-500/30 text-red-400',
+    info:    'bg-engine/10 border-engine/30 text-engine',
     warning: 'bg-amber-500/10 border-amber-500/30 text-amber-400',
   };
 
@@ -92,7 +93,7 @@ function JoinConfirmModal({ club, onConfirm, onCancel }) {
             <Icon className="w-7 h-7" style={{ color: club.accent }} />
           </div>
           <div>
-            <p className="text-[10px] font-bold uppercase tracking-widest" style={{ color: club.accent }}>
+            <p className="text-[11px] font-bold uppercase tracking-widest" style={{ color: club.accent }}>
               Rejoindre
             </p>
             <h2 className="text-lg font-extrabold text-text-primary leading-snug">{club.kicker}</h2>
@@ -116,7 +117,7 @@ function JoinConfirmModal({ club, onConfirm, onCancel }) {
         <div className="flex gap-3 relative z-10">
           <button
             onClick={onCancel}
-            className="flex-1 py-3 rounded-xl text-xs font-bold text-text-secondary bg-white/5 border border-white/10 hover:bg-white/10 transition-all"
+            className="flex-1 py-3 rounded-xl text-xs font-bold text-text-secondary bg-bg-tertiary border border-border-subtle hover:bg-bg-tertiary transition-all"
           >
             Annuler
           </button>
@@ -201,7 +202,7 @@ function ClubCard({ club, user, navigate, onJoin, onLeave, isPending, joiningId,
         <h3 className="text-text-primary font-bold text-base leading-snug line-clamp-2">
           <button
             onClick={() => navigate?.('club-detail', { clubId: club.id })}
-            className="text-left hover:text-accent-primary transition-colors cursor-pointer"
+            className="text-left hover:text-engine transition-colors cursor-pointer"
           >
             {club.title}
           </button>
@@ -216,7 +217,7 @@ function ClubCard({ club, user, navigate, onJoin, onLeave, isPending, joiningId,
             {club.divisions.map((div) => (
               <span
                 key={div}
-                className="text-[11px] font-medium px-2 py-0.5 rounded-full bg-white/5 text-text-secondary border border-white/8"
+                className="text-[11px] font-medium px-2 py-0.5 rounded-full bg-bg-tertiary text-text-secondary border border-white/8"
               >
                 {div}
               </span>
@@ -261,8 +262,8 @@ function ClubCard({ club, user, navigate, onJoin, onLeave, isPending, joiningId,
             className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl text-sm font-bold border cursor-default"
             style={{
               background: `${club.accent}0A`,
-              color: '#f5a623',
-              borderColor: '#f5a62340',
+              color: 'var(--color-ember)',
+              borderColor: 'color-mix(in srgb, var(--color-ember) 25%, transparent)',
             }}
           >
             <Clock className="w-4 h-4 animate-pulse" />
@@ -299,7 +300,7 @@ function ClubCard({ club, user, navigate, onJoin, onLeave, isPending, joiningId,
         ) : (
           <button
             disabled
-            className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl text-sm font-semibold text-text-secondary bg-white/5 border border-white/10 cursor-not-allowed"
+            className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl text-sm font-semibold text-text-secondary bg-bg-tertiary border border-border-subtle cursor-not-allowed"
             aria-label="Connexion requise pour rejoindre ce club"
           >
             <Lock className="w-4 h-4" />
@@ -309,16 +310,16 @@ function ClubCard({ club, user, navigate, onJoin, onLeave, isPending, joiningId,
 
         {/* Section Administration du Club pour Mentors et Admins */}
         {isManager && (
-          <div className="pt-4 border-t border-white/5 space-y-2">
+          <div className="pt-4 border-t border-border-subtle space-y-2">
             <button
               onClick={() => setShowManage(!showManage)}
-              className="flex items-center justify-between w-full px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-xs font-bold text-text-secondary hover:text-text-primary hover:bg-white/10 transition-all"
+              className="flex items-center justify-between w-full px-3 py-2 rounded-lg bg-bg-tertiary border border-border-subtle text-xs font-bold text-text-secondary hover:text-text-primary hover:bg-bg-tertiary transition-all"
             >
               <div className="flex items-center gap-1.5">
                 <ShieldCheck className="w-4 h-4 text-emerald-400" />
                 <span>Gérer les adhésions</span>
               </div>
-              <span className="px-2 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-[10px] text-emerald-400">
+              <span className="px-2 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-[11px] text-emerald-400">
                 {pendingMembers.length} en attente
               </span>
             </button>
@@ -340,7 +341,7 @@ function ClubCard({ club, user, navigate, onJoin, onLeave, isPending, joiningId,
                       {pendingMembers.map((req) => (
                         <div
                           key={req.id}
-                          className="flex items-center justify-between p-2 rounded-lg bg-white/[0.02] border border-white/5 text-[11px]"
+                          className="flex items-center justify-between p-2 rounded-lg bg-white/[0.02] border border-border-subtle text-[11px]"
                         >
                           <div className="min-w-0 flex-1 pr-2">
                             {(() => {
@@ -354,7 +355,7 @@ function ClubCard({ club, user, navigate, onJoin, onLeave, isPending, joiningId,
                               return (
                                 <>
                                   <p className="font-bold text-text-primary truncate">{displayName}</p>
-                                  {email && <p className="text-[10px] text-text-secondary truncate">{email}</p>}
+                                  {email && <p className="text-[11px] text-text-secondary truncate">{email}</p>}
                                 </>
                               )
                             })()}
@@ -369,7 +370,7 @@ function ClubCard({ club, user, navigate, onJoin, onLeave, isPending, joiningId,
                             </button>
                             <button
                               onClick={() => onRejectRequest(req.id)}
-                              className="p-1 rounded bg-rose-500/20 text-rose-400 hover:bg-rose-500 hover:text-white transition-all"
+                              className="p-1 rounded bg-red-500/20 text-red-400 hover:bg-red-500 hover:text-white transition-all"
                               title="Rejeter"
                             >
                               <Ban className="w-3.5 h-3.5" />
@@ -525,42 +526,21 @@ export default function ResearchClubs({ navigate }) {
 
   return (
     <main id="clubs" className="min-h-screen">
-      {/* ── Halos de fond ── */}
-      <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden" aria-hidden="true">
-        <div
-          className="absolute -top-40 -left-40 w-[600px] h-[600px] rounded-full opacity-[0.06] blur-[100px]"
-          style={{ background: 'radial-gradient(circle, #6C4CF1, transparent)' }}
-        />
-        <div
-          className="absolute top-1/2 -right-60 w-[500px] h-[500px] rounded-full opacity-[0.05] blur-[120px]"
-          style={{ background: 'radial-gradient(circle, #e05a2b, transparent)' }}
-        />
-      </div>
 
       <div className="relative z-10 max-w-[92rem] mx-auto w-full py-16 px-6 md:px-12 lg:px-12">
 
         {/* ── Hero Section ── */}
-        <FadeInWhenVisible direction="up" delay={0}>
-          <div className="text-center mb-16 space-y-5">
-            {/* Badge */}
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest bg-fieri-blue/10 text-fieri-blue border border-fieri-blue/25">
-              <Zap className="w-3.5 h-3.5" />
-              Student Hub · Epic 4
-            </div>
-
-            <h1 className="text-text-primary font-extrabold text-4xl md:text-5xl leading-tight">
-              CITE de Recherche
-            </h1>
-            <p className="text-text-secondary text-lg max-w-2xl mx-auto leading-relaxed">
-              Rejoignez l'une de nos{' '}
-              <span className="text-text-primary font-semibold">6 communautés thématiques</span>{' '}
-              et collaborez avec les meilleurs chercheurs et ingénieurs de la plateforme FIERI.
-            </p>
-
-            {/* Stats rapides */}
-            <div className="flex items-center justify-center flex-wrap gap-6 pt-2">
+        <PageHeader
+          align="center"
+          tag="Student Hub · Epic 4"
+          icon={Zap}
+          title="CITE de Recherche"
+          description={<>Rejoignez l'une de nos <span className="text-text-primary font-semibold">6 communautés thématiques</span> et collaborez avec les meilleurs chercheurs et ingénieurs de la plateforme FIERI.</>}
+        >
+          {/* Stats rapides */}
+          <div className="flex items-center justify-center flex-wrap gap-6 pt-2">
               <div className="flex items-center gap-2 text-sm text-text-secondary">
-                <Users className="w-4 h-4 text-fieri-blue" />
+                <Users className="w-4 h-4 text-engine" />
                 <span>
                   <strong className="text-text-primary font-bold">
                     {totalMembers.toLocaleString('fr-FR')}
@@ -568,16 +548,16 @@ export default function ResearchClubs({ navigate }) {
                   membres actifs
                 </span>
               </div>
-              <div className="w-px h-4 bg-white/15 hidden sm:block" />
+              <div className="w-px h-4 bg-border-subtle hidden sm:block" />
               <div className="flex items-center gap-2 text-sm text-text-secondary">
-                <Star className="w-4 h-4 text-fieri-orange" />
+                <Star className="w-4 h-4 text-ember" />
                 <span>
                   <strong className="text-text-primary font-bold">6</strong> pôles scientifiques
                 </span>
               </div>
               {user && joinedCount > 0 && (
                 <>
-                  <div className="w-px h-4 bg-white/15 hidden sm:block" />
+                  <div className="w-px h-4 bg-border-subtle hidden sm:block" />
                   <div className="flex items-center gap-2 text-sm text-emerald-400">
                     <CheckCircle className="w-4 h-4" />
                     <span>
@@ -588,14 +568,13 @@ export default function ResearchClubs({ navigate }) {
                 </>
               )}
             </div>
-          </div>
-        </FadeInWhenVisible>
+        </PageHeader>
 
         {/* ── Bandeau invitation connexion (visiteur) ── */}
         {!user && (
           <FadeInWhenVisible direction="up" delay={0.1}>
-            <div className="mb-10 flex items-center gap-4 p-4 rounded-2xl bg-fieri-blue/8 border border-fieri-blue/20 text-sm">
-              <Lock className="w-5 h-5 text-fieri-blue shrink-0" />
+            <div className="mb-10 flex items-center gap-4 p-4 rounded-2xl bg-engine/8 border border-engine/20 text-sm">
+              <Lock className="w-5 h-5 text-engine shrink-0" />
               <p className="text-text-secondary">
                 <span className="text-text-primary font-semibold">Connectez-vous</span> pour rejoindre
                 un club et accéder à vos avantages membres.
@@ -603,7 +582,7 @@ export default function ResearchClubs({ navigate }) {
               {navigate && (
                 <button
                   onClick={() => navigate('auth')}
-                  className="ml-auto shrink-0 px-4 py-1.5 rounded-xl bg-fieri-blue text-white text-xs font-bold hover:bg-fieri-blue/85 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-fieri-blue"
+                  className="ml-auto shrink-0 px-4 py-1.5 rounded-xl bg-engine text-white text-xs font-bold hover:bg-engine/85 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-engine"
                 >
                   Se connecter
                 </button>
@@ -647,14 +626,14 @@ export default function ResearchClubs({ navigate }) {
               Explorez les{' '}
               <button
                 onClick={() => navigate && navigate('projects')}
-                className="text-fieri-blue font-semibold hover:underline underline-offset-2 transition-all cursor-pointer"
+                className="text-engine font-semibold hover:underline underline-offset-2 transition-all cursor-pointer"
               >
                 projets R&D
               </button>{' '}
               ou les{' '}
               <button
                 onClick={() => navigate && navigate('student-portal')}
-                className="text-fieri-orange font-semibold hover:underline underline-offset-2 transition-all cursor-pointer"
+                className="text-ember font-semibold hover:underline underline-offset-2 transition-all cursor-pointer"
               >
                 ateliers pratiques
               </button>{' '}

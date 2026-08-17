@@ -139,7 +139,7 @@ export default function ResearchersCarousel({ navigate }) {
       {/* Kicker section header */}
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-2">
-          <Sparkles className="w-4 h-4 text-fieri-blue animate-pulse" />
+          <Sparkles className="w-4 h-4 text-engine animate-pulse" />
           <h2 className="text-sm font-black tracking-widest text-text-muted uppercase">
             Membres d'Élite R&D
           </h2>
@@ -181,7 +181,7 @@ export default function ResearchersCarousel({ navigate }) {
         onScroll={handleScroll}
         onKeyDown={handleKeyDown}
         tabIndex={0}
-        className="flex gap-6 overflow-x-auto snap-x snap-mandatory scroll-smooth select-none pb-4 no-scrollbar focus:outline-none focus-visible:ring-1 focus-visible:ring-fieri-blue/30 rounded-2xl"
+        className="flex gap-6 overflow-x-auto snap-x snap-mandatory scroll-smooth select-none pb-4 no-scrollbar focus:outline-none focus-visible:ring-1 focus-visible:ring-engine/30 rounded-2xl"
         role="region"
         aria-label="Carrousel des chercheurs vedettes. Utilisez les touches fléchées pour naviguer."
       >
@@ -191,13 +191,13 @@ export default function ResearchersCarousel({ navigate }) {
           return (
             <motion.div
               key={researcher.id}
-              className="snap-start shrink-0 w-80 md:w-96 glass-panel rounded-3xl p-6 border border-white/5 shadow-lg relative overflow-hidden flex flex-col justify-between gap-5 group cursor-pointer focus-within:border-fieri-blue/40"
+              className="snap-start shrink-0 w-80 md:w-96 glass-panel rounded-3xl p-6 border border-white/5 shadow-lg relative overflow-hidden flex flex-col justify-between gap-5 group cursor-pointer focus-within:border-engine/40"
               whileHover={{ y: -5, scale: 1.01 }}
               transition={{ type: 'spring', stiffness: 400, damping: 30 }}
               onClick={() => navigate('profile', { researcherId: researcher.id })}
             >
               {/* Subtle hover radial glow behind avatar */}
-              <div className="absolute -inset-px bg-gradient-to-r from-fieri-blue/5 to-[#8B5CF6]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none rounded-3xl" />
+              <div className="absolute -inset-px bg-gradient-to-r from-engine/5 to-engine/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none rounded-3xl" />
               
               {/* Card Top: Identity */}
               <div className="flex gap-4 items-start relative z-10">
@@ -205,7 +205,7 @@ export default function ResearchersCarousel({ navigate }) {
                   <img
                     src={researcher.avatar}
                     alt={researcher.name}
-                    className="w-16 h-16 rounded-2xl object-cover border border-white/10 group-hover:border-fieri-blue/40 transition-colors"
+                    className="w-16 h-16 rounded-2xl object-cover border border-white/10 group-hover:border-engine/40 transition-colors"
                   />
                   {followersCount > 150 && (
                     <span className="absolute -bottom-1 -right-1 w-5 h-5 rounded-lg bg-amber-400 border border-bg-secondary flex items-center justify-center shadow-md">
@@ -215,13 +215,13 @@ export default function ResearchersCarousel({ navigate }) {
                 </div>
 
                 <div className="flex flex-col gap-1 overflow-hidden">
-                  <h3 className="text-base font-black text-text-primary group-hover:text-fieri-blue transition-colors truncate">
+                  <h3 className="text-base font-black text-text-primary group-hover:text-engine transition-colors truncate">
                     {researcher.name}
                   </h3>
-                  <span className="text-[10px] font-bold text-fieri-blue tracking-wide uppercase truncate">
+                  <span className="text-[11px] font-bold text-engine tracking-wide uppercase truncate">
                     {researcher.pole}
                   </span>
-                  <span className="text-[9px] font-medium text-text-muted truncate">
+                  <span className="text-[11px] font-medium text-text-muted truncate">
                     {researcher.university}
                   </span>
                 </div>
@@ -238,9 +238,9 @@ export default function ResearchersCarousel({ navigate }) {
               {/* Card Bottom: Stats & Button */}
               <div className="flex items-center justify-between relative z-10 gap-3">
                 {/* Horizontal Stats */}
-                <div className="flex items-center gap-4 text-[10px] text-text-muted font-black uppercase">
+                <div className="flex items-center gap-4 text-[11px] text-text-muted font-black uppercase">
                   <div className="flex items-center gap-1.5">
-                    <BookOpen className="w-3.5 h-3.5 text-fieri-blue/80" />
+                    <BookOpen className="w-3.5 h-3.5 text-engine/80" />
                     <span>{researcher.publicationsCount} Pubs</span>
                   </div>
                   
@@ -256,7 +256,7 @@ export default function ResearchersCarousel({ navigate }) {
                     e.stopPropagation()
                     navigate('profile', { researcherId: researcher.id })
                   }}
-                  className="flex items-center gap-1 text-xs font-bold text-fieri-blue hover:text-fieri-blue/80 transition-colors group/btn cursor-pointer py-1.5 px-3 bg-white/5 rounded-xl border border-white/5 group-hover:border-fieri-blue/20"
+                  className="flex items-center gap-1 text-xs font-bold text-engine hover:text-engine/80 transition-colors group/btn cursor-pointer py-1.5 px-3 bg-white/5 rounded-xl border border-white/5 group-hover:border-engine/20"
                   aria-label={`Consulter le profil de ${researcher.name}`}
                 >
                   <span>Voir</span>

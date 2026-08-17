@@ -5,11 +5,10 @@ import landingData from '../content/landing.json';
 
 // Modular Home Sections
 import HeroSection from '../components/home/HeroSection.jsx';
-import DiscoverSection from '../components/home/DiscoverSection.jsx';
+import StatsSection from '../components/home/StatsSection.jsx';
 import OrgSection from '../components/home/OrgSection.jsx';
 import MissionsSection from '../components/home/MissionsSection.jsx';
 import VisionSection from '../components/home/VisionSection.jsx';
-import StatsSection from '../components/home/StatsSection.jsx';
 import ResearchClubsSection from '../components/home/ResearchClubsSection.jsx';
 import JournalSection from '../components/home/JournalSection.jsx';
 import ProgrammesSection from '../components/home/ProgrammesSection.jsx';
@@ -34,7 +33,7 @@ function ScrollToTop() {
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.8 }}
           onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-          className="fixed bottom-6 right-6 z-40 w-10 h-10 rounded-full bg-accent-primary/90 border border-accent-primary/40 text-white flex items-center justify-center shadow-lg backdrop-blur-md hover:bg-accent-primary transition-all cursor-pointer"
+          className="fixed bottom-6 right-6 z-40 w-11 h-11 rounded-sm chamfer-sm bg-engine text-white flex items-center justify-center shadow-lg hover:bg-engine-deep transition-colors cursor-pointer"
           aria-label="Retour en haut"
         >
           <ArrowUp className="w-4 h-4" />
@@ -45,57 +44,53 @@ function ScrollToTop() {
 }
 
 export default function Home({ navigate }) {
-  const { 
-    hero, 
-    decouvrir, 
-    organisation, 
-    mission, 
-    vision, 
-    stats, 
-    clubs, 
-    journal, 
-    programmes, 
-    partenaires, 
-    faq, 
-    contact 
+  const {
+    hero,
+    stats,
+    organisation,
+    mission,
+    vision,
+    clubs,
+    journal,
+    programmes,
+    partenaires,
+    faq,
+    contact
   } = landingData;
 
   return (
-    <div className="relative w-full overflow-hidden bg-bg-primary text-text-primary selection:bg-accent-primary/20 selection:text-accent-primary">
-      {/* SECTION 1 : HERO */}
+    <div className="relative w-full bg-bg-primary text-text-primary selection:bg-engine/25">
+      {/* 1. HERO — la thèse */}
       <HeroSection hero={hero} navigate={navigate} />
 
-      {/* SECTION 2 : NOUS DÉCOUVRIR */}
-      <DiscoverSection decouvrir={decouvrir} navigate={navigate} />
-
-      {/* SECTION 3 : NOTRE ORGANISATION */}
-      <OrgSection organisation={organisation} navigate={navigate} />
-
-      {/* SECTION 4 : NOS MISSIONS */}
-      <MissionsSection mission={mission} />
-
-      {/* SECTION 5 : NOTRE VISION */}
-      <VisionSection vision={vision} />
-
-      {/* SECTION 6 : LES CHIFFRES CLÉS (STATS) */}
+      {/* 2. STATS — la preuve immédiate */}
       <StatsSection stats={stats} />
 
-      {/* SECTION 7 : GRAND CAROUSEL DE TOUTES LES CITE */}
+      {/* 3. ORGANISATION — le parcours en 3 étapes */}
+      <OrgSection organisation={organisation} navigate={navigate} />
+
+      {/* 4. MISSIONS — les piliers */}
+      <MissionsSection mission={mission} />
+
+      {/* 5. VISION — le pourquoi */}
+      <VisionSection vision={vision} />
+
+      {/* 6. CLUBS — la solution concrète */}
       <ResearchClubsSection clubs={clubs} navigate={navigate} />
 
-      {/* SECTION 8 : JOURNAL UNIFIÉ (ateliers, offres, actualités) */}
+      {/* 7. JOURNAL — les preuves vivantes */}
       <JournalSection journal={journal} navigate={navigate} />
 
-      {/* SECTION 9 : NOS PROGRAMMES (ambassadeur, bénévolat, mentorat…) */}
+      {/* 8. PROGRAMMES */}
       <ProgrammesSection programmes={programmes} navigate={navigate} />
 
-      {/* SECTION 10 : PARTENAIRES COMMERCIAUX */}
+      {/* 9. PARTENAIRES */}
       <PartnersSection partenaires={partenaires} />
 
-      {/* SECTION 12 : FOIRE AUX QUESTIONS (FAQ) */}
+      {/* 10. FAQ */}
       <FAQSection faq={faq} />
 
-      {/* SECTION 13 : CONTACT DIRECT & FORMULAIRE */}
+      {/* 11. CONTACT — CTA final */}
       <ContactSection contact={contact} />
 
       <ScrollToTop />

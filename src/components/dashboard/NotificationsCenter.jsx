@@ -65,7 +65,7 @@ export default function NotificationsCenter({ navigate }) {
   }
 
   return (
-    <section className="p-4 bg-white/5 rounded">
+    <section className="p-4 bg-bg-tertiary rounded">
       <div className="flex items-center justify-between mb-3">
         <h3 className="font-semibold">Notifications</h3>
         <div className="flex items-center gap-2">
@@ -88,7 +88,7 @@ export default function NotificationsCenter({ navigate }) {
 
       {confirmClear && (
         <div role="dialog" aria-modal="true" className="fixed inset-0 flex items-center justify-center bg-black/50">
-          <div ref={confirmRef} className="bg-white/5 p-6 rounded max-w-md w-full">
+          <div ref={confirmRef} className="bg-bg-tertiary p-6 rounded max-w-md w-full">
             <p className="mb-4">Confirmer la suppression de toutes les notifications ?</p>
             <div className="flex justify-end gap-3">
               <button onClick={() => setConfirmClear(false)}>Annuler</button>

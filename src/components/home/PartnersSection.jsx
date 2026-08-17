@@ -12,21 +12,17 @@ const TYPE_ICONS = {
 
 export default function PartnersSection({ partenaires }) {
   return (
-    <section id="partenaires" className="py-24 px-6 md:px-12 lg:px-12 border-b border-border-subtle bg-bg-secondary/5 relative overflow-hidden">
-      {/* Glow ambient background spot */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[70vw] h-[25vw] rounded-full bg-radial from-accent-primary/8 to-transparent blur-[120px] pointer-events-none z-0" />
-
-      <div className="max-w-[92rem] mx-auto w-full relative z-10">
+    <section id="partenaires" className="py-24 px-6 md:px-12 lg:px-12 border-b border-border-subtle bg-bg-primary relative">
+      <div className="max-w-[92rem] mx-auto w-full">
         {/* Header Block */}
         <div className="text-center max-w-3xl mx-auto mb-14">
           <FadeInWhenVisible direction="down" delay={0.05}>
-            <div className="inline-flex items-center gap-2 bg-accent-primary/10 border border-accent-primary/30 px-3.5 py-1 rounded-full mb-3.5">
-              <Globe2 className="w-3.5 h-3.5 text-accent-primary animate-pulse" />
-              <span className="text-[10px] font-black uppercase tracking-widest text-text-primary">
-                {partenaires.tag}
-              </span>
-            </div>
-            <h2 className="text-2xl md:text-3xl font-extrabold tracking-tight text-text-primary">
+            <span className="eyebrow flex items-center gap-3 justify-center">
+              <span className="w-8 h-px bg-ember inline-block" aria-hidden="true" />
+              {partenaires.tag}
+              <span className="w-8 h-px bg-ember inline-block" aria-hidden="true" />
+            </span>
+            <h2 className="mt-5 text-2xl md:text-3xl font-extrabold tracking-tight text-text-primary font-display">
               {partenaires.title}
             </h2>
             <p className="text-text-secondary text-sm font-light mt-3 max-w-xl mx-auto">
@@ -41,15 +37,15 @@ export default function PartnersSection({ partenaires }) {
             const Icon = TYPE_ICONS[partner.type] || Globe2;
             return (
               <FadeInWhenVisible key={index} delay={index * 0.06} direction="up">
-                <div className="glass-panel h-full px-7 py-6 rounded-2xl border border-border-subtle/70 bg-bg-secondary/20 hover:bg-bg-secondary/40 hover:border-accent-primary/30 transition-all duration-350 shadow-sm flex items-center gap-4 select-none cursor-default group">
-                  <div className="w-11 h-11 rounded-xl flex items-center justify-center bg-accent-primary/10 border border-accent-primary/20 shrink-0 group-hover:scale-105 transition-transform">
-                    <Icon className="w-5 h-5 text-accent-primary" />
+                <div className="glass-panel h-full px-7 py-6 rounded-2xl border border-border-subtle hover:border-border-strong transition-all duration-300 flex items-center gap-4 select-none cursor-default group">
+                  <div className="w-11 h-11 rounded-sm chamfer-sm flex items-center justify-center bg-bg-tertiary border border-border-subtle shrink-0 group-hover:scale-105 transition-transform">
+                    <Icon className="w-5 h-5 text-engine" />
                   </div>
                   <div className="flex flex-col gap-1 min-w-0">
-                    <span className="text-sm font-black text-text-primary group-hover:text-accent-primary transition-colors truncate">
+                    <span className="text-sm font-black text-text-primary group-hover:text-engine transition-colors truncate">
                       {partner.name}
                     </span>
-                    <span className="text-[9px] font-bold uppercase tracking-wider text-text-muted">
+                    <span className="text-[11px] font-bold uppercase tracking-wider text-text-muted">
                       {partner.type}
                     </span>
                   </div>

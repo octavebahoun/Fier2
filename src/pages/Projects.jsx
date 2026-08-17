@@ -65,7 +65,7 @@ export default function Projects({ navigate }) {
     <div className="max-w-[88rem] mx-auto w-full py-24 px-6 md:px-12 lg:px-12 flex flex-col gap-12 relative min-h-screen">
       
       {/* Decorative cosmic glows */}
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[500px] h-[500px] bg-fieri-blue/5 rounded-full blur-[140px] pointer-events-none" />
+      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[500px] h-[500px] bg-engine/5 rounded-full blur-[140px] pointer-events-none" />
       <div className="absolute bottom-10 left-10 w-[300px] h-[300px] bg-indigo-500/5 rounded-full blur-[100px] pointer-events-none" />
 
       {/* Header section with neat design */}
@@ -74,19 +74,22 @@ export default function Projects({ navigate }) {
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3 }}
-          className="flex items-center gap-2 px-3 py-1 rounded-full bg-fieri-blue/10 border border-fieri-blue/20 text-fieri-blue text-xs font-bold w-fit"
+          className="flex items-center gap-3 w-fit"
         >
-          <Sparkles className="w-3.5 h-3.5 text-fieri-blue animate-pulse" />
-          <span>PORTFOLIO TECHNOLOGIQUE R&D</span>
+          <span className="w-8 h-px bg-ember inline-block" aria-hidden="true" />
+          <span className="eyebrow flex items-center gap-2">
+            <Sparkles className="w-3.5 h-3.5 text-engine" />
+            PORTFOLIO TECHNOLOGIQUE R&D
+          </span>
         </motion.div>
         
         <motion.h1 
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.1 }}
-          className="text-4xl md:text-5xl font-black tracking-tight bg-gradient-to-r from-white via-text-secondary to-fieri-blue bg-clip-text text-transparent leading-tight"
+          className="text-4xl md:text-5xl font-extrabold tracking-tight text-text-primary font-display leading-tight"
         >
-          Hub de Recherche & Projets Innovants
+          Hub de Recherche & <span className="text-gradient-cosmic">Projets Innovants</span>
         </motion.h1>
         
         <motion.p 
@@ -105,7 +108,7 @@ export default function Projects({ navigate }) {
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4, delay: 0.25 }}
-        className="flex flex-col md:flex-row gap-4 items-center justify-between glass-panel border border-white/5 rounded-2xl p-4 relative z-10"
+        className="flex flex-col md:flex-row gap-4 items-center justify-between glass-panel border border-border-subtle rounded-2xl p-4 relative z-10"
       >
         {/* Search */}
         <div className="relative w-full md:max-w-md">
@@ -115,7 +118,7 @@ export default function Projects({ navigate }) {
             placeholder="Rechercher un projet, une technologie..." 
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full bg-white/3 border border-white/5 focus:border-fieri-blue/30 rounded-xl py-2.5 pl-11 pr-4 text-xs text-text-primary placeholder:text-text-muted focus:outline-none transition-all"
+            className="w-full bg-bg-secondary border border-border-subtle focus:border-engine/40 rounded-xl py-2.5 pl-11 pr-4 text-xs text-text-primary placeholder:text-text-muted focus:outline-none transition-all"
           />
         </div>
 
@@ -125,8 +128,8 @@ export default function Projects({ navigate }) {
             onClick={() => setActiveFilter('all')}
             className={`px-4 py-2 rounded-xl text-xs font-bold border transition-all shrink-0 cursor-pointer ${
               activeFilter === 'all' 
-                ? 'bg-fieri-blue border-fieri-blue text-white shadow-lg shadow-fieri-blue/10' 
-                : 'bg-white/3 border-white/5 text-text-secondary hover:text-text-primary'
+                ? 'bg-engine border-engine text-white shadow-lg shadow-engine/10' 
+                : 'bg-bg-secondary border-border-subtle text-text-secondary hover:text-text-primary'
             }`}
           >
             Tous les projets
@@ -135,8 +138,8 @@ export default function Projects({ navigate }) {
             onClick={() => setActiveFilter('active')}
             className={`px-4 py-2 rounded-xl text-xs font-bold border transition-all shrink-0 cursor-pointer ${
               activeFilter === 'active' 
-                ? 'bg-fieri-blue border-fieri-blue text-white shadow-lg shadow-fieri-blue/10' 
-                : 'bg-white/3 border-white/5 text-text-secondary hover:text-text-primary'
+                ? 'bg-engine border-engine text-white shadow-lg shadow-engine/10' 
+                : 'bg-bg-secondary border-border-subtle text-text-secondary hover:text-text-primary'
             }`}
           >
             Actifs
@@ -145,8 +148,8 @@ export default function Projects({ navigate }) {
             onClick={() => setActiveFilter('rd')}
             className={`px-4 py-2 rounded-xl text-xs font-bold border transition-all shrink-0 cursor-pointer ${
               activeFilter === 'rd' 
-                ? 'bg-fieri-blue border-fieri-blue text-white shadow-lg shadow-fieri-blue/10' 
-                : 'bg-white/3 border-white/5 text-text-secondary hover:text-text-primary'
+                ? 'bg-engine border-engine text-white shadow-lg shadow-engine/10' 
+                : 'bg-bg-secondary border-border-subtle text-text-secondary hover:text-text-primary'
             }`}
           >
             En R&D
@@ -175,7 +178,7 @@ export default function Projects({ navigate }) {
                   variants={cardVariants}
                   className={`${
                     isFeatured ? 'md:col-span-2 flex-col md:flex-row' : 'col-span-1 flex-col'
-                  } group relative glass-panel rounded-3xl overflow-hidden border border-white/5 bg-bg-secondary/60 backdrop-blur-xl transition-all cursor-pointer flex min-h-[380px]`}
+                  } group relative glass-panel rounded-3xl overflow-hidden border border-border-subtle bg-bg-secondary/60 backdrop-blur-xl transition-all cursor-pointer flex min-h-[380px]`}
                   whileHover={{ 
                     y: -4, 
                     boxShadow: "0 0 30px rgba(59, 130, 246, 0.15)",
@@ -185,10 +188,10 @@ export default function Projects({ navigate }) {
                   onClick={() => navigate('project-detail', { projectId: p.id })}
                 >
                   {/* Radial accent glow visible on card hover */}
-                  <div className="absolute inset-0 bg-gradient-to-br from-fieri-blue/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+                  <div className="absolute inset-0 bg-gradient-to-br from-engine/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
                   
                   {/* Card Cover Image */}
-                  <div className={`relative overflow-hidden border-white/5 shrink-0 ${
+                  <div className={`relative overflow-hidden border-border-subtle shrink-0 ${
                     isFeatured 
                       ? 'md:w-[42%] w-full h-48 md:h-full border-b md:border-b-0 md:border-r' 
                       : 'w-full h-44 border-b'
@@ -215,7 +218,7 @@ export default function Projects({ navigate }) {
                       {/* Status badge & stars count */}
                       <div className="flex justify-between items-center">
                         <div className="flex items-center gap-2">
-                          <span className={`text-[9px] font-black uppercase tracking-wider px-2.5 py-0.5 rounded-md border ${
+                          <span className={`text-[11px] font-black uppercase tracking-wider px-2.5 py-0.5 rounded-md border ${
                             p.status === 'Actif'
                               ? 'text-emerald-400 bg-emerald-500/10 border-emerald-500/10'
                               : 'text-amber-400 bg-amber-500/10 border-amber-500/10'
@@ -223,7 +226,7 @@ export default function Projects({ navigate }) {
                             {p.status}
                           </span>
                           {isFeatured && (
-                            <span className="text-[9px] font-black uppercase tracking-wider px-2.5 py-0.5 rounded-md text-fieri-blue bg-fieri-blue/10 border-fieri-blue/10 flex items-center gap-1">
+                            <span className="text-[11px] font-black uppercase tracking-wider px-2.5 py-0.5 rounded-md text-engine bg-engine/10 border-engine/10 flex items-center gap-1">
                               <Award className="w-2.5 h-2.5 animate-bounce" />
                               À la Une
                             </span>
@@ -232,13 +235,13 @@ export default function Projects({ navigate }) {
                         
                         <div className="flex items-center gap-1 text-text-secondary group-hover:text-amber-400 transition-colors">
                           <Star className={`w-3.5 h-3.5 ${p.starred ? 'fill-amber-400 text-amber-400' : ''}`} />
-                          <span className="text-[10px] font-bold">{p.stars}</span>
+                          <span className="text-[11px] font-bold">{p.stars}</span>
                         </div>
                       </div>
 
                       {/* Main textual representation */}
                       <div className="space-y-2">
-                        <h3 className={`font-black tracking-tight text-text-primary group-hover:text-fieri-blue transition-colors leading-tight ${
+                        <h3 className={`font-black tracking-tight text-text-primary group-hover:text-engine transition-colors leading-tight ${
                           isFeatured ? 'text-2xl md:text-3xl' : 'text-lg'
                         }`}>
                           {p.title}
@@ -251,12 +254,12 @@ export default function Projects({ navigate }) {
                       {/* Technologies tags list */}
                       <div className="flex flex-wrap gap-2 pt-2">
                         {p.technologies.slice(0, isFeatured ? 7 : 4).map((tech, idx) => (
-                          <span key={idx} className="text-[9px] font-black text-text-muted bg-white/5 border border-white/5 px-2 py-0.5 rounded-md">
+                          <span key={idx} className="text-[11px] font-black text-text-muted bg-bg-tertiary border border-border-subtle px-2 py-0.5 rounded-md">
                             {tech}
                           </span>
                         ))}
                         {p.technologies.length > (isFeatured ? 7 : 4) && (
-                          <span className="text-[9px] font-black text-fieri-blue bg-fieri-blue/5 border border-fieri-blue/10 px-2 py-0.5 rounded-md">
+                          <span className="text-[11px] font-black text-engine bg-engine/5 border border-engine/10 px-2 py-0.5 rounded-md">
                             +{p.technologies.length - (isFeatured ? 7 : 4)}
                           </span>
                         )}
@@ -264,20 +267,20 @@ export default function Projects({ navigate }) {
                     </div>
 
                     {/* Progressive budget and team footer */}
-                    <div className="space-y-4 pt-5 mt-6 border-t border-white/5 relative z-10">
+                    <div className="space-y-4 pt-5 mt-6 border-t border-border-subtle relative z-10">
                       
                       {/* Budget indicator bar */}
                       <div className="space-y-1.5">
-                        <div className="flex justify-between items-center text-[10px] font-bold text-text-secondary">
+                        <div className="flex justify-between items-center text-[11px] font-bold text-text-secondary">
                           <span className="flex items-center gap-1.5">
-                            <Coins className="w-3.5 h-3.5 text-fieri-blue" />
+                            <Coins className="w-3.5 h-3.5 text-engine" />
                             {p.supportersCount} soutien(s)
                           </span>
                           <span>{p.budgetRaised} $ / {budgetGoal} $ ({budgetPercentage}%)</span>
                         </div>
-                        <div className="w-full h-1 bg-white/5 rounded-full overflow-hidden">
+                        <div className="w-full h-1 bg-bg-tertiary rounded-full overflow-hidden">
                           <motion.div 
-                            className="h-full bg-gradient-to-r from-fieri-blue to-indigo-500 rounded-full"
+                            className="h-full bg-gradient-to-r from-engine to-engine-deep rounded-full"
                             initial={{ width: 0 }}
                             animate={{ width: `${budgetPercentage}%` }}
                             transition={{ duration: 0.8 }}
@@ -288,13 +291,13 @@ export default function Projects({ navigate }) {
                       {/* Author block and visual Explore link */}
                       <div className="flex justify-between items-center gap-4">
                         <div className="flex items-center gap-2.5">
-                          <span className="w-7 h-7 rounded-full bg-fieri-blue/10 border border-white/10 flex items-center justify-center text-[9px] font-black text-fieri-blue shrink-0">
+                          <span className="w-7 h-7 rounded-full bg-engine/10 border border-border-subtle flex items-center justify-center text-[11px] font-black text-engine shrink-0">
                             {p.author ? p.author.charAt(0).toUpperCase() : '?'}
                           </span>
-                          <span className="text-[10px] font-bold text-text-primary line-clamp-1">{p.author}</span>
+                          <span className="text-[11px] font-bold text-text-primary line-clamp-1">{p.author}</span>
                         </div>
 
-                        <div className="flex items-center gap-1 text-[9px] font-black uppercase tracking-wider text-fieri-blue group-hover:translate-x-1 transition-transform">
+                        <div className="flex items-center gap-1 text-[11px] font-black uppercase tracking-wider text-engine group-hover:translate-x-1 transition-transform">
                           Détails
                           <ArrowRight className="w-3 h-3" />
                         </div>
@@ -309,8 +312,8 @@ export default function Projects({ navigate }) {
           </motion.div>
         ) : (
           /* Empty state */
-          <div className="text-center py-20 glass-panel border border-white/5 rounded-3xl flex flex-col items-center justify-center gap-4 max-w-xl mx-auto">
-            <div className="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center text-text-muted">
+          <div className="text-center py-20 glass-panel border border-border-subtle rounded-3xl flex flex-col items-center justify-center gap-4 max-w-xl mx-auto">
+            <div className="w-16 h-16 rounded-full bg-bg-tertiary flex items-center justify-center text-text-muted">
               <Compass className="w-8 h-8" />
             </div>
             <div>

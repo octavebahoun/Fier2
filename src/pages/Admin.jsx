@@ -18,7 +18,7 @@ function Toast({ message, type = 'success', onClose }) {
   const bgClass =
     type === 'success'
       ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'
-      : 'bg-rose-500/10 border-rose-500/30 text-rose-400';
+      : 'bg-red-500/10 border-red-500/30 text-red-400';
 
   return (
     <motion.div
@@ -139,7 +139,7 @@ export default function Admin() {
           <div className="p-2.5 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400">
             <Shield className="w-6 h-6" />
           </div>
-          <span className="text-[10px] font-black tracking-[0.25em] uppercase text-red-400">
+          <span className="text-[11px] font-black tracking-[0.25em] uppercase text-red-400">
             ESPACE DE CONTRÔLE
           </span>
         </div>
@@ -165,7 +165,7 @@ export default function Admin() {
               onClick={() => setTab(t.id)}
               className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
                 active
-                  ? 'bg-accent-primary/20 border border-accent-primary/30 text-text-primary'
+                  ? 'bg-engine/20 border border-engine/30 text-text-primary'
                   : 'text-text-secondary hover:text-text-primary border border-transparent'
               }`}
             >
@@ -187,10 +187,10 @@ export default function Admin() {
             <div className="p-2 rounded-lg bg-indigo-500/10 border border-indigo-500/30 text-indigo-400">
               <Users className="w-5 h-5" />
             </div>
-            <span className="text-[10px] font-black uppercase tracking-wider text-text-secondary">Membres</span>
+            <span className="text-[11px] font-black uppercase tracking-wider text-text-secondary">Membres</span>
           </div>
           <h3 className="text-2xl font-black text-text-primary">1 240</h3>
-          <p className="text-[10px] text-text-secondary mt-1">Utilisateurs inscrits sur la plateforme</p>
+          <p className="text-[11px] text-text-secondary mt-1">Utilisateurs inscrits sur la plateforme</p>
         </div>
 
         <div className="glass-panel border border-border-subtle bg-bg-secondary/40 p-6 rounded-2xl">
@@ -198,10 +198,10 @@ export default function Admin() {
             <div className="p-2 rounded-lg bg-emerald-500/10 border border-emerald-500/30 text-emerald-400">
               <CheckCircle className="w-5 h-5" />
             </div>
-            <span className="text-[10px] font-black uppercase tracking-wider text-text-secondary">Publications</span>
+            <span className="text-[11px] font-black uppercase tracking-wider text-text-secondary">Publications</span>
           </div>
           <h3 className="text-2xl font-black text-text-primary">{approvedCount} Approuvées</h3>
-          <p className="text-[10px] text-text-secondary mt-1">
+          <p className="text-[11px] text-text-secondary mt-1">
             {pendingArticles.length} en attente de comité de lecture
           </p>
         </div>
@@ -211,10 +211,10 @@ export default function Admin() {
             <div className="p-2 rounded-lg bg-amber-500/10 border border-amber-500/30 text-amber-400">
               <AlertTriangle className="w-5 h-5" />
             </div>
-            <span className="text-[10px] font-black uppercase tracking-wider text-text-secondary">Système</span>
+            <span className="text-[11px] font-black uppercase tracking-wider text-text-secondary">Système</span>
           </div>
           <h3 className="text-2xl font-black text-text-primary">100% En Ligne</h3>
-          <p className="text-[10px] text-text-secondary mt-1">Base de données hybride locale</p>
+          <p className="text-[11px] text-text-secondary mt-1">Base de données hybride locale</p>
         </div>
       </div>
 
@@ -265,14 +265,14 @@ export default function Admin() {
                   <div className="p-5 flex flex-col md:flex-row md:items-center justify-between gap-4">
                     <div className="flex-1">
                       <div className="flex flex-wrap items-center gap-2 mb-2">
-                        <span className="inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-bold border border-indigo-500/20 bg-indigo-500/10 text-indigo-400">
+                        <span className="inline-flex items-center px-2 py-0.5 rounded-md text-[11px] font-bold border border-indigo-500/20 bg-indigo-500/10 text-indigo-400">
                           {article.categorie}
                         </span>
-                        <span className="inline-flex items-center text-[10px] text-text-secondary gap-1">
+                        <span className="inline-flex items-center text-[11px] text-text-secondary gap-1">
                           <User className="w-3 h-3 text-indigo-400/70" />
                           {article.author}
                         </span>
-                        <span className="inline-flex items-center text-[10px] text-text-secondary gap-1 ml-2">
+                        <span className="inline-flex items-center text-[11px] text-text-secondary gap-1 ml-2">
                           <Calendar className="w-3 h-3" />
                           {article.date}
                         </span>
@@ -289,7 +289,7 @@ export default function Admin() {
                     <div className="flex items-center gap-2 shrink-0 self-end md:self-center">
                       <button
                         onClick={() => toggleExpand(article.id)}
-                        className={`p-2.5 rounded-xl border border-border-subtle hover:text-text-primary hover:bg-white/5 transition-all cursor-pointer flex items-center gap-1.5 text-xs text-text-secondary font-bold ${isExpanded ? 'bg-white/5' : ''}`}
+                        className={`p-2.5 rounded-xl border border-border-subtle hover:text-text-primary hover:bg-bg-tertiary transition-all cursor-pointer flex items-center gap-1.5 text-xs text-text-secondary font-bold ${isExpanded ? 'bg-bg-tertiary' : ''}`}
                       >
                         {isExpanded ? (
                           <>
@@ -316,7 +316,7 @@ export default function Admin() {
                       <button
                         onClick={() => handleReject(article.id)}
                         disabled={isProcessing}
-                        className="p-2.5 rounded-xl border-rose-500/30 hover:border-rose-500/60 bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 hover:scale-105 transition-all cursor-pointer disabled:opacity-50 disabled:pointer-events-none"
+                        className="p-2.5 rounded-xl border-red-500/30 hover:border-red-500/60 bg-red-500/10 hover:bg-red-500/20 text-red-400 hover:scale-105 transition-all cursor-pointer disabled:opacity-50 disabled:pointer-events-none"
                         title="Rejeter et supprimer"
                       >
                         <Trash2 className="w-4.5 h-4.5" />
@@ -337,7 +337,7 @@ export default function Admin() {
                           {/* Image and core info block */}
                           <div className="flex flex-col md:flex-row gap-6">
                             {article.image && (
-                              <div className="w-full md:w-48 h-32 rounded-xl overflow-hidden bg-white/5 shrink-0 border border-border-subtle">
+                              <div className="w-full md:w-48 h-32 rounded-xl overflow-hidden bg-bg-tertiary shrink-0 border border-border-subtle">
                                 <img src={article.image} alt={article.title} className="w-full h-full object-cover" />
                               </div>
                             )}

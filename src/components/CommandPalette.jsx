@@ -212,7 +212,7 @@ export default function CommandPalette({ navigate }) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.15 }}
-            className="absolute inset-0 bg-black/60 backdrop-blur-md"
+            className="absolute inset-0 bg-bg-primary/70 backdrop-blur-md"
             onClick={() => setIsOpen(false)}
           />
 
@@ -225,7 +225,7 @@ export default function CommandPalette({ navigate }) {
             role="dialog"
             aria-modal="true"
             aria-label="Palette de commandes"
-            className="relative w-full max-w-xl bg-bg-secondary/90 border border-border-subtle rounded-2xl shadow-2xl overflow-hidden glass-panel flex flex-col pointer-events-auto max-h-[480px]"
+            className="relative w-full max-w-xl bg-bg-secondary border border-border-subtle rounded-2xl shadow-2xl overflow-hidden glass-panel flex flex-col pointer-events-auto max-h-[480px]"
           >
             {/* Header / Search Input */}
             <div className="flex items-center gap-3 px-4 py-3.5 border-b border-border-subtle">
@@ -241,7 +241,7 @@ export default function CommandPalette({ navigate }) {
                 placeholder="Tapez une commande ou naviguez..."
                 className="w-full bg-transparent border-none text-text-primary placeholder:text-text-muted text-sm focus:outline-none focus:ring-0"
               />
-              <span className="text-[10px] bg-white/5 border border-border-subtle text-text-muted px-2 py-0.5 rounded-md font-mono shrink-0">
+              <span className="text-[11px] bg-bg-tertiary border border-border-subtle text-text-muted px-2 py-0.5 rounded font-mono shrink-0">
                 ÉCHAP
               </span>
             </div>
@@ -249,7 +249,7 @@ export default function CommandPalette({ navigate }) {
             {/* Commands List */}
             <div
               ref={listRef}
-              className="flex-grow overflow-y-auto p-2 max-h-[360px] custom-scrollbar"
+              className="flex-grow overflow-y-auto p-2 max-h-[360px]"
             >
               {filteredCommands.length > 0 ? (
                 <div className="flex flex-col gap-1">
@@ -263,7 +263,7 @@ export default function CommandPalette({ navigate }) {
                   ).map(([category, items]) => (
                     <div key={category} className="flex flex-col">
                       {/* Category Label */}
-                      <span className="text-[9px] uppercase tracking-widest text-text-muted font-black px-3 py-2">
+                      <span className="eyebrow px-3 py-2">
                         {category}
                       </span>
                       {/* Category Items */}
@@ -278,24 +278,24 @@ export default function CommandPalette({ navigate }) {
                             role="option"
                             aria-selected={isSelected}
                             onClick={cmd.action}
-                            className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-left text-xs transition-all cursor-pointer ${
+                            className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-left text-[13px] transition-all cursor-pointer ${
                               isSelected
-                                ? 'bg-accent-primary/10 text-text-primary font-bold border border-accent-primary/20'
-                                : 'bg-transparent text-text-secondary border border-transparent hover:text-text-primary hover:bg-white/5'
+                                ? 'bg-engine/12 text-text-primary font-semibold border border-engine/25'
+                                : 'bg-transparent text-text-secondary border border-transparent hover:text-text-primary hover:bg-bg-tertiary'
                             }`}
                           >
                             <div className="flex items-center gap-3">
                               <div className={`p-1.5 rounded-lg border transition-colors ${
                                 isSelected
-                                  ? 'bg-accent-primary/20 border-accent-primary/30 text-fieri-blue'
-                                  : 'bg-white/5 border-border-subtle text-text-muted'
+                                  ? 'bg-engine/20 border-engine/30 text-engine'
+                                  : 'bg-bg-tertiary border-border-subtle text-text-muted'
                               }`}>
                                 <Icon className="w-3.5 h-3.5" />
                               </div>
                               <span>{cmd.label}</span>
                             </div>
                             {isSelected && (
-                              <span className="text-[10px] text-accent-primary font-black uppercase tracking-widest">
+                              <span className="text-[11px] text-engine font-bold uppercase tracking-widest">
                                 Valider
                               </span>
                             )}
@@ -307,27 +307,27 @@ export default function CommandPalette({ navigate }) {
                 </div>
               ) : (
                 <div className="py-8 px-4 text-center flex flex-col items-center justify-center gap-2">
-                  <span className="text-2xl">🔍</span>
-                  <p className="text-xs font-bold text-text-primary">Aucune commande trouvée</p>
-                  <p className="text-[10px] text-text-secondary">
-                    Aucune action ne correspond à votre recherche "{search}"
+                  <Search className="w-6 h-6 text-text-muted" />
+                  <p className="text-sm font-bold text-text-primary">Aucune commande trouvée</p>
+                  <p className="text-[13px] text-text-secondary">
+                    Aucune action ne correspond à votre recherche « {search} »
                   </p>
                 </div>
               )}
             </div>
 
             {/* Footer / Instructions */}
-            <div className="px-4 py-2 bg-white/2 border-t border-border-subtle flex items-center justify-between text-[9px] text-text-muted">
+            <div className="px-4 py-2 bg-bg-tertiary/50 border-t border-border-subtle flex items-center justify-between text-[11px] text-text-muted">
               <div className="flex items-center gap-3">
                 <span className="flex items-center gap-1">
-                  <span className="px-1 py-0.5 bg-white/5 rounded border border-border-subtle">↑↓</span> Naviguer
+                  <span className="px-1 py-0.5 bg-bg-tertiary rounded border border-border-subtle">↑↓</span> Naviguer
                 </span>
                 <span className="flex items-center gap-1">
-                  <span className="px-1 py-0.5 bg-white/5 rounded border border-border-subtle">↵</span> Choisir
+                  <span className="px-1 py-0.5 bg-bg-tertiary rounded border border-border-subtle">↵</span> Choisir
                 </span>
               </div>
               <div>
-                Raccourci : <span className="px-1.5 py-0.5 bg-white/5 rounded border border-border-subtle font-mono">⌘K</span> ou <span className="px-1.5 py-0.5 bg-white/5 rounded border border-border-subtle font-mono">Ctrl+K</span>
+                Raccourci : <span className="px-1.5 py-0.5 bg-bg-tertiary rounded border border-border-subtle font-mono">⌘K</span> ou <span className="px-1.5 py-0.5 bg-bg-tertiary rounded border border-border-subtle font-mono">Ctrl+K</span>
               </div>
             </div>
           </motion.div>

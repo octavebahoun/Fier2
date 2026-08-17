@@ -52,20 +52,18 @@ export default function ContactSection({ contact }) {
   };
 
   return (
-    <section id="contact" className="py-24 px-6 md:px-12 lg:px-12 bg-bg-secondary/5 border-b border-border-subtle relative">
-      {/* Glow Spots */}
-      <div className="absolute bottom-0 left-1/3 w-[300px] h-[300px] rounded-full bg-radial from-accent-primary/24 to-transparent blur-[100px] pointer-events-none" />
-      <div className="absolute top-[20%] right-[10%] w-[35vw] h-[35vw] max-w-[400px] rounded-full bg-radial from-fieri-blue/28 to-transparent blur-[100px] pointer-events-none z-0" />
-      <div className="absolute bottom-[20%] left-[10%] w-[35vw] h-[35vw] max-w-[400px] rounded-full bg-radial from-accent-secondary/22 to-transparent blur-[100px] pointer-events-none z-0" />
-
-      <div className="max-w-[92rem] mx-auto w-full relative z-10">
+    <section id="contact" className="py-24 px-6 md:px-12 lg:px-12 bg-bg-primary border-b border-border-subtle relative">
+      <div className="max-w-[92rem] mx-auto w-full">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
           
           {/* Left information panel */}
           <div className="lg:col-span-5 flex flex-col justify-between">
             <div>
               <FadeInWhenVisible direction="left">
-                <span className="text-xs font-bold tracking-[0.2em] text-accent-primary uppercase">{contact.tag}</span>
+                <span className="eyebrow flex items-center gap-3">
+                  <span className="w-8 h-px bg-ember inline-block" aria-hidden="true" />
+                  {contact.tag}
+                </span>
                 <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight mt-3 mb-4">
                   {contact.title}
                 </h2>
@@ -76,36 +74,36 @@ export default function ContactSection({ contact }) {
                 {/* Info lines */}
                 <div className="space-y-4 mb-8">
                   <div className="flex items-center gap-3.5">
-                    <div className="w-9 h-9 rounded-lg bg-bg-secondary border border-border-subtle flex items-center justify-center text-accent-primary">
+                    <div className="w-9 h-9 chamfer-sm bg-bg-secondary border border-border-subtle flex items-center justify-center text-engine">
                       <Mail className="w-4 h-4" />
                     </div>
                     <div>
-                      <div className="text-[9px] font-bold text-text-muted uppercase">Adresse E-mail</div>
-                      <a href={`mailto:${contact.info.email}`} className="text-xs sm:text-sm text-text-primary hover:text-accent-primary font-medium font-mono">
+                      <div className="text-[11px] font-bold text-text-muted uppercase">Adresse E-mail</div>
+                      <a href={`mailto:${contact.info.email}`} className="text-sm text-text-primary hover:text-engine font-medium font-mono">
                         {contact.info.email}
                       </a>
                     </div>
                   </div>
 
                   <div className="flex items-center gap-3.5">
-                    <div className="w-9 h-9 rounded-lg bg-bg-secondary border border-border-subtle flex items-center justify-center text-accent-primary">
+                    <div className="w-9 h-9 chamfer-sm bg-bg-secondary border border-border-subtle flex items-center justify-center text-engine">
                       <Phone className="w-4 h-4" />
                     </div>
                     <div>
-                      <div className="text-[9px] font-bold text-text-muted uppercase">Téléphone</div>
-                      <a href={`tel:${contact.info.tel}`} className="text-xs sm:text-sm text-text-primary hover:text-accent-primary font-medium font-mono">
+                      <div className="text-[11px] font-bold text-text-muted uppercase">Téléphone</div>
+                      <a href={`tel:${contact.info.tel}`} className="text-sm text-text-primary hover:text-engine font-medium font-mono">
                         {contact.info.tel}
                       </a>
                     </div>
                   </div>
 
                   <div className="flex items-center gap-3.5">
-                    <div className="w-9 h-9 rounded-lg bg-bg-secondary border border-border-subtle flex items-center justify-center text-accent-primary">
+                    <div className="w-9 h-9 chamfer-sm bg-bg-secondary border border-border-subtle flex items-center justify-center text-engine">
                       <MapPin className="w-4 h-4" />
                     </div>
                     <div>
-                      <div className="text-[9px] font-bold text-text-muted uppercase">Localisation</div>
-                      <div className="text-xs sm:text-sm text-text-primary font-medium">
+                      <div className="text-[11px] font-bold text-text-muted uppercase">Localisation</div>
+                      <div className="text-sm text-text-primary font-medium">
                         {contact.info.adresse}
                       </div>
                     </div>
@@ -120,7 +118,7 @@ export default function ContactSection({ contact }) {
                   href="https://wa.me/+22941642355?text=Bonjour,%20FIERI"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-6 py-3.5 rounded-xl bg-accent-tertiary hover:bg-accent-tertiary/90 text-text-primary font-bold text-sm transition-all duration-300 hover:scale-[1.02] shadow-lg shadow-accent-tertiary/20 cursor-pointer animate-pulse"
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-6 py-3.5 chamfer-sm bg-ember hover:bg-ember-soft text-white font-bold text-sm transition-colors duration-300 cursor-pointer"
                 >
                   <MessageIcon className="w-5 h-5 fill-current" />
                   Échanger directement sur WhatsApp
@@ -151,59 +149,59 @@ export default function ContactSection({ contact }) {
 
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
-                          <label className="block text-[10px] font-bold tracking-widest text-text-secondary uppercase mb-2">Votre Nom</label>
+                          <label className="block text-[11px] font-bold tracking-widest text-text-secondary uppercase mb-2">Votre Nom</label>
                           <input
                             type="text"
                             required
                             value={formState.name}
                             onChange={(e) => handleChange('name', e.target.value)}
                             placeholder="Nom complet"
-                            className={`w-full px-4 py-3 rounded-lg bg-bg-primary/80 border ${errors.name ? 'border-red-500/50' : 'border-border-subtle focus:border-accent-primary'} focus:outline-none text-text-primary text-xs sm:text-sm font-medium transition-all`}
+                            className={`w-full px-4 py-3 rounded-lg bg-bg-primary/80 border ${errors.name ? 'border-red-500/50' : 'border-border-subtle focus:border-engine'} focus:outline-none text-text-primary text-xs sm:text-sm font-medium transition-all`}
                           />
-                          {errors.name && <span className="text-[10px] text-red-400 mt-1 block">{errors.name}</span>}
+                          {errors.name && <span className="text-[11px] text-red-400 mt-1 block">{errors.name}</span>}
                         </div>
                         <div>
-                          <label className="block text-[10px] font-bold tracking-widest text-text-secondary uppercase mb-2">Adresse E-mail</label>
+                          <label className="block text-[11px] font-bold tracking-widest text-text-secondary uppercase mb-2">Adresse E-mail</label>
                           <input
                             type="email"
                             required
                             value={formState.email}
                             onChange={(e) => handleChange('email', e.target.value)}
                             placeholder="adresse@mail.com"
-                            className={`w-full px-4 py-3 rounded-lg bg-bg-primary/80 border ${errors.email ? 'border-red-500/50' : 'border-border-subtle focus:border-accent-primary'} focus:outline-none text-text-primary text-xs sm:text-sm font-medium transition-all`}
+                            className={`w-full px-4 py-3 rounded-lg bg-bg-primary/80 border ${errors.email ? 'border-red-500/50' : 'border-border-subtle focus:border-engine'} focus:outline-none text-text-primary text-xs sm:text-sm font-medium transition-all`}
                           />
-                          {errors.email && <span className="text-[10px] text-red-400 mt-1 block">{errors.email}</span>}
+                          {errors.email && <span className="text-[11px] text-red-400 mt-1 block">{errors.email}</span>}
                         </div>
                       </div>
 
                       <div>
-                        <label className="block text-[10px] font-bold tracking-widest text-text-secondary uppercase mb-2">Sujet de discussion</label>
+                        <label className="block text-[11px] font-bold tracking-widest text-text-secondary uppercase mb-2">Sujet de discussion</label>
                         <input
                           type="text"
                           value={formState.subject}
                           onChange={(e) => handleChange('subject', e.target.value)}
                           placeholder="Ex: Candidature R&D, Partenariat..."
-                          className="w-full px-4 py-3 rounded-lg bg-bg-primary/80 border border-border-subtle focus:border-accent-primary focus:outline-none text-text-primary text-xs sm:text-sm font-medium transition-all"
+                          className="w-full px-4 py-3 rounded-lg bg-bg-primary/80 border border-border-subtle focus:border-engine focus:outline-none text-text-primary text-xs sm:text-sm font-medium transition-all"
                         />
                       </div>
 
                       <div>
-                        <label className="block text-[10px] font-bold tracking-widest text-text-secondary uppercase mb-2">Message détaillé</label>
+                        <label className="block text-[11px] font-bold tracking-widest text-text-secondary uppercase mb-2">Message détaillé</label>
                         <textarea
                           required
                           rows="4"
                           value={formState.message}
                           onChange={(e) => handleChange('message', e.target.value)}
                           placeholder="Décrivez votre idée de projet, vos besoins..."
-                          className={`w-full px-4 py-3 rounded-lg bg-bg-primary/80 border ${errors.message ? 'border-red-500/50' : 'border-border-subtle focus:border-accent-primary'} focus:outline-none text-text-primary text-xs sm:text-sm font-medium transition-all resize-none`}
+                          className={`w-full px-4 py-3 rounded-lg bg-bg-primary/80 border ${errors.message ? 'border-red-500/50' : 'border-border-subtle focus:border-engine'} focus:outline-none text-text-primary text-xs sm:text-sm font-medium transition-all resize-none`}
                         />
-                        {errors.message && <span className="text-[10px] text-red-400 mt-1 block">{errors.message}</span>}
+                        {errors.message && <span className="text-[11px] text-red-400 mt-1 block">{errors.message}</span>}
                       </div>
 
                       <button
                         type="submit"
                         disabled={loading}
-                        className="w-full py-3.5 rounded-lg bg-accent-primary hover:bg-accent-primary/95 disabled:opacity-50 disabled:cursor-not-allowed text-text-primary font-bold text-xs sm:text-sm transition-all duration-300 flex items-center justify-center gap-2 shadow-md cursor-pointer"
+                        className="w-full py-3.5 chamfer-sm bg-engine hover:bg-engine-deep disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold text-sm transition-colors duration-300 flex items-center justify-center gap-2 cursor-pointer"
                       >
                         {loading ? (
                           <>
@@ -229,7 +227,7 @@ export default function ContactSection({ contact }) {
                       exit={{ opacity: 0 }}
                       className="py-12 text-center"
                     >
-                      <div className="w-16 h-16 rounded-full bg-accent-primary/20 border border-accent-primary/40 flex items-center justify-center mx-auto text-accent-primary mb-6">
+                      <div className="w-16 h-16 rounded-full bg-engine/20 border border-engine/40 flex items-center justify-center mx-auto text-engine mb-6">
                         <CheckCircle2 className="w-8 h-8" />
                       </div>
                       <h3 className="text-xl font-bold text-text-primary mb-2">Message transmis avec succès !</h3>

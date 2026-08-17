@@ -66,7 +66,7 @@ export default function NewsDetail({ navigate, newsId }) {
       <div className="max-w-3xl mx-auto px-6 py-24 text-center flex flex-col items-center gap-4">
         <h1 className="text-xl font-extrabold text-text-primary">Article inaccessible</h1>
         <p className="text-sm text-text-secondary">{error}</p>
-        <button onClick={() => navigate?.('news')} className="px-4 py-2 rounded-xl bg-accent-primary text-white text-xs font-bold">
+        <button onClick={() => navigate?.('news')} className="px-4 py-2 rounded-xl bg-engine text-white text-xs font-bold">
           Retour aux actualités
         </button>
       </div>
@@ -84,9 +84,9 @@ export default function NewsDetail({ navigate, newsId }) {
       </button>
 
       <header className="flex flex-col gap-4">
-        <div className="flex items-center gap-2 flex-wrap text-[10px] font-black uppercase tracking-wider">
+        <div className="flex items-center gap-2 flex-wrap text-[11px] font-black uppercase tracking-wider">
           {article.categorie && (
-            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-accent-primary/12 border border-accent-primary/25 text-accent-primary">
+            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-engine/12 border border-engine/25 text-engine">
               <Tag className="w-3 h-3" /> {article.categorie}
             </span>
           )}
@@ -98,7 +98,7 @@ export default function NewsDetail({ navigate, newsId }) {
         <div className="flex items-center gap-4 text-xs text-text-muted">
           {article.author && <span className="inline-flex items-center gap-1.5"><User className="w-3.5 h-3.5" /> {article.author}</span>}
           {article.date && <span className="inline-flex items-center gap-1.5"><Calendar className="w-3.5 h-3.5" /> {article.date}</span>}
-          <button onClick={handleShare} className="ml-auto inline-flex items-center gap-1.5 text-accent-primary hover:underline">
+          <button onClick={handleShare} className="ml-auto inline-flex items-center gap-1.5 text-engine hover:underline">
             {copied ? <><Check className="w-3.5 h-3.5" /> Lien copié</> : <><Share2 className="w-3.5 h-3.5" /> Partager</>}
           </button>
         </div>
@@ -120,7 +120,7 @@ export default function NewsDetail({ navigate, newsId }) {
                 onClick={() => navigate?.('news-detail', { newsId: r.id })}
                 className="text-left p-4 rounded-2xl glass-panel hover:-translate-y-0.5 transition-all"
               >
-                {r.categorie && <span className="text-[9px] font-black uppercase tracking-wider text-accent-primary">{r.categorie}</span>}
+                {r.categorie && <span className="text-[11px] font-black uppercase tracking-wider text-engine">{r.categorie}</span>}
                 <p className="text-xs font-bold text-text-primary line-clamp-3 mt-1">{r.title}</p>
               </button>
             ))}

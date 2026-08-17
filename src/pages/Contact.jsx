@@ -75,11 +75,11 @@ function FAQItem({ item, isOpen, onToggle }) {
         onClick={onToggle}
         aria-expanded={isOpen}
         aria-controls={`faq-answer-${item.id}`}
-        className="w-full flex items-center justify-between px-6 py-4 text-left hover:bg-white/3 transition-colors cursor-pointer"
+        className="w-full flex items-center justify-between px-6 py-4 text-left hover:bg-bg-secondary transition-colors cursor-pointer"
       >
         <span className="text-sm font-bold text-text-primary pr-4">{item.question}</span>
         {isOpen
-          ? <ChevronUp className="w-4 h-4 text-fieri-blue shrink-0" />
+          ? <ChevronUp className="w-4 h-4 text-engine shrink-0" />
           : <ChevronDown className="w-4 h-4 text-text-muted shrink-0" />
         }
       </button>
@@ -186,10 +186,10 @@ export default function Contact({ navigate }) {
       {/* En-tête */}
       <div className="flex flex-col gap-3 mb-16 max-w-2xl">
         <div className="flex items-center gap-3 mb-1">
-          <div className="p-2 rounded-xl bg-fieri-blue/10 border border-fieri-blue/20 text-fieri-blue">
+          <div className="p-2 rounded-xl bg-engine/10 border border-engine/20 text-engine">
             <MessageCircle className="w-5 h-5" />
           </div>
-          <span className="text-[10px] font-black tracking-[0.25em] uppercase text-fieri-blue">
+          <span className="text-[11px] font-black tracking-[0.25em] uppercase text-engine">
             SUPPORT & AIDE
           </span>
         </div>
@@ -223,20 +223,20 @@ export default function Contact({ navigate }) {
           {/* Infos de contact directes */}
           <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="glass-panel border border-border-subtle p-5 rounded-2xl flex items-start gap-3">
-              <div className="p-2 rounded-lg bg-fieri-blue/10 border border-fieri-blue/20 text-fieri-blue shrink-0">
+              <div className="p-2 rounded-lg bg-engine/10 border border-engine/20 text-engine shrink-0">
                 <Mail className="w-4 h-4" />
               </div>
               <div>
-                <p className="text-[10px] uppercase tracking-widest text-text-muted font-bold">Email</p>
+                <p className="text-[11px] uppercase tracking-widest text-text-muted font-bold">Email</p>
                 <p className="text-xs font-bold text-text-primary mt-0.5">contact@fieri.research</p>
               </div>
             </div>
             <div className="glass-panel border border-border-subtle p-5 rounded-2xl flex items-start gap-3">
-              <div className="p-2 rounded-lg bg-fieri-orange/10 border border-fieri-orange/20 text-fieri-bleue shrink-0">
+              <div className="p-2 rounded-lg bg-ember/10 border border-ember/20 text-engine shrink-0">
                 <MapPin className="w-4 h-4" />
               </div>
               <div>
-                <p className="text-[10px] uppercase tracking-widest text-text-muted font-bold">Localisation</p>
+                <p className="text-[11px] uppercase tracking-widest text-text-muted font-bold">Localisation</p>
                 <p className="text-xs font-bold text-text-primary mt-0.5">Abomey-Calavi, Bénin</p>
               </div>
             </div>
@@ -252,13 +252,13 @@ export default function Contact({ navigate }) {
             className="glass-panel border border-border-subtle rounded-3xl p-8 flex flex-col gap-5 sticky top-24"
           >
             <div className="flex items-center gap-2 mb-2">
-              <Send className="w-4 h-4 text-fieri-blue" />
+              <Send className="w-4 h-4 text-engine" />
               <h2 className="text-xs font-black uppercase tracking-widest text-text-primary">Envoyer un message</h2>
             </div>
 
             {/* Champ Nom */}
             <div className="flex flex-col gap-1.5">
-              <label htmlFor="contact-name" className="text-[10px] font-bold uppercase tracking-widest text-text-secondary">
+              <label htmlFor="contact-name" className="text-[11px] font-bold uppercase tracking-widest text-text-secondary">
                 Nom complet
               </label>
               <input
@@ -276,17 +276,17 @@ export default function Contact({ navigate }) {
                     ? 'border-border-subtle text-text-secondary cursor-not-allowed opacity-70'
                     : errors.name
                     ? 'border-red-500/50 focus:border-red-500'
-                    : 'border-border-subtle hover:border-accent-primary/30 focus:border-accent-primary'
+                    : 'border-border-subtle hover:border-engine/30 focus:border-engine'
                 }`}
               />
               {errors.name && (
-                <span id="error-name" role="alert" className="text-[10px] text-red-400">{errors.name}</span>
+                <span id="error-name" role="alert" className="text-[11px] text-red-400">{errors.name}</span>
               )}
             </div>
 
             {/* Champ Email */}
             <div className="flex flex-col gap-1.5">
-              <label htmlFor="contact-email" className="text-[10px] font-bold uppercase tracking-widest text-text-secondary">
+              <label htmlFor="contact-email" className="text-[11px] font-bold uppercase tracking-widest text-text-secondary">
                 Adresse e-mail
               </label>
               <input
@@ -304,17 +304,17 @@ export default function Contact({ navigate }) {
                     ? 'border-border-subtle text-text-secondary cursor-not-allowed opacity-70'
                     : errors.email
                     ? 'border-red-500/50 focus:border-red-500'
-                    : 'border-border-subtle hover:border-accent-primary/30 focus:border-accent-primary'
+                    : 'border-border-subtle hover:border-engine/30 focus:border-engine'
                 }`}
               />
               {errors.email && (
-                <span id="error-email" role="alert" className="text-[10px] text-red-400">{errors.email}</span>
+                <span id="error-email" role="alert" className="text-[11px] text-red-400">{errors.email}</span>
               )}
             </div>
 
             {/* Champ Sujet */}
             <div className="flex flex-col gap-1.5">
-              <label htmlFor="contact-subject" className="text-[10px] font-bold uppercase tracking-widest text-text-secondary">
+              <label htmlFor="contact-subject" className="text-[11px] font-bold uppercase tracking-widest text-text-secondary">
                 Sujet
               </label>
               <input
@@ -329,17 +329,17 @@ export default function Contact({ navigate }) {
                 className={`bg-bg-primary/60 border rounded-xl px-4 py-2.5 text-xs text-text-primary placeholder:text-text-muted transition-all focus:outline-none ${
                   errors.subject
                     ? 'border-red-500/50 focus:border-red-500'
-                    : 'border-border-subtle hover:border-accent-primary/30 focus:border-accent-primary'
+                    : 'border-border-subtle hover:border-engine/30 focus:border-engine'
                 }`}
               />
               {errors.subject && (
-                <span id="error-subject" role="alert" className="text-[10px] text-red-400">{errors.subject}</span>
+                <span id="error-subject" role="alert" className="text-[11px] text-red-400">{errors.subject}</span>
               )}
             </div>
 
             {/* Champ Message */}
             <div className="flex flex-col gap-1.5">
-              <label htmlFor="contact-message" className="text-[10px] font-bold uppercase tracking-widest text-text-secondary">
+              <label htmlFor="contact-message" className="text-[11px] font-bold uppercase tracking-widest text-text-secondary">
                 Message
               </label>
               <textarea
@@ -355,11 +355,11 @@ export default function Contact({ navigate }) {
                 className={`bg-bg-primary/60 border rounded-xl px-4 py-2.5 text-xs text-text-primary placeholder:text-text-muted transition-all focus:outline-none resize-none leading-relaxed ${
                   errors.message
                     ? 'border-red-500/50 focus:border-red-500'
-                    : 'border-border-subtle hover:border-accent-primary/30 focus:border-accent-primary'
+                    : 'border-border-subtle hover:border-engine/30 focus:border-engine'
                 }`}
               />
               {errors.message && (
-                <span id="error-message" role="alert" className="text-[10px] text-red-400">{errors.message}</span>
+                <span id="error-message" role="alert" className="text-[11px] text-red-400">{errors.message}</span>
               )}
             </div>
 
@@ -367,7 +367,7 @@ export default function Contact({ navigate }) {
             <button
               type="submit"
               disabled={sending}
-              className="mt-1 w-full py-3 rounded-xl bg-accent-primary hover:bg-accent-primary/90 text-white text-xs font-black uppercase tracking-widest transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 shadow-lg hover:shadow-accent-primary/20"
+              className="mt-1 w-full py-3 rounded-xl bg-engine hover:bg-engine/90 text-white text-xs font-black uppercase tracking-widest transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 shadow-lg hover:shadow-engine/20"
             >
               {sending ? (
                 <>

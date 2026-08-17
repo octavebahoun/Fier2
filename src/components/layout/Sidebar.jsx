@@ -25,6 +25,7 @@ import {
   Layers,
 
 } from 'lucide-react'
+import Logo from '../Logo.jsx'
 import { useAuth } from '../../context/AuthContext.jsx'
 
 // Mappe les pages « détail » vers l'item de menu parent pour l'état actif.
@@ -133,42 +134,37 @@ export default function Sidebar({
       {/* Backdrop (mobile uniquement) */}
       {mobileOpen && (
         <div
-          className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm md:hidden"
+          className="fixed inset-0 z-40 bg-bg-primary/70 backdrop-blur-sm md:hidden"
           onClick={() => setMobileOpen?.(false)}
           aria-hidden="true"
         />
       )}
 
       <aside
-        className={`fixed top-0 left-0 bottom-0 z-50 flex flex-col bg-bg-secondary/95 backdrop-blur-xl border-r border-border-subtle h-screen select-none pointer-events-auto
+        className={`fixed top-0 left-0 bottom-0 z-50 flex flex-col bg-bg-secondary border-r border-border-subtle h-screen select-none pointer-events-auto
           transition-[width,transform] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]
           ${collapsed ? 'w-[76px]' : 'w-64'}
           ${mobileOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0`}
         aria-label="Navigation principale"
       >
-        {/* Glow décoratif */}
-        <div className="absolute top-1/4 left-0 w-full h-1/2 pointer-events-none bg-fieri-blue/5 blur-[40px] z-0" />
-
         {/* En-tête : marque + toggle */}
-        <div className="relative z-10 flex items-center justify-between h-16 px-4 shrink-0 border-b border-border-subtle/60">
+        <div className="relative flex items-center justify-between h-16 px-4 shrink-0 border-b border-border-subtle">
           <button
             onClick={() => navigate('dashboard')}
-            className="flex items-center gap-2.5 cursor-pointer group min-w-0"
+            className="flex items-center gap-2.5 cursor-pointer group min-w-0 text-text-primary"
             title="Tableau de bord"
             aria-label="Aller au tableau de bord"
           >
-            <div className="w-8 h-8 shrink-0 flex items-center justify-center rounded-lg bg-fieri-blue/20 border border-fieri-blue/40 group-hover:border-fieri-blue/60 transition-colors shadow-md">
-              <span className="text-fieri-blue text-xs font-black">F</span>
-            </div>
+            <Logo className="h-5" />
             {!collapsed && (
-              <span className="text-[11px] font-black uppercase tracking-[0.18em] text-text-primary truncate">FIERI Hub</span>
+              <span className="eyebrow text-text-muted truncate">FIERI Hub</span>
             )}
           </button>
 
           {/* Fermer (mobile) */}
           <button
             onClick={() => setMobileOpen?.(false)}
-            className="md:hidden p-1.5 rounded-lg text-text-muted hover:text-text-primary hover:bg-white/5 transition-all cursor-pointer"
+            className="md:hidden p-1.5 rounded-lg text-text-muted hover:text-text-primary hover:bg-bg-tertiary transition-all cursor-pointer"
             aria-label="Fermer le menu"
           >
             <X className="w-4 h-4" />
@@ -178,7 +174,7 @@ export default function Sidebar({
           {!collapsed && (
             <button
               onClick={() => setCollapsed?.(true)}
-              className="hidden md:flex p-1.5 rounded-lg text-text-muted hover:text-text-primary hover:bg-white/5 transition-all cursor-pointer"
+              className="hidden md:flex p-1.5 rounded-lg text-text-muted hover:text-text-primary hover:bg-bg-tertiary transition-all cursor-pointer"
               title="Replier la barre"
               aria-label="Replier la barre latérale"
             >
@@ -188,37 +184,37 @@ export default function Sidebar({
         </div>
 
         {/* ─────────────────────────── NAVIGATION PAR SESSIONS ACCORDÉONS (BOUTONS EXTENSIBLES) ─────────────────────────── */}
-        <nav className="relative z-10 flex-1 overflow-y-auto overflow-x-hidden py-5 px-3 flex flex-col gap-6">
+        <nav className="relative flex-1 overflow-y-auto overflow-x-hidden py-5 px-3 flex flex-col gap-6">
           {groups.map((group) => {
             const isOpen = openGroupId === group.id
             const hasActiveChild = group.items.some(i => isActive(i.id))
 
             return (
               <div key={group.id} className="flex flex-col gap-2">
-                
+
                 {/* Session Extensible Button Header (non replié) */}
                 {!collapsed ? (
                   <button
                     onClick={() => toggleGroup(group.id)}
-                    className={`w-full px-3 py-2 flex items-center justify-between text-[10px] font-black uppercase tracking-[0.2em] transition-all cursor-pointer rounded-xl border ${
-                      hasActiveChild 
-                        ? 'text-fieri-blue bg-fieri-blue/10 border-fieri-blue/20 shadow-sm' 
-                        : 'text-text-muted hover:text-text-primary bg-white/[0.03] hover:bg-white/[0.07] border-white/5'
+                    className={`w-full px-3 py-2 flex items-center justify-between text-[11px] font-semibold uppercase tracking-[0.16em] transition-all cursor-pointer rounded-md border ${
+                      hasActiveChild
+                        ? 'text-engine bg-engine/8 border-engine/20'
+                        : 'text-text-muted hover:text-text-primary hover:bg-bg-tertiary border-border-subtle'
                     }`}
                   >
                     <span className="flex items-center gap-2.5">
-                      <group.icon className="w-3.5 h-3.5 text-fieri-blue/80" />
+                      <group.icon className="w-4 h-4 text-text-muted" />
                       <span>{group.label}</span>
                     </span>
-                    <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${isOpen ? 'rotate-180 text-fieri-blue' : ''}`} />
+                    <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${isOpen ? 'rotate-180 text-engine' : ''}`} />
                   </button>
                 ) : (
-                  <div className="h-px bg-white/5 my-1" />
+                  <div className="h-px bg-border-subtle my-1" />
                 )}
 
                 {/* Contenu de la session (Boutons de navigation) */}
                 {(isOpen || collapsed) && (
-                  <div className="flex flex-col gap-1.5 pl-1">
+                  <div className="flex flex-col gap-1 pl-1">
                     {group.items.map((item) => {
                       const Icon = item.icon
                       const active = isActive(item.id)
@@ -229,19 +225,19 @@ export default function Sidebar({
                           title={collapsed ? item.label : undefined}
                           aria-label={collapsed ? item.label : undefined}
                           aria-current={active ? 'page' : undefined}
-                          className={`relative w-full h-10 rounded-xl flex items-center transition-all duration-200 cursor-pointer
+                          className={`relative w-full h-10 rounded-md flex items-center transition-all duration-200 cursor-pointer
                             ${collapsed ? 'justify-center px-0' : 'px-3 gap-3'}
                             ${active
-                              ? 'bg-fieri-blue/15 border border-fieri-blue/30 text-text-primary shadow-sm font-bold'
-                              : 'border border-transparent text-text-secondary hover:text-text-primary hover:bg-white/5 font-medium'}`}
+                              ? 'bg-engine/12 border border-engine/25 text-text-primary font-semibold'
+                              : 'border border-transparent text-text-secondary hover:text-text-primary hover:bg-bg-tertiary font-medium'}`}
                         >
-                          <Icon className={`w-[17px] h-[17px] shrink-0 ${active ? 'text-fieri-blue' : 'text-text-muted'}`} aria-hidden="true" />
+                          <Icon className={`w-[17px] h-[17px] shrink-0 ${active ? 'text-engine' : 'text-text-muted'}`} aria-hidden="true" />
                           {!collapsed && (
-                            <span className="text-xs tracking-wide whitespace-nowrap truncate">{item.label}</span>
+                            <span className="text-[13px] tracking-wide whitespace-nowrap truncate">{item.label}</span>
                           )}
                           {active && (
-                            <span className={`absolute rounded-full bg-fieri-blue shadow-[0_0_8px_rgba(108,76,241,0.8)] ${
-                              collapsed ? 'top-2 right-2 w-1.5 h-1.5' : 'right-3 w-1.5 h-1.5'
+                            <span className={`absolute left-0 w-[3px] h-5 rounded-full bg-engine ${
+                              collapsed ? 'top-1/2 -translate-y-1/2' : 'top-1/2 -translate-y-1/2'
                             }`} />
                           )}
                         </button>
@@ -255,16 +251,16 @@ export default function Sidebar({
         </nav>
 
         {/* Pied de Sidebar épuré */}
-        <div className="relative z-10 shrink-0 border-t border-border-subtle/60 p-2.5 flex flex-col gap-1">
+        <div className="relative shrink-0 border-t border-border-subtle p-2.5 flex flex-col gap-1">
           <button
             onClick={() => go({ id: 'contact' })}
             title={collapsed ? 'Aide & Contact' : undefined}
             aria-label={collapsed ? 'Aide & Contact' : undefined}
-            className={`w-full h-9 rounded-xl flex items-center transition-all cursor-pointer text-text-secondary hover:text-text-primary hover:bg-white/5 border border-transparent
+            className={`w-full h-9 rounded-md flex items-center transition-all cursor-pointer text-text-secondary hover:text-text-primary hover:bg-bg-tertiary border border-transparent
               ${collapsed ? 'justify-center px-0' : 'px-2.5 gap-3'}`}
           >
             <LifeBuoy className="w-[17px] h-[17px] shrink-0 text-text-muted" aria-hidden="true" />
-            {!collapsed && <span className="text-xs font-semibold tracking-wide">Aide & Contact</span>}
+            {!collapsed && <span className="text-[13px] font-medium tracking-wide">Aide & Contact</span>}
           </button>
 
           {collapsed && (
@@ -272,7 +268,7 @@ export default function Sidebar({
               onClick={() => setCollapsed?.(false)}
               title="Déplier la barre"
               aria-label="Déplier la barre latérale"
-              className="hidden md:flex w-full h-9 rounded-xl items-center justify-center text-text-muted hover:text-text-primary hover:bg-white/5 border border-transparent transition-all cursor-pointer"
+              className="hidden md:flex w-full h-9 rounded-md items-center justify-center text-text-muted hover:text-text-primary hover:bg-bg-tertiary border border-transparent transition-all cursor-pointer"
             >
               <ChevronsRight className="w-[17px] h-[17px]" aria-hidden="true" />
             </button>
@@ -282,11 +278,11 @@ export default function Sidebar({
             onClick={handleLogout}
             title={collapsed ? 'Se déconnecter' : undefined}
             aria-label={collapsed ? 'Se déconnecter' : undefined}
-            className={`w-full h-9 rounded-xl flex items-center transition-all cursor-pointer text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 border border-transparent hover:border-rose-500/20
+            className={`w-full h-9 rounded-md flex items-center transition-all cursor-pointer text-red-400 hover:text-red-300 hover:bg-red-500/10 border border-transparent hover:border-red-500/20
               ${collapsed ? 'justify-center px-0' : 'px-2.5 gap-3'}`}
           >
-            <LogOut className="w-[17px] h-[17px] shrink-0 text-rose-400" aria-hidden="true" />
-            {!collapsed && <span className="text-xs font-semibold tracking-wide">Déconnexion</span>}
+            <LogOut className="w-[17px] h-[17px] shrink-0 text-red-400" aria-hidden="true" />
+            {!collapsed && <span className="text-[13px] font-medium tracking-wide">Déconnexion</span>}
           </button>
         </div>
       </aside>

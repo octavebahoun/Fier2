@@ -497,8 +497,8 @@ export default function CiteIntegration({ navigate }) {
   return (
     <div className="relative overflow-hidden bg-bg-primary text-text-primary min-h-screen">
       <div className="absolute inset-0 blueprint-grid opacity-70 pointer-events-none" />
-      <div className="absolute top-10 left-1/2 -translate-x-1/2 w-[80vw] h-[80vw] max-w-[900px] max-h-[900px] rounded-full bg-radial from-accent-primary/18 to-transparent blur-[100px] pointer-events-none" />
-      <div className="absolute bottom-0 right-0 w-[42vw] h-[42vw] rounded-full bg-radial from-accent-tertiary/12 to-transparent blur-[90px] pointer-events-none" />
+      <div className="absolute top-10 left-1/2 -translate-x-1/2 w-[80vw] h-[80vw] max-w-[900px] max-h-[900px] rounded-full bg-radial from-engine/18 to-transparent blur-[100px] pointer-events-none" />
+      <div className="absolute bottom-0 right-0 w-[42vw] h-[42vw] rounded-full bg-radial from-ember-soft/12 to-transparent blur-[90px] pointer-events-none" />
 
       <section className="relative z-10 max-w-[92rem] mx-auto w-full px-6 md:px-12 lg:px-12 py-10 md:py-14">
         <div className="flex flex-col gap-8">
@@ -506,14 +506,14 @@ export default function CiteIntegration({ navigate }) {
             <div className="max-w-2xl lg:max-w-[45%]">
               <button
                 onClick={() => navigate('home')}
-                className="inline-flex items-center gap-2 text-[10px] uppercase tracking-widest font-black text-text-secondary hover:text-text-primary transition-colors cursor-pointer mb-5"
+                className="inline-flex items-center gap-2 text-[11px] uppercase tracking-widest font-black text-text-secondary hover:text-text-primary transition-colors cursor-pointer mb-5"
               >
                 <ArrowLeft className="w-3.5 h-3.5" />
                 Retour à l’accueil
               </button>
-              <div className="inline-flex items-center gap-2 bg-accent-primary/10 border border-accent-primary/30 px-4 py-1.5 rounded-full mb-5">
-                <Sparkles className="w-3.5 h-3.5 text-accent-secondary" />
-                <span className="text-[10px] font-extrabold uppercase tracking-widest">Parcours d’intégration FIERI</span>
+              <div className="inline-flex items-center gap-2 bg-engine/10 border border-engine/30 px-4 py-1.5 rounded-full mb-5">
+                <Sparkles className="w-3.5 h-3.5 text-ember" />
+                <span className="text-[11px] font-extrabold uppercase tracking-widest">Parcours d’intégration FIERI</span>
               </div>
               <h1 className="text-3xl md:text-5xl font-extrabold tracking-tight leading-tight">
                 Intégrer notre cité, du niveau international jusqu’au club local.
@@ -532,12 +532,12 @@ export default function CiteIntegration({ navigate }) {
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-bg-primary/60 via-transparent to-transparent pointer-events-none" />
               </div>
-              <div className="absolute -bottom-3 -right-3 w-32 h-32 rounded-full bg-radial from-accent-primary/20 to-transparent blur-[40px] pointer-events-none" />
+              <div className="absolute -bottom-3 -right-3 w-32 h-32 rounded-full bg-radial from-engine/20 to-transparent blur-[40px] pointer-events-none" />
             </div>
           </header>
 
             <div className="glass-panel rounded-2xl p-4 min-w-0 lg:min-w-[320px]">
-              <div className="text-[10px] uppercase tracking-widest font-black text-text-muted mb-3">Position actuelle</div>
+              <div className="text-[11px] uppercase tracking-widest font-black text-text-muted mb-3">Position actuelle</div>
               <div className="flex flex-wrap items-center gap-2 text-xs text-text-secondary">
                 <Crumb label="International" active={view === 'countries' || view === 'global'} onClick={goCountries} />
                 {selectedCountry && <Crumb label={selectedCountry.name} active={view === 'country' || view === 'national'} onClick={() => goCountry()} />}
@@ -665,10 +665,10 @@ function Crumb({ label, active, onClick }) {
   return (
     <button
       onClick={onClick}
-      className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-[10px] uppercase tracking-wider font-black cursor-pointer transition-all ${
+      className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-[11px] uppercase tracking-wider font-black cursor-pointer transition-all ${
         active
-          ? 'bg-accent-primary/20 border-accent-primary/35 text-text-primary'
-          : 'border-border-subtle text-text-secondary hover:text-text-primary hover:bg-white/5'
+          ? 'bg-engine/20 border-engine/35 text-text-primary'
+          : 'border-border-subtle text-text-secondary hover:text-text-primary hover:bg-bg-tertiary'
       }`}
     >
       {label}
@@ -685,7 +685,7 @@ function SearchBox({ value, onChange, placeholder }) {
         value={value}
         onChange={(event) => onChange(event.target.value)}
         placeholder={placeholder}
-        className="w-full rounded-full bg-bg-secondary/80 border border-border-subtle pl-11 pr-4 py-3 text-sm text-text-primary placeholder:text-text-muted outline-none focus:border-accent-primary/60 transition-colors"
+        className="w-full rounded-full bg-bg-secondary/80 border border-border-subtle pl-11 pr-4 py-3 text-sm text-text-primary placeholder:text-text-muted outline-none focus:border-engine/60 transition-colors"
       />
     </label>
   );
@@ -694,9 +694,9 @@ function SearchBox({ value, onChange, placeholder }) {
 function Metric({ icon: Icon, label, value }) {
   return (
     <div className="rounded-2xl border border-border-subtle bg-bg-secondary/45 p-4">
-      <Icon className="w-5 h-5 text-accent-secondary mb-3" />
+      <Icon className="w-5 h-5 text-ember mb-3" />
       <div className="text-2xl font-black">{value}</div>
-      <div className="text-[10px] uppercase tracking-widest font-bold text-text-muted mt-1">{label}</div>
+      <div className="text-[11px] uppercase tracking-widest font-bold text-text-muted mt-1">{label}</div>
     </div>
   );
 }
@@ -732,15 +732,15 @@ function CountriesView({ countries, query, setQuery, onCountrySelect, onGlobalGo
             className="glass-panel rounded-2xl p-5 text-left cursor-pointer group"
           >
             <div className="flex items-start justify-between gap-4">
-              <div className="w-12 h-12 rounded-2xl bg-accent-primary/15 border border-accent-primary/25 flex items-center justify-center font-black">
+              <div className="w-12 h-12 rounded-2xl bg-engine/15 border border-engine/25 flex items-center justify-center font-black">
                 {country.flag}
               </div>
-              <ArrowRight className="w-4 h-4 text-text-muted group-hover:text-accent-secondary transition-colors" />
+              <ArrowRight className="w-4 h-4 text-text-muted group-hover:text-ember transition-colors" />
             </div>
             <h3 className="mt-5 text-xl font-black">{country.name}</h3>
-            <p className="text-xs uppercase tracking-widest font-bold text-accent-secondary mt-1">{country.region}</p>
+            <p className="text-xs uppercase tracking-widest font-bold text-ember mt-1">{country.region}</p>
             <p className="text-sm text-text-secondary mt-4 leading-relaxed">{country.summary}</p>
-            <div className="flex gap-2 mt-5 text-[10px] uppercase tracking-wider font-black text-text-muted">
+            <div className="flex gap-2 mt-5 text-[11px] uppercase tracking-wider font-black text-text-muted">
               <span>{country.universities.length} université(s)</span>
               <span>•</span>
               <span>{country.universities.reduce((sum, university) => sum + university.clubs.length, 0)} club(s)</span>
@@ -752,7 +752,7 @@ function CountriesView({ countries, query, setQuery, onCountrySelect, onGlobalGo
       <div className="flex justify-center pt-2">
         <button
           onClick={onGlobalGovernance}
-          className="inline-flex items-center justify-center gap-2 rounded-full border border-accent-secondary/30 bg-accent-secondary/10 px-6 py-3 text-xs uppercase tracking-widest font-black text-text-primary hover:bg-accent-secondary/15 transition-all cursor-pointer"
+          className="inline-flex items-center justify-center gap-2 rounded-full border border-ember/30 bg-ember/10 px-6 py-3 text-xs uppercase tracking-widest font-black text-text-primary hover:bg-ember/15 transition-all cursor-pointer"
         >
           <Crown className="w-4 h-4" />
           Voir la Gouvernance Globale
@@ -780,11 +780,11 @@ function GovernanceView({ title, subtitle, people, board, onBack }) {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           {people.map((person) => (
             <article key={`${person.name}-${person.role}`} className="glass-panel rounded-2xl p-5">
-              <div className="w-12 h-12 rounded-2xl bg-accent-primary/15 border border-accent-primary/25 flex items-center justify-center mb-5">
-                <Users className="w-5 h-5 text-accent-secondary" />
+              <div className="w-12 h-12 rounded-2xl bg-engine/15 border border-engine/25 flex items-center justify-center mb-5">
+                <Users className="w-5 h-5 text-ember" />
               </div>
               <h3 className="text-lg font-black">{person.name}</h3>
-              <p className="text-xs uppercase tracking-widest text-accent-secondary font-black mt-1">{person.role}</p>
+              <p className="text-xs uppercase tracking-widest text-ember font-black mt-1">{person.role}</p>
               <p className="text-sm text-text-secondary mt-4">
                 {person.bio ?? (canSeeContacts ? person.contact : 'Coordonnées masquées (Connexion Étudiant requise)')}
               </p>
@@ -796,7 +796,7 @@ function GovernanceView({ title, subtitle, people, board, onBack }) {
           <div className="flex flex-col gap-3">
             {board.map((item) => (
               <div key={item} className="flex items-center gap-3 text-sm text-text-secondary">
-                <CheckCircle2 className="w-4 h-4 text-accent-secondary shrink-0" />
+                <CheckCircle2 className="w-4 h-4 text-ember shrink-0" />
                 {item}
               </div>
             ))}
@@ -827,15 +827,15 @@ function CountryView({ country, universities, query, setQuery, onUniversitySelec
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
         {universities.map((university) => (
           <button key={university.id} onClick={() => onUniversitySelect(university.id)} className="glass-panel rounded-2xl p-5 text-left cursor-pointer group">
-            <Building2 className="w-6 h-6 text-accent-secondary" />
+            <Building2 className="w-6 h-6 text-ember" />
             <h3 className="text-xl font-black mt-4">{university.name}</h3>
             <p className="text-sm text-text-secondary mt-2 flex items-center gap-2">
               <MapPin className="w-4 h-4" />
               {university.city}
             </p>
             <div className="flex items-center justify-between mt-5">
-              <span className="text-[10px] uppercase tracking-widest font-black text-text-muted">{university.clubs.length} club(s)</span>
-              <ArrowRight className="w-4 h-4 text-text-muted group-hover:text-accent-secondary transition-colors" />
+              <span className="text-[11px] uppercase tracking-widest font-black text-text-muted">{university.clubs.length} club(s)</span>
+              <ArrowRight className="w-4 h-4 text-text-muted group-hover:text-ember transition-colors" />
             </div>
           </button>
         ))}
@@ -862,14 +862,14 @@ function UniversityView({ university, clubs, query, setQuery, onClubSelect, onUn
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
         {clubs.map((club) => (
           <button key={club.id} onClick={() => onClubSelect(club.id)} className="glass-panel rounded-2xl p-5 text-left cursor-pointer group">
-            <Award className="w-6 h-6 text-accent-secondary" />
+            <Award className="w-6 h-6 text-ember" />
             <h3 className="text-xl font-black mt-4">{club.name}</h3>
             <p className="text-sm text-text-secondary mt-2">{club.domain}</p>
             <div className="flex flex-wrap gap-2 mt-5">
-              <span className="rounded-full bg-accent-primary/15 border border-accent-primary/25 px-3 py-1 text-[10px] uppercase tracking-widest font-black">
+              <span className="rounded-full bg-engine/15 border border-engine/25 px-3 py-1 text-[11px] uppercase tracking-widest font-black">
                 {club.members} membres
               </span>
-              <span className="rounded-full bg-accent-secondary/10 border border-accent-secondary/20 px-3 py-1 text-[10px] uppercase tracking-widest font-black">
+              <span className="rounded-full bg-ember/10 border border-ember/20 px-3 py-1 text-[11px] uppercase tracking-widest font-black">
                 Recrutement ouvert
               </span>
             </div>
@@ -899,15 +899,15 @@ function ClubView({ club, university, country, onChief, onJoin }) {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <button
           onClick={onChief}
-          className="rounded-2xl border border-border-subtle bg-bg-secondary/60 p-5 text-left hover:border-accent-primary/35 transition-all cursor-pointer"
+          className="rounded-2xl border border-border-subtle bg-bg-secondary/60 p-5 text-left hover:border-engine/35 transition-all cursor-pointer"
         >
-          <Users className="w-5 h-5 text-accent-secondary mb-3" />
+          <Users className="w-5 h-5 text-ember mb-3" />
           <span className="text-sm font-black">Voir le Responsable du Club</span>
           <p className="text-xs text-text-secondary mt-2">Profil du chef de club et informations de contact.</p>
         </button>
         <button
           onClick={onJoin}
-          className="rounded-2xl bg-fieri-blue border border-transparent p-5 text-left text-white hover:bg-fieri-blue/90 transition-all cursor-pointer shadow-[0_12px_35px_rgba(27,111,216,0.28)]"
+          className="rounded-2xl bg-engine border border-transparent p-5 text-left text-white hover:bg-engine/90 transition-all cursor-pointer shadow-[0_12px_35px_rgba(27,111,216,0.28)]"
         >
           <ArrowRight className="w-5 h-5 mb-3" />
           <span className="text-sm font-black">Rejoindre / Intégrer le Club</span>
@@ -929,11 +929,11 @@ function ChiefView({ club, onBack }) {
         Retour au club
       </button>
       <article className="glass-panel rounded-2xl p-6">
-        <div className="w-14 h-14 rounded-2xl bg-accent-primary/15 border border-accent-primary/25 flex items-center justify-center mb-5">
-          <Users className="w-6 h-6 text-accent-secondary" />
+        <div className="w-14 h-14 rounded-2xl bg-engine/15 border border-engine/25 flex items-center justify-center mb-5">
+          <Users className="w-6 h-6 text-ember" />
         </div>
         <h2 className="text-3xl font-black">{club.chief.name}</h2>
-        <p className="text-xs uppercase tracking-widest font-black text-accent-secondary mt-1">{club.chief.role}</p>
+        <p className="text-xs uppercase tracking-widest font-black text-ember mt-1">{club.chief.role}</p>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
           <ContactTile
             icon={Phone}
@@ -965,7 +965,7 @@ function JoinView({ club, form, submitted, onBack, onChange, onSubmit }) {
             Ce formulaire est une simulation locale pour l’essai. Aucune donnée n’est envoyée à un serveur.
           </p>
           {submitted && (
-            <div className="mt-5 rounded-2xl border border-accent-secondary/25 bg-accent-secondary/10 p-4 text-sm text-text-primary">
+            <div className="mt-5 rounded-2xl border border-ember/25 bg-ember/10 p-4 text-sm text-text-primary">
               Demande enregistrée dans le prototype. Le bureau du club pourra vous contacter.
             </div>
           )}
@@ -976,16 +976,16 @@ function JoinView({ club, form, submitted, onBack, onChange, onSubmit }) {
           <FormField label="Téléphone" value={form.phone} onChange={(value) => onChange('phone', value)} required />
           <FormField label="Filière / spécialité" value={form.field} onChange={(value) => onChange('field', value)} required />
           <label className="grid gap-2">
-            <span className="text-[10px] uppercase tracking-widest font-black text-text-muted">Motivation</span>
+            <span className="text-[11px] uppercase tracking-widest font-black text-text-muted">Motivation</span>
             <textarea
               value={form.motivation}
               onChange={(event) => onChange('motivation', event.target.value)}
               required
               rows={4}
-              className="rounded-2xl bg-bg-primary/70 border border-border-subtle px-4 py-3 text-sm text-text-primary outline-none focus:border-accent-primary/60 transition-colors resize-none"
+              className="rounded-2xl bg-bg-primary/70 border border-border-subtle px-4 py-3 text-sm text-text-primary outline-none focus:border-engine/60 transition-colors resize-none"
             />
           </label>
-          <button className="mt-2 rounded-full bg-fieri-blue text-white px-6 py-3 text-xs uppercase tracking-widest font-black hover:bg-fieri-blue/90 transition-all cursor-pointer">
+          <button className="mt-2 rounded-full bg-engine text-white px-6 py-3 text-xs uppercase tracking-widest font-black hover:bg-engine/90 transition-all cursor-pointer">
             Envoyer la demande
           </button>
         </form>
@@ -999,7 +999,7 @@ function LevelHeader({ icon: Icon, eyebrow, title, subtitle, metrics }) {
     <div className="glass-panel rounded-2xl p-6 md:p-8">
       <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6">
         <div className="max-w-3xl">
-          <div className="inline-flex items-center gap-2 text-[10px] uppercase tracking-widest font-black text-accent-secondary mb-4">
+          <div className="inline-flex items-center gap-2 text-[11px] uppercase tracking-widest font-black text-ember mb-4">
             <Icon className="w-4 h-4" />
             {eyebrow}
           </div>
@@ -1008,7 +1008,7 @@ function LevelHeader({ icon: Icon, eyebrow, title, subtitle, metrics }) {
         </div>
         <div className="flex flex-wrap gap-2">
           {metrics.map((metric) => (
-            <span key={metric} className="rounded-full border border-border-subtle bg-white/5 px-4 py-2 text-[10px] uppercase tracking-widest font-black text-text-secondary">
+            <span key={metric} className="rounded-full border border-border-subtle bg-bg-tertiary px-4 py-2 text-[11px] uppercase tracking-widest font-black text-text-secondary">
               {metric}
             </span>
           ))}
@@ -1021,7 +1021,7 @@ function LevelHeader({ icon: Icon, eyebrow, title, subtitle, metrics }) {
 function InfoPanel({ icon: Icon, title, text }) {
   return (
     <article className="glass-panel rounded-2xl p-5">
-      <Icon className="w-6 h-6 text-accent-secondary" />
+      <Icon className="w-6 h-6 text-ember" />
       <h3 className="text-lg font-black mt-4">{title}</h3>
       <p className="text-sm text-text-secondary mt-3 leading-relaxed">{text}</p>
     </article>
@@ -1031,8 +1031,8 @@ function InfoPanel({ icon: Icon, title, text }) {
 function ContactTile({ icon: Icon, label, value }) {
   return (
     <div className="rounded-2xl border border-border-subtle bg-bg-primary/50 p-4">
-      <Icon className="w-4 h-4 text-accent-secondary mb-3" />
-      <div className="text-[10px] uppercase tracking-widest font-black text-text-muted">{label}</div>
+      <Icon className="w-4 h-4 text-ember mb-3" />
+      <div className="text-[11px] uppercase tracking-widest font-black text-text-muted">{label}</div>
       <div className="text-sm font-bold mt-1 break-words">{value}</div>
     </div>
   );
@@ -1041,13 +1041,13 @@ function ContactTile({ icon: Icon, label, value }) {
 function FormField({ label, value, onChange, type = 'text', required = false }) {
   return (
     <label className="grid gap-2">
-      <span className="text-[10px] uppercase tracking-widest font-black text-text-muted">{label}</span>
+      <span className="text-[11px] uppercase tracking-widest font-black text-text-muted">{label}</span>
       <input
         type={type}
         value={value}
         onChange={(event) => onChange(event.target.value)}
         required={required}
-        className="rounded-full bg-bg-primary/70 border border-border-subtle px-4 py-3 text-sm text-text-primary outline-none focus:border-accent-primary/60 transition-colors"
+        className="rounded-full bg-bg-primary/70 border border-border-subtle px-4 py-3 text-sm text-text-primary outline-none focus:border-engine/60 transition-colors"
       />
     </label>
   );
@@ -1058,7 +1058,7 @@ function PrimaryFooterButton({ icon: Icon, label, onClick }) {
     <div className="flex justify-center pt-2">
       <button
         onClick={onClick}
-        className="inline-flex items-center justify-center gap-2 rounded-full bg-fieri-blue text-white px-6 py-3 text-xs uppercase tracking-widest font-black hover:bg-fieri-blue/90 transition-all cursor-pointer shadow-[0_10px_30px_rgba(27,111,216,0.24)]"
+        className="inline-flex items-center justify-center gap-2 rounded-full bg-engine text-white px-6 py-3 text-xs uppercase tracking-widest font-black hover:bg-engine/90 transition-all cursor-pointer shadow-[0_10px_30px_rgba(27,111,216,0.24)]"
       >
         <Icon className="w-4 h-4" />
         {label}

@@ -17,7 +17,7 @@ function Toast({ message, type = 'success', onClose }) {
 
   const bgClass = type === 'success'
     ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'
-    : 'bg-rose-500/10 border-rose-500/30 text-rose-400';
+    : 'bg-ember/10 border-ember/30 text-ember';
 
   return (
     <motion.div
@@ -268,12 +268,15 @@ export default function Offers({ navigate }) {
       {/* Hero Header */}
       <div className="flex flex-col md:flex-row gap-6 items-start md:items-center justify-between relative z-10">
         <div className="space-y-4 max-w-2xl">
-          <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs font-bold w-fit">
-            <Sparkles className="w-3.5 h-3.5 text-rose-400" />
-            <span>AVANTAGES SOCIAUX & PARTENARIATS</span>
+          <div className="flex items-center gap-3 w-fit">
+            <span className="w-8 h-px bg-ember inline-block" aria-hidden="true" />
+            <span className="eyebrow flex items-center gap-2">
+              <Sparkles className="w-3.5 h-3.5 text-engine" />
+              AVANTAGES SOCIAUX & PARTENARIATS
+            </span>
           </div>
-          <h1 className="text-4xl md:text-5xl font-black tracking-tight bg-gradient-to-r from-white via-text-secondary to-rose-400 bg-clip-text text-transparent leading-tight">
-            Offres & Exclusivités
+          <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight text-text-primary font-display leading-tight">
+            Offres & <span className="text-gradient-orange">Exclusivités</span>
           </h1>
           <p className="text-text-secondary text-sm leading-relaxed">
             Profitez des avantages exclusifs, réductions de loyer, bourses d'adhésion et subventions négociés pour les membres de la CITE FIERI auprès de nos partenaires sociaux.
@@ -282,7 +285,7 @@ export default function Offers({ navigate }) {
 
         <button
           onClick={openPublishModal}
-          className="px-5 py-3 rounded-2xl text-xs font-black uppercase tracking-wider text-white transition-all cursor-pointer flex items-center gap-2 shadow-lg bg-rose-500 hover:bg-rose-500/90 shadow-rose-500/20"
+          className="px-5 py-3 rounded-2xl text-xs font-black uppercase tracking-wider text-white transition-all cursor-pointer flex items-center gap-2 shadow-lg bg-ember hover:bg-ember-deep shadow-ember/20"
         >
           <Plus className="w-4 h-4" />
           Proposer une exclusivité
@@ -298,17 +301,17 @@ export default function Offers({ navigate }) {
           {[
             { name: "MUA", role: "Mutuelle & Santé", desc: "Mutuelle Universitaire d'Afrique", color: "from-emerald-500/10 to-teal-500/5 hover:border-emerald-500/30", textColor: "text-emerald-400" },
             { name: "COUS", role: "Logement & Social", desc: "Centre des Œuvres Universitaires", color: "from-amber-500/10 to-orange-500/5 hover:border-amber-500/30", textColor: "text-amber-400" },
-            { name: "Trans-Metro", role: "Mobilité Urbaine", desc: "Navettes & mobilités durables", color: "from-cyan-500/10 to-blue-500/5 hover:border-cyan-500/30", textColor: "text-cyan-400" },
-            { name: "Valkyrie R&D Labs", role: "Équipement & Logiciels", desc: "Dotation technologique", color: "from-rose-500/10 to-purple-500/5 hover:border-rose-500/30", textColor: "text-rose-400" }
+            { name: "Trans-Metro", role: "Mobilité Urbaine", desc: "Navettes & mobilités durables", color: "from-engine/10 to-engine-deep/5 hover:border-engine/30", textColor: "text-engine" },
+            { name: "Valkyrie R&D Labs", role: "Équipement & Logiciels", desc: "Dotation technologique", color: "from-ember/10 to-engine/5 hover:border-ember/30", textColor: "text-ember" }
           ].map(partner => (
-            <div key={partner.name} className={`p-5 rounded-2xl bg-gradient-to-br ${partner.color} border border-white/5 flex flex-col gap-2 transition-all`}>
+            <div key={partner.name} className={`p-5 rounded-2xl bg-gradient-to-br ${partner.color} border border-border-subtle flex flex-col gap-2 transition-all`}>
               <div className="flex justify-between items-start">
                 <span className={`text-base font-black tracking-wider ${partner.textColor}`}>{partner.name}</span>
-                <span className="text-[8px] uppercase tracking-wider font-extrabold bg-white/5 px-2 py-0.5 rounded text-text-muted">Partenaire Officiel</span>
+                <span className="text-[8px] uppercase tracking-wider font-extrabold bg-bg-tertiary px-2 py-0.5 rounded text-text-muted">Partenaire Officiel</span>
               </div>
               <div>
                 <h4 className="text-[11px] font-bold text-text-primary">{partner.role}</h4>
-                <p className="text-[10px] text-text-muted mt-1 leading-normal">{partner.desc}</p>
+                <p className="text-[11px] text-text-muted mt-1 leading-normal">{partner.desc}</p>
               </div>
             </div>
           ))}
@@ -316,7 +319,7 @@ export default function Offers({ navigate }) {
       </div>
 
       {/* Search & Selection Filter Header */}
-      <div className="flex flex-col md:flex-row gap-4 items-center justify-between glass-panel border border-white/5 rounded-2xl p-4 relative z-10 bg-bg-secondary/40">
+      <div className="flex flex-col md:flex-row gap-4 items-center justify-between glass-panel border border-border-subtle rounded-2xl p-4 relative z-10 bg-bg-secondary/40">
         <div className="relative w-full md:max-w-md">
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted" />
           <input
@@ -324,11 +327,11 @@ export default function Offers({ navigate }) {
             placeholder="Rechercher une exclusivité, un partenaire..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full bg-white/3 border border-white/5 focus:border-fieri-blue/30 rounded-xl py-2.5 pl-11 pr-4 text-xs text-text-primary focus:outline-none transition-all"
+            className="w-full bg-bg-secondary border border-border-subtle focus:border-engine/40 rounded-xl py-2.5 pl-11 pr-4 text-xs text-text-primary focus:outline-none transition-all"
           />
         </div>
 
-        <div className="text-[10px] font-extrabold uppercase tracking-wider text-rose-400 bg-rose-500/10 border border-rose-500/20 px-3.5 py-2 rounded-xl flex items-center gap-1.5 shrink-0">
+        <div className="text-[11px] font-extrabold uppercase tracking-wider text-ember bg-ember/10 border border-ember/25 px-3.5 py-2 rounded-xl flex items-center gap-1.5 shrink-0">
           <Sparkles className="w-3.5 h-3.5" />
           <span>Offres Partenaires Socialement Engagés</span>
         </div>
@@ -352,15 +355,15 @@ export default function Offers({ navigate }) {
                   borderColor: "rgba(244, 63, 94, 0.25)",
                   boxShadow: "0 0 30px rgba(244, 63, 94, 0.1)"
                 }}
-                className="glass-panel border bg-bg-secondary/60 backdrop-blur-xl rounded-3xl p-6 md:p-8 flex flex-col justify-between gap-6 transition-all border-rose-500/15"
+                className="glass-panel border bg-bg-secondary/60 backdrop-blur-xl rounded-3xl p-6 md:p-8 flex flex-col justify-between gap-6 transition-all border-ember/20"
               >
                 <div className="space-y-4">
                   {/* Top info row */}
                   <div className="flex justify-between items-center gap-4">
-                    <span className="text-[9px] font-black uppercase tracking-wider px-2.5 py-0.5 rounded-md border text-rose-400 bg-rose-500/10 border-rose-500/10">
+                    <span className="text-[11px] font-black uppercase tracking-wider px-2.5 py-0.5 rounded-md border text-ember bg-ember/10 border-ember/15">
                       Partenaire Social
                     </span>
-                    <span className="text-[9px] font-black uppercase tracking-wider bg-white/5 px-2 py-0.5 rounded text-rose-300">
+                    <span className="text-[11px] font-black uppercase tracking-wider bg-bg-tertiary px-2 py-0.5 rounded text-ember-soft">
                       {opt.discipline}
                     </span>
                   </div>
@@ -370,15 +373,15 @@ export default function Offers({ navigate }) {
                     <h3 className="text-xl font-black tracking-tight text-text-primary">
                       {opt.title}
                     </h3>
-                    <p className="text-[10px] text-text-muted flex items-center gap-1">
-                      Partenaire : <strong className="text-rose-400 font-bold">{opt.author}</strong>
+                    <p className="text-[11px] text-text-muted flex items-center gap-1">
+                      Partenaire : <strong className="text-ember font-bold">{opt.author}</strong>
                     </p>
                   </div>
 
                   {/* Body details */}
-                  <div className="space-y-3 pt-3 border-t border-white/5">
+                  <div className="space-y-3 pt-3 border-t border-border-subtle">
                     <div>
-                      <h4 className="text-[10px] font-black uppercase tracking-wider text-text-secondary mb-1">
+                      <h4 className="text-[11px] font-black uppercase tracking-wider text-text-secondary mb-1">
                         Avantage exclusif
                       </h4>
                       <p className="text-[11px] text-text-secondary leading-relaxed line-clamp-3 font-medium">
@@ -387,7 +390,7 @@ export default function Offers({ navigate }) {
                     </div>
 
                     <div>
-                      <h4 className="text-[10px] font-black uppercase tracking-wider text-text-secondary mb-1">
+                      <h4 className="text-[11px] font-black uppercase tracking-wider text-text-secondary mb-1">
                         Conditions d'accès
                       </h4>
                       <p className="text-[11px] text-text-muted leading-relaxed line-clamp-2">
@@ -398,21 +401,21 @@ export default function Offers({ navigate }) {
                 </div>
 
                 {/* Footer Info & Application CTA */}
-                <div className="flex justify-between items-center pt-4 border-t border-white/5">
-                  <div className="flex items-center gap-1.5 text-xs text-rose-400 font-black">
-                    <Sparkles className="w-4 h-4 text-rose-400" />
+                <div className="flex justify-between items-center pt-4 border-t border-border-subtle">
+                  <div className="flex items-center gap-1.5 text-xs text-ember font-black">
+                    <Sparkles className="w-4 h-4 text-ember" />
                     <span>{opt.salary}</span>
                   </div>
 
                   {appliedOpportunityIds.has(opt.id) ? (
-                    <span className="px-4 py-2 text-[10px] font-black uppercase tracking-wider text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 rounded-xl flex items-center gap-1.5">
+                    <span className="px-4 py-2 text-[11px] font-black uppercase tracking-wider text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 rounded-xl flex items-center gap-1.5">
                       Offre activée
                       <CheckCircle2 className="w-3.5 h-3.5" />
                     </span>
                   ) : (
                     <button
                       onClick={() => openApplyModal(opt)}
-                      className="px-4 py-2 text-[10px] font-black uppercase tracking-wider text-white transition-all rounded-xl shadow-lg flex items-center gap-1.5 cursor-pointer bg-rose-500 hover:bg-rose-500/95 shadow-rose-500/10"
+                      className="px-4 py-2 text-[11px] font-black uppercase tracking-wider text-white transition-all rounded-xl shadow-lg flex items-center gap-1.5 cursor-pointer bg-ember hover:bg-ember-deep shadow-ember/15"
                     >
                       En profiter
                       <ArrowRight className="w-3.5 h-3.5" />
@@ -424,8 +427,8 @@ export default function Offers({ navigate }) {
           </motion.div>
         ) : (
           /* Empty state */
-          <div className="text-center py-20 glass-panel border border-white/5 rounded-3xl flex flex-col items-center justify-center gap-4 max-w-xl mx-auto">
-            <div className="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center text-text-muted">
+          <div className="text-center py-20 glass-panel border border-border-subtle rounded-3xl flex flex-col items-center justify-center gap-4 max-w-xl mx-auto">
+            <div className="w-16 h-16 rounded-full bg-bg-tertiary flex items-center justify-center text-text-muted">
               <Briefcase className="w-8 h-8" />
             </div>
             <div>
@@ -453,13 +456,13 @@ export default function Offers({ navigate }) {
               initial={{ opacity: 0, scale: 0.95, y: 15 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 15 }}
-              className="glass-panel border border-white/10 rounded-3xl p-8 max-w-lg w-full relative bg-bg-secondary/90 backdrop-blur-2xl shadow-2xl z-10 flex flex-col gap-6"
+              className="glass-panel border border-border-subtle rounded-3xl p-8 max-w-lg w-full relative bg-bg-secondary/90 backdrop-blur-2xl shadow-2xl z-10 flex flex-col gap-6"
               role="dialog"
               aria-modal="true"
             >
               <button
                 onClick={closeApplyModal}
-                className="absolute top-4 right-4 text-text-muted hover:text-text-primary p-2 rounded-xl bg-white/3 border border-white/5 cursor-pointer"
+                className="absolute top-4 right-4 text-text-muted hover:text-text-primary p-2 rounded-xl bg-bg-secondary border border-border-subtle cursor-pointer"
                 aria-label="Fermer"
               >
                 <X className="w-4 h-4" />
@@ -470,13 +473,13 @@ export default function Offers({ navigate }) {
                   Bénéficier de l'offre partenaire
                 </h3>
                 <p className="text-xs text-text-secondary leading-relaxed">
-                  Demande d'activation pour l'exclusivité : <strong className="text-rose-400 font-bold">{selectedOpportunity.title}</strong>.
+                  Demande d'activation pour l'exclusivité : <strong className="text-ember font-bold">{selectedOpportunity.title}</strong>.
                 </p>
               </div>
 
               <form onSubmit={handleApplySubmit} className="flex flex-col gap-4">
                 {applyError && (
-                  <div className="p-3 bg-rose-500/10 border border-rose-500/20 text-rose-400 rounded-xl text-[10px] font-bold flex items-center gap-1.5">
+                  <div className="p-3 bg-ember/10 border border-ember/25 text-ember rounded-xl text-[11px] font-bold flex items-center gap-1.5">
                     <ShieldAlert className="w-4 h-4 shrink-0" />
                     {applyError}
                   </div>
@@ -484,7 +487,7 @@ export default function Offers({ navigate }) {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="flex flex-col gap-1.5">
-                    <label htmlFor="student-name" className="text-[9px] font-black uppercase tracking-wider text-text-secondary">Nom Complet</label>
+                    <label htmlFor="student-name" className="text-[11px] font-black uppercase tracking-wider text-text-secondary">Nom Complet</label>
                     <div className="relative">
                       <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted" />
                       <input
@@ -494,13 +497,13 @@ export default function Offers({ navigate }) {
                         required
                         value={applyForm.name}
                         onChange={(e) => setApplyForm({ ...applyForm, name: e.target.value })}
-                        className="w-full bg-white/3 border border-white/5 rounded-xl py-2.5 pl-10 pr-4 text-xs font-semibold text-text-primary focus:outline-none focus:border-fieri-blue/30"
+                        className="w-full bg-bg-secondary border border-border-subtle rounded-xl py-2.5 pl-10 pr-4 text-xs font-semibold text-text-primary focus:outline-none focus:border-engine/40"
                       />
                     </div>
                   </div>
 
                   <div className="flex flex-col gap-1.5">
-                    <label htmlFor="student-email" className="text-[9px] font-black uppercase tracking-wider text-text-secondary">Email de contact</label>
+                    <label htmlFor="student-email" className="text-[11px] font-black uppercase tracking-wider text-text-secondary">Email de contact</label>
                     <div className="relative">
                       <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted" />
                       <input
@@ -509,14 +512,14 @@ export default function Offers({ navigate }) {
                         required
                         value={applyForm.email}
                         onChange={(e) => setApplyForm({ ...applyForm, email: e.target.value })}
-                        className="w-full bg-white/3 border border-white/5 rounded-xl py-2.5 pl-10 pr-4 text-xs font-semibold text-text-primary focus:outline-none focus:border-fieri-blue/30"
+                        className="w-full bg-bg-secondary border border-border-subtle rounded-xl py-2.5 pl-10 pr-4 text-xs font-semibold text-text-primary focus:outline-none focus:border-engine/40"
                       />
                     </div>
                   </div>
                 </div>
 
                 <div className="flex flex-col gap-1.5">
-                  <label htmlFor="student-achievements" className="text-[9px] font-black uppercase tracking-wider text-text-secondary">
+                  <label htmlFor="student-achievements" className="text-[11px] font-black uppercase tracking-wider text-text-secondary">
                     Motivations & Justification de la demande d'avantage
                   </label>
                   <textarea
@@ -526,18 +529,18 @@ export default function Offers({ navigate }) {
                     placeholder="Veuillez indiquer vos motivations ou préciser vos besoins par rapport à cet avantage social."
                     value={applyForm.achievements}
                     onChange={(e) => setApplyForm({ ...applyForm, achievements: e.target.value })}
-                    className="w-full bg-white/3 border border-white/5 rounded-xl p-3 text-xs font-semibold text-text-primary focus:outline-none focus:border-fieri-blue/30 placeholder:text-text-muted"
+                    className="w-full bg-bg-secondary border border-border-subtle rounded-xl p-3 text-xs font-semibold text-text-primary focus:outline-none focus:border-engine/40 placeholder:text-text-muted"
                   />
                 </div>
 
                 <div className="flex flex-col gap-1.5">
-                  <span className="text-[9px] font-black uppercase tracking-wider text-text-secondary">
+                  <span className="text-[11px] font-black uppercase tracking-wider text-text-secondary">
                     Justificatif d'adhésion / Carte d'étudiant
                   </span>
-                  <div className="border border-dashed border-white/10 rounded-2xl p-4 bg-white/2 text-center flex flex-col items-center justify-center gap-2 hover:border-fieri-blue/30 hover:bg-white/3 transition-colors cursor-pointer relative">
-                    <FileText className="w-6 h-6 text-rose-500" />
+                  <div className="border border-dashed border-border-subtle rounded-2xl p-4 bg-bg-secondary/60 text-center flex flex-col items-center justify-center gap-2 hover:border-engine/40 hover:bg-bg-secondary transition-colors cursor-pointer relative">
+                    <FileText className="w-6 h-6 text-ember" />
                     <div>
-                      <p className="text-[10px] text-text-primary font-bold">
+                      <p className="text-[11px] text-text-primary font-bold">
                         Déposer un justificatif d'adhésion (PDF, JPG...)
                       </p>
                       <p className="text-[8px] text-text-muted mt-0.5">Taille max: 10 Mo (Simulation de validation)</p>
@@ -550,24 +553,24 @@ export default function Offers({ navigate }) {
                     />
                   </div>
                   {applyForm.cvFile && (
-                    <span className="text-[10px] text-emerald-400 font-bold mt-1 flex items-center gap-1.5 bg-emerald-500/5 px-3 py-1.5 rounded-xl border border-emerald-500/10 w-fit">
+                    <span className="text-[11px] text-emerald-400 font-bold mt-1 flex items-center gap-1.5 bg-emerald-500/5 px-3 py-1.5 rounded-xl border border-emerald-500/10 w-fit">
                       <CheckCircle2 className="w-3.5 h-3.5" />
                       Fichier lié : {applyForm.cvFile}
                     </span>
                   )}
                 </div>
 
-                <div className="flex gap-4 pt-4 border-t border-white/5">
+                <div className="flex gap-4 pt-4 border-t border-border-subtle">
                   <button
                     type="button"
                     onClick={closeApplyModal}
-                    className="flex-1 py-3 rounded-xl border border-white/5 bg-white/3 hover:bg-white/5 text-xs font-black uppercase text-text-secondary tracking-wider cursor-pointer"
+                    className="flex-1 py-3 rounded-xl border border-border-subtle bg-bg-secondary hover:bg-bg-tertiary text-xs font-black uppercase text-text-secondary tracking-wider cursor-pointer"
                   >
                     Annuler
                   </button>
                   <button
                     type="submit"
-                    className="flex-1 py-3 rounded-xl text-white text-xs font-black uppercase tracking-wider shadow-lg cursor-pointer bg-rose-500 hover:bg-rose-500/90 shadow-rose-500/20"
+                    className="flex-1 py-3 rounded-xl text-white text-xs font-black uppercase tracking-wider shadow-lg cursor-pointer bg-ember hover:bg-ember-deep shadow-ember/20"
                   >
                     Activer l'offre
                   </button>
@@ -595,13 +598,13 @@ export default function Offers({ navigate }) {
               initial={{ opacity: 0, scale: 0.95, y: 15 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 15 }}
-              className="glass-panel border border-white/10 rounded-3xl p-8 max-w-xl w-full relative bg-bg-secondary/90 backdrop-blur-2xl shadow-2xl z-10 flex flex-col gap-6"
+              className="glass-panel border border-border-subtle rounded-3xl p-8 max-w-xl w-full relative bg-bg-secondary/90 backdrop-blur-2xl shadow-2xl z-10 flex flex-col gap-6"
               role="dialog"
               aria-modal="true"
             >
               <button
                 onClick={closePublishModal}
-                className="absolute top-4 right-4 text-text-muted hover:text-text-primary p-2 rounded-xl bg-white/3 border border-white/5 cursor-pointer"
+                className="absolute top-4 right-4 text-text-muted hover:text-text-primary p-2 rounded-xl bg-bg-secondary border border-border-subtle cursor-pointer"
                 aria-label="Fermer"
               >
                 <X className="w-4 h-4" />
@@ -618,7 +621,7 @@ export default function Offers({ navigate }) {
 
               <form onSubmit={handlePublishSubmit} className="flex flex-col gap-4">
                 {publishError && (
-                  <div className="p-3 bg-rose-500/10 border border-rose-500/20 text-rose-400 rounded-xl text-[10px] font-bold flex items-center gap-1.5">
+                  <div className="p-3 bg-ember/10 border border-ember/25 text-ember rounded-xl text-[11px] font-bold flex items-center gap-1.5">
                     <ShieldAlert className="w-4 h-4 shrink-0" />
                     {publishError}
                   </div>
@@ -626,7 +629,7 @@ export default function Offers({ navigate }) {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="flex flex-col gap-1.5">
-                    <label htmlFor="publish-title" className="text-[9px] font-black uppercase tracking-wider text-text-secondary">Titre de l'Offre</label>
+                    <label htmlFor="publish-title" className="text-[11px] font-black uppercase tracking-wider text-text-secondary">Titre de l'Offre</label>
                     <input
                       ref={publishInputRef}
                       id="publish-title"
@@ -635,12 +638,12 @@ export default function Offers({ navigate }) {
                       placeholder="ex. Réduction Logement COUS"
                       value={publishForm.title}
                       onChange={(e) => setPublishForm({ ...publishForm, title: e.target.value })}
-                      className="w-full bg-white/3 border border-white/5 rounded-xl py-2.5 px-4 text-xs font-semibold text-text-primary focus:outline-none focus:border-fieri-blue/30"
+                      className="w-full bg-bg-secondary border border-border-subtle rounded-xl py-2.5 px-4 text-xs font-semibold text-text-primary focus:outline-none focus:border-engine/40"
                     />
                   </div>
 
                   <div className="flex flex-col gap-1.5">
-                    <label htmlFor="publish-discipline" className="text-[9px] font-black uppercase tracking-wider text-text-secondary">Catégorie</label>
+                    <label htmlFor="publish-discipline" className="text-[11px] font-black uppercase tracking-wider text-text-secondary">Catégorie</label>
                     <input
                       id="publish-discipline"
                       type="text"
@@ -648,13 +651,13 @@ export default function Offers({ navigate }) {
                       placeholder="ex. Logement / Transport"
                       value={publishForm.discipline}
                       onChange={(e) => setPublishForm({ ...publishForm, discipline: e.target.value })}
-                      className="w-full bg-white/3 border border-white/5 rounded-xl py-2.5 px-4 text-xs font-semibold text-text-primary focus:outline-none focus:border-fieri-blue/30"
+                      className="w-full bg-bg-secondary border border-border-subtle rounded-xl py-2.5 px-4 text-xs font-semibold text-text-primary focus:outline-none focus:border-engine/40"
                     />
                   </div>
                 </div>
 
                 <div className="flex flex-col gap-1.5">
-                  <label htmlFor="publish-salary" className="text-[9px] font-black uppercase tracking-wider text-text-secondary">Valeur de l'avantage (ex. Remise -50%)</label>
+                  <label htmlFor="publish-salary" className="text-[11px] font-black uppercase tracking-wider text-text-secondary">Valeur de l'avantage (ex. Remise -50%)</label>
                   <input
                     id="publish-salary"
                     type="text"
@@ -662,12 +665,12 @@ export default function Offers({ navigate }) {
                     placeholder="Remise de 30% / Loyer subventionné"
                     value={publishForm.salary}
                     onChange={(e) => setPublishForm({ ...publishForm, salary: e.target.value })}
-                    className="w-full bg-white/3 border border-white/5 rounded-xl py-2.5 px-4 text-xs font-semibold text-text-primary focus:outline-none focus:border-fieri-blue/30"
+                    className="w-full bg-bg-secondary border border-border-subtle rounded-xl py-2.5 px-4 text-xs font-semibold text-text-primary focus:outline-none focus:border-engine/40"
                   />
                 </div>
 
                 <div className="flex flex-col gap-1.5">
-                  <label htmlFor="publish-desc" className="text-[9px] font-black uppercase tracking-wider text-text-secondary">Description détaillée de l'avantage</label>
+                  <label htmlFor="publish-desc" className="text-[11px] font-black uppercase tracking-wider text-text-secondary">Description détaillée de l'avantage</label>
                   <textarea
                     id="publish-desc"
                     rows="3"
@@ -675,12 +678,12 @@ export default function Offers({ navigate }) {
                     placeholder="Décrivez précisément l'avantage exclusif et comment en bénéficier."
                     value={publishForm.description}
                     onChange={(e) => setPublishForm({ ...publishForm, description: e.target.value })}
-                    className="w-full bg-white/3 border border-white/5 rounded-xl p-3 text-xs font-semibold text-text-primary focus:outline-none focus:border-fieri-blue/30"
+                    className="w-full bg-bg-secondary border border-border-subtle rounded-xl p-3 text-xs font-semibold text-text-primary focus:outline-none focus:border-engine/40"
                   />
                 </div>
 
                 <div className="flex flex-col gap-1.5">
-                  <label htmlFor="publish-req" className="text-[9px] font-black uppercase tracking-wider text-text-secondary">Conditions d'éligibilité / Justificatifs requis</label>
+                  <label htmlFor="publish-req" className="text-[11px] font-black uppercase tracking-wider text-text-secondary">Conditions d'éligibilité / Justificatifs requis</label>
                   <textarea
                     id="publish-req"
                     rows="2"
@@ -688,21 +691,21 @@ export default function Offers({ navigate }) {
                     placeholder="ex. Réservé aux étudiants boursiers, carte d'adhérent requise."
                     value={publishForm.requirements}
                     onChange={(e) => setPublishForm({ ...publishForm, requirements: e.target.value })}
-                    className="w-full bg-white/3 border border-white/5 rounded-xl p-3 text-xs font-semibold text-text-primary focus:outline-none focus:border-fieri-blue/30"
+                    className="w-full bg-bg-secondary border border-border-subtle rounded-xl p-3 text-xs font-semibold text-text-primary focus:outline-none focus:border-engine/40"
                   />
                 </div>
 
-                <div className="flex gap-4 pt-4 border-t border-white/5">
+                <div className="flex gap-4 pt-4 border-t border-border-subtle">
                   <button
                     type="button"
                     onClick={closePublishModal}
-                    className="flex-1 py-3 rounded-xl border border-white/5 bg-white/3 hover:bg-white/5 text-xs font-black uppercase text-text-secondary tracking-wider cursor-pointer"
+                    className="flex-1 py-3 rounded-xl border border-border-subtle bg-bg-secondary hover:bg-bg-tertiary text-xs font-black uppercase text-text-secondary tracking-wider cursor-pointer"
                   >
                     Annuler
                   </button>
                   <button
                     type="submit"
-                    className="flex-1 py-3 rounded-xl bg-rose-500 hover:bg-rose-500/90 text-white text-xs font-black uppercase tracking-wider shadow-lg shadow-rose-500/20 cursor-pointer"
+                    className="flex-1 py-3 rounded-xl bg-ember hover:bg-ember-deep text-white text-xs font-black uppercase tracking-wider shadow-lg shadow-ember/20 cursor-pointer"
                   >
                     Créer l'exclusivité
                   </button>

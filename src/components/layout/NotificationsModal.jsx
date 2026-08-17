@@ -92,7 +92,7 @@ export default function NotificationsModal({ open, onClose, navigate }) {
     <>
       {/* Backdrop */}
       <div
-        className="fixed inset-0 z-[60] bg-black/50 backdrop-blur-sm animate-fade-in"
+        className="fixed inset-0 z-[60] bg-bg-primary/70 backdrop-blur-sm"
         onClick={onClose}
         aria-hidden="true"
       />
@@ -103,18 +103,18 @@ export default function NotificationsModal({ open, onClose, navigate }) {
         role="dialog"
         aria-modal="true"
         aria-label="Centre de notifications"
-        className="fixed top-0 right-0 bottom-0 z-[61] w-full max-w-md bg-bg-secondary/98 backdrop-blur-xl border-l border-border-subtle flex flex-col shadow-2xl animate-slide-in-right"
+        className="fixed top-0 right-0 bottom-0 z-[61] w-full max-w-md bg-bg-secondary border-l border-border-subtle flex flex-col shadow-2xl transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]"
       >
         {/* En-tête */}
         <div className="flex items-center justify-between px-5 py-4 border-b border-border-subtle/60 shrink-0">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-fieri-blue/15 border border-fieri-blue/30 flex items-center justify-center">
-              <Bell className="w-4.5 h-4.5 text-fieri-blue" />
+            <div className="w-9 h-9 rounded-xl bg-engine/15 border border-engine/30 flex items-center justify-center">
+              <Bell className="w-4.5 h-4.5 text-engine" />
             </div>
             <div>
               <h2 className="text-sm font-extrabold text-text-primary tracking-tight">Notifications</h2>
               {unreadCount > 0 && (
-                <p className="text-[10px] text-fieri-blue font-bold">
+                <p className="text-xs text-engine font-bold">
                   {unreadCount} non lue{unreadCount > 1 ? 's' : ''}
                 </p>
               )}
@@ -122,7 +122,7 @@ export default function NotificationsModal({ open, onClose, navigate }) {
           </div>
           <button
             onClick={onClose}
-            className="p-2 rounded-lg text-text-muted hover:text-text-primary hover:bg-white/5 transition-all cursor-pointer"
+            className="p-2 rounded-lg text-text-muted hover:text-text-primary hover:bg-bg-tertiary transition-all cursor-pointer"
             aria-label="Fermer les notifications"
           >
             <X className="w-5 h-5" />
@@ -134,7 +134,7 @@ export default function NotificationsModal({ open, onClose, navigate }) {
           <div className="flex items-center gap-2 px-5 py-2.5 border-b border-border-subtle/40 shrink-0">
             <button
               onClick={markAllRead}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-semibold text-text-secondary hover:text-text-primary hover:bg-white/5 transition-all cursor-pointer"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-semibold text-text-secondary hover:text-text-primary hover:bg-bg-tertiary transition-all cursor-pointer"
             >
               <CheckCheck className="w-3.5 h-3.5" />
               Tout marquer lu
@@ -153,11 +153,11 @@ export default function NotificationsModal({ open, onClose, navigate }) {
         <div className="flex-1 overflow-y-auto px-3 py-3">
           {loading ? (
             <div className="flex items-center justify-center py-16">
-              <div className="w-6 h-6 border-2 border-fieri-blue/30 border-t-fieri-blue rounded-full animate-spin" />
+              <div className="w-6 h-6 border-2 border-engine/30 border-t-engine rounded-full animate-spin" />
             </div>
           ) : list.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-16 gap-3 text-center">
-              <div className="w-14 h-14 rounded-2xl bg-white/5 border border-white/8 flex items-center justify-center">
+              <div className="w-14 h-14 rounded-2xl bg-bg-tertiary border border-border-subtle flex items-center justify-center">
                 <Inbox className="w-6 h-6 text-text-muted" />
               </div>
               <p className="text-sm font-semibold text-text-secondary">Aucune notification</p>
@@ -172,8 +172,8 @@ export default function NotificationsModal({ open, onClose, navigate }) {
                   key={notif.id}
                   className={`relative p-3.5 rounded-xl border transition-all cursor-pointer group
                     ${notif.read
-                      ? 'border-transparent bg-transparent opacity-60 hover:opacity-80 hover:bg-white/3'
-                      : 'border-fieri-blue/15 bg-fieri-blue/5 hover:bg-fieri-blue/8 hover:border-fieri-blue/25'
+                      ? 'border-transparent bg-transparent opacity-60 hover:opacity-80 hover:bg-bg-tertiary/60'
+                      : 'border-engine/15 bg-engine/5 hover:bg-engine/8 hover:border-engine/25'
                     }`}
                   onClick={() => handleNotifClick(notif)}
                   onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleNotifClick(notif) } }}
@@ -184,7 +184,7 @@ export default function NotificationsModal({ open, onClose, navigate }) {
                     {/* Indicateur non lu */}
                     <div className="mt-1.5 shrink-0">
                       {!notif.read ? (
-                        <span className="block w-2 h-2 rounded-full bg-fieri-blue shadow-[0_0_6px_rgba(27,111,216,0.6)]" />
+                        <span className="block w-2 h-2 rounded-full bg-engine" />
                       ) : (
                         <span className="block w-2 h-2 rounded-full bg-text-muted/30" />
                       )}
@@ -197,14 +197,14 @@ export default function NotificationsModal({ open, onClose, navigate }) {
                       {notif.body && (
                         <p className="text-[11px] text-text-secondary mt-0.5 line-clamp-2">{notif.body}</p>
                       )}
-                      <p className="text-[10px] text-text-muted mt-1">{notif.createdAt || notif.date}</p>
+                      <p className="text-xs text-text-muted mt-1">{notif.createdAt || notif.date}</p>
                     </div>
 
                     {/* Action rapide marquer lu */}
                     {!notif.read && (
                       <button
                         onClick={(e) => { e.stopPropagation(); markRead(notif.id) }}
-                        className="opacity-0 group-hover:opacity-100 p-1.5 rounded-lg text-text-muted hover:text-fieri-blue hover:bg-fieri-blue/10 transition-all cursor-pointer shrink-0"
+                        className="opacity-0 group-hover:opacity-100 p-1.5 rounded-lg text-text-muted hover:text-engine hover:bg-engine/10 transition-all cursor-pointer shrink-0"
                         title="Marquer comme lu"
                         aria-label="Marquer comme lu"
                       >
@@ -228,7 +228,7 @@ export default function NotificationsModal({ open, onClose, navigate }) {
           from { opacity: 0; }
           to   { opacity: 1; }
         }
-        .animate-slide-in-right { animation: slide-in-right 0.28s cubic-bezier(0.16,1,0.3,1) forwards; }
+        .transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] { animation: slide-in-right 0.28s cubic-bezier(0.16,1,0.3,1) forwards; }
         .animate-fade-in { animation: fade-in 0.18s ease-out forwards; }
       `}</style>
     </>

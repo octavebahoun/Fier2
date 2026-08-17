@@ -88,16 +88,14 @@ export default function ResearchClubsSection({ clubs, navigate }) {
       id="clubs"
       className="py-24 px-6 md:px-12 lg:px-12 border-b border-border-subtle bg-bg-secondary/10 relative overflow-hidden"
     >
-      {/* Ambient halos */}
-      <div className="absolute top-1/3 right-10 w-[400px] h-[400px] rounded-full bg-radial from-accent-primary/22 to-transparent blur-[120px] pointer-events-none" />
-      <div className="absolute top-[15%] left-[10%] w-[45vw] h-[45vw] max-w-[550px] rounded-full bg-radial from-fieri-blue/26 to-transparent blur-[120px] pointer-events-none z-0" />
-      <div className="absolute bottom-[15%] right-[10%] w-[45vw] h-[45vw] max-w-[550px] rounded-full bg-radial from-accent-secondary/20 to-transparent blur-[120px] pointer-events-none z-0" />
-
-      <div className="max-w-[92rem] mx-auto w-full relative z-10">
+      <div className="max-w-[92rem] mx-auto w-full">
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
           <FadeInWhenVisible direction="left">
-            <span className="text-xs font-bold tracking-[0.2em] text-accent-primary uppercase">{clubs.tag}</span>
-            <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight mt-3">
+            <span className="eyebrow flex items-center gap-3">
+              <span className="w-8 h-px bg-ember inline-block" aria-hidden="true" />
+              {clubs.tag}
+            </span>
+            <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight mt-4 font-display">
               {clubs.title}
             </h2>
             <p className="text-text-secondary text-sm font-light mt-3 max-w-xl">
@@ -134,13 +132,13 @@ export default function ResearchClubsSection({ clubs, navigate }) {
           </div>
         ) : error ? (
           <div className="text-center py-16">
-            <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-accent-primary/10 border border-accent-primary/20 mb-4">
-              <Layers className="w-6 h-6 text-accent-primary" />
+            <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-engine/10 border border-engine/20 mb-4">
+              <Layers className="w-6 h-6 text-engine" />
             </div>
             <p className="text-text-secondary text-sm font-light mb-4">{error}</p>
             <button
               onClick={() => window.location.reload()}
-              className="inline-flex items-center gap-2 text-[10px] uppercase tracking-widest font-black bg-accent-primary/10 border border-accent-primary/30 text-accent-primary px-5 py-2.5 rounded-full hover:bg-accent-primary/20 transition-all cursor-pointer"
+              className="inline-flex items-center gap-2 text-[11px] uppercase tracking-widest font-bold bg-engine/10 border border-engine/30 text-engine px-5 py-2.5 chamfer-sm hover:bg-engine/20 transition-all cursor-pointer"
             >
               Réessayer
             </button>
@@ -161,13 +159,13 @@ export default function ResearchClubsSection({ clubs, navigate }) {
           >
             {items.map((club, i) => {
               const Icon = getClubIcon(i);
-              const accent = club.accent || '#e05a2b';
+              const accent = club.accent || 'var(--color-ember)';
               return (
                 <motion.article
                   key={club.id ?? i}
                   onClick={() => safeNavigate('clubs')}
                   whileHover={{ y: -6 }}
-                  className="glass-panel group relative shrink-0 snap-center rounded-2xl border border-border-subtle/70 bg-bg-secondary/30 backdrop-blur-xl p-7 flex flex-col justify-between overflow-hidden transition-colors hover:border-accent-primary/35 cursor-pointer select-none"
+                  className="glass-panel group relative shrink-0 snap-center rounded-2xl border border-border-subtle bg-bg-secondary p-7 flex flex-col justify-between overflow-hidden transition-colors hover:border-border-strong cursor-pointer select-none"
                   style={{ width: cardWidth }}
                 >
                   {/* Halo d'accent */}
@@ -184,12 +182,12 @@ export default function ResearchClubsSection({ clubs, navigate }) {
                       >
                         <Icon className="w-5 h-5" style={{ color: accent }} />
                       </div>
-                      <span className="text-[10px] font-bold tracking-widest uppercase text-text-muted">
+                      <span className="text-[11px] font-bold tracking-widest uppercase text-text-muted font-mono">
                         CITE_{String(i + 1).padStart(2, '0')}
                       </span>
                     </div>
 
-                    <h3 className="text-xl font-extrabold text-text-primary mb-3 leading-snug group-hover:text-accent-primary transition-colors">
+                    <h3 className="text-xl font-extrabold text-text-primary mb-3 leading-snug group-hover:text-engine transition-colors font-display">
                       {club.title}
                     </h3>
 
@@ -200,7 +198,7 @@ export default function ResearchClubsSection({ clubs, navigate }) {
 
                   <div className="border-t border-border-subtle/50 pt-4 mt-auto flex items-center justify-between">
                     <span className="inline-flex items-center gap-1.5 text-xs font-medium text-text-secondary">
-                      <Users className="w-4 h-4 text-accent-secondary" />
+                      <Users className="w-4 h-4 text-text-muted" />
                       {club.membersCount || 0} membres
                     </span>
                     <span
@@ -217,7 +215,7 @@ export default function ResearchClubsSection({ clubs, navigate }) {
           </div>
         )}
 
-        <p className="text-center text-[10px] text-text-muted font-mono uppercase mt-6">
+        <p className="text-center text-[11px] text-text-muted font-mono uppercase mt-6">
           fieri // glissez ou utilisez les flèches pour parcourir les CITE
         </p>
       </div>

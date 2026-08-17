@@ -21,7 +21,7 @@ const HUB_SECTIONS = [
     id: 'clubs',
     title: 'CITE de Recherche',
     desc: 'Rejoignez nos 6 clubs thématiques et collaborez avec des chercheurs passionnés.',
-    color: '#6C4CF1',
+    color: 'var(--color-engine)',
     features: ['6 pôles scientifiques', 'Adhésion en un clic', 'Accents distinctifs'],
     link: 'clubs',
     icon: Users
@@ -30,7 +30,7 @@ const HUB_SECTIONS = [
     id: 'workshops',
     title: 'Ateliers Académiques',
     desc: 'Développez vos compétences grâce à nos ateliers interactifs animés par des experts.',
-    color: '#10b981',
+    color: 'var(--color-emerald-500)',
     features: ['Débutant à Avancé', 'Inscription directe', 'Liste d\'attente'],
     link: 'workshops',
     icon: BookOpen
@@ -39,7 +39,7 @@ const HUB_SECTIONS = [
     id: 'events',
     title: 'Événements & Live',
     desc: 'Participez aux hackathons, webinaires et conférences en direct.',
-    color: '#f5a623',
+    color: 'var(--color-ember-soft)',
     features: ['Streaming live', 'Badges Live', 'Calendrier interactif'],
     link: 'events',
     icon: Calendar
@@ -72,10 +72,10 @@ export default function StudentPortal({ navigate }) {
       <div className="relative z-10">
         <div className="flex flex-col gap-4 mb-16 max-w-3xl">
           <div className="flex items-center gap-3">
-            <div className="p-2.5 rounded-xl bg-fieri-blue/10 border border-fieri-blue/20 text-fieri-blue">
+            <div className="p-2.5 rounded-xl bg-engine/10 border border-engine/20 text-engine">
               <GraduationCap className="w-5 h-5" />
             </div>
-            <span className="text-[10px] font-black tracking-[0.25em] uppercase text-fieri-blue">
+            <span className="text-[11px] font-black tracking-[0.25em] uppercase text-engine">
               PORTAL ÉTUDIANT
             </span>
           </div>
@@ -89,14 +89,14 @@ export default function StudentPortal({ navigate }) {
 
           {/* Bandeau invitation connexion si non connecté */}
           {!user && (
-            <div className="flex items-center gap-4 p-4 rounded-2xl bg-fieri-blue/8 border border-fieri-blue/20 text-sm mt-2">
-              <Lock className="w-5 h-5 text-fieri-blue shrink-0" />
+            <div className="flex items-center gap-4 p-4 rounded-2xl bg-engine/8 border border-engine/20 text-sm mt-2">
+              <Lock className="w-5 h-5 text-engine shrink-0" />
               <p className="text-text-secondary text-xs">
                 <span className="text-text-primary font-semibold">Connectez-vous</span> pour rejoindre des clubs, vous inscrire aux ateliers et accéder à votre tableau de bord.
               </p>
               <button
                 onClick={() => navigate('auth')}
-                className="ml-auto shrink-0 px-4 py-1.5 rounded-xl bg-fieri-blue text-white text-xs font-bold hover:bg-fieri-blue/85 transition-colors"
+                className="ml-auto shrink-0 px-4 py-1.5 rounded-xl bg-engine text-white text-xs font-bold hover:bg-engine/85 transition-colors"
               >
                 Se connecter
               </button>
@@ -114,7 +114,7 @@ export default function StudentPortal({ navigate }) {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.1, type: 'spring', stiffness: 100, damping: 15 }}
                 onClick={() => navigate(section.link)}
-                className="glass-panel rounded-3xl p-7 border border-white/5 text-left group cursor-pointer relative overflow-hidden"
+                className="glass-panel rounded-3xl p-7 border border-border-subtle text-left group cursor-pointer relative overflow-hidden"
                 whileHover={{ y: -4 }}
               >
                 <div
@@ -136,13 +136,13 @@ export default function StudentPortal({ navigate }) {
                     {section.features.map((f) => (
                       <span
                         key={f}
-                        className="text-[9px] font-semibold text-text-muted bg-white/5 px-2 py-1 rounded-full border border-white/5"
+                        className="text-[11px] font-semibold text-text-muted bg-bg-tertiary px-2 py-1 rounded-full border border-border-subtle"
                       >
                         {f}
                       </span>
                     ))}
                   </div>
-                  <div className="flex items-center gap-1.5 text-xs font-bold text-fieri-blue group-hover:gap-2.5 transition-all">
+                  <div className="flex items-center gap-1.5 text-xs font-bold text-engine group-hover:gap-2.5 transition-all">
                     <span>Explorer</span>
                     <ArrowRight className="w-3.5 h-3.5" />
                   </div>
@@ -153,19 +153,19 @@ export default function StudentPortal({ navigate }) {
         </div>
 
         {clubs.length > 0 && (
-          <div className="glass-panel rounded-3xl p-8 border border-white/5 relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-64 h-64 bg-fieri-blue/5 blur-[60px] rounded-full pointer-events-none" />
+          <div className="glass-panel rounded-3xl p-8 border border-border-subtle relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-64 h-64 bg-engine/5 blur-[60px] rounded-full pointer-events-none" />
             <div className="relative z-10 flex flex-col gap-6">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <Users className="w-5 h-5 text-fieri-blue" />
+                  <Users className="w-5 h-5 text-engine" />
                   <h2 className="text-lg font-black tracking-tight text-text-primary">
                     CITE populaires
                   </h2>
                 </div>
                 <button
                   onClick={() => navigate('clubs')}
-                  className="flex items-center gap-1.5 text-xs font-bold text-fieri-blue hover:text-fieri-blue/80 transition-colors cursor-pointer"
+                  className="flex items-center gap-1.5 text-xs font-bold text-engine hover:text-engine/80 transition-colors cursor-pointer"
                 >
                   Voir tout
                   <ChevronRight className="w-3.5 h-3.5" />
@@ -181,7 +181,7 @@ export default function StudentPortal({ navigate }) {
                       initial={{ opacity: 0, y: 16 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: 0.1 * i }}
-                      className="bg-white/5 border border-white/10 rounded-2xl p-5 flex items-center gap-4 group hover:bg-white/10 transition-all cursor-pointer"
+                      className="bg-bg-tertiary border border-border-subtle rounded-2xl p-5 flex items-center gap-4 group hover:bg-bg-tertiary transition-all cursor-pointer"
                       onClick={() => navigate('clubs')}
                     >
                       <div
@@ -192,7 +192,7 @@ export default function StudentPortal({ navigate }) {
                       </div>
                       <div className="flex flex-col min-w-0">
                         <span className="text-xs font-bold text-text-primary truncate">{club.kicker}</span>
-                        <span className="text-[9px] text-text-muted truncate">{club.membersCount || 0} membres</span>
+                        <span className="text-[11px] text-text-muted truncate">{club.membersCount || 0} membres</span>
                       </div>
                     </motion.div>
                   )
@@ -202,11 +202,11 @@ export default function StudentPortal({ navigate }) {
           </div>
         )}
 
-        <div className="mt-12 glass-panel rounded-3xl p-8 border border-white/5 flex flex-col md:flex-row items-center justify-between gap-6 relative overflow-hidden">
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-accent-secondary/5 blur-[60px] rounded-full pointer-events-none" />
+        <div className="mt-12 glass-panel rounded-3xl p-8 border border-border-subtle flex flex-col md:flex-row items-center justify-between gap-6 relative overflow-hidden">
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-ember/5 blur-[60px] rounded-full pointer-events-none" />
           <div className="relative z-10 flex flex-col gap-2">
             <h3 className="text-lg font-extrabold text-text-primary flex items-center gap-2">
-              <Sparkles className="w-5 h-5 text-accent-secondary" />
+              <Sparkles className="w-5 h-5 text-ember" />
               Prêt à rejoindre l'aventure ?
             </h3>
             <p className="text-sm text-text-secondary max-w-xl">
@@ -215,7 +215,7 @@ export default function StudentPortal({ navigate }) {
           </div>
           <button
             onClick={() => navigate('auth')}
-            className="relative z-10 px-6 py-3 rounded-2xl text-xs font-bold text-white bg-fieri-blue hover:bg-fieri-blue/90 shadow-lg shadow-fieri-blue/20 transition-all cursor-pointer shrink-0"
+            className="relative z-10 px-6 py-3 rounded-2xl text-xs font-bold text-white bg-engine hover:bg-engine/90 shadow-lg shadow-engine/20 transition-all cursor-pointer shrink-0"
           >
             Commencer
           </button>

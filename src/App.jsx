@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { Routes, Route, Navigate, useLocation, useParams } from 'react-router-dom'
 import './App.css'
 import AppLayout from './components/layout/AppLayout.jsx'
@@ -73,8 +73,6 @@ function App() {
   const location = useLocation()
   const currentPage = pathToPageName(location.pathname)
 
-  const [isScrolled, setIsScrolled] = useState(false)
-  const [isNavExpanded, setIsNavExpanded] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   const { user, logout } = useAuth()
@@ -84,34 +82,6 @@ function App() {
     navigate('home')
   }
 
-  // Détection du scroll (contracte la pilule de navigation)
-  useEffect(() => {
-    const handleScroll = () => {
-      if (window.scrollY > 40) {
-        setIsScrolled(true)
-        setIsNavExpanded(false)
-      } else {
-        setIsScrolled(false)
-      }
-    }
-    window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
-
-  // Repli automatique des menus au clic extérieur
-  useEffect(() => {
-    const handleClickOutside = (e) => {
-      if (isNavExpanded && !e.target.closest('.pointer-events-auto')) {
-        setIsNavExpanded(false)
-      }
-      if (mobileMenuOpen && !e.target.closest('.pointer-events-auto')) {
-        setMobileMenuOpen(false)
-      }
-    }
-    window.addEventListener('mousedown', handleClickOutside)
-    return () => window.removeEventListener('mousedown', handleClickOutside)
-  }, [isNavExpanded, mobileMenuOpen])
-
   return (
     <AuthGateProvider>
     <AppLayout
@@ -119,9 +89,6 @@ function App() {
       navigate={navigate}
       user={user}
       handleLogout={handleLogout}
-      isScrolled={isScrolled}
-      isNavExpanded={isNavExpanded}
-      setIsNavExpanded={setIsNavExpanded}
       mobileMenuOpen={mobileMenuOpen}
       setMobileMenuOpen={setMobileMenuOpen}
     >

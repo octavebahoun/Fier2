@@ -20,7 +20,7 @@ function Toast({ message, type = 'success', onClose }) {
   const bgClass =
     type === 'success'
       ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'
-      : 'bg-rose-500/10 border-rose-500/30 text-rose-400';
+      : 'bg-red-500/10 border-red-500/30 text-red-400';
 
   return (
     <motion.div
@@ -40,11 +40,11 @@ function Toast({ message, type = 'success', onClose }) {
 
 // ─────────────────────────── Category Color Mapping ───────────────────────────
 const CATEGORY_COLORS = {
-  "Intelligence Artificielle": "from-indigo-500/20 to-blue-500/20 border-indigo-500/30 text-indigo-400",
+  "Intelligence Artificielle": "from-engine/20 to-engine-deep/20 border-engine/30 text-engine",
   "Lancement R&D": "from-amber-500/20 to-orange-500/20 border-amber-500/30 text-amber-400",
   "Éco-énergie": "from-emerald-500/20 to-teal-500/20 border-emerald-500/30 text-emerald-400",
-  "Bio-Tech": "from-rose-500/20 to-pink-500/20 border-rose-500/30 text-rose-400",
-  "Robotique": "from-cyan-500/20 to-blue-500/20 border-cyan-500/30 text-cyan-400"
+  "Bio-Tech": "from-ember/20 to-ember-soft/20 border-ember/30 text-ember",
+  "Robotique": "from-ember/20 to-ember-soft/20 border-ember/30 text-ember"
 };
 
 const getCategoryClass = (cat) => {
@@ -173,8 +173,7 @@ export default function News({ navigate }) {
   return (
     <div className="min-h-screen bg-bg-primary text-text-primary pt-24 pb-16 px-4 md:px-8 relative overflow-hidden">
       {/* Background Decorative Gradient Orbs */}
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[500px] h-[500px] bg-indigo-500/10 rounded-full blur-[120px] pointer-events-none" />
-      <div className="absolute bottom-10 left-10 w-[300px] h-[300px] bg-pink-500/5 rounded-full blur-[100px] pointer-events-none" />
+      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[500px] h-[500px] bg-engine/10 rounded-full blur-[120px] pointer-events-none" />
 
       {/* Tab Filter: Actualités / Événements */}
       <div className="max-w-7xl mx-auto mb-10">
@@ -183,7 +182,7 @@ export default function News({ navigate }) {
             onClick={() => setActiveTab('actualites')}
             className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
               activeTab === 'actualites'
-                ? 'bg-accent-primary/20 border border-accent-primary/30 text-accent-primary shadow-sm'
+                ? 'bg-engine/20 border border-engine/30 text-engine shadow-sm'
                 : 'text-text-secondary hover:text-text-primary border border-transparent'
             }`}
           >
@@ -194,7 +193,7 @@ export default function News({ navigate }) {
             onClick={() => setActiveTab('evenements')}
             className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
               activeTab === 'evenements'
-                ? 'bg-accent-primary/20 border border-accent-primary/30 text-accent-primary shadow-sm'
+                ? 'bg-engine/20 border border-engine/30 text-engine shadow-sm'
                 : 'text-text-secondary hover:text-text-primary border border-transparent'
             }`}
           >
@@ -210,12 +209,15 @@ export default function News({ navigate }) {
       <FadeInWhenVisible>
         <div className="max-w-7xl mx-auto mb-12 text-center md:text-left flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-border-subtle pb-8">
           <div>
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-xs font-semibold text-indigo-400 mb-4">
-              <BookMarked className="w-3.5 h-3.5" />
-              Journal Scientifique & R&D
+            <div className="flex items-center gap-3 mb-4">
+              <span className="w-8 h-px bg-ember inline-block" aria-hidden="true" />
+              <span className="eyebrow flex items-center gap-2">
+                <BookMarked className="w-3.5 h-3.5 text-engine" />
+                Journal Scientifique & R&D
+              </span>
             </div>
-            <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight bg-gradient-to-r from-indigo-200 via-indigo-100 to-purple-200 bg-clip-text text-transparent">
-              Actualités & Publications
+            <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight text-text-primary font-display">
+              Actualités & <span className="text-gradient-cosmic">Publications</span>
             </h1>
             <p className="text-sm md:text-base text-text-secondary mt-3 max-w-2xl">
               Suivez les percées technologiques de nos chercheurs, les comptes-rendus de R&D des CITE scientifiques et les annonces de la CITE Fieri.
@@ -227,7 +229,7 @@ export default function News({ navigate }) {
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               onClick={() => setShowWriteModal(true)}
-              className="flex items-center justify-center gap-2 px-6 py-3.5 rounded-2xl bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-xs font-bold text-white shadow-lg shadow-indigo-600/20 transition-all cursor-pointer w-full md:w-auto"
+              className="flex items-center justify-center gap-2 px-6 py-3.5 rounded-2xl bg-gradient-to-r bg-engine hover:bg-engine-deep text-xs font-bold text-white shadow-lg shadow-engine/20 transition-all cursor-pointer w-full md:w-auto"
             >
               <PlusCircle className="w-4.5 h-4.5" />
               Rédiger un article
@@ -246,7 +248,7 @@ export default function News({ navigate }) {
               onClick={() => setSelectedCategory(cat)}
               className={`px-4 py-2 rounded-xl text-xs font-bold border transition-all whitespace-nowrap cursor-pointer ${
                 selectedCategory === cat
-                  ? 'bg-indigo-600/10 border-indigo-500/30 text-indigo-400'
+                  ? 'bg-engine/10 border-engine/30 text-engine'
                   : 'bg-bg-secondary/40 border-border-subtle text-text-secondary hover:text-text-primary'
               }`}
             >
@@ -263,7 +265,7 @@ export default function News({ navigate }) {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Rechercher par titre, résumé ou chercheur..."
-            className="w-full pl-11 pr-4 py-3 rounded-xl border border-border-subtle bg-bg-secondary/30 text-xs text-text-primary placeholder:text-text-secondary focus:outline-none focus:border-indigo-500/60 focus:bg-bg-secondary/50 transition-all"
+            className="w-full pl-11 pr-4 py-3 rounded-xl border border-border-subtle bg-bg-secondary/30 text-xs text-text-primary placeholder:text-text-secondary focus:outline-none focus:border-engine/60 focus:bg-bg-secondary/50 transition-all"
           />
           {searchQuery && (
             <button
@@ -282,18 +284,18 @@ export default function News({ navigate }) {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {[1, 2, 3].map((n) => (
               <div key={n} className="glass-panel border border-border-subtle bg-bg-secondary/20 rounded-3xl p-6 h-[400px] animate-pulse flex flex-col justify-between">
-                <div className="w-full h-44 rounded-2xl bg-white/5 mb-4" />
-                <div className="h-4 w-1/3 bg-white/5 rounded-md mb-2" />
-                <div className="h-6 w-3/4 bg-white/5 rounded-md mb-4" />
-                <div className="h-4 w-full bg-white/5 rounded-md mb-2" />
-                <div className="h-4 w-5/6 bg-white/5 rounded-md mb-6" />
-                <div className="h-10 w-full bg-white/5 rounded-xl" />
+                <div className="w-full h-44 rounded-2xl bg-bg-tertiary mb-4" />
+                <div className="h-4 w-1/3 bg-bg-tertiary rounded-md mb-2" />
+                <div className="h-6 w-3/4 bg-bg-tertiary rounded-md mb-4" />
+                <div className="h-4 w-full bg-bg-tertiary rounded-md mb-2" />
+                <div className="h-4 w-5/6 bg-bg-tertiary rounded-md mb-6" />
+                <div className="h-10 w-full bg-bg-tertiary rounded-xl" />
               </div>
             ))}
           </div>
         ) : filteredNews.length === 0 ? (
           <div className="glass-panel border border-border-subtle bg-bg-secondary/10 p-12 rounded-3xl text-center max-w-xl mx-auto">
-            <BookOpen className="w-12 h-12 text-indigo-500/40 mx-auto mb-4" />
+            <BookOpen className="w-12 h-12 text-engine/40 mx-auto mb-4" />
             <h3 className="text-base font-bold text-text-primary mb-1">Aucune publication trouvée</h3>
             <p className="text-xs text-text-secondary">
               Aucun article ne correspond à votre recherche ou à la thématique sélectionnée.
@@ -312,7 +314,7 @@ export default function News({ navigate }) {
               >
                 <div>
                   {/* Article Image Header */}
-                  <div className="relative w-full h-48 overflow-hidden bg-white/5">
+                  <div className="relative w-full h-48 overflow-hidden bg-bg-tertiary">
                     <img
                       src={item.image || "https://images.unsplash.com/photo-1615811361523-6bd03d7748e7?w=800"}
                       alt={item.title}
@@ -322,7 +324,7 @@ export default function News({ navigate }) {
                     
                     {/* Category Pill */}
                     <div className="absolute top-4 left-4">
-                      <span className={`inline-flex items-center px-3 py-1 rounded-xl text-[10px] font-extrabold border backdrop-blur-md bg-bg-primary/60 shadow-lg ${getCategoryClass(item.categorie)}`}>
+                      <span className={`inline-flex items-center px-3 py-1 rounded-xl text-[11px] font-extrabold border backdrop-blur-md bg-bg-primary/60 shadow-lg ${getCategoryClass(item.categorie)}`}>
                         {item.categorie}
                       </span>
                     </div>
@@ -331,7 +333,7 @@ export default function News({ navigate }) {
                   {/* Info Metadata */}
                   <div className="px-6 pt-5 pb-3 flex items-center justify-between text-[11px] text-text-secondary">
                     <div className="flex items-center gap-1.5">
-                      <User className="w-3.5 h-3.5 text-indigo-400" />
+                      <User className="w-3.5 h-3.5 text-engine" />
                       <span className="font-semibold text-text-primary/90">{item.author}</span>
                     </div>
                     <div className="flex items-center gap-1.5">
@@ -342,7 +344,7 @@ export default function News({ navigate }) {
 
                   {/* Main Title & Excerpt */}
                   <div className="px-6 py-2">
-                    <h3 className="text-base font-bold text-text-primary leading-snug group-hover:text-indigo-400 transition-colors line-clamp-2">
+                    <h3 className="text-base font-bold text-text-primary leading-snug group-hover:text-engine transition-colors line-clamp-2">
                       {item.title}
                     </h3>
                     <p className="text-xs text-text-secondary mt-2 line-clamp-3 leading-relaxed">
@@ -355,7 +357,7 @@ export default function News({ navigate }) {
                 <div className="px-6 pb-6 pt-4">
                   <button
                     onClick={() => navigate?.('news-detail', { newsId: item.id })}
-                    className="w-full flex items-center justify-center gap-2 py-3 rounded-xl border border-border-subtle hover:border-indigo-500/40 bg-white/5 hover:bg-indigo-600/10 text-xs font-bold text-text-primary hover:text-indigo-400 transition-all cursor-pointer"
+                    className="w-full flex items-center justify-center gap-2 py-3 rounded-xl border border-border-subtle hover:border-engine/40 bg-bg-tertiary hover:bg-engine/10 text-xs font-bold text-text-primary hover:text-engine transition-all cursor-pointer"
                   >
                     <span>Consulter la publication</span>
                     <ArrowRight className="w-4 h-4" />
@@ -395,14 +397,14 @@ export default function News({ navigate }) {
                 {/* Close Button */}
                 <button
                   onClick={() => setReadingArticle(null)}
-                  className="absolute top-4 right-4 p-2 rounded-full bg-black/50 border border-white/10 hover:border-white/30 text-white hover:scale-105 transition-all cursor-pointer"
+                  className="absolute top-4 right-4 p-2 rounded-full bg-black/50 border border-border-subtle hover:border-white/30 text-white hover:scale-105 transition-all cursor-pointer"
                 >
                   <X className="w-5 h-5" />
                 </button>
 
                 {/* Category badge */}
                 <div className="absolute bottom-6 left-6 flex flex-col gap-2">
-                  <span className={`self-start inline-flex items-center px-3 py-1 rounded-xl text-[10px] font-extrabold border bg-bg-primary/80 backdrop-blur-md shadow-md ${getCategoryClass(readingArticle.categorie)}`}>
+                  <span className={`self-start inline-flex items-center px-3 py-1 rounded-xl text-[11px] font-extrabold border bg-bg-primary/80 backdrop-blur-md shadow-md ${getCategoryClass(readingArticle.categorie)}`}>
                     {readingArticle.categorie}
                   </span>
                   <h2 className="text-xl md:text-2xl font-extrabold text-white tracking-tight leading-tight pr-4">
@@ -416,34 +418,34 @@ export default function News({ navigate }) {
                 {/* Metadata details */}
                 <div className="flex flex-wrap items-center gap-6 text-xs text-text-secondary border-b border-border-subtle pb-4 mb-6">
                   <div className="flex items-center gap-2">
-                    <div className="w-8 h-8 rounded-full bg-indigo-600/20 border border-indigo-500/30 flex items-center justify-center text-[11px] text-indigo-400 font-bold uppercase shadow-sm">
+                    <div className="w-8 h-8 rounded-full bg-engine/20 border border-engine/30 flex items-center justify-center text-[11px] text-engine font-bold uppercase shadow-sm">
                       {readingArticle.author.substring(0, 2)}
                     </div>
                     <div>
-                      <div className="text-[10px] text-text-secondary">Auteur</div>
+                      <div className="text-[11px] text-text-secondary">Auteur</div>
                       <div className="font-semibold text-text-primary">{readingArticle.author}</div>
                     </div>
                   </div>
 
                   <div className="flex items-center gap-2">
-                    <Calendar className="w-4 h-4 text-indigo-400 shrink-0" />
+                    <Calendar className="w-4 h-4 text-engine shrink-0" />
                     <div>
-                      <div className="text-[10px] text-text-secondary">Publié le</div>
+                      <div className="text-[11px] text-text-secondary">Publié le</div>
                       <div className="font-semibold text-text-primary">{readingArticle.date}</div>
                     </div>
                   </div>
 
                   <div className="flex items-center gap-2">
-                    <Clock className="w-4 h-4 text-indigo-400 shrink-0" />
+                    <Clock className="w-4 h-4 text-engine shrink-0" />
                     <div>
-                      <div className="text-[10px] text-text-secondary">Temps de lecture</div>
+                      <div className="text-[11px] text-text-secondary">Temps de lecture</div>
                       <div className="font-semibold text-text-primary">4 min</div>
                     </div>
                   </div>
                 </div>
 
                 {/* Excerpt Section */}
-                <div className="bg-indigo-600/5 border-l-2 border-indigo-500/50 p-4 rounded-r-xl text-xs font-semibold text-text-primary/90 italic mb-6">
+                <div className="bg-engine/5 border-l-2 border-engine/50 p-4 rounded-r-xl text-xs font-semibold text-text-primary/90 italic mb-6">
                   {readingArticle.excerpt}
                 </div>
 
@@ -462,7 +464,7 @@ export default function News({ navigate }) {
               <div className="p-6 border-t border-border-subtle bg-bg-secondary/40 flex items-center justify-end shrink-0">
                 <button
                   onClick={() => setReadingArticle(null)}
-                  className="px-6 py-2.5 rounded-xl border border-border-subtle text-xs font-bold text-text-secondary hover:text-text-primary hover:bg-white/5 transition-all cursor-pointer"
+                  className="px-6 py-2.5 rounded-xl border border-border-subtle text-xs font-bold text-text-secondary hover:text-text-primary hover:bg-bg-tertiary transition-all cursor-pointer"
                 >
                   Fermer la publication
                 </button>
@@ -491,12 +493,12 @@ export default function News({ navigate }) {
               {/* Header */}
               <div className="p-6 border-b border-border-subtle flex items-center justify-between shrink-0">
                 <div className="flex items-center gap-2">
-                  <FileText className="w-5 h-5 text-indigo-400" />
+                  <FileText className="w-5 h-5 text-engine" />
                   <h2 className="text-lg font-bold text-text-primary">Rédiger un nouvel article scientifique</h2>
                 </div>
                 <button
                   onClick={() => setShowWriteModal(false)}
-                  className="p-1 rounded-full hover:bg-white/5 text-text-secondary hover:text-text-primary cursor-pointer"
+                  className="p-1 rounded-full hover:bg-bg-tertiary text-text-secondary hover:text-text-primary cursor-pointer"
                 >
                   <X className="w-5 h-5" />
                 </button>
@@ -506,10 +508,10 @@ export default function News({ navigate }) {
               <form onSubmit={handleCreateArticle} className="p-6 overflow-y-auto flex-1 space-y-5 scrollbar-thin scrollbar-thumb-border-subtle">
                 
                 {/* Notice Board */}
-                <div className="p-4 rounded-2xl bg-indigo-500/5 border border-indigo-500/20 text-[11px] text-indigo-400 flex items-start gap-3">
+                <div className="p-4 rounded-2xl bg-engine/5 border border-engine/20 text-[11px] text-engine flex items-start gap-3">
                   <Layers className="w-4 h-4 shrink-0 mt-0.5" />
                   <div>
-                    <span className="font-bold">Circuit de relecture scientifique (Peer-review) :</span> Votre article sera soumis pour validation au comité de lecture. Il sera automatiquement marqué avec le statut <span className="font-bold text-white bg-indigo-500/30 px-1.5 py-0.5 rounded">PENDING</span> et ne sera visible publiquement qu'après approbation par un administrateur.
+                    <span className="font-bold">Circuit de relecture scientifique (Peer-review) :</span> Votre article sera soumis pour validation au comité de lecture. Il sera automatiquement marqué avec le statut <span className="font-bold text-white bg-engine/30 px-1.5 py-0.5 rounded">PENDING</span> et ne sera visible publiquement qu'après approbation par un administrateur.
                   </div>
                 </div>
 
@@ -522,7 +524,7 @@ export default function News({ navigate }) {
                     value={newArticle.title}
                     onChange={(e) => setNewArticle({ ...newArticle, title: e.target.value })}
                     placeholder="ex: Modélisation d'un réseau maillé LoRaWAN résilient"
-                    className="w-full px-4 py-3 rounded-xl border border-border-subtle bg-bg-secondary/40 text-xs text-text-primary focus:outline-none focus:border-indigo-500/60 focus:bg-bg-secondary/60 transition-all"
+                    className="w-full px-4 py-3 rounded-xl border border-border-subtle bg-bg-secondary/40 text-xs text-text-primary focus:outline-none focus:border-engine/60 focus:bg-bg-secondary/60 transition-all"
                   />
                 </div>
 
@@ -533,7 +535,7 @@ export default function News({ navigate }) {
                     <select
                       value={newArticle.categorie}
                       onChange={(e) => setNewArticle({ ...newArticle, categorie: e.target.value })}
-                      className="w-full px-4 py-3 rounded-xl border border-border-subtle bg-bg-secondary/40 text-xs text-text-primary focus:outline-none focus:border-indigo-500/60 focus:bg-bg-secondary/60 transition-all"
+                      className="w-full px-4 py-3 rounded-xl border border-border-subtle bg-bg-secondary/40 text-xs text-text-primary focus:outline-none focus:border-engine/60 focus:bg-bg-secondary/60 transition-all"
                     >
                       <option value="Intelligence Artificielle">Intelligence Artificielle</option>
                       <option value="Lancement R&D">Lancement R&D</option>
@@ -551,7 +553,7 @@ export default function News({ navigate }) {
                         value={newArticle.image}
                         onChange={(e) => setNewArticle({ ...newArticle, image: e.target.value })}
                         placeholder="URL de l'image..."
-                        className="w-full px-4 py-3 rounded-xl border border-border-subtle bg-bg-secondary/40 text-xs text-text-primary focus:outline-none focus:border-indigo-500/60 focus:bg-bg-secondary/60 transition-all"
+                        className="w-full px-4 py-3 rounded-xl border border-border-subtle bg-bg-secondary/40 text-xs text-text-primary focus:outline-none focus:border-engine/60 focus:bg-bg-secondary/60 transition-all"
                       />
                     </div>
                   </div>
@@ -560,7 +562,7 @@ export default function News({ navigate }) {
                 {/* Preset choice row */}
                 <div className="space-y-1.5">
                   <label className="text-[11px] font-bold text-text-secondary uppercase tracking-wider flex items-center gap-1.5">
-                    <Image className="w-3.5 h-3.5 text-indigo-400" />
+                    <Image className="w-3.5 h-3.5 text-engine" />
                     Ou choisir un visuel scientifique prédéfini :
                   </label>
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
@@ -571,13 +573,13 @@ export default function News({ navigate }) {
                         onClick={() => setNewArticle({ ...newArticle, image: preset.url })}
                         className={`group relative h-16 rounded-xl overflow-hidden border transition-all cursor-pointer ${
                           newArticle.image === preset.url
-                            ? 'border-indigo-500 ring-2 ring-indigo-500/30'
+                            ? 'border-engine ring-2 ring-engine/30'
                             : 'border-border-subtle opacity-70 hover:opacity-100'
                         }`}
                       >
                         <img src={preset.url} alt={preset.name} className="w-full h-full object-cover" />
                         <div className="absolute inset-0 bg-black/60 flex items-center justify-center p-1 text-center">
-                          <span className="text-[9px] font-bold text-white leading-tight group-hover:scale-105 transition-transform">{preset.name}</span>
+                          <span className="text-[11px] font-bold text-white leading-tight group-hover:scale-105 transition-transform">{preset.name}</span>
                         </div>
                       </button>
                     ))}
@@ -593,7 +595,7 @@ export default function News({ navigate }) {
                     value={newArticle.excerpt}
                     onChange={(e) => setNewArticle({ ...newArticle, excerpt: e.target.value })}
                     placeholder="Synthèse courte de vos travaux pour la carte de prévisualisation (max. 150 caractères)..."
-                    className="w-full px-4 py-3 rounded-xl border border-border-subtle bg-bg-secondary/40 text-xs text-text-primary placeholder:text-text-secondary/60 focus:outline-none focus:border-indigo-500/60 focus:bg-bg-secondary/60 transition-all resize-none"
+                    className="w-full px-4 py-3 rounded-xl border border-border-subtle bg-bg-secondary/40 text-xs text-text-primary placeholder:text-text-secondary/60 focus:outline-none focus:border-engine/60 focus:bg-bg-secondary/60 transition-all resize-none"
                   />
                 </div>
 
@@ -606,7 +608,7 @@ export default function News({ navigate }) {
                     value={newArticle.content}
                     onChange={(e) => setNewArticle({ ...newArticle, content: e.target.value })}
                     placeholder="Détail complet de la publication : méthodologie, protocoles expérimentaux, conclusions de recherche..."
-                    className="w-full px-4 py-3 rounded-xl border border-border-subtle bg-bg-secondary/40 text-xs text-text-primary placeholder:text-text-secondary/60 focus:outline-none focus:border-indigo-500/60 focus:bg-bg-secondary/60 transition-all"
+                    className="w-full px-4 py-3 rounded-xl border border-border-subtle bg-bg-secondary/40 text-xs text-text-primary placeholder:text-text-secondary/60 focus:outline-none focus:border-engine/60 focus:bg-bg-secondary/60 transition-all"
                   />
                 </div>
 
@@ -615,7 +617,7 @@ export default function News({ navigate }) {
                   <button
                     type="button"
                     onClick={() => setShowWriteModal(false)}
-                    className="px-5 py-3 rounded-xl border border-border-subtle text-xs font-bold text-text-secondary hover:text-text-primary hover:bg-white/5 transition-all cursor-pointer"
+                    className="px-5 py-3 rounded-xl border border-border-subtle text-xs font-bold text-text-secondary hover:text-text-primary hover:bg-bg-tertiary transition-all cursor-pointer"
                   >
                     Annuler
                   </button>
@@ -624,7 +626,7 @@ export default function News({ navigate }) {
                     whileTap={{ scale: 0.98 }}
                     type="submit"
                     disabled={submitting}
-                    className="px-6 py-3 rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-xs font-bold text-white shadow-lg shadow-indigo-600/10 transition-all cursor-pointer disabled:opacity-50"
+                    className="px-6 py-3 rounded-xl bg-gradient-to-r bg-engine hover:bg-engine-deep text-xs font-bold text-white shadow-lg shadow-engine/10 transition-all cursor-pointer disabled:opacity-50"
                   >
                     {submitting ? "Soumission en cours..." : "Soumettre à l'approbation"}
                   </motion.button>

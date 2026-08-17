@@ -8,6 +8,7 @@ import {
 import api from '../services/api.js';
 import { useAuth } from '../context/AuthContext.jsx';
 import FadeInWhenVisible from '../components/home/FadeInWhenVisible.jsx';
+import PageHeader from '../components/ui/PageHeader.jsx';
 
 // ───────────────────────────── Toast Component ───────────────────────────────
 function Toast({ message, type = 'success', onClose }) {
@@ -18,8 +19,8 @@ function Toast({ message, type = 'success', onClose }) {
 
   const styles = {
     success: 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400',
-    error:   'bg-rose-500/10 border-rose-500/30 text-rose-400',
-    info:    'bg-fieri-blue/10 border-fieri-blue/30 text-fieri-blue',
+    error:   'bg-red-500/10 border-red-500/30 text-red-400',
+    info:    'bg-engine/10 border-engine/30 text-engine',
     warning: 'bg-amber-500/10 border-amber-500/30 text-amber-400',
   };
   const icons = {
@@ -53,7 +54,7 @@ function SectionCard({ icon: Icon, title, subtitle, accent, children }) {
     <FadeInWhenVisible direction="up" delay={0.05}>
       <motion.section
         whileHover={{ y: -4 }}
-        className="glass-panel bg-bg-secondary/60 backdrop-blur-xl border border-white/5 rounded-3xl p-6 md:p-8 shadow-xl"
+        className="glass-panel bg-bg-secondary/60 backdrop-blur-xl border border-border-subtle rounded-3xl p-6 md:p-8 shadow-xl"
       >
         <div className="flex items-center gap-3 mb-6">
           <div
@@ -371,11 +372,10 @@ export default function Gouvernance() {
     return (
       <main className="min-h-screen">
         <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden" aria-hidden="true">
-          <div className="absolute -top-40 -left-40 w-[600px] h-[600px] rounded-full opacity-[0.06] blur-[100px]" style={{ background: 'radial-gradient(circle, #6C4CF1, transparent)' }} />
         </div>
         <div className="relative z-10 max-w-3xl mx-auto w-full py-24 px-6 text-center">
-          <div className="glass-panel bg-bg-secondary/60 backdrop-blur-xl border border-white/5 rounded-3xl p-10">
-            <ShieldCheck className="w-12 h-12 text-rose-400 mx-auto mb-4" />
+          <div className="glass-panel bg-bg-secondary/60 backdrop-blur-xl border border-border-subtle rounded-3xl p-10">
+            <ShieldCheck className="w-12 h-12 text-red-400 mx-auto mb-4" />
             <h1 className="text-text-primary font-extrabold text-2xl mb-2">Accès réservé</h1>
             <p className="text-text-secondary text-sm leading-relaxed">
               Cette page est réservée aux <span className="text-text-primary font-semibold">Chefs Universitaires</span> et aux <span className="text-text-primary font-semibold">Administrateurs</span>.
@@ -391,16 +391,15 @@ export default function Gouvernance() {
     return (
       <main className="min-h-screen">
         <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden" aria-hidden="true">
-          <div className="absolute -top-40 -left-40 w-[600px] h-[600px] rounded-full opacity-[0.06] blur-[100px]" style={{ background: 'radial-gradient(circle, #6C4CF1, transparent)' }} />
         </div>
         <div className="relative z-10 max-w-2xl mx-auto w-full py-24 px-6">
           <h1 className="text-text-primary font-extrabold text-4xl mb-2">Gouvernance</h1>
           <p className="text-text-secondary text-sm mb-8">
             Sélectionnez votre université pour accéder aux outils de gouvernance.
           </p>
-          <div className="glass-panel bg-bg-secondary/60 backdrop-blur-xl border border-white/5 rounded-3xl p-6 space-y-4">
+          <div className="glass-panel bg-bg-secondary/60 backdrop-blur-xl border border-border-subtle rounded-3xl p-6 space-y-4">
             {errorRequests && (
-              <div className="flex items-center gap-2 text-rose-400 text-sm bg-rose-500/10 border border-rose-500/30 rounded-xl px-4 py-3">
+              <div className="flex items-center gap-2 text-red-400 text-sm bg-red-500/10 border border-red-500/30 rounded-xl px-4 py-3">
                 <AlertCircle className="w-4 h-4 shrink-0" /> {errorRequests}
               </div>
             )}
@@ -409,7 +408,7 @@ export default function Gouvernance() {
               <select
                 value={countryId}
                 onChange={(e) => setCountryId(e.target.value)}
-                className="w-full appearance-none bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-accent-primary"
+                className="w-full appearance-none bg-bg-tertiary border border-border-subtle rounded-xl px-4 py-3 text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-engine"
               >
                 <option value="">— Choisir un pays —</option>
                 {countries.map((c) => (
@@ -425,7 +424,7 @@ export default function Gouvernance() {
                 value={selectedUniversityId ?? ''}
                 onChange={(e) => setSelectedUniversityId(Number(e.target.value))}
                 disabled={!universities.length}
-                className="w-full appearance-none bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-accent-primary disabled:opacity-50"
+                className="w-full appearance-none bg-bg-tertiary border border-border-subtle rounded-xl px-4 py-3 text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-engine disabled:opacity-50"
               >
                 <option value="">— Choisir une université —</option>
                 {universities.map((u) => (
@@ -445,23 +444,17 @@ export default function Gouvernance() {
     <main className="min-h-screen">
       {/* Halos de fond */}
       <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden" aria-hidden="true">
-        <div className="absolute -top-40 -left-40 w-[600px] h-[600px] rounded-full opacity-[0.06] blur-[100px]" style={{ background: 'radial-gradient(circle, #6C4CF1, transparent)' }} />
-        <div className="absolute top-1/2 -right-60 w-[500px] h-[500px] rounded-full opacity-[0.05] blur-[120px]" style={{ background: 'radial-gradient(circle, #e05a2b, transparent)' }} />
       </div>
 
       <div className="relative z-10 max-w-[92rem] mx-auto w-full py-16 px-6 md:px-12 lg:px-12">
         {/* Hero */}
         <FadeInWhenVisible direction="up" delay={0}>
-          <div className="mb-12 space-y-4">
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest bg-accent-primary/10 text-accent-primary border border-accent-primary/25">
-              <ShieldCheck className="w-3.5 h-3.5" />
-              Espace Chef Universitaire
-            </div>
-            <h1 className="text-text-primary font-extrabold text-4xl md:text-5xl leading-tight">Gouvernance</h1>
-            <p className="text-text-secondary text-lg max-w-2xl leading-relaxed">
-              Gérez les demandes d’exclusion et émettez des attestations officielles pour les membres de votre université.
-            </p>
-          </div>
+          <PageHeader
+            tag="Espace Chef Universitaire"
+            icon={ShieldCheck}
+            title="Gouvernance"
+            description="Gérez les demandes d’exclusion et émettez des attestations officielles pour les membres de votre université."
+          />
         </FadeInWhenVisible>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -470,14 +463,14 @@ export default function Gouvernance() {
             icon={UserX}
             title="Demandes d’exclusion"
             subtitle="Validation ou refus des exclusions demandées par les responsables de club"
-            accent="#e05a2b"
+            accent="var(--color-ember)"
           >
             {loadingRequests ? (
               <div className="flex items-center gap-2 text-text-secondary text-sm py-8 justify-center">
                 <Loader2 className="w-4 h-4 animate-spin" /> Chargement…
               </div>
             ) : errorRequests ? (
-              <div className="flex items-center gap-2 text-rose-400 text-sm bg-rose-500/10 border border-rose-500/30 rounded-xl px-4 py-3">
+              <div className="flex items-center gap-2 text-red-400 text-sm bg-red-500/10 border border-red-500/30 rounded-xl px-4 py-3">
                 <AlertCircle className="w-4 h-4 shrink-0" /> {errorRequests}
               </div>
             ) : requests.length === 0 ? (
@@ -503,13 +496,13 @@ export default function Gouvernance() {
                           <p className="text-text-muted text-[11px] mt-0.5">Demandé par : {req.requestedBy}</p>
                         )}
                       </div>
-                      <span className="shrink-0 text-[10px] font-bold uppercase px-2 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400">
+                      <span className="shrink-0 text-[11px] font-bold uppercase px-2 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400">
                         En attente
                       </span>
                     </div>
 
                     {req.reason && (
-                      <p className="text-text-secondary text-xs italic bg-white/5 rounded-lg px-3 py-2 border border-white/5">
+                      <p className="text-text-secondary text-xs italic bg-bg-tertiary rounded-lg px-3 py-2 border border-border-subtle">
                         « {req.reason} »
                       </p>
                     )}
@@ -519,7 +512,7 @@ export default function Gouvernance() {
                       value={rejectReason[req.memberId] || ''}
                       onChange={(e) => setRejectReason((r) => ({ ...r, [req.memberId]: e.target.value }))}
                       placeholder="Motif du rejet (optionnel)"
-                      className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-xs text-text-primary placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-accent-primary"
+                      className="w-full bg-bg-tertiary border border-border-subtle rounded-lg px-3 py-2 text-xs text-text-primary placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-engine"
                     />
 
                     <div className="flex gap-2">
@@ -535,7 +528,7 @@ export default function Gouvernance() {
                         whileTap={{ scale: 0.97 }}
                         onClick={() => handleConfirmDeletion(req.memberId, false)}
                         disabled={processingId === req.memberId}
-                        className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl text-xs font-bold bg-rose-500/20 text-rose-400 border border-rose-500/30 hover:bg-rose-500 hover:text-white transition-all disabled:opacity-50"
+                        className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl text-xs font-bold bg-red-500/20 text-red-400 border border-red-500/30 hover:bg-red-500 hover:text-white transition-all disabled:opacity-50"
                       >
                         {processingId === req.memberId ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <X className="w-3.5 h-3.5" />} Rejeter
                       </motion.button>
@@ -551,43 +544,43 @@ export default function Gouvernance() {
             icon={FileBadge}
             title="Émettre une attestation"
             subtitle="Génère un PDF signé et l’envoie par e-mail au destinataire"
-            accent="#6C4CF1"
+            accent="var(--color-engine)"
           >
             <form onSubmit={handleIssue} className="space-y-4">
               {/* ── Signature / Griffe Manuscrite Officielle ── */}
-              <div className="p-4 rounded-2xl bg-white/[0.03] border border-white/10">
+              <div className="p-4 rounded-2xl bg-white/[0.03] border border-border-subtle">
                 <div className="flex items-center justify-between mb-2">
                   <label className="text-xs font-bold uppercase tracking-widest text-text-muted flex items-center gap-2">
-                    <PenTool className="w-3.5 h-3.5 text-accent-primary" />
+                    <PenTool className="w-3.5 h-3.5 text-engine" />
                     Signature & Griffe Officielle (Requis)
                   </label>
                   {signatureUrl && (
-                    <span className="text-[10px] font-black uppercase text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20 flex items-center gap-1">
+                    <span className="text-[11px] font-black uppercase text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20 flex items-center gap-1">
                       <CheckCircle2 className="w-3 h-3" /> Griffe Active
                     </span>
                   )}
                 </div>
 
                 {signatureUrl ? (
-                  <div className="flex items-center justify-between gap-3 p-3 rounded-xl bg-black/40 border border-white/10">
+                  <div className="flex items-center justify-between gap-3 p-3 rounded-xl bg-black/40 border border-border-subtle">
                     <div className="flex items-center gap-3">
-                      <div className="w-16 h-10 rounded-lg bg-white/10 border border-white/20 flex items-center justify-center p-1 overflow-hidden">
+                      <div className="w-16 h-10 rounded-lg bg-bg-tertiary border border-white/20 flex items-center justify-center p-1 overflow-hidden">
                         <img src={signatureUrl} alt="Signature officielle" className="max-h-full max-w-full object-contain filter invert opacity-90" />
                       </div>
                       <div className="flex flex-col">
                         <span className="text-xs font-bold text-text-primary">Signature manuscrite chargée</span>
-                        <span className="text-[10px] text-text-muted">Appliquée sur les PDF d'attestations émis</span>
+                        <span className="text-[11px] text-text-muted">Appliquée sur les PDF d'attestations émis</span>
                       </div>
                     </div>
                     <div className="flex items-center gap-2">
-                      <label className="px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-bold text-text-secondary hover:text-text-primary cursor-pointer transition-colors">
+                      <label className="px-3 py-1.5 rounded-lg bg-bg-tertiary hover:bg-bg-tertiary border border-border-subtle text-xs font-bold text-text-secondary hover:text-text-primary cursor-pointer transition-colors">
                         Modifier
                         <input type="file" accept="image/*" onChange={handleUploadSignature} className="hidden" />
                       </label>
                       <button
                         type="button"
                         onClick={handleRemoveSignature}
-                        className="px-2.5 py-1.5 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/30 text-xs font-bold text-rose-400 transition-colors"
+                        className="px-2.5 py-1.5 rounded-lg bg-red-500/10 hover:bg-red-500/20 border border-red-500/30 text-xs font-bold text-red-400 transition-colors"
                         title="Réinitialiser la signature"
                       >
                         Réinitialiser
@@ -597,14 +590,14 @@ export default function Gouvernance() {
                 ) : (
                   <label className="flex flex-col items-center justify-center gap-2 p-4 rounded-xl border-2 border-dashed border-white/15 bg-white/[0.01] hover:bg-white/[0.04] cursor-pointer transition-colors group">
                     {uploadingSignature ? (
-                      <Loader2 className="w-5 h-5 animate-spin text-accent-primary" />
+                      <Loader2 className="w-5 h-5 animate-spin text-engine" />
                     ) : (
-                      <Upload className="w-5 h-5 text-text-muted group-hover:text-accent-primary transition-colors" />
+                      <Upload className="w-5 h-5 text-text-muted group-hover:text-engine transition-colors" />
                     )}
                     <span className="text-xs font-bold text-text-secondary group-hover:text-text-primary">
                       {uploadingSignature ? 'Enregistrement…' : 'Déposer votre signature manuscrite (PNG, JPG)'}
                     </span>
-                    <span className="text-[10px] text-text-muted">Requis pour apposer le sceau et la griffe officielle sur les attestations</span>
+                    <span className="text-[11px] text-text-muted">Requis pour apposer le sceau et la griffe officielle sur les attestations</span>
                     <input type="file" accept="image/*" onChange={handleUploadSignature} className="hidden" />
                   </label>
                 )}
@@ -616,7 +609,7 @@ export default function Gouvernance() {
                     value={form.recipientId}
                     onChange={(e) => setForm((f) => ({ ...f, recipientId: e.target.value }))}
                     disabled={loadingMembers}
-                    className="w-full appearance-none bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-accent-primary disabled:opacity-50"
+                    className="w-full appearance-none bg-bg-tertiary border border-border-subtle rounded-xl px-4 py-3 text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-engine disabled:opacity-50"
                   >
                     <option value="">— Choisir un membre —</option>
                     {members.map((m) => (
@@ -641,7 +634,7 @@ export default function Gouvernance() {
                   value={form.title}
                   onChange={(e) => setForm((f) => ({ ...f, title: e.target.value }))}
                   placeholder="Ex : Attestation de participation au projet X"
-                  className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-text-primary placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-accent-primary"
+                  className="w-full bg-bg-tertiary border border-border-subtle rounded-xl px-4 py-3 text-sm text-text-primary placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-engine"
                 />
               </div>
 
@@ -651,7 +644,7 @@ export default function Gouvernance() {
                   <select
                     value={form.category}
                     onChange={(e) => setForm((f) => ({ ...f, category: e.target.value }))}
-                    className="w-full appearance-none bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-accent-primary"
+                    className="w-full appearance-none bg-bg-tertiary border border-border-subtle rounded-xl px-4 py-3 text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-engine"
                   >
                     <option value="FORMATION">Formation</option>
                     <option value="MANDAT">Mandat</option>
@@ -672,7 +665,7 @@ export default function Gouvernance() {
                 whileTap={{ scale: 0.98 }}
                 type="submit"
                 disabled={issuing}
-                className="flex items-center justify-center gap-2 w-full py-3 rounded-xl text-sm font-bold text-white bg-accent-primary hover:opacity-90 transition-all disabled:opacity-50"
+                className="flex items-center justify-center gap-2 w-full py-3 rounded-xl text-sm font-bold text-white bg-engine hover:opacity-90 transition-all disabled:opacity-50"
               >
                 {issuing ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
                 {issuing ? 'Émission…' : 'Émettre l’attestation'}
@@ -685,10 +678,10 @@ export default function Gouvernance() {
         <FadeInWhenVisible direction="up" delay={0.1}>
           <motion.section
             whileHover={{ y: -4 }}
-            className="glass-panel bg-bg-secondary/60 backdrop-blur-xl border border-white/5 rounded-3xl p-6 md:p-8 shadow-xl mt-6"
+            className="glass-panel bg-bg-secondary/60 backdrop-blur-xl border border-border-subtle rounded-3xl p-6 md:p-8 shadow-xl mt-6"
           >
             <div className="flex items-center gap-3 mb-6">
-              <div className="w-11 h-11 rounded-2xl flex items-center justify-center" style={{ background: '#10b9811A', border: '1px solid #10b98140' }}>
+              <div className="w-11 h-11 rounded-2xl flex items-center justify-center" style={{ background: 'color-mix(in srgb, var(--color-emerald-500) 10%, transparent)', border: '1px solid color-mix(in srgb, var(--color-emerald-500) 25%, transparent)' }}>
                 <Award className="w-5 h-5 text-emerald-400" />
               </div>
               <div>
@@ -737,7 +730,7 @@ export default function Gouvernance() {
             icon={FileCheck}
             title="Validation des Rapports Mensuels & Bilans Financiers"
             subtitle="Rapports d'activité et comptes rendus transmis par la Secrétaire pour arbitrage de l'Admin Universitaire"
-            accent="#e05a2b"
+            accent="var(--color-ember)"
           >
             <div className="space-y-4">
               <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/25 flex items-start gap-3">
@@ -748,8 +741,8 @@ export default function Gouvernance() {
               </div>
 
               {/* Exemple de rapport soumis */}
-              <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-5 space-y-3">
-                <div className="flex flex-wrap items-center justify-between gap-2 border-b border-white/5 pb-3">
+              <div className="rounded-2xl border border-border-subtle bg-white/[0.03] p-5 space-y-3">
+                <div className="flex flex-wrap items-center justify-between gap-2 border-b border-border-subtle pb-3">
                   <div>
                     <div className="flex items-center gap-2">
                       <span className="text-xs font-black uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">
@@ -766,20 +759,20 @@ export default function Gouvernance() {
                   </div>
 
                   <div className="flex items-center gap-2">
-                    <span className="text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full bg-amber-500/15 text-amber-400 border border-amber-500/30">
+                    <span className="text-[11px] font-black uppercase tracking-widest px-3 py-1 rounded-full bg-amber-500/15 text-amber-400 border border-amber-500/30">
                       En attente de validation
                     </span>
                   </div>
                 </div>
 
-                <div className="text-xs text-text-secondary bg-black/20 p-3 rounded-xl border border-white/5 leading-relaxed font-mono">
+                <div className="text-xs text-text-secondary bg-black/20 p-3 rounded-xl border border-border-subtle leading-relaxed font-mono">
                   « Bilan du mois de Juillet : 6 ateliers techniques réalisés, 1 challenge inter-clubs finalisé. Solde de trésorerie disponible : 450 000 FCFA. Demande d'approbation pour renouvellement du matériel d'expérimentation. »
                 </div>
 
                 <div className="flex items-center justify-end gap-3 pt-2">
                   <button
                     onClick={() => setToast({ message: 'Demande de précision envoyée à la Secrétaire.', type: 'info' })}
-                    className="px-4 py-2 rounded-xl text-xs font-bold text-text-secondary hover:text-text-primary bg-white/5 hover:bg-white/10 border border-white/10 transition-all cursor-pointer"
+                    className="px-4 py-2 rounded-xl text-xs font-bold text-text-secondary hover:text-text-primary bg-bg-tertiary hover:bg-bg-tertiary border border-border-subtle transition-all cursor-pointer"
                   >
                     Demander révision
                   </button>
@@ -800,10 +793,10 @@ export default function Gouvernance() {
         <FadeInWhenVisible direction="up" delay={0.15}>
           <motion.section
             whileHover={{ y: -4 }}
-            className="glass-panel bg-bg-secondary/60 backdrop-blur-xl border border-white/5 rounded-3xl p-6 md:p-8 shadow-xl mt-6"
+            className="glass-panel bg-bg-secondary/60 backdrop-blur-xl border border-border-subtle rounded-3xl p-6 md:p-8 shadow-xl mt-6"
           >
             <div className="flex items-center gap-3 mb-6">
-              <div className="w-11 h-11 rounded-2xl flex items-center justify-center" style={{ background: '#8b5cf61A', border: '1px solid #8b5cf640' }}>
+              <div className="w-11 h-11 rounded-2xl flex items-center justify-center" style={{ background: 'color-mix(in srgb, var(--color-engine) 10%, transparent)', border: '1px solid color-mix(in srgb, var(--color-engine) 25%, transparent)' }}>
                 <Sparkles className="w-5 h-5 text-purple-400" />
               </div>
               <div>
@@ -839,13 +832,13 @@ export default function Gouvernance() {
                         <div className="flex items-center gap-2">
                           <p className="text-text-primary font-bold text-sm truncate">{name}</p>
                           {isEmblematic && (
-                            <span className="shrink-0 text-[9px] font-black uppercase px-2 py-0.5 rounded-full bg-purple-500/20 text-purple-300 border border-purple-500/40">
+                            <span className="shrink-0 text-[11px] font-black uppercase px-2 py-0.5 rounded-full bg-purple-500/20 text-purple-300 border border-purple-500/40">
                               Emblématique
                             </span>
                           )}
                         </div>
                         <p className="text-text-secondary text-xs truncate mt-0.5">{m.email}</p>
-                        {m.role && <p className="text-text-muted text-[10px] uppercase font-mono mt-1">{m.role}</p>}
+                        {m.role && <p className="text-text-muted text-[11px] uppercase font-mono mt-1">{m.role}</p>}
                       </div>
 
                       <button
@@ -854,7 +847,7 @@ export default function Gouvernance() {
                         className={`shrink-0 p-2.5 rounded-xl border text-xs font-bold transition-all cursor-pointer ${
                           isEmblematic
                             ? 'bg-purple-600 text-white border-purple-400 hover:bg-purple-700'
-                            : 'bg-white/5 text-text-secondary border-white/10 hover:text-text-primary hover:bg-white/10'
+                            : 'bg-bg-tertiary text-text-secondary border-border-subtle hover:text-text-primary hover:bg-bg-tertiary'
                         }`}
                         title={isEmblematic ? 'Retirer des figures emblématiques' : 'Marquer comme figure emblématique'}
                       >
@@ -878,10 +871,10 @@ export default function Gouvernance() {
             icon={Users}
             title="Annuaire Transversal des Membres & Clubs"
             subtitle="Visibilité directe sur l'ensemble des membres et chercheurs des 6 clubs de l'université"
-            accent="#10b981"
+            accent="var(--color-emerald-500)"
           >
             <div className="space-y-4">
-              <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 pb-3 border-b border-white/5">
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 pb-3 border-b border-border-subtle">
                 <div className="flex items-center gap-2">
                   <span className="text-xs font-extrabold text-emerald-400 bg-emerald-500/10 px-3 py-1 rounded-full border border-emerald-500/30">
                     {members.length} membre(s) répertorié(s)
@@ -900,14 +893,14 @@ export default function Gouvernance() {
                       key={m.id}
                       className="p-3.5 rounded-2xl bg-white/[0.02] hover:bg-white/[0.05] border border-white/8 transition-all flex items-start gap-3"
                     >
-                      <div className="w-10 h-10 rounded-xl bg-fieri-blue/15 border border-fieri-blue/30 flex items-center justify-center font-black text-fieri-blue shrink-0">
+                      <div className="w-10 h-10 rounded-xl bg-engine/15 border border-engine/30 flex items-center justify-center font-black text-engine shrink-0">
                         {name.charAt(0)}
                       </div>
                       <div className="min-w-0 flex-1">
                         <div className="flex items-center justify-between gap-2">
                           <p className="text-text-primary font-bold text-xs truncate">{name}</p>
                           <span
-                            className={`text-[9px] font-black uppercase px-2 py-0.5 rounded-full shrink-0 border ${
+                            className={`text-[11px] font-black uppercase px-2 py-0.5 rounded-full shrink-0 border ${
                               isLead
                                 ? 'bg-amber-500/15 text-amber-300 border-amber-500/30'
                                 : 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30'
@@ -916,8 +909,8 @@ export default function Gouvernance() {
                             {isLead ? 'Responsable' : 'Chercheur'}
                           </span>
                         </div>
-                        <p className="text-[11px] font-medium text-fieri-blue/90 mt-0.5 truncate">{club}</p>
-                        <p className="text-[10px] text-text-muted mt-1 truncate">{m.email}</p>
+                        <p className="text-[11px] font-medium text-engine/90 mt-0.5 truncate">{club}</p>
+                        <p className="text-[11px] text-text-muted mt-1 truncate">{m.email}</p>
                       </div>
                     </div>
                   );

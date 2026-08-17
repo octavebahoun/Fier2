@@ -17,8 +17,8 @@ function Toast({ message, type = 'success', onClose }) {
 
   const styles = {
     success: 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400',
-    error:   'bg-rose-500/10 border-rose-500/30 text-rose-400',
-    info:    'bg-fieri-blue/10 border-fieri-blue/30 text-fieri-blue',
+    error:   'bg-red-500/10 border-red-500/30 text-red-400',
+    info:    'bg-engine/10 border-engine/30 text-engine',
     warning: 'bg-amber-500/10 border-amber-500/30 text-amber-400',
   };
   const Icon = type === 'success' ? CheckCircle2 : AlertCircle;
@@ -45,7 +45,7 @@ function Toast({ message, type = 'success', onClose }) {
 function Spinner({ label }) {
   return (
     <div className="flex flex-col items-center justify-center gap-3 py-20 text-text-secondary">
-      <Loader2 className="w-8 h-8 animate-spin text-fieri-blue" />
+      <Loader2 className="w-8 h-8 animate-spin text-engine" />
       {label && <p className="text-sm">{label}</p>}
     </div>
   );
@@ -57,7 +57,7 @@ function StatusPill({ status }) {
     OPEN:   { label: 'Ouvert', cls: 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400' },
     CLOSED: { label: 'Clôturé', cls: 'bg-slate-500/10 border-slate-500/30 text-slate-400' },
   };
-  const s = map[status] || { label: status || '—', cls: 'bg-white/5 border-white/10 text-text-secondary' };
+  const s = map[status] || { label: status || '—', cls: 'bg-bg-tertiary border-border-subtle text-text-secondary' };
   return (
     <span className={`text-[11px] font-bold px-2.5 py-0.5 rounded-full border ${s.cls}`}>
       {s.label}
@@ -125,14 +125,14 @@ function CreateChallengeModal({ clubId, onClose, onCreated }) {
         exit={{ opacity: 0, scale: 0.92, y: 20 }}
         transition={{ type: 'spring', stiffness: 380, damping: 28 }}
         onClick={(e) => e.stopPropagation()}
-        className="relative w-full max-w-lg rounded-3xl border border-white/10 p-7 shadow-2xl bg-bg-secondary/80 backdrop-blur-xl max-h-[90vh] overflow-y-auto"
+        className="relative w-full max-w-lg rounded-3xl border border-border-subtle p-7 shadow-2xl bg-bg-secondary/80 backdrop-blur-xl max-h-[90vh] overflow-y-auto"
       >
         <div className="flex items-center gap-3 mb-5">
-          <div className="w-11 h-11 rounded-xl flex items-center justify-center bg-accent-primary/15 border border-accent-primary/30">
-            <FlaskConical className="w-5 h-5 text-fieri-blue" />
+          <div className="w-11 h-11 rounded-xl flex items-center justify-center bg-engine/15 border border-engine/30">
+            <FlaskConical className="w-5 h-5 text-engine" />
           </div>
           <div>
-            <p className="text-[10px] font-bold uppercase tracking-widest text-fieri-blue">Nouveau</p>
+            <p className="text-[11px] font-bold uppercase tracking-widest text-engine">Nouveau</p>
             <h2 className="text-lg font-extrabold text-text-primary">Créer un challenge</h2>
           </div>
           <button onClick={onClose} className="ml-auto opacity-60 hover:opacity-100 transition-opacity">
@@ -141,7 +141,7 @@ function CreateChallengeModal({ clubId, onClose, onCreated }) {
         </div>
 
         {error && (
-          <div className="mb-4 flex items-center gap-2 text-xs font-semibold text-rose-400 bg-rose-500/10 border border-rose-500/30 px-3 py-2 rounded-xl">
+          <div className="mb-4 flex items-center gap-2 text-xs font-semibold text-red-400 bg-red-500/10 border border-red-500/30 px-3 py-2 rounded-xl">
             <AlertCircle className="w-4 h-4 shrink-0" /> {error}
           </div>
         )}
@@ -149,7 +149,7 @@ function CreateChallengeModal({ clubId, onClose, onCreated }) {
         <form onSubmit={handleSubmit} className="space-y-4">
           <Field label="Titre *">
             <input
-              className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2.5 text-sm text-text-primary placeholder:text-text-secondary/60 focus:outline-none focus:ring-2 focus:ring-fieri-blue/50"
+              className="w-full bg-bg-tertiary border border-border-subtle rounded-xl px-3 py-2.5 text-sm text-text-primary placeholder:text-text-secondary/60 focus:outline-none focus:ring-2 focus:ring-engine/50"
               placeholder="Défi d'optimisation d'algorithmes"
               value={form.title}
               onChange={(e) => update('title', e.target.value)}
@@ -159,7 +159,7 @@ function CreateChallengeModal({ clubId, onClose, onCreated }) {
           <Field label="Description *">
             <textarea
               rows={3}
-              className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2.5 text-sm text-text-primary placeholder:text-text-secondary/60 focus:outline-none focus:ring-2 focus:ring-fieri-blue/50 resize-none"
+              className="w-full bg-bg-tertiary border border-border-subtle rounded-xl px-3 py-2.5 text-sm text-text-primary placeholder:text-text-secondary/60 focus:outline-none focus:ring-2 focus:ring-engine/50 resize-none"
               placeholder="Présentez l'objectif du challenge…"
               value={form.description}
               onChange={(e) => update('description', e.target.value)}
@@ -169,7 +169,7 @@ function CreateChallengeModal({ clubId, onClose, onCreated }) {
           <Field label="Consignes / règles *">
             <textarea
               rows={3}
-              className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2.5 text-sm text-text-primary placeholder:text-text-secondary/60 focus:outline-none focus:ring-2 focus:ring-fieri-blue/50 resize-none"
+              className="w-full bg-bg-tertiary border border-border-subtle rounded-xl px-3 py-2.5 text-sm text-text-primary placeholder:text-text-secondary/60 focus:outline-none focus:ring-2 focus:ring-engine/50 resize-none"
               placeholder="Décrivez les règles et critères…"
               value={form.rules}
               onChange={(e) => update('rules', e.target.value)}
@@ -180,7 +180,7 @@ function CreateChallengeModal({ clubId, onClose, onCreated }) {
             <Field label="Date limite *">
               <input
                 type="datetime-local"
-                className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2.5 text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-fieri-blue/50"
+                className="w-full bg-bg-tertiary border border-border-subtle rounded-xl px-3 py-2.5 text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-engine/50"
                 value={form.dueDate}
                 onChange={(e) => update('dueDate', e.target.value)}
               />
@@ -188,7 +188,7 @@ function CreateChallengeModal({ clubId, onClose, onCreated }) {
 
             <Field label="Badge de récompense">
               <select
-                className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2.5 text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-fieri-blue/50"
+                className="w-full bg-bg-tertiary border border-border-subtle rounded-xl px-3 py-2.5 text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-engine/50"
                 value={form.rewardBadgeType}
                 onChange={(e) => update('rewardBadgeType', e.target.value)}
               >
@@ -204,14 +204,14 @@ function CreateChallengeModal({ clubId, onClose, onCreated }) {
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 py-2.5 rounded-xl text-xs font-bold text-text-secondary bg-white/5 border border-white/10 hover:bg-white/10 transition-all"
+              className="flex-1 py-2.5 rounded-xl text-xs font-bold text-text-secondary bg-bg-tertiary border border-border-subtle hover:bg-bg-tertiary transition-all"
             >
               Annuler
             </button>
             <button
               type="submit"
               disabled={submitting}
-              className="flex-1 py-2.5 rounded-xl text-xs font-bold text-white bg-fieri-blue hover:bg-fieri-blue/85 transition-all disabled:opacity-60 flex items-center justify-center gap-2"
+              className="flex-1 py-2.5 rounded-xl text-xs font-bold text-white bg-engine hover:bg-engine/85 transition-all disabled:opacity-60 flex items-center justify-center gap-2"
             >
               {submitting ? <Loader2 className="w-4 h-4 animate-spin" /> : <FlaskConical className="w-4 h-4" />}
               {submitting ? 'Création…' : 'Créer le challenge'}
@@ -243,13 +243,13 @@ function ChallengeCard({ challenge, onOpen, index }) {
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.05 }}
       whileHover={{ y: -4, transition: { duration: 0.2 } }}
-      className="relative text-left rounded-2xl overflow-hidden backdrop-blur-xl border border-white/5 bg-bg-secondary/60 shadow-lg hover:border-fieri-blue/30 transition-colors"
+      className="relative text-left rounded-2xl overflow-hidden backdrop-blur-xl border border-border-subtle bg-bg-secondary/60 shadow-lg hover:border-engine/30 transition-colors"
     >
       <div className="absolute inset-0 pointer-events-none opacity-0 hover:opacity-100 transition-opacity duration-300"
         style={{ background: 'radial-gradient(ellipse at 50% 0%, rgba(108,76,241,0.12) 0%, transparent 70%)' }} />
       <div className="relative p-6">
         <div className="flex items-start justify-between gap-3 mb-3">
-          <div className="flex items-center gap-2 text-fieri-blue">
+          <div className="flex items-center gap-2 text-engine">
             <FlaskConical className="w-5 h-5" />
             <span className="text-[11px] font-bold uppercase tracking-widest">Challenge</span>
           </div>
@@ -299,7 +299,7 @@ function SubmissionRow({ submission, isManager, onEvaluate, onToggleWinner, isWi
   };
 
   return (
-    <div className="p-4 rounded-xl bg-white/[0.03] border border-white/5 space-y-3">
+    <div className="p-4 rounded-xl bg-white/[0.03] border border-border-subtle space-y-3">
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
           <p className="text-text-primary font-semibold text-sm truncate">{submission.memberName || 'Membre'}</p>
@@ -308,7 +308,7 @@ function SubmissionRow({ submission, isManager, onEvaluate, onToggleWinner, isWi
               href={submission.fileUrl}
               target="_blank"
               rel="noreferrer"
-              className="text-xs text-fieri-blue hover:underline break-all inline-flex items-center gap-1 mt-0.5"
+              className="text-xs text-engine hover:underline break-all inline-flex items-center gap-1 mt-0.5"
               onClick={(e) => e.stopPropagation()}
             >
               <Upload className="w-3 h-3 shrink-0" /> Voir le rendu
@@ -332,7 +332,7 @@ function SubmissionRow({ submission, isManager, onEvaluate, onToggleWinner, isWi
         <div className="flex flex-wrap items-center gap-2 pt-1">
           <button
             onClick={() => setShowEval((s) => !s)}
-            className="text-xs font-bold px-3 py-1.5 rounded-lg bg-fieri-blue/15 text-fieri-blue border border-fieri-blue/30 hover:bg-fieri-blue/25 transition-all"
+            className="text-xs font-bold px-3 py-1.5 rounded-lg bg-engine/15 text-engine border border-engine/30 hover:bg-engine/25 transition-all"
           >
             Évaluer
           </button>
@@ -341,7 +341,7 @@ function SubmissionRow({ submission, isManager, onEvaluate, onToggleWinner, isWi
               type="checkbox"
               checked={isWinnerSelected}
               onChange={() => onToggleWinner(submission.memberId)}
-              className="accent-fieri-blue w-3.5 h-3.5"
+              className="accent-engine w-3.5 h-3.5"
             />
             Désigner gagnant
           </label>
@@ -356,13 +356,13 @@ function SubmissionRow({ submission, isManager, onEvaluate, onToggleWinner, isWi
               placeholder="Note /20"
               value={grade}
               onChange={(e) => setGrade(e.target.value)}
-              className="bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-fieri-blue/50"
+              className="bg-bg-tertiary border border-border-subtle rounded-lg px-3 py-2 text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-engine/50"
             />
             <input
               placeholder="Commentaire"
               value={feedback}
               onChange={(e) => setFeedback(e.target.value)}
-              className="bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-fieri-blue/50"
+              className="bg-bg-tertiary border border-border-subtle rounded-lg px-3 py-2 text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-engine/50"
             />
           </div>
           <button
@@ -382,9 +382,9 @@ function SubmissionRow({ submission, isManager, onEvaluate, onToggleWinner, isWi
 // ───────────────────────────── Hackathon Card ─────────────────────────────
 function HackathonCard({ hackathon }) {
   return (
-    <div className="p-5 rounded-2xl border border-white/5 bg-bg-secondary/60 backdrop-blur-xl shadow-lg">
+    <div className="p-5 rounded-2xl border border-border-subtle bg-bg-secondary/60 backdrop-blur-xl shadow-lg">
       <div className="flex items-start justify-between gap-3 mb-2">
-        <div className="flex items-center gap-2 text-fieri-orange">
+        <div className="flex items-center gap-2 text-ember">
           <CalendarDays className="w-5 h-5" />
           <span className="text-[11px] font-bold uppercase tracking-widest">Hackathon</span>
         </div>
@@ -392,7 +392,7 @@ function HackathonCard({ hackathon }) {
       </div>
       <h4 className="text-text-primary font-bold text-base leading-snug mb-1">{hackathon.title}</h4>
       {hackathon.theme && (
-        <p className="text-xs font-semibold text-fieri-blue mb-2">Thème : {hackathon.theme}</p>
+        <p className="text-xs font-semibold text-engine mb-2">Thème : {hackathon.theme}</p>
       )}
       <p className="text-xs text-text-secondary mb-3">{hackathon.description}</p>
       <div className="flex items-center gap-4 text-xs text-text-secondary">
@@ -591,15 +591,11 @@ export default function Challenges() {
   return (
     <main className="min-h-screen">
       <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden" aria-hidden="true">
-        <div className="absolute -top-40 -left-40 w-[600px] h-[600px] rounded-full opacity-[0.06] blur-[100px]"
-          style={{ background: 'radial-gradient(circle, #6C4CF1, transparent)' }} />
-        <div className="absolute top-1/2 -right-60 w-[500px] h-[500px] rounded-full opacity-[0.05] blur-[120px]"
-          style={{ background: 'radial-gradient(circle, #e05a2b, transparent)' }} />
       </div>
 
       <div className="relative z-10 max-w-[92rem] mx-auto w-full py-16 px-6 md:px-12 lg:px-12">
         <div className="mb-10 space-y-4">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest bg-fieri-blue/10 text-fieri-blue border border-fieri-blue/25">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest bg-engine/10 text-engine border border-engine/25">
             <Trophy className="w-3.5 h-3.5" />
             Compétitions & Défis
           </div>
@@ -614,7 +610,7 @@ export default function Challenges() {
         {/* Sélecteur de CITE */}
         <div className="mb-8 flex flex-col sm:flex-row sm:items-center gap-3">
           <label className="text-sm font-bold text-text-secondary flex items-center gap-2">
-            <FlaskConical className="w-4 h-4 text-fieri-blue" /> CITE (club) :
+            <FlaskConical className="w-4 h-4 text-engine" /> CITE (club) :
           </label>
           {loadingClubs ? (
             <div className="flex items-center gap-2 text-text-secondary text-sm">
@@ -626,7 +622,7 @@ export default function Challenges() {
             <select
               value={clubId || ''}
               onChange={(e) => setClubId(e.target.value)}
-              className="bg-bg-secondary/60 backdrop-blur-xl border border-white/10 rounded-xl px-4 py-2.5 text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-fieri-blue/50 min-w-[220px]"
+              className="bg-bg-secondary/60 backdrop-blur-xl border border-border-subtle rounded-xl px-4 py-2.5 text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-engine/50 min-w-[220px]"
             >
               {clubs.map((c) => (
                 <option key={c.id} value={c.id}>{c.name || c.title || c.kicker || c.id}</option>
@@ -638,7 +634,7 @@ export default function Challenges() {
             <button
               onClick={() => setShowCreate(true)}
               disabled={!clubId}
-              className="sm:ml-auto text-xs font-bold px-4 py-2.5 rounded-xl bg-fieri-blue text-white hover:bg-fieri-blue/85 transition-all disabled:opacity-60 flex items-center gap-2"
+              className="sm:ml-auto text-xs font-bold px-4 py-2.5 rounded-xl bg-engine text-white hover:bg-engine/85 transition-all disabled:opacity-60 flex items-center gap-2"
             >
               <FlaskConical className="w-4 h-4" /> Créer un challenge
             </button>
@@ -646,7 +642,7 @@ export default function Challenges() {
         </div>
 
         {error && (
-          <div className="mb-6 flex items-center gap-2 text-sm font-semibold text-rose-400 bg-rose-500/10 border border-rose-500/30 px-4 py-3 rounded-xl">
+          <div className="mb-6 flex items-center gap-2 text-sm font-semibold text-red-400 bg-red-500/10 border border-red-500/30 px-4 py-3 rounded-xl">
             <AlertCircle className="w-4 h-4 shrink-0" /> {error}
           </div>
         )}
@@ -659,7 +655,7 @@ export default function Challenges() {
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -16 }}
-              className="rounded-3xl border border-white/5 bg-bg-secondary/60 backdrop-blur-xl p-7 shadow-xl"
+              className="rounded-3xl border border-border-subtle bg-bg-secondary/60 backdrop-blur-xl p-7 shadow-xl"
             >
               <button
                 onClick={closeDetail}
@@ -670,7 +666,7 @@ export default function Challenges() {
 
               <div className="flex items-start justify-between gap-4 flex-wrap mb-4">
                 <div>
-                  <div className="flex items-center gap-2 text-fieri-blue mb-1">
+                  <div className="flex items-center gap-2 text-engine mb-1">
                     <FlaskConical className="w-5 h-5" />
                     <span className="text-[11px] font-bold uppercase tracking-widest">Challenge</span>
                   </div>
@@ -682,13 +678,13 @@ export default function Challenges() {
               <p className="text-text-secondary text-sm leading-relaxed mb-4">{selectedChallenge.description}</p>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-5 text-sm">
-                <div className="p-3 rounded-xl bg-white/[0.03] border border-white/5">
+                <div className="p-3 rounded-xl bg-white/[0.03] border border-border-subtle">
                   <p className="text-[11px] font-bold uppercase tracking-wider text-text-secondary mb-1">Date limite</p>
                   <p className="text-text-primary flex items-center gap-1.5">
-                    <CalendarDays className="w-4 h-4 text-fieri-blue" /> {fmtDate(selectedChallenge.dueDate)}
+                    <CalendarDays className="w-4 h-4 text-engine" /> {fmtDate(selectedChallenge.dueDate)}
                   </p>
                 </div>
-                <div className="p-3 rounded-xl bg-white/[0.03] border border-white/5">
+                <div className="p-3 rounded-xl bg-white/[0.03] border border-border-subtle">
                   <p className="text-[11px] font-bold uppercase tracking-wider text-text-secondary mb-1">Badge de récompense</p>
                   <p className="text-text-primary flex items-center gap-1.5">
                     <Award className="w-4 h-4 text-amber-400" /> {selectedChallenge.rewardBadgeType || 'Aucun'}
@@ -697,8 +693,8 @@ export default function Challenges() {
               </div>
 
               {selectedChallenge.rules && (
-                <div className="p-4 rounded-xl bg-fieri-blue/[0.06] border border-fieri-blue/20 mb-6">
-                  <p className="text-[11px] font-bold uppercase tracking-wider text-fieri-blue mb-1.5">Règles & consignes</p>
+                <div className="p-4 rounded-xl bg-engine/[0.06] border border-engine/20 mb-6">
+                  <p className="text-[11px] font-bold uppercase tracking-wider text-engine mb-1.5">Règles & consignes</p>
                   <p className="text-text-secondary text-sm leading-relaxed whitespace-pre-line">{selectedChallenge.rules}</p>
                 </div>
               )}
@@ -714,11 +710,11 @@ export default function Challenges() {
                       <Upload className="w-4 h-4" /> Soumettre une solution
                     </button>
                   ) : (
-                    <form onSubmit={handleSubmit} className="space-y-3 p-4 rounded-xl bg-white/[0.03] border border-white/5"
+                    <form onSubmit={handleSubmit} className="space-y-3 p-4 rounded-xl bg-white/[0.03] border border-border-subtle"
                       onClick={(e) => e.stopPropagation()}>
                       <p className="text-sm font-bold text-text-primary">Votre lien de rendu</p>
                       {submitError && (
-                        <div className="flex items-center gap-2 text-xs font-semibold text-rose-400 bg-rose-500/10 border border-rose-500/30 px-3 py-2 rounded-lg">
+                        <div className="flex items-center gap-2 text-xs font-semibold text-red-400 bg-red-500/10 border border-red-500/30 px-3 py-2 rounded-lg">
                           <AlertCircle className="w-3.5 h-3.5 shrink-0" /> {submitError}
                         </div>
                       )}
@@ -727,13 +723,13 @@ export default function Challenges() {
                         placeholder="https://… (lien vers votre fichier)"
                         value={fileUrl}
                         onChange={(e) => setFileUrl(e.target.value)}
-                        className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2.5 text-sm text-text-primary placeholder:text-text-secondary/60 focus:outline-none focus:ring-2 focus:ring-fieri-blue/50"
+                        className="w-full bg-bg-tertiary border border-border-subtle rounded-xl px-3 py-2.5 text-sm text-text-primary placeholder:text-text-secondary/60 focus:outline-none focus:ring-2 focus:ring-engine/50"
                       />
                       <div className="flex gap-2">
                         <button
                           type="button"
                           onClick={() => setShowSubmit(false)}
-                          className="flex-1 py-2 rounded-xl text-xs font-bold text-text-secondary bg-white/5 border border-white/10 hover:bg-white/10 transition-all"
+                          className="flex-1 py-2 rounded-xl text-xs font-bold text-text-secondary bg-bg-tertiary border border-border-subtle hover:bg-bg-tertiary transition-all"
                         >
                           Annuler
                         </button>
@@ -754,7 +750,7 @@ export default function Challenges() {
               {/* Soumissions */}
               <div className="mb-6">
                 <h3 className="text-text-primary font-bold text-lg mb-3 flex items-center gap-2">
-                  <Star className="w-4 h-4 text-fieri-blue" />
+                  <Star className="w-4 h-4 text-engine" />
                   Soumissions ({selectedChallenge.submissions?.length ?? 0})
                 </h3>
                 {loadingDetail ? (
@@ -781,7 +777,7 @@ export default function Challenges() {
 
               {/* Clôture (responsable) */}
               {isManager && selectedChallenge.status === 'OPEN' && (
-                <div className="flex items-center gap-3 pt-4 border-t border-white/5">
+                <div className="flex items-center gap-3 pt-4 border-t border-border-subtle">
                   <button
                     onClick={handleClose}
                     disabled={closing}
@@ -808,18 +804,18 @@ export default function Challenges() {
               {/* ── Liste des challenges ── */}
               <section className="mb-12">
                 <h2 className="text-text-primary font-bold text-xl mb-4 flex items-center gap-2">
-                  <FlaskConical className="w-5 h-5 text-fieri-blue" /> Challenges
+                  <FlaskConical className="w-5 h-5 text-engine" /> Challenges
                 </h2>
                 {loadingList ? (
                   <Spinner label="Chargement des challenges…" />
                 ) : challenges.length === 0 ? (
-                  <div className="p-8 rounded-2xl border border-white/5 bg-bg-secondary/60 text-center text-text-secondary">
+                  <div className="p-8 rounded-2xl border border-border-subtle bg-bg-secondary/60 text-center text-text-secondary">
                     <FlaskConical className="w-8 h-8 mx-auto mb-3 opacity-60" />
                     <p className="text-sm">Aucun challenge pour cette CITE pour le moment.</p>
                     {isManager && (
                       <button
                         onClick={() => setShowCreate(true)}
-                        className="mt-4 text-xs font-bold px-4 py-2 rounded-xl bg-fieri-blue text-white hover:bg-fieri-blue/85 transition-all"
+                        className="mt-4 text-xs font-bold px-4 py-2 rounded-xl bg-engine text-white hover:bg-engine/85 transition-all"
                       >
                         Créer le premier challenge
                       </button>
@@ -838,7 +834,7 @@ export default function Challenges() {
               <section>
                 <div className="flex items-center justify-between mb-4">
                   <h2 className="text-text-primary font-bold text-xl flex items-center gap-2">
-                    <CalendarDays className="w-5 h-5 text-fieri-orange" /> Hackathons
+                    <CalendarDays className="w-5 h-5 text-ember" /> Hackathons
                   </h2>
                   {isAdmin() && (
                     <span className="text-[11px] text-text-secondary italic">
@@ -849,7 +845,7 @@ export default function Challenges() {
                 {loadingList ? (
                   <Spinner label="Chargement des hackathons…" />
                 ) : hackathons.length === 0 ? (
-                  <div className="p-8 rounded-2xl border border-white/5 bg-bg-secondary/60 text-center text-text-secondary">
+                  <div className="p-8 rounded-2xl border border-border-subtle bg-bg-secondary/60 text-center text-text-secondary">
                     <CalendarDays className="w-8 h-8 mx-auto mb-3 opacity-60" />
                     <p className="text-sm">Aucun hackathon associé à cette CITE.</p>
                   </div>

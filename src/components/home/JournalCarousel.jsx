@@ -15,19 +15,19 @@ import api from '../../services/api.js';
 
 // Configuration des badges & catégories du Journal
 export const JOURNAL_CATEGORIES = [
-  { id: 'all', label: 'Tout', color: '#6C4CF1' },
-  { id: 'atelier', label: 'Ateliers', color: '#8b5cf6', icon: GraduationCap, badgeLabel: 'ATELIER' },
-  { id: 'appel', label: 'Appels', color: '#f97316', icon: Megaphone, badgeLabel: 'APPEL À PARTICIPATION' },
-  { id: 'bootcamp', label: 'Bootcamps', color: '#3b82f6', icon: Rocket, badgeLabel: 'BOOTCAMP' },
-  { id: 'offre', label: 'Offres', color: '#10b981', icon: Tag, badgeLabel: 'OFFRE SPÉCIALE' }
+  { id: 'all', label: 'Tout', color: 'var(--color-engine)' },
+  { id: 'atelier', label: 'Ateliers', color: 'var(--color-engine)', icon: GraduationCap, badgeLabel: 'ATELIER' },
+  { id: 'appel', label: 'Appels', color: 'var(--color-ember)', icon: Megaphone, badgeLabel: 'APPEL À PARTICIPATION' },
+  { id: 'bootcamp', label: 'Bootcamps', color: 'var(--color-engine-deep)', icon: Rocket, badgeLabel: 'BOOTCAMP' },
+  { id: 'offre', label: 'Offres', color: 'var(--color-emerald-500)', icon: Tag, badgeLabel: 'OFFRE SPÉCIALE' }
 ];
 
 const CATEGORY_MAP = {
-  atelier: { color: '#8b5cf6', icon: GraduationCap, badgeLabel: 'ATELIER' },
-  appel: { color: '#f97316', icon: Megaphone, badgeLabel: 'APPEL À PARTICIPATION' },
-  bootcamp: { color: '#3b82f6', icon: Rocket, badgeLabel: 'BOOTCAMP' },
-  offre: { color: '#10b981', icon: Tag, badgeLabel: 'OFFRE SPÉCIALE' },
-  actu: { color: '#e05a2b', icon: Newspaper, badgeLabel: 'ACTUALITÉ' }
+  atelier: { color: 'var(--color-engine)', icon: GraduationCap, badgeLabel: 'ATELIER' },
+  appel: { color: 'var(--color-ember)', icon: Megaphone, badgeLabel: 'APPEL À PARTICIPATION' },
+  bootcamp: { color: 'var(--color-engine-deep)', icon: Rocket, badgeLabel: 'BOOTCAMP' },
+  offre: { color: 'var(--color-emerald-500)', icon: Tag, badgeLabel: 'OFFRE SPÉCIALE' },
+  actu: { color: 'var(--color-ember)', icon: Newspaper, badgeLabel: 'ACTUALITÉ' }
 };
 
 export default function JournalCarousel({ navigate }) {
@@ -170,7 +170,7 @@ export default function JournalCarousel({ navigate }) {
                 onClick={() => setActiveTab(cat.id)}
                 className={`px-4 py-2 rounded-full text-xs font-bold transition-all cursor-pointer whitespace-nowrap flex items-center gap-2 border ${
                   isActive
-                    ? 'bg-accent-primary text-white border-accent-primary shadow-lg shadow-accent-primary/25'
+                    ? 'bg-engine text-white border-engine'
                     : 'bg-bg-secondary/70 text-text-secondary border-border-subtle hover:text-text-primary hover:bg-bg-secondary'
                 }`}
               >
@@ -213,13 +213,13 @@ export default function JournalCarousel({ navigate }) {
         </div>
       ) : error ? (
         <div className="text-center py-16">
-          <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-accent-primary/10 border border-accent-primary/20 mb-4">
-            <Newspaper className="w-6 h-6 text-accent-primary" />
+          <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-engine/10 border border-engine/20 mb-4">
+            <Newspaper className="w-6 h-6 text-engine" />
           </div>
           <p className="text-text-secondary text-sm font-light mb-4">{error}</p>
           <button
             onClick={() => window.location.reload()}
-            className="inline-flex items-center gap-2 text-[10px] uppercase tracking-widest font-black bg-accent-primary/10 border border-accent-primary/30 text-accent-primary px-5 py-2.5 rounded-full hover:bg-accent-primary/20 transition-all cursor-pointer"
+            className="inline-flex items-center gap-2 text-[11px] uppercase tracking-widest font-bold bg-engine/10 border border-engine/30 text-engine px-5 py-2.5 chamfer-sm hover:bg-engine/20 transition-all cursor-pointer"
           >
             Réessayer
           </button>
@@ -251,7 +251,7 @@ export default function JournalCarousel({ navigate }) {
                   exit={{ opacity: 0, scale: 0.95 }}
                   onClick={() => safeNavigate(card.route)}
                   whileHover={{ y: -6 }}
-                  className="glass-panel group relative shrink-0 snap-center rounded-2xl border border-border-subtle/70 bg-bg-secondary/30 backdrop-blur-xl p-7 flex flex-col justify-between overflow-hidden transition-colors hover:border-accent-primary/35 cursor-pointer select-none"
+                  className="glass-panel group relative shrink-0 snap-center rounded-2xl border border-border-subtle bg-bg-secondary p-7 flex flex-col justify-between overflow-hidden transition-colors hover:border-border-strong cursor-pointer select-none"
                   style={{ width: cardWidth }}
                 >
                   <div
@@ -262,7 +262,7 @@ export default function JournalCarousel({ navigate }) {
                   <div>
                     <div className="flex items-center justify-between mb-5">
                       <span
-                        className="text-[9px] font-black uppercase tracking-widest px-2.5 py-1 rounded-full border"
+                        className="text-[11px] font-bold uppercase tracking-widest px-2.5 py-0.5 rounded-sm border"
                         style={{
                           color: meta.color,
                           borderColor: `${meta.color}55`,
@@ -279,7 +279,7 @@ export default function JournalCarousel({ navigate }) {
                       </div>
                     </div>
 
-                    <h3 className="text-lg font-extrabold text-text-primary mb-3 leading-snug group-hover:text-accent-primary transition-colors line-clamp-2">
+                    <h3 className="text-lg font-extrabold text-text-primary mb-3 leading-snug group-hover:text-engine transition-colors line-clamp-2 font-display">
                       {card.title}
                     </h3>
 
@@ -289,10 +289,10 @@ export default function JournalCarousel({ navigate }) {
                   </div>
 
                   <div className="border-t border-border-subtle/50 pt-4 mt-auto flex items-center justify-between">
-                    <span className="text-[10px] font-mono uppercase text-text-muted truncate pr-2">
+                    <span className="text-[11px] font-mono uppercase text-text-muted truncate pr-2">
                       {card.meta || 'FIERI Community'}
                     </span>
-                    <span className="inline-flex items-center gap-1 text-xs font-bold text-accent-primary shrink-0">
+                    <span className="inline-flex items-center gap-1 text-xs font-bold text-engine shrink-0">
                       Découvrir
                       <ArrowRight className="w-3.5 h-3.5" />
                     </span>

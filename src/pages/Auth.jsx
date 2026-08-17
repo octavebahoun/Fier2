@@ -190,10 +190,6 @@ export default function Auth({ navigate, redirectTo, onAuthComplete }) {
   return (
     <div className="min-h-screen flex flex-col md:flex-row bg-bg-primary relative overflow-x-hidden">
 
-      {/* 🌌 Halos cosmiques d'arrière-plan */}
-      <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] rounded-full bg-accent-primary/10 blur-[150px] pointer-events-none" />
-      <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-fieri-blue/10 blur-[120px] pointer-events-none" />
-
       {/* ========================================== */}
       {/* 🖼️ PANNEAU DE GAUCHE : VISUEL ET CITATION */}
       {/* ========================================== */}
@@ -224,8 +220,8 @@ export default function Auth({ navigate, redirectTo, onAuthComplete }) {
 
           {/* Badge Eyebrow */}
           <div className="flex items-center gap-2">
-            <span className="w-2.5 h-2.5 rounded-full bg-fieri-blue animate-pulse-dot" />
-            <span className="text-[10px] font-black tracking-[0.25em] uppercase text-fieri-blue">
+            <span className="w-2.5 h-2.5 rounded-full bg-engine animate-pulse-dot" />
+            <span className="text-[11px] font-black tracking-[0.25em] uppercase text-engine">
               FIERI RESEARCH
             </span>
           </div>
@@ -240,13 +236,13 @@ export default function Auth({ navigate, redirectTo, onAuthComplete }) {
                 exit={{ opacity: 0, y: -15 }}
                 transition={{ duration: 0.3 }}
               >
-                <blockquote className="text-xl md:text-2xl lg:text-2xl font-extrabold text-text-primary leading-tight font-sans tracking-tight">
+                <blockquote className="text-xl md:text-2xl lg:text-2xl font-extrabold text-text-primary leading-tight font-display tracking-tight">
                   {authMode === 'login'
                     ? "« La recherche est le moteur de demain. »"
                     : "« Innover ensemble, changer l'Afrique. »"
                   }
                 </blockquote>
-                <cite className="block text-[11px] font-bold uppercase tracking-widest text-text-secondary mt-3.5 not-italic">
+                <cite className="block text-[11px] font-bold uppercase tracking-widest text-text-secondary mt-3.5 not-italic font-mono">
                   {authMode === 'login' ? "— FIERI RESEARCH" : "— COMMUNAUTÉ FIERI"}
                 </cite>
               </motion.div>
@@ -257,16 +253,16 @@ export default function Auth({ navigate, redirectTo, onAuthComplete }) {
           <div className="glass-panel border border-border-subtle/80 bg-bg-secondary/45 p-5 md:p-6 rounded-2xl shadow-2xl backdrop-blur-md hidden sm:block">
             <div className="grid grid-cols-3 gap-4">
               <div>
-                <div className="text-xl lg:text-2xl font-black text-fieri-blue">5 000+</div>
-                <div className="text-[9px] uppercase tracking-wider text-text-secondary font-bold mt-1">MEMBRES</div>
+                <div className="text-xl lg:text-2xl font-black text-engine">5 000+</div>
+                <div className="text-[11px] uppercase tracking-wider text-text-secondary font-bold mt-1">MEMBRES</div>
               </div>
               <div className="border-l border-border-subtle pl-4">
-                <div className="text-xl lg:text-2xl font-black text-fieri-blue">12</div>
-                <div className="text-[9px] uppercase tracking-wider text-text-secondary font-bold mt-1">PAYS</div>
+                <div className="text-xl lg:text-2xl font-black text-engine">12</div>
+                <div className="text-[11px] uppercase tracking-wider text-text-secondary font-bold mt-1">PAYS</div>
               </div>
               <div className="border-l border-border-subtle pl-4">
-                <div className="text-xl lg:text-2xl font-black text-fieri-blue">6</div>
-                <div className="text-[9px] uppercase tracking-wider text-text-secondary font-bold mt-1">CLUBS</div>
+                <div className="text-xl lg:text-2xl font-black text-engine">6</div>
+                <div className="text-[11px] uppercase tracking-wider text-text-secondary font-bold mt-1">CLUBS</div>
               </div>
             </div>
           </div>
@@ -284,11 +280,11 @@ export default function Auth({ navigate, redirectTo, onAuthComplete }) {
 
           {/* 1. Pill Switcher (Boutons Connexion / Inscription) */}
           <div className="flex justify-center">
-            <div className="flex p-1 rounded-full border border-border-subtle bg-bg-secondary/60 backdrop-blur-lg w-full max-w-[340px] relative">
+            <div className="flex p-1 chamfer-sm border border-border-subtle bg-bg-secondary w-full max-w-[340px] relative">
               <button
                 onClick={() => handleModeChange('login')}
-                className={`flex-1 text-center py-2 px-4 rounded-full text-xs font-bold uppercase tracking-wider transition-all z-10 cursor-pointer ${authMode === 'login'
-                  ? 'text-text-primary bg-accent-primary/30 border border-accent-primary/20 shadow-inner'
+                className={`flex-1 text-center py-2 px-4 chamfer-sm text-[11px] font-bold uppercase tracking-wider transition-all z-10 cursor-pointer ${authMode === 'login'
+                  ? 'text-text-primary bg-engine/15 border border-engine/30'
                   : 'text-text-secondary hover:text-text-primary'
                   }`}
               >
@@ -296,8 +292,8 @@ export default function Auth({ navigate, redirectTo, onAuthComplete }) {
               </button>
               <button
                 onClick={() => handleModeChange('register')}
-                className={`flex-1 text-center py-2 px-4 rounded-full text-xs font-bold uppercase tracking-wider transition-all z-10 cursor-pointer ${authMode === 'register'
-                  ? 'text-text-primary bg-accent-primary/30 border border-accent-primary/20 shadow-inner'
+                className={`flex-1 text-center py-2 px-4 chamfer-sm text-[11px] font-bold uppercase tracking-wider transition-all z-10 cursor-pointer ${authMode === 'register'
+                  ? 'text-text-primary bg-engine/15 border border-engine/30'
                   : 'text-text-secondary hover:text-text-primary'
                   }`}
               >
@@ -360,8 +356,8 @@ export default function Auth({ navigate, redirectTo, onAuthComplete }) {
                 <form onSubmit={handleLoginSubmit} className="flex flex-col gap-4">
                   {/* Email */}
                   <div className="flex flex-col gap-1.5">
-                    <label htmlFor="login-email" className="text-[10px] font-black uppercase tracking-wider text-text-secondary">
-                      ADRESSE EMAIL <span className="text-fieri-blue">*</span>
+                    <label htmlFor="login-email" className="text-[11px] font-black uppercase tracking-wider text-text-secondary">
+                      ADRESSE EMAIL <span className="text-engine">*</span>
                     </label>
                     <div className="relative">
                       <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted" />
@@ -378,7 +374,7 @@ export default function Auth({ navigate, redirectTo, onAuthComplete }) {
                         onChange={(e) => setLoginData({ ...loginData, email: e.target.value })}
                         aria-invalid={!!errorMsg}
                         aria-describedby={errorMsg ? "auth-error-message" : undefined}
-                        className="w-full bg-bg-secondary/60 border border-border-subtle focus:border-fieri-blue/40 rounded-xl py-3 pl-11 pr-4 text-sm text-text-primary outline-none transition-all placeholder:text-text-muted"
+                        className="w-full bg-bg-secondary/60 border border-border-subtle focus:border-engine/50 rounded-xl py-3 pl-11 pr-4 text-sm text-text-primary outline-none transition-all placeholder:text-text-muted"
                       />
                     </div>
                   </div>
@@ -386,8 +382,8 @@ export default function Auth({ navigate, redirectTo, onAuthComplete }) {
                   {/* Mot de passe */}
                   <div className="flex flex-col gap-1.5">
                     <div className="flex justify-between items-center">
-                      <label htmlFor="login-password" className="text-[10px] font-black uppercase tracking-wider text-text-secondary">
-                        MOT DE PASSE <span className="text-fieri-blue">*</span>
+                      <label htmlFor="login-password" className="text-[11px] font-black uppercase tracking-wider text-text-secondary">
+                        MOT DE PASSE <span className="text-engine">*</span>
                       </label>
                     </div>
                     <div className="relative">
@@ -403,7 +399,7 @@ export default function Auth({ navigate, redirectTo, onAuthComplete }) {
                         onChange={(e) => setLoginData({ ...loginData, password: e.target.value })}
                         aria-invalid={!!errorMsg}
                         aria-describedby={errorMsg ? "auth-error-message" : undefined}
-                        className="w-full bg-bg-secondary/60 border border-border-subtle focus:border-fieri-blue/40 rounded-xl py-3 pl-11 pr-12 text-sm text-text-primary outline-none transition-all placeholder:text-text-muted"
+                        className="w-full bg-bg-secondary/60 border border-border-subtle focus:border-engine/50 rounded-xl py-3 pl-11 pr-12 text-sm text-text-primary outline-none transition-all placeholder:text-text-muted"
                       />
                       <button
                         type="button"
@@ -421,7 +417,7 @@ export default function Auth({ navigate, redirectTo, onAuthComplete }) {
                   <button
                     type="submit"
                     disabled={loading}
-                    className="w-full py-3.5 px-6 rounded-xl bg-gradient-to-r from-fieri-blue to-[#00aeef] hover:from-fieri-blue/95 hover:to-[#00aeef]/95 text-white font-extrabold text-xs uppercase tracking-widest flex items-center justify-center gap-2 shadow-[0_4px_20px_rgba(27,111,216,0.3)] hover:shadow-[0_6px_24px_rgba(27,111,216,0.45)] hover:scale-[1.01] active:scale-[0.99] transition-all cursor-pointer mt-2"
+                    className="w-full py-3.5 px-6 chamfer-sm bg-engine hover:bg-engine-deep text-white font-extrabold text-[11px] uppercase tracking-widest flex items-center justify-center gap-2 transition-colors cursor-pointer mt-2"
                   >
                     {loading ? (
                       <Loader2 className="w-4 h-4 animate-spin" />
@@ -438,7 +434,7 @@ export default function Auth({ navigate, redirectTo, onAuthComplete }) {
                   Pas encore membre ?{' '}
                   <button
                     onClick={() => handleModeChange('register')}
-                    className="text-fieri-blue font-bold hover:underline cursor-pointer"
+                    className="text-engine font-bold hover:underline cursor-pointer"
                   >
                     Créer un compte
                   </button>
@@ -466,13 +462,13 @@ export default function Auth({ navigate, redirectTo, onAuthComplete }) {
                 <div className="flex items-center gap-3 py-1 px-0.5 select-none">
                   {/* Étape 1 */}
                   <div className="flex items-center gap-2">
-                    <div className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-black transition-colors ${registerStep === 1
-                      ? 'bg-fieri-blue text-white shadow-[0_0_12px_rgba(27,111,216,0.4)]'
+                    <div className={`w-6 h-6 rounded-full flex items-center justify-center text-[11px] font-black transition-colors ${registerStep === 1
+                      ? 'bg-engine text-white'
                       : 'bg-emerald-950/40 border border-emerald-500/40 text-emerald-400'
                       }`}>
                       {registerStep > 1 ? <Check className="w-3.5 h-3.5" /> : "1"}
                     </div>
-                    <span className={`text-[10px] font-black uppercase tracking-wider ${registerStep === 1 ? 'text-fieri-blue' : 'text-emerald-400'
+                    <span className={`text-[11px] font-black uppercase tracking-wider ${registerStep === 1 ? 'text-engine' : 'text-emerald-400'
                       }`}>
                       IDENTITÉ
                     </span>
@@ -484,13 +480,13 @@ export default function Auth({ navigate, redirectTo, onAuthComplete }) {
 
                   {/* Étape 2 */}
                   <div className="flex items-center gap-2">
-                    <div className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-black border transition-colors ${registerStep === 2
-                      ? 'bg-fieri-blue border-transparent text-white shadow-[0_0_12px_rgba(27,111,216,0.4)]'
+                    <div className={`w-6 h-6 rounded-full flex items-center justify-center text-[11px] font-black border transition-colors ${registerStep === 2
+                      ? 'bg-engine border-transparent text-white'
                       : 'bg-bg-secondary border-border-subtle text-text-muted'
                       }`}>
                       2
                     </div>
-                    <span className={`text-[10px] font-black uppercase tracking-wider ${registerStep === 2 ? 'text-fieri-blue' : 'text-text-muted'
+                    <span className={`text-[11px] font-black uppercase tracking-wider ${registerStep === 2 ? 'text-engine' : 'text-text-muted'
                       }`}>
                       AFFILIATION
                     </span>
@@ -513,8 +509,8 @@ export default function Auth({ navigate, redirectTo, onAuthComplete }) {
                       {/* Prénom & Nom */}
                       <div className="grid grid-cols-2 gap-4">
                         <div className="flex flex-col gap-1.5">
-                          <label htmlFor="register-first-name" className="text-[10px] font-black uppercase tracking-wider text-text-secondary">
-                            PRÉNOM <span className="text-fieri-blue">*</span>
+                          <label htmlFor="register-first-name" className="text-[11px] font-black uppercase tracking-wider text-text-secondary">
+                            PRÉNOM <span className="text-engine">*</span>
                           </label>
                           <div className="relative">
                             <User className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted" />
@@ -529,14 +525,14 @@ export default function Auth({ navigate, redirectTo, onAuthComplete }) {
                               onChange={(e) => setRegisterData({ ...registerData, firstName: e.target.value })}
                               aria-invalid={!!errorMsg}
                               aria-describedby={errorMsg ? "auth-error-message" : undefined}
-                              className="w-full bg-bg-secondary/60 border border-border-subtle focus:border-fieri-blue/40 rounded-xl py-3 pl-11 pr-4 text-sm text-text-primary outline-none transition-all placeholder:text-text-muted"
+                              className="w-full bg-bg-secondary/60 border border-border-subtle focus:border-engine/50 rounded-xl py-3 pl-11 pr-4 text-sm text-text-primary outline-none transition-all placeholder:text-text-muted"
                             />
                           </div>
                         </div>
 
                         <div className="flex flex-col gap-1.5">
-                          <label htmlFor="register-last-name" className="text-[10px] font-black uppercase tracking-wider text-text-secondary">
-                            NOM <span className="text-fieri-blue">*</span>
+                          <label htmlFor="register-last-name" className="text-[11px] font-black uppercase tracking-wider text-text-secondary">
+                            NOM <span className="text-engine">*</span>
                           </label>
                           <div className="relative">
                             <User className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted" />
@@ -551,7 +547,7 @@ export default function Auth({ navigate, redirectTo, onAuthComplete }) {
                               onChange={(e) => setRegisterData({ ...registerData, lastName: e.target.value })}
                               aria-invalid={!!errorMsg}
                               aria-describedby={errorMsg ? "auth-error-message" : undefined}
-                              className="w-full bg-bg-secondary/60 border border-border-subtle focus:border-fieri-blue/40 rounded-xl py-3 pl-11 pr-4 text-sm text-text-primary outline-none transition-all placeholder:text-text-muted"
+                              className="w-full bg-bg-secondary/60 border border-border-subtle focus:border-engine/50 rounded-xl py-3 pl-11 pr-4 text-sm text-text-primary outline-none transition-all placeholder:text-text-muted"
                             />
                           </div>
                         </div>
@@ -559,8 +555,8 @@ export default function Auth({ navigate, redirectTo, onAuthComplete }) {
 
                       {/* Email */}
                       <div className="flex flex-col gap-1.5">
-                        <label htmlFor="register-email" className="text-[10px] font-black uppercase tracking-wider text-text-secondary">
-                          EMAIL <span className="text-fieri-blue">*</span>
+                        <label htmlFor="register-email" className="text-[11px] font-black uppercase tracking-wider text-text-secondary">
+                          EMAIL <span className="text-engine">*</span>
                         </label>
                         <div className="relative">
                           <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted" />
@@ -577,15 +573,15 @@ export default function Auth({ navigate, redirectTo, onAuthComplete }) {
                             onChange={(e) => setRegisterData({ ...registerData, email: e.target.value })}
                             aria-invalid={!!errorMsg}
                             aria-describedby={errorMsg ? "auth-error-message" : undefined}
-                            className="w-full bg-bg-secondary/60 border border-border-subtle focus:border-fieri-blue/40 rounded-xl py-3 pl-11 pr-4 text-sm text-text-primary outline-none transition-all placeholder:text-text-muted"
+                            className="w-full bg-bg-secondary/60 border border-border-subtle focus:border-engine/50 rounded-xl py-3 pl-11 pr-4 text-sm text-text-primary outline-none transition-all placeholder:text-text-muted"
                           />
                         </div>
                       </div>
 
                       {/* Mot de passe */}
                       <div className="flex flex-col gap-1.5">
-                        <label htmlFor="register-password" className="text-[10px] font-black uppercase tracking-wider text-text-secondary">
-                          MOT DE PASSE <span className="text-fieri-blue">*</span>
+                        <label htmlFor="register-password" className="text-[11px] font-black uppercase tracking-wider text-text-secondary">
+                          MOT DE PASSE <span className="text-engine">*</span>
                         </label>
                         <div className="relative">
                           <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted" />
@@ -600,7 +596,7 @@ export default function Auth({ navigate, redirectTo, onAuthComplete }) {
                             onChange={(e) => setRegisterData({ ...registerData, password: e.target.value })}
                             aria-invalid={!!errorMsg}
                             aria-describedby={errorMsg ? "auth-error-message" : undefined}
-                            className="w-full bg-bg-secondary/60 border border-border-subtle focus:border-fieri-blue/40 rounded-xl py-3 pl-11 pr-12 text-sm text-text-primary outline-none transition-all placeholder:text-text-muted"
+                            className="w-full bg-bg-secondary/60 border border-border-subtle focus:border-engine/50 rounded-xl py-3 pl-11 pr-12 text-sm text-text-primary outline-none transition-all placeholder:text-text-muted"
                           />
                           <button
                             type="button"
@@ -616,8 +612,8 @@ export default function Auth({ navigate, redirectTo, onAuthComplete }) {
 
                       {/* Confirmer le Mot de passe */}
                       <div className="flex flex-col gap-1.5">
-                        <label htmlFor="register-confirm-password" className="text-[10px] font-black uppercase tracking-wider text-text-secondary">
-                          CONFIRMER LE MOT DE PASSE <span className="text-fieri-blue">*</span>
+                        <label htmlFor="register-confirm-password" className="text-[11px] font-black uppercase tracking-wider text-text-secondary">
+                          CONFIRMER LE MOT DE PASSE <span className="text-engine">*</span>
                         </label>
                         <div className="relative">
                           <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted" />
@@ -632,7 +628,7 @@ export default function Auth({ navigate, redirectTo, onAuthComplete }) {
                             onChange={(e) => setRegisterData({ ...registerData, confirmPassword: e.target.value })}
                             aria-invalid={!!errorMsg}
                             aria-describedby={errorMsg ? "auth-error-message" : undefined}
-                            className="w-full bg-bg-secondary/60 border border-border-subtle focus:border-fieri-blue/40 rounded-xl py-3 pl-11 pr-12 text-sm text-text-primary outline-none transition-all placeholder:text-text-muted"
+                            className="w-full bg-bg-secondary/60 border border-border-subtle focus:border-engine/50 rounded-xl py-3 pl-11 pr-12 text-sm text-text-primary outline-none transition-all placeholder:text-text-muted"
                           />
                           <button
                             type="button"
@@ -649,7 +645,7 @@ export default function Auth({ navigate, redirectTo, onAuthComplete }) {
                       {/* Continuer */}
                       <button
                         type="submit"
-                        className="w-full py-3.5 px-6 rounded-xl bg-gradient-to-r from-fieri-blue to-[#00aeef] hover:from-fieri-blue/95 hover:to-[#00aeef]/95 text-white font-extrabold text-xs uppercase tracking-widest flex items-center justify-center gap-2 shadow-[0_4px_20px_rgba(27,111,216,0.3)] hover:shadow-[0_6px_24px_rgba(27,111,216,0.45)] hover:scale-[1.01] active:scale-[0.99] transition-all cursor-pointer mt-2"
+                        className="w-full py-3.5 px-6 chamfer-sm bg-engine hover:bg-engine-deep text-white font-extrabold text-[11px] uppercase tracking-widest flex items-center justify-center gap-2 transition-colors cursor-pointer mt-2"
                       >
                         <span>Continuer</span>
                         <ArrowRight className="w-4 h-4" />
@@ -668,8 +664,8 @@ export default function Auth({ navigate, redirectTo, onAuthComplete }) {
                     >
                       {/* Pays */}
                       <div className="flex flex-col gap-1.5">
-                        <label htmlFor="register-country" className="text-[10px] font-black uppercase tracking-wider text-text-secondary">
-                          PAYS DE RECHERCHE <span className="text-fieri-blue">*</span>
+                        <label htmlFor="register-country" className="text-[11px] font-black uppercase tracking-wider text-text-secondary">
+                          PAYS DE RECHERCHE <span className="text-engine">*</span>
                         </label>
                         <div className="relative">
                           <Globe className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted" />
@@ -690,7 +686,7 @@ export default function Auth({ navigate, redirectTo, onAuthComplete }) {
                             }}
                             aria-invalid={!!errorMsg}
                             aria-describedby={errorMsg ? "auth-error-message" : undefined}
-                            className="w-full bg-bg-secondary/60 border border-border-subtle focus:border-fieri-blue/40 rounded-xl py-3.5 pl-11 pr-4 text-sm text-text-primary outline-none transition-all appearance-none cursor-pointer"
+                            className="w-full bg-bg-secondary/60 border border-border-subtle focus:border-engine/50 rounded-xl py-3.5 pl-11 pr-4 text-sm text-text-primary outline-none transition-all appearance-none cursor-pointer"
                           >
                             <option value="">Sélectionnez un pays</option>
                             {countries.map(c => (
@@ -700,15 +696,15 @@ export default function Auth({ navigate, redirectTo, onAuthComplete }) {
                             ))}
                           </select>
                           <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none border-l border-border-subtle pl-2.5">
-                            <span className="text-[9px] font-bold text-text-muted">▼</span>
+                            <span className="text-[11px] font-bold text-text-muted">▼</span>
                           </div>
                         </div>
                       </div>
 
                       {/* Université (Désactivé si aucun pays sélectionné) */}
                       <div className="flex flex-col gap-1.5">
-                        <label htmlFor="register-university" className="text-[10px] font-black uppercase tracking-wider text-text-secondary">
-                          UNIVERSITÉ PARTENAIRE <span className="text-fieri-blue">*</span>
+                        <label htmlFor="register-university" className="text-[11px] font-black uppercase tracking-wider text-text-secondary">
+                          UNIVERSITÉ PARTENAIRE <span className="text-engine">*</span>
                         </label>
                         <div className="relative">
                           <GraduationCap className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted" />
@@ -728,7 +724,7 @@ export default function Auth({ navigate, redirectTo, onAuthComplete }) {
                             }}
                             aria-invalid={!!errorMsg}
                             aria-describedby={errorMsg ? "auth-error-message" : undefined}
-                            className="w-full bg-bg-secondary/60 border border-border-subtle focus:border-fieri-blue/40 rounded-xl py-3.5 pl-11 pr-4 text-sm text-text-primary outline-none transition-all appearance-none cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
+                            className="w-full bg-bg-secondary/60 border border-border-subtle focus:border-engine/50 rounded-xl py-3.5 pl-11 pr-4 text-sm text-text-primary outline-none transition-all appearance-none cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
                           >
                             <option value="">
                               {loadingMeta ? "Chargement..." : "Sélectionnez votre université"}
@@ -740,15 +736,15 @@ export default function Auth({ navigate, redirectTo, onAuthComplete }) {
                             ))}
                           </select>
                           <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none border-l border-border-subtle pl-2.5">
-                            <span className="text-[9px] font-bold text-text-muted">▼</span>
+                            <span className="text-[11px] font-bold text-text-muted">▼</span>
                           </div>
                         </div>
                       </div>
 
                       {/* Branche / Pôle (Désactivé si aucune université sélectionnée) */}
                       <div className="flex flex-col gap-1.5">
-                        <label htmlFor="register-branch" className="text-[10px] font-black uppercase tracking-wider text-text-secondary">
-                          BRANCHE / PÔLE ACADÉMIQUE <span className="text-fieri-blue">*</span>
+                        <label htmlFor="register-branch" className="text-[11px] font-black uppercase tracking-wider text-text-secondary">
+                          BRANCHE / PÔLE ACADÉMIQUE <span className="text-engine">*</span>
                         </label>
                         <div className="relative">
                           <BookOpen className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted" />
@@ -761,7 +757,7 @@ export default function Auth({ navigate, redirectTo, onAuthComplete }) {
                             onChange={(e) => setRegisterData(prev => ({ ...prev, branchId: e.target.value }))}
                             aria-invalid={!!errorMsg}
                             aria-describedby={errorMsg ? "auth-error-message" : undefined}
-                            className="w-full bg-bg-secondary/60 border border-border-subtle focus:border-fieri-blue/40 rounded-xl py-3.5 pl-11 pr-4 text-sm text-text-primary outline-none transition-all appearance-none cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
+                            className="w-full bg-bg-secondary/60 border border-border-subtle focus:border-engine/50 rounded-xl py-3.5 pl-11 pr-4 text-sm text-text-primary outline-none transition-all appearance-none cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
                           >
                             <option value="">
                               {loadingMeta ? "Chargement..." : "Sélectionnez votre branche"}
@@ -773,7 +769,7 @@ export default function Auth({ navigate, redirectTo, onAuthComplete }) {
                             ))}
                           </select>
                           <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none border-l border-border-subtle pl-2.5">
-                            <span className="text-[9px] font-bold text-text-muted">▼</span>
+                            <span className="text-[11px] font-bold text-text-muted">▼</span>
                           </div>
                         </div>
                       </div>
@@ -782,7 +778,7 @@ export default function Auth({ navigate, redirectTo, onAuthComplete }) {
                       <button
                         type="submit"
                         disabled={loading}
-                        className="w-full py-3.5 px-6 rounded-xl bg-gradient-to-r from-fieri-blue to-[#00aeef] hover:from-fieri-blue/95 hover:to-[#00aeef]/95 text-white font-extrabold text-xs uppercase tracking-widest flex items-center justify-center gap-2 shadow-[0_4px_20px_rgba(27,111,216,0.3)] hover:shadow-[0_6px_24px_rgba(27,111,216,0.45)] hover:scale-[1.01] active:scale-[0.99] transition-all cursor-pointer mt-2"
+                        className="w-full py-3.5 px-6 chamfer-sm bg-engine hover:bg-engine-deep text-white font-extrabold text-[11px] uppercase tracking-widest flex items-center justify-center gap-2 transition-colors cursor-pointer mt-2"
                       >
                         {loading ? (
                           <Loader2 className="w-4 h-4 animate-spin" />
@@ -810,7 +806,7 @@ export default function Auth({ navigate, redirectTo, onAuthComplete }) {
                   Déjà membre de la communauté ?{' '}
                   <button
                     onClick={() => handleModeChange('login')}
-                    className="text-fieri-blue font-bold hover:underline cursor-pointer"
+                    className="text-engine font-bold hover:underline cursor-pointer"
                   >
                     Se connecter
                   </button>
@@ -821,7 +817,7 @@ export default function Auth({ navigate, redirectTo, onAuthComplete }) {
           </AnimatePresence>
 
           {/* Mentions légales */}
-          <div className="text-center text-[10px] text-text-muted leading-relaxed select-none">
+          <div className="text-center text-[11px] text-text-muted leading-relaxed select-none">
             En vous connectant ou en vous inscrivant, vous acceptez nos{' '}
             <a href="#" className="underline hover:text-text-secondary">conditions d'utilisation</a>{' '}
             et notre{' '}

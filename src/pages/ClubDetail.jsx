@@ -62,14 +62,14 @@ export default function ClubDetail({ navigate, clubId }) {
       <div className="max-w-4xl mx-auto px-6 py-24 text-center flex flex-col items-center gap-4">
         <h1 className="text-xl font-extrabold text-text-primary">Club inaccessible</h1>
         <p className="text-sm text-text-secondary">{error}</p>
-        <button onClick={() => navigate?.('clubs')} className="px-4 py-2 rounded-xl bg-accent-primary text-white text-xs font-bold">
+        <button onClick={() => navigate?.('clubs')} className="px-4 py-2 rounded-xl bg-engine text-white text-xs font-bold">
           Retour aux clubs
         </button>
       </div>
     )
   }
 
-  const accent = club.accent || '#1B6FD8'
+  const accent = club.accent || 'var(--color-engine)'
   const members = Array.isArray(club.members) ? club.members : []
 
   return (
@@ -100,7 +100,7 @@ export default function ClubDetail({ navigate, clubId }) {
             onClick={handleJoinToggle}
             disabled={busy}
             className={`px-4 py-2 rounded-xl text-xs font-black uppercase tracking-wider transition-all disabled:opacity-50 ${
-              club.joined ? 'bg-bg-tertiary text-text-secondary border border-border-subtle' : 'bg-accent-primary text-white'
+              club.joined ? 'bg-bg-tertiary text-text-secondary border border-border-subtle' : 'bg-engine text-white'
             }`}
           >
             {!user ? <span className="inline-flex items-center gap-1.5"><LogIn className="w-3.5 h-3.5" /> Se connecter</span>
@@ -132,9 +132,9 @@ export default function ClubDetail({ navigate, clubId }) {
                 <button
                   key={m.id}
                   onClick={() => navigate?.('profile', { researcherId: m.id })}
-                  className="flex items-center gap-3 p-3 rounded-2xl bg-bg-tertiary/50 border border-border-subtle hover:border-accent-primary/40 transition-all text-left"
+                  className="flex items-center gap-3 p-3 rounded-2xl bg-bg-tertiary/50 border border-border-subtle hover:border-engine/40 transition-all text-left"
                 >
-                  <div className="w-9 h-9 rounded-full bg-accent-primary/15 border border-accent-primary/25 flex items-center justify-center shrink-0 text-xs font-bold text-text-primary uppercase">
+                  <div className="w-9 h-9 rounded-full bg-engine/15 border border-engine/25 flex items-center justify-center shrink-0 text-xs font-bold text-text-primary uppercase">
                     {name[0]}
                   </div>
                   <span className="text-xs font-bold text-text-primary truncate">{name}</span>
