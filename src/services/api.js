@@ -209,6 +209,13 @@ export const api = {
 
     register: (id) => post(`/events/${id}/register`),
 
+    // DELETE /events/:id/register — annulation de sa propre inscription.
+    deregister: (id) => del(`/events/${id}/register`),
+
+    // Dispatcher : l'appelant fournit l'état courant d'inscription.
+    toggleRegister: (id, isRegistered) =>
+      isRegistered ? del(`/events/${id}/register`) : post(`/events/${id}/register`),
+
     // GET /events/:id/registrants — RESP_COMM / CHEF_UNIV.
     getRegistrants: (id) => get(`/events/${id}/registrants`),
 

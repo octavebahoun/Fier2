@@ -10,6 +10,15 @@ import { useAuth } from '../context/AuthContext.jsx';
 import FadeInWhenVisible from '../components/home/FadeInWhenVisible.jsx';
 import PageHeader from '../components/ui/PageHeader.jsx';
 
+// Date courte en français ; tiret si la valeur est absente ou illisible.
+const formatDateFr = (valeur) => {
+  if (!valeur) return '—';
+  const d = new Date(valeur);
+  return Number.isNaN(d.getTime())
+    ? '—'
+    : d.toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', year: 'numeric' });
+};
+
 // ───────────────────────────── Toast Component ───────────────────────────────
 function Toast({ message, type = 'success', onClose }) {
   useEffect(() => {
@@ -104,41 +113,37 @@ export default function Gouvernance() {
   const [issuing, setIssuing] = useState(false);
   const [form, setForm] = useState({ recipientId: '', title: '', category: 'FORMATION' });
   const [issueSuccess, setIssueSuccess] = useState(null);
-  const [signatureUrl, setSignatureUrl] = useState(
-    () => user?.signatureUrl || localStorage.getItem('fieri_signature_url') || 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="60"><text x="10" y="40" font-family="cursive" font-size="22" fill="%236C4CF1">Griffe Officielle FIERI</text></svg>'
-  );
+  // La griffe apposée sur les attestations est produite par le serveur : sa
+  // seule source valable est le profil renvoyé par l'API. Une copie dans le
+  // navigateur donnerait l'illusion d'une griffe active alors que les PDF
+  // émis n'en porteraient aucune. Le téléversement de la session prend le
+  // relais le temps que le profil soit rechargé.
+  const [signatureTeleversee, setSignatureTeleversee] = useState(null);
+  const signatureUrl = signatureTeleversee ?? user?.signatureUrl ?? null;
   const [uploadingSignature, setUploadingSignature] = useState(false);
 
   const handleUploadSignature = async (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
     setUploadingSignature(true);
-    const reader = new FileReader();
-    reader.onload = async () => {
-      const base64Data = reader.result;
-      setSignatureUrl(base64Data);
-      localStorage.setItem('fieri_signature_url', base64Data);
-      try {
-        const res = await api.certificate.uploadSignature(file);
-        if (res?.success && res?.data?.signatureUrl) {
-          setSignatureUrl(res.data.signatureUrl);
-          localStorage.setItem('fieri_signature_url', res.data.signatureUrl);
-        }
-        setToast({ message: 'Signature officiellement modifiée et enregistrée en base !', type: 'success' });
-      } catch {
-        setToast({ message: 'Signature mise à jour et enregistrée localement avec succès !', type: 'success' });
-      } finally {
-        setUploadingSignature(false);
+    try {
+      const res = await api.certificate.uploadSignature(file);
+      if (res?.success && res?.data?.signatureUrl) {
+        setSignatureTeleversee(res.data.signatureUrl);
+        setToast({ message: 'Signature enregistrée : elle sera apposée sur les attestations émises.', type: 'success' });
+      } else {
+        setToast({ message: res?.message || "La signature n'a pas pu être enregistrée.", type: 'error' });
       }
-    };
-    reader.readAsDataURL(file);
-  };
-
-  const handleRemoveSignature = () => {
-    const defaultSvg = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="60"><text x="10" y="40" font-family="cursive" font-size="22" fill="%236C4CF1">Griffe Officielle FIERI</text></svg>';
-    setSignatureUrl(defaultSvg);
-    localStorage.removeItem('fieri_signature_url');
-    setToast({ message: 'Signature réinitialisée.', type: 'info' });
+    } catch (err) {
+      console.error('[Gouvernance] Erreur uploadSignature:', err);
+      setToast({
+        message: err?.serverMessage || err?.message || "La signature n'a pas pu être enregistrée.",
+        type: 'error',
+      });
+    } finally {
+      setUploadingSignature(false);
+      e.target.value = '';
+    }
   };
 
   // ── Section 4 : Figures Emblématiques ──
@@ -272,13 +277,38 @@ export default function Gouvernance() {
     }
   }, []);
 
+  // ── Rapports d'activité de l'université ──
+  // GET /universities/:id/activity-reports est gardé par UniversityPostGuard
+  // + @UniversityPosts('SECRETAIRE') : seul un ADMIN global y accède depuis
+  // cette page. On ne tente donc pas l'appel pour un Chef Universitaire.
+  const peutLireRapports = isAdmin();
+  const [rapports, setRapports] = useState([]);
+  const [loadingRapports, setLoadingRapports] = useState(false);
+  const [errorRapports, setErrorRapports] = useState(null);
+
+  const loadRapports = useCallback(async (uniId) => {
+    setLoadingRapports(true);
+    setErrorRapports(null);
+    try {
+      const res = await api.clubSpace.universityReports(uniId);
+      setRapports(res?.success && Array.isArray(res.data) ? res.data : []);
+    } catch (err) {
+      console.error('[Gouvernance] Erreur universityReports:', err);
+      setRapports([]);
+      setErrorRapports(err?.serverMessage || err?.message || 'Impossible de charger les rapports transmis.');
+    } finally {
+      setLoadingRapports(false);
+    }
+  }, []);
+
   useEffect(() => {
     if (!hasGovAccess || !universityId) return;
     loadRequests();
     loadMembers();
     loadMyCerts();
     loadEmblematicFigures();
-  }, [hasGovAccess, universityId, loadRequests, loadMembers, loadMyCerts, loadEmblematicFigures]);
+    if (peutLireRapports) loadRapports(universityId);
+  }, [hasGovAccess, universityId, peutLireRapports, loadRequests, loadMembers, loadMyCerts, loadEmblematicFigures, loadRapports]);
 
   const handleToggleEmblematic = async (memberId, currentStatus) => {
     if (togglingId) return;
@@ -577,14 +607,6 @@ export default function Gouvernance() {
                         Modifier
                         <input type="file" accept="image/*" onChange={handleUploadSignature} className="hidden" />
                       </label>
-                      <button
-                        type="button"
-                        onClick={handleRemoveSignature}
-                        className="px-2.5 py-1.5 rounded-lg bg-red-500/10 hover:bg-red-500/20 border border-red-500/30 text-xs font-bold text-red-400 transition-colors"
-                        title="Réinitialiser la signature"
-                      >
-                        Réinitialiser
-                      </button>
                     </div>
                   </div>
                 ) : (
@@ -724,67 +746,73 @@ export default function Gouvernance() {
           </motion.section>
         </FadeInWhenVisible>
 
-        {/* ── Section 4 : Validation des Rapports Mensuels (Transmis par la Secrétaire) ── */}
+        {/* ── Section 4 : Rapports d'activité transmis par les clubs ── */}
         <FadeInWhenVisible direction="up" delay={0.12}>
           <SectionCard
             icon={FileCheck}
-            title="Validation des Rapports Mensuels & Bilans Financiers"
-            subtitle="Rapports d'activité et comptes rendus transmis par la Secrétaire pour arbitrage de l'Admin Universitaire"
+            title="Rapports d'activité transmis"
+            subtitle="Rapports mensuels déposés par les Responsables de Club de l'université"
             accent="var(--color-ember)"
           >
             <div className="space-y-4">
-              <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/25 flex items-start gap-3">
-                <AlertCircle className="w-5 h-5 text-amber-400 shrink-0 mt-0.5" />
-                <div className="text-xs text-text-secondary leading-relaxed">
-                  <span className="font-bold text-amber-300">Rôle de l'Admin Universitaire (Chef Univ.) :</span> Les rapports mensuels et bilans financiers sont préparés par la <span className="font-bold text-emerald-400">Secrétaire Général(e)</span> et doivent être approuvés par l'Admin Universitaire avant clôture comptable.
+              {!peutLireRapports ? (
+                <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/25 flex items-start gap-3">
+                  <AlertCircle className="w-5 h-5 text-amber-400 shrink-0 mt-0.5" />
+                  <div className="text-xs text-text-secondary leading-relaxed">
+                    Les rapports mensuels sont déposés par les Responsables de Club et
+                    consultés par le <span className="font-bold text-emerald-400">Secrétariat</span>
+                    {' '}depuis l'Espace CITE. La consultation depuis la Gouvernance n'est pas
+                    encore ouverte au poste de Chef Universitaire.
+                  </div>
                 </div>
-              </div>
-
-              {/* Exemple de rapport soumis */}
-              <div className="rounded-2xl border border-border-subtle bg-white/[0.03] p-5 space-y-3">
-                <div className="flex flex-wrap items-center justify-between gap-2 border-b border-border-subtle pb-3">
-                  <div>
-                    <div className="flex items-center gap-2">
-                      <span className="text-xs font-black uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">
-                        Période 2026-07
-                      </span>
-                      <span className="text-xs font-medium text-text-muted">· Transmis le 28 Juillet 2026</span>
+              ) : loadingRapports ? (
+                <div className="flex items-center justify-center gap-3 py-10 text-text-muted">
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                  <span className="text-sm">Chargement des rapports…</span>
+                </div>
+              ) : errorRapports ? (
+                <div className="p-4 rounded-2xl bg-red-500/10 border border-red-500/30 flex items-start gap-3">
+                  <AlertCircle className="w-5 h-5 text-red-400 shrink-0 mt-0.5" />
+                  <p className="text-xs text-red-300 leading-relaxed">{errorRapports}</p>
+                </div>
+              ) : rapports.length === 0 ? (
+                <div className="py-10 text-center">
+                  <Inbox className="w-8 h-8 text-text-muted/40 mx-auto mb-3" />
+                  <p className="text-sm text-text-secondary font-semibold">Aucun rapport transmis</p>
+                  <p className="text-xs text-text-muted mt-1">
+                    Les rapports déposés par les clubs de l'université apparaîtront ici.
+                  </p>
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  {rapports.map((r) => (
+                    <div key={r.id} className="rounded-2xl border border-border-subtle bg-white/[0.03] p-5 space-y-3">
+                      <div className="flex flex-wrap items-start justify-between gap-2 border-b border-border-subtle pb-3">
+                        <div className="min-w-0">
+                          <div className="flex flex-wrap items-center gap-2">
+                            <span className="text-xs font-black uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">
+                              Période {r.period}
+                            </span>
+                            <span className="text-xs font-medium text-text-muted">· {r.clubName}</span>
+                          </div>
+                          <h3 className="text-sm font-extrabold text-text-primary mt-1">{r.title}</h3>
+                          <p className="text-xs text-text-secondary mt-0.5">
+                            Rédigé par : <span className="font-bold text-text-primary">{r.author || '—'}</span>
+                          </p>
+                        </div>
+                        <span className="text-[11px] font-medium text-text-muted shrink-0">
+                          {formatDateFr(r.createdAt)}
+                        </span>
+                      </div>
+                      {r.content && (
+                        <div className="text-xs text-text-secondary bg-black/20 p-3 rounded-xl border border-border-subtle leading-relaxed whitespace-pre-line">
+                          {r.content}
+                        </div>
+                      )}
                     </div>
-                    <h3 className="text-sm font-extrabold text-text-primary mt-1">
-                      Bilan Mensuel des Activités et Trésorerie CITE - Université d'Abomey-Calavi
-                    </h3>
-                    <p className="text-xs text-text-secondary mt-0.5">
-                      Rédigé par : <span className="font-bold text-text-primary">Secrétaire Générale (CITE Bénin)</span>
-                    </p>
-                  </div>
-
-                  <div className="flex items-center gap-2">
-                    <span className="text-[11px] font-black uppercase tracking-widest px-3 py-1 rounded-full bg-amber-500/15 text-amber-400 border border-amber-500/30">
-                      En attente de validation
-                    </span>
-                  </div>
+                  ))}
                 </div>
-
-                <div className="text-xs text-text-secondary bg-black/20 p-3 rounded-xl border border-border-subtle leading-relaxed font-mono">
-                  « Bilan du mois de Juillet : 6 ateliers techniques réalisés, 1 challenge inter-clubs finalisé. Solde de trésorerie disponible : 450 000 FCFA. Demande d'approbation pour renouvellement du matériel d'expérimentation. »
-                </div>
-
-                <div className="flex items-center justify-end gap-3 pt-2">
-                  <button
-                    onClick={() => setToast({ message: 'Demande de précision envoyée à la Secrétaire.', type: 'info' })}
-                    className="px-4 py-2 rounded-xl text-xs font-bold text-text-secondary hover:text-text-primary bg-bg-tertiary hover:bg-bg-tertiary border border-border-subtle transition-all cursor-pointer"
-                  >
-                    Demander révision
-                  </button>
-                  <button
-                    onClick={() => setToast({ message: 'Rapport mensuel d\'activité validé avec succès par l\'Admin Universitaire !', type: 'success' })}
-                    className="flex items-center gap-2 px-5 py-2 rounded-xl text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-500 border border-emerald-400/40 shadow-lg shadow-emerald-900/30 transition-all cursor-pointer"
-                  >
-                    <CheckCircle2 className="w-4 h-4" />
-                    Approuver & Valider le rapport
-                  </button>
-                </div>
-              </div>
+              )}
             </div>
           </SectionCard>
         </FadeInWhenVisible>

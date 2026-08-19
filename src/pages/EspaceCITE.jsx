@@ -61,6 +61,16 @@ const STATUS_META = {
 const statusBadge = (status) =>
   STATUS_META[status] || { label: status || '—', className: 'bg-bg-tertiary border-border-subtle text-text-muted' };
 
+// Date courte en français. Renvoie un tiret si la valeur est absente ou
+// illisible : on n'affiche jamais une date qu'on n'a pas.
+const formatDateFr = (valeur) => {
+  if (!valeur) return '—';
+  const d = new Date(valeur);
+  return Number.isNaN(d.getTime())
+    ? '—'
+    : d.toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', year: 'numeric' });
+};
+
 const formatRoleBadge = (m) => {
   const post = m.universityPost?.post || m.universityPost || '';
   const role = m.role || '';
@@ -123,7 +133,7 @@ function SectionCard({ icon: Icon, title, subtitle, children, accent = 'var(--co
 
 // ───────────────────────────── EspaceCITE Page ──────────────────────────────
 export default function EspaceCITE({ navigate }) {
-  const { user, isClubResponsible } = useAuth();
+  const { user, isClubResponsible, isSecretary, isChefUniversitaire, universityPost, universityId } = useAuth();
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -131,13 +141,19 @@ export default function EspaceCITE({ navigate }) {
   const [projects, setProjects] = useState([]);
   const [, setAssignedActivities] = useState([]);
 
-  // Rôle d'administration centrale (Secrétariat & Chef Universitaire)
-  const isSecretaryOrAdmin =
-    user?.universityPost === 'SECRETAIRE' ||
-    user?.universityPost === 'CHEF_UNIVERSITAIRE' ||
-    user?.role === 'ADMIN_UNIVERSITAIRE' ||
-    user?.role === 'ADMIN' ||
-    user?.role === 'CHEF_UNIVERSITAIRE';
+  // Rôle d'administration centrale (Secrétariat & Chef Universitaire).
+  // On passe par les helpers du contexte : `user.universityPost` est un objet
+  // { post, universityId }, le comparer à une chaîne ne matchait jamais.
+  const isSecretaryOrAdmin = isSecretary() || isChefUniversitaire();
+
+  // Poste exact du membre : décide à qui les documents sont transmis.
+  const estSecretaire = universityPost === 'SECRETAIRE';
+
+  // Le Secrétariat (et l'ADMIN) sont seuls habilités à lire les rapports de
+  // toute l'université : GET /universities/:id/activity-reports est gardé par
+  // UniversityPostGuard + @UniversityPosts('SECRETAIRE'). Le Chef
+  // Universitaire recevrait un 403 : on ne lui affiche pas le panneau.
+  const canReadUniversityReports = isSecretary();
 
   // Détermination du club de l'utilisateur
   const userAssignedClubId = user?.clubId || (user?.responsibleClubIds && user.responsibleClubIds[0]) || (user?.memberships && user.memberships[0]?.clubId) || '';
@@ -157,22 +173,13 @@ export default function EspaceCITE({ navigate }) {
   const [showOtherClubs, setShowOtherClubs] = useState(false);
   const [joiningClubId, setJoiningClubId] = useState(null);
 
-  // Annuaire Transversal & Rapports Réceptionnés des 6 Clubs (Reservé Secrétariat / Admin)
+  // Annuaire Transversal & Rapports Réceptionnés de l'université (réservé Secrétariat / Admin)
   const [allMembers, setAllMembers] = useState([]);
   const [allMembersLoading, setAllMembersLoading] = useState(false);
   const [memberSearch, setMemberSearch] = useState('');
-  const [receivedReports, setReceivedReports] = useState(() => {
-    try {
-      const saved = localStorage.getItem('fieri_submitted_club_reports');
-      return saved ? JSON.parse(saved) : [
-        { id: 1, clubName: 'Club Dev Web', period: '2026-07', title: 'Bilan Activités Web & API Hub', submittedBy: 'Resp. Dev Web', submittedAt: '2026-07-28', status: 'TRANSMIS_SECRETAIRE' },
-        { id: 2, clubName: 'Club Intelligence Artificielle', period: '2026-07', title: 'Rapport R&D Synthèse Bibliographique LLM', submittedBy: 'Resp. IA', submittedAt: '2026-07-29', status: 'TRANSMIS_SECRETAIRE' },
-        { id: 3, clubName: 'Club Robotique (ROS)', period: '2026-07', title: 'Avancement Cartographie SLAM Visuelle', submittedBy: 'Resp. ROS', submittedAt: '2026-07-29', status: 'TRANSMIS_SECRETAIRE' },
-      ];
-    } catch {
-      return [];
-    }
-  });
+  const [receivedReports, setReceivedReports] = useState([]);
+  const [reportsLoading, setReportsLoading] = useState(false);
+  const [reportsError, setReportsError] = useState(null);
 
   const [toast, setToast] = useState(null);
 
@@ -216,9 +223,13 @@ export default function EspaceCITE({ navigate }) {
         if (list.length > 0 && !clubId) {
           if (userAssignedClubId) {
             setClubId(userAssignedClubId);
-          } else {
+          } else if (isSecretaryOrAdmin) {
+            // Le Secrétariat supervise tous les clubs : ouvrir sur le premier
+            // est un point de départ, pas une appartenance.
             setClubId(list[0].id);
           }
+          // Sinon on ne présélectionne rien : un membre sans club doit voir
+          // qu'il n'a pas de club, pas celui d'un autre.
         }
       } catch (err) {
         console.error('[EspaceCITE] Erreur clubs.getAll:', err);
@@ -227,7 +238,8 @@ export default function EspaceCITE({ navigate }) {
         setClubLoading(false);
       }
     })();
-  }, [userAssignedClubId]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userAssignedClubId, isSecretaryOrAdmin]);
 
   // Sync clubId quand user change
   useEffect(() => {
@@ -282,6 +294,33 @@ export default function EspaceCITE({ navigate }) {
     }
   }, [isClubManager, clubId]);
 
+  // ── Rapports d'activité réceptionnés (Secrétariat / ADMIN) ──
+  // Source unique : GET /universities/:id/activity-reports. Ce que la page
+  // affiche est donc exactement ce que la base contient.
+  const loadReceivedReports = async () => {
+    if (!canReadUniversityReports || !universityId) {
+      setReceivedReports([]);
+      return;
+    }
+    setReportsLoading(true);
+    setReportsError(null);
+    try {
+      const res = await api.clubSpace.universityReports(universityId);
+      setReceivedReports(res?.success && Array.isArray(res.data) ? res.data : []);
+    } catch (err) {
+      console.error('[EspaceCITE] Erreur universityReports:', err);
+      setReceivedReports([]);
+      setReportsError(err?.serverMessage || err?.message || 'Impossible de charger les rapports transmis.');
+    } finally {
+      setReportsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    loadReceivedReports();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [canReadUniversityReports, universityId]);
+
   // ── Chargement global pour le Secrétariat / Admin ──
   useEffect(() => {
     if (!isSecretaryOrAdmin) return;
@@ -291,25 +330,7 @@ export default function EspaceCITE({ navigate }) {
       try {
         const res = await api.members.list();
         const list = res?.success && Array.isArray(res.data) ? res.data : [];
-        if (list.length < 5) {
-          const defaultMembers = [
-            { id: 101, firstname: 'Responsable', lastname: 'Dev Web', clubName: 'Club Dev Web', email: 'resp.devweb@uac.bj', role: 'RESPONSABLE_CLUB' },
-            { id: 102, firstname: 'Chercheur', lastname: 'Dev Web', clubName: 'Club Dev Web', email: 'chercheur.devweb@uac.bj', role: 'ETUDIANT_CHERCHEUR' },
-            { id: 201, firstname: 'Responsable', lastname: 'IA', clubName: 'Club Intelligence Artificielle', email: 'resp.ia@uac.bj', role: 'RESPONSABLE_CLUB' },
-            { id: 202, firstname: 'Chercheur', lastname: 'IA', clubName: 'Club Intelligence Artificielle', email: 'chercheur.ia@uac.bj', role: 'ETUDIANT_CHERCHEUR' },
-            { id: 301, firstname: 'Responsable', lastname: 'ROS', clubName: 'Club Robotique (ROS)', email: 'resp.ros@uac.bj', role: 'RESPONSABLE_CLUB' },
-            { id: 302, firstname: 'Chercheur', lastname: 'ROS', clubName: 'Club Robotique (ROS)', email: 'chercheur.ros@uac.bj', role: 'ETUDIANT_CHERCHEUR' },
-            { id: 401, firstname: 'Responsable', lastname: 'Électronique', clubName: 'Club Électronique', email: 'resp.elec@uac.bj', role: 'RESPONSABLE_CLUB' },
-            { id: 402, firstname: 'Chercheur', lastname: 'Électronique', clubName: 'Club Électronique', email: 'chercheur.elec@uac.bj', role: 'ETUDIANT_CHERCHEUR' },
-            { id: 501, firstname: 'Responsable', lastname: 'BTP', clubName: 'Club BTP & Génie Civil', email: 'resp.btp@uac.bj', role: 'RESPONSABLE_CLUB' },
-            { id: 502, firstname: 'Chercheur', lastname: 'BTP', clubName: 'Club BTP & Génie Civil', email: 'chercheur.btp@uac.bj', role: 'ETUDIANT_CHERCHEUR' },
-            { id: 601, firstname: 'Responsable', lastname: 'Froid & Clima', clubName: 'Club Froid & Climatisation', email: 'resp.froid@uac.bj', role: 'RESPONSABLE_CLUB' },
-            { id: 602, firstname: 'Chercheur', lastname: 'Froid & Clima', clubName: 'Club Froid & Climatisation', email: 'chercheur.froid@uac.bj', role: 'ETUDIANT_CHERCHEUR' },
-          ];
-          setAllMembers([...list, ...defaultMembers]);
-        } else {
-          setAllMembers(list);
-        }
+        setAllMembers(list);
       } catch {
         setAllMembers([]);
       } finally {
@@ -380,17 +401,20 @@ export default function EspaceCITE({ navigate }) {
   const handleSubmitCensus = async () => {
     if (!clubId || censusBusy) return;
     setCensusBusy(true);
-    const dest = user?.universityPost === 'SECRETAIRE' ? "au Chef Universitaire (Admin)" : "à la Secrétaire Générale";
+    const dest = estSecretaire ? "au Chef Universitaire (Admin)" : "à la Secrétaire Générale";
     try {
       const res = await api.clubSpace.submitCensus(clubId);
       if (res?.success) {
-        setToast({ message: `Recensement mensuel transmis ${dest} avec succès (${res.data?.memberCount ?? 0} membre(s)).`, type: 'success' });
+        setToast({ message: `Recensement mensuel transmis ${dest} (${res.data?.memberCount ?? 0} membre(s)).`, type: 'success' });
       } else {
-        setToast({ message: `Recensement mensuel transmis ${dest} avec succès.`, type: 'success' });
+        setToast({ message: res?.message || "Le recensement n'a pas pu être transmis.", type: 'error' });
       }
     } catch (err) {
       console.error('[EspaceCITE] Erreur submitCensus:', err);
-      setToast({ message: `Recensement mensuel transmis ${dest} avec succès.`, type: 'success' });
+      setToast({
+        message: err?.serverMessage || err?.message || "Le recensement n'a pas pu être transmis.",
+        type: 'error',
+      });
     } finally {
       setCensusBusy(false);
     }
@@ -444,32 +468,33 @@ export default function EspaceCITE({ navigate }) {
       return;
     }
     setReportBusy(true);
-    const dest = user?.universityPost === 'SECRETAIRE' ? "au Chef Universitaire (Admin)" : "à la Secrétaire Générale";
-    const newReport = {
-      id: Date.now(),
-      clubName: clubsList.find(c => String(c.id) === String(clubId))?.name || `Club #${clubId}`,
-      period: reportForm.period.trim(),
-      title: reportForm.title.trim(),
-      content: reportForm.content.trim(),
-      submittedBy: [user?.firstname, user?.lastname].filter(Boolean).join(' ') || 'Responsable Club',
-      submittedAt: new Date().toISOString().split('T')[0],
-      status: user?.universityPost === 'SECRETAIRE' ? 'TRANSMIS_ADMIN' : 'TRANSMIS_SECRETAIRE',
-    };
-
     try {
-      await api.clubSpace.submitReport(clubId, {
+      const res = await api.clubSpace.submitReport(clubId, {
         period: reportForm.period.trim(),
         title: reportForm.title.trim(),
         content: reportForm.content.trim(),
       });
+      if (res?.success) {
+        setToast({
+          message: res.message || "Rapport mensuel d'activité transmis à la Secrétaire Générale.",
+          type: 'success',
+        });
+        setReportForm({ period: '', title: '', content: '' });
+        // On relit la liste au lieu de l'inventer : elle reflète la base.
+        await loadReceivedReports();
+      } else {
+        setToast({
+          message: res?.message || "Le rapport n'a pas pu être transmis.",
+          type: 'error',
+        });
+      }
     } catch (err) {
       console.error('[EspaceCITE] Erreur submitReport:', err);
+      setToast({
+        message: err?.serverMessage || err?.message || "Le rapport n'a pas pu être transmis.",
+        type: 'error',
+      });
     } finally {
-      const updated = [newReport, ...receivedReports];
-      setReceivedReports(updated);
-      localStorage.setItem('fieri_submitted_club_reports', JSON.stringify(updated));
-      setToast({ message: `Rapport mensuel d'activité transmis ${dest} avec succès.`, type: 'success' });
-      setReportForm({ period: '', title: '', content: '' });
       setReportBusy(false);
     }
   };
@@ -479,6 +504,15 @@ export default function EspaceCITE({ navigate }) {
   const labelClass = 'block text-xs font-bold uppercase tracking-wider text-text-muted mb-1.5';
   const btnPrimary =
     'flex items-center justify-center gap-2 w-full py-2.5 rounded-xl text-sm font-bold text-white bg-engine hover:bg-engine/85 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-engine disabled:opacity-50 disabled:cursor-not-allowed';
+
+  // Annuaire filtré : sert au tableau (12 premières lignes) et à la mention
+  // de troncature, pour que le nombre affiché corresponde au nombre réel.
+  const membresFiltres = allMembers.filter((m) => {
+    const q = memberSearch.toLowerCase();
+    const nomComplet = `${m.firstname || ''} ${m.lastname || m.name || ''}`.toLowerCase();
+    const club = (m.clubName || m.club?.name || '').toLowerCase();
+    return nomComplet.includes(q) || club.includes(q);
+  });
 
   const selectedClubObj = clubsList.find(c => String(c.id) === String(clubId));
 
@@ -498,7 +532,7 @@ export default function EspaceCITE({ navigate }) {
             </h1>
             <p className="text-text-muted text-sm mt-1">
               {isSecretaryOrAdmin
-                ? "Coordination centrale et supervision des 6 clubs de recherche universitaire."
+                ? "Coordination centrale et supervision des clubs de recherche universitaire."
                 : "Espace réservé à la gestion des membres, projets, activités et rapports de votre club."}
             </p>
           </div>
@@ -549,6 +583,28 @@ export default function EspaceCITE({ navigate }) {
 
         {!loading && (
           <div className="space-y-8">
+            {/* Membre rattaché à aucun club : le dire, plutôt que d'ouvrir
+                l'espace d'un club auquel il n'appartient pas. */}
+            {!clubId && !isSecretaryOrAdmin && (
+              <div className="p-6 rounded-2xl bg-amber-500/5 border border-amber-500/25 flex flex-col sm:flex-row sm:items-center gap-4">
+                <AlertCircle className="w-6 h-6 text-amber-400 shrink-0" />
+                <div className="flex-1">
+                  <p className="text-sm font-bold text-text-primary">Vous n'êtes membre d'aucun club de recherche.</p>
+                  <p className="text-xs text-text-muted mt-1">
+                    L'Espace CITE présente la vie de votre club. Rejoignez-en un pour y accéder :
+                    votre demande sera validée par le Responsable du club.
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => navigate && navigate('clubs')}
+                  className="px-4 py-2 rounded-xl text-sm font-bold text-white bg-engine hover:bg-engine/85 transition-colors shrink-0"
+                >
+                  Découvrir les clubs
+                </button>
+              </div>
+            )}
+
             {/* VUE MEMBRES & RESPONSABLES DU CLUB ACTIF */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               {/* ── 1. Liste des membres actifs du club ── */}
@@ -666,13 +722,13 @@ export default function EspaceCITE({ navigate }) {
                 {/* Recensement mensuel */}
                 <SectionCard 
                   icon={Users} 
-                  title={user?.universityPost === 'SECRETAIRE' ? "Recensement Global CITE" : "Recensement Mensuel"} 
-                  subtitle={user?.universityPost === 'SECRETAIRE' ? "Consolidation et transmission à l'Admin" : "Transmission à la Secrétaire Générale"} 
+                  title={estSecretaire ? "Recensement Global CITE" : "Recensement Mensuel"} 
+                  subtitle={estSecretaire ? "Consolidation et transmission à l'Admin" : "Transmission à la Secrétaire Générale"} 
                   accent="var(--color-emerald-500)"
                 >
                   <p className="text-text-secondary text-xs leading-relaxed mb-4">
-                    {user?.universityPost === 'SECRETAIRE'
-                      ? "Fige et transmet le recensement des effectifs consolidés des 6 clubs de l'université à l'Admin Universitaire (Chef Univ.)."
+                    {estSecretaire
+                      ? "Fige et transmet le recensement des effectifs consolidés des clubs de l'université à l'Admin Universitaire (Chef Univ.)."
                       : "Fige et transmet le recensement des membres actifs de votre club à la Secrétaire Générale de l'université."}
                   </p>
                   <button
@@ -685,7 +741,7 @@ export default function EspaceCITE({ navigate }) {
                     ) : (
                       <Send className="w-4 h-4" />
                     )}
-                    {censusBusy ? 'Soumission…' : user?.universityPost === 'SECRETAIRE' ? 'Transmettre le recensement global' : 'Transmettre à la Secrétaire'}
+                    {censusBusy ? 'Soumission…' : estSecretaire ? 'Transmettre le recensement global' : 'Transmettre à la Secrétaire'}
                   </button>
                 </SectionCard>
 
@@ -741,8 +797,8 @@ export default function EspaceCITE({ navigate }) {
                 {/* Rapport mensuel d'activité */}
                 <SectionCard 
                   icon={FileText} 
-                  title={user?.universityPost === 'SECRETAIRE' ? "Rapport Mensuel Global" : "Rapport d'Activité du Club"} 
-                  subtitle={user?.universityPost === 'SECRETAIRE' ? "Synthèse transmise au Chef Universitaire" : "Soumission à la Secrétaire Générale"} 
+                  title={estSecretaire ? "Rapport Mensuel Global" : "Rapport d'Activité du Club"} 
+                  subtitle={estSecretaire ? "Synthèse transmise au Chef Universitaire" : "Soumission à la Secrétaire Générale"} 
                   accent="var(--color-ember)"
                 >
                   <form onSubmit={handleSubmitReport} className="space-y-3">
@@ -772,8 +828,8 @@ export default function EspaceCITE({ navigate }) {
                         value={reportForm.content}
                         onChange={(e) => setReportForm({ ...reportForm, content: e.target.value })}
                         rows={3}
-                        placeholder={user?.universityPost === 'SECRETAIRE'
-                          ? "Synthèse d'activité des 6 clubs..."
+                        placeholder={estSecretaire
+                          ? "Synthèse d'activité des clubs..."
                           : "Bilan d'activité du club..."}
                         className={inputClass + ' resize-none'}
                       />
@@ -784,7 +840,7 @@ export default function EspaceCITE({ navigate }) {
                       ) : (
                         <BookOpen className="w-4 h-4" />
                       )}
-                      {reportBusy ? 'Transmission…' : user?.universityPost === 'SECRETAIRE' ? 'Transmettre au Chef Univ.' : 'Transmettre à la Secrétaire'}
+                      {reportBusy ? 'Transmission…' : estSecretaire ? 'Transmettre au Chef Univ.' : 'Transmettre à la Secrétaire'}
                     </button>
                   </form>
                 </SectionCard>
@@ -861,25 +917,45 @@ export default function EspaceCITE({ navigate }) {
             {/* ── PANNEAU GLOBAL SECRÉTARIAT / ADMIN ── */}
             {isSecretaryOrAdmin && (
               <div className="space-y-8 pt-6 border-t border-border-subtle">
-                {/* Rapports Réceptionnés par le Secrétariat */}
+                {/* Rapports d'activité transmis — lecture directe de la base */}
+                {canReadUniversityReports && (
                 <div className="p-6 rounded-2xl bg-white/[0.03] border border-border-subtle backdrop-blur-xl">
                   <div className="flex items-center justify-between mb-6">
                     <div>
                       <h3 className="text-lg font-bold text-text-primary flex items-center gap-2">
                         <FileText className="w-5 h-5 text-engine" />
-                        Rapports Réceptionnés par le Secrétariat (6 Clubs R&D)
+                        Rapports d'activité transmis par les clubs
                       </h3>
                       <p className="text-xs text-text-muted">
-                        Consultez les rapports mensuels d'activité et recensements transmis par chaque Responsable de Club avant consolidation.
+                        Rapports mensuels déposés par les Responsables de Club de votre université.
                       </p>
                     </div>
-                    <span className="px-3 py-1 rounded-full text-xs font-bold bg-engine/10 text-engine border border-engine/20">
-                      {receivedReports.length} Rapport(s) Reçu(s)
-                    </span>
+                    <div className="flex items-center gap-2 shrink-0">
+                      <span className="px-3 py-1 rounded-full text-xs font-bold bg-engine/10 text-engine border border-engine/20">
+                        {receivedReports.length} rapport{receivedReports.length > 1 ? 's' : ''}
+                      </span>
+                      <button
+                        type="button"
+                        onClick={loadReceivedReports}
+                        disabled={reportsLoading}
+                        className="px-3 py-1 rounded-full text-xs font-bold border border-border-subtle text-text-muted hover:text-text-primary hover:border-engine/40 transition-colors disabled:opacity-50"
+                      >
+                        Actualiser
+                      </button>
+                    </div>
                   </div>
 
-                  {receivedReports.length === 0 ? (
-                    <p className="text-xs text-text-muted italic py-4 text-center">Aucun rapport transmis pour le moment.</p>
+                  {reportsLoading ? (
+                    <p className="text-xs text-text-muted py-4 text-center">Chargement des rapports…</p>
+                  ) : reportsError ? (
+                    <div className="flex items-center gap-3 p-4 rounded-xl bg-red-500/10 border border-red-500/30 text-xs text-red-300">
+                      <AlertCircle className="w-4 h-4 shrink-0" />
+                      <span>{reportsError}</span>
+                    </div>
+                  ) : receivedReports.length === 0 ? (
+                    <p className="text-xs text-text-muted italic py-4 text-center">
+                      Aucun rapport n'a encore été transmis par les clubs de votre université.
+                    </p>
                   ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                       {receivedReports.map((rep) => (
@@ -887,30 +963,29 @@ export default function EspaceCITE({ navigate }) {
                           <div>
                             <div className="flex items-center justify-between text-[11px] text-text-muted mb-1">
                               <span className="font-bold text-engine">{rep.clubName}</span>
-                              <span>Période: {rep.period}</span>
+                              <span>Période : {rep.period}</span>
                             </div>
                             <h4 className="text-sm font-bold text-text-primary">{rep.title}</h4>
                             {rep.content && <p className="text-xs text-text-secondary mt-1 line-clamp-3">{rep.content}</p>}
                           </div>
                           <div className="pt-2 border-t border-border-subtle flex items-center justify-between text-[11px] text-text-muted">
-                            <span>Par: {rep.submittedBy}</span>
-                            <span className="px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-semibold">
-                              {rep.status === 'TRANSMIS_ADMIN' ? 'Transmis Admin' : 'Reçu Secrétariat'}
-                            </span>
+                            <span>Par : {rep.author || '—'}</span>
+                            <span>{formatDateFr(rep.createdAt)}</span>
                           </div>
                         </div>
                       ))}
                     </div>
                   )}
                 </div>
+                )}
 
-                {/* Annuaire Transversal : Membres des 6 Clubs R&D */}
+                {/* Annuaire Transversal : Membres de l'université */}
                 <div className="p-6 rounded-2xl bg-white/[0.03] border border-border-subtle backdrop-blur-xl">
                   <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
                     <div>
                       <h3 className="text-lg font-bold text-text-primary flex items-center gap-2">
                         <Users className="w-5 h-5 text-emerald-400" />
-                        Annuaire Transversal des Membres (6 Clubs UAC)
+                        Annuaire Transversal des Membres
                       </h3>
                       <p className="text-xs text-text-muted">
                         Vue centralisée accessible à la Secrétaire Générale et à l'Admin Universitaire.
@@ -928,7 +1003,11 @@ export default function EspaceCITE({ navigate }) {
                   </div>
 
                   {allMembersLoading ? (
-                    <p className="text-xs text-text-muted py-4 text-center">Chargement des membres des 6 clubs...</p>
+                    <p className="text-xs text-text-muted py-4 text-center">Chargement de l'annuaire…</p>
+                  ) : allMembers.length === 0 ? (
+                    <p className="text-xs text-text-muted italic py-6 text-center">
+                      Aucun membre enregistré pour le moment.
+                    </p>
                   ) : (
                     <div className="overflow-x-auto">
                       <table className="w-full text-left text-xs">
@@ -941,13 +1020,7 @@ export default function EspaceCITE({ navigate }) {
                           </tr>
                         </thead>
                         <tbody className="divide-y divide-white/5 text-text-secondary">
-                          {allMembers
-                            .filter(m => {
-                              const q = memberSearch.toLowerCase();
-                              const fullName = `${m.firstname || ''} ${m.lastname || m.name || ''}`.toLowerCase();
-                              const club = (m.clubName || m.club?.name || '').toLowerCase();
-                              return fullName.includes(q) || club.includes(q);
-                            })
+                          {membresFiltres
                             .slice(0, 12)
                             .map((m, idx) => {
                               const badge = formatRoleBadge(m);
@@ -970,6 +1043,16 @@ export default function EspaceCITE({ navigate }) {
                             })}
                         </tbody>
                       </table>
+                      {membresFiltres.length > 12 && (
+                        <p className="text-[11px] text-text-muted italic pt-3 text-center">
+                          12 membres affichés sur {membresFiltres.length}. Affinez la recherche pour voir les autres.
+                        </p>
+                      )}
+                      {membresFiltres.length === 0 && (
+                        <p className="text-[11px] text-text-muted italic py-4 text-center">
+                          Aucun membre ne correspond à cette recherche.
+                        </p>
+                      )}
                     </div>
                   )}
                 </div>

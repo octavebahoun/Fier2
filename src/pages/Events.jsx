@@ -352,10 +352,26 @@ function EventCard({ event, user, onRegister, onLiveAccess, isRegistering, canMa
             {!user ? 'Connectez-vous pour s\'inscrire' : 'S\'inscrire'}
           </button>
         ) : (
-          <div className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold
-            bg-emerald-500/20 border border-emerald-500/40 text-emerald-300">
-            <CheckCircle2 size={15} />
-            Inscrit ✓
+          <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold
+              bg-emerald-500/20 border border-emerald-500/40 text-emerald-300">
+              <CheckCircle2 size={15} />
+              Inscrit ✓
+            </div>
+            <button
+              id={`unregister-btn-${event.id}`}
+              onClick={() => onRegister(event.id)}
+              disabled={isRegistering === event.id}
+              className="flex items-center gap-2 px-3 py-2 rounded-xl text-sm font-semibold
+                text-text-secondary hover:text-text-primary border border-border-subtle
+                hover:border-border-strong transition-all duration-200 cursor-pointer
+                disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {isRegistering === event.id ? (
+                <span className="w-4 h-4 border-2 border-text-muted/30 border-t-text-muted rounded-full animate-spin" />
+              ) : null}
+              Se désinscrire
+            </button>
           </div>
         )}
 
@@ -458,26 +474,50 @@ export default function Events({ navigate }) {
     loadEvents();
   }, [tab]);
 
-  // Handle event registration
+  // Inscription et annulation d'inscription à un événement.
+  // `DELETE /events/:id/register` existait côté serveur sans être joignable
+  // depuis l'interface : un inscrit ne pouvait pas libérer sa place.
   const handleRegister = async (eventId) => {
     if (!user) {
       promptLogin("Connectez-vous pour vous inscrire à cet événement.");
       return;
     }
+    const current = events.find((ev) => ev.id === eventId);
+    const etaitInscrit = !!current?.registered;
+
+    const echec = etaitInscrit
+      ? "Impossible d'annuler l'inscription. Réessayez."
+      : "Impossible de vous inscrire. Réessayez.";
+
     setIsRegistering(eventId);
-    const res = await api.events.register(eventId);
-    if (res.success) {
-      // Immutable state update
-      setEvents(prev => prev.map(ev =>
-        ev.id === eventId
-          ? { ...ev, registered: true, participantsCount: ev.participantsCount + 1 }
-          : ev
-      ));
-      showToast(res.message || 'Inscription confirmée !', 'success');
-    } else {
-      showToast(res.message || 'Erreur lors de l\'inscription.', 'error');
+    try {
+      const res = await api.events.toggleRegister(eventId, etaitInscrit);
+      if (res?.success) {
+        setEvents(prev => prev.map(ev =>
+          ev.id === eventId
+            ? {
+                ...ev,
+                registered: !etaitInscrit,
+                participantsCount: Math.max(
+                  0,
+                  (ev.participantsCount ?? 0) + (etaitInscrit ? -1 : 1),
+                ),
+              }
+            : ev
+        ));
+        showToast(
+          res.message ||
+            (etaitInscrit ? 'Inscription annulée.' : 'Inscription confirmée !'),
+          'success',
+        );
+      } else {
+        showToast(res?.message || echec, 'error');
+      }
+    } catch (err) {
+      showToast(err?.serverMessage || err?.message || echec, 'error');
+    } finally {
+      setIsRegistering(null);
     }
-    setIsRegistering(null);
   };
 
   // Handle live streaming access gating
