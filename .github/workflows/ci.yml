@@ -22,21 +22,8 @@ jobs:
       - run: npm run build
       - run: npm run test
 
-  backend:
-    name: Backend (NestJS)
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    defaults:
-      run:
-        working-directory: backend_fieri
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: npm
-          cache-dependency-path: backend_fieri/package-lock.json
-      - run: npm ci
-      - run: npm run lint
-      - run: npm run build
-      - run: npm run test
+# NOTE: le backend NestJS n'est PAS dans ce dépôt — il vit dans
+# TEAM-D-EXCELLENCE/backend_fieri et `backend_fieri` est d'ailleurs listé dans
+# le .gitignore d'ici. Le job "Backend (NestJS)" qui pointait vers ce dossier
+# échouait donc systématiquement dès `setup-node` (« Some specified paths were
+# not resolved »). Le backend a désormais sa propre CI dans son dépôt.
