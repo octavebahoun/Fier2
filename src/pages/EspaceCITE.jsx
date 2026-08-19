@@ -149,11 +149,11 @@ export default function EspaceCITE({ navigate }) {
   // Poste exact du membre : décide à qui les documents sont transmis.
   const estSecretaire = universityPost === 'SECRETAIRE';
 
-  // Le Secrétariat (et l'ADMIN) sont seuls habilités à lire les rapports de
-  // toute l'université : GET /universities/:id/activity-reports est gardé par
-  // UniversityPostGuard + @UniversityPosts('SECRETAIRE'). Le Chef
-  // Universitaire recevrait un 403 : on ne lui affiche pas le panneau.
-  const canReadUniversityReports = isSecretary();
+  // Lecture des rapports de toute l'université : Secrétariat, Chef
+  // Universitaire et ADMIN, conformément à
+  // @UniversityPosts('SECRETAIRE', 'CHEF_UNIVERSITAIRE') sur
+  // GET /universities/:id/activity-reports.
+  const canReadUniversityReports = isSecretary() || isChefUniversitaire();
 
   // Détermination du club de l'utilisateur
   const userAssignedClubId = user?.clubId || (user?.responsibleClubIds && user.responsibleClubIds[0]) || (user?.memberships && user.memberships[0]?.clubId) || '';

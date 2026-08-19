@@ -15,6 +15,7 @@ import EspaceCITE from './EspaceCITE.jsx'
 
 // ── Identité simulée : Secrétaire Générale de l'université 7 ────────────────
 let estSecretaire = true
+let estChef = false
 
 vi.mock('../context/AuthContext.jsx', () => ({
   useAuth: () => ({
@@ -29,7 +30,7 @@ vi.mock('../context/AuthContext.jsx', () => ({
     },
     isClubResponsible: () => false,
     isSecretary: () => estSecretaire,
-    isChefUniversitaire: () => false,
+    isChefUniversitaire: () => estChef,
     // Le contexte expose le poste sous forme de chaîne, pas d'objet.
     universityPost: 'SECRETAIRE',
     universityId: 7,
@@ -62,6 +63,7 @@ vi.mock('../services/api.js', () => {
 beforeEach(() => {
   cleanup()
   estSecretaire = true
+  estChef = false
   mockUniversityReports.mockReset()
   mockSubmitReport.mockReset()
   mockMembersAll.mockReset()
@@ -186,5 +188,33 @@ describe('Espace CITE — la soumission de rapport dit la vérité', () => {
 
     await waitFor(() => expect(mockUniversityReports).toHaveBeenCalledTimes(2))
     expect(localStorage.getItem('fieri_submitted_club_reports')).toBeNull()
+  })
+})
+
+// Le Chef Universitaire supervise ce que la Secrétaire consolide : la route
+// GET /universities/:id/activity-reports lui est ouverte au même titre.
+describe('Espace CITE — le Chef Universitaire lit les rapports', () => {
+  it('charge et affiche la liste pour un Chef qui n’est pas Secrétaire', async () => {
+    estSecretaire = false
+    estChef = true
+    mockUniversityReports.mockResolvedValue({
+      success: true,
+      data: [
+        {
+          id: 4,
+          clubName: 'Club Électronique',
+          period: '2026-08',
+          title: 'Bilan des bancs de test',
+          content: 'Trois bancs remis en service.',
+          author: 'Grace Hopper',
+          createdAt: '2026-08-05T08:00:00.000Z',
+        },
+      ],
+    })
+
+    render(<EspaceCITE navigate={vi.fn()} />)
+
+    expect(await screen.findByText('Bilan des bancs de test')).toBeInTheDocument()
+    expect(mockUniversityReports).toHaveBeenCalledWith(7)
   })
 })

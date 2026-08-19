@@ -278,10 +278,10 @@ export default function Gouvernance() {
   }, []);
 
   // ── Rapports d'activité de l'université ──
-  // GET /universities/:id/activity-reports est gardé par UniversityPostGuard
-  // + @UniversityPosts('SECRETAIRE') : seul un ADMIN global y accède depuis
-  // cette page. On ne tente donc pas l'appel pour un Chef Universitaire.
-  const peutLireRapports = isAdmin();
+  // GET /universities/:id/activity-reports accepte le Chef Universitaire au
+  // même titre que la Secrétaire : il supervise ce qu'elle consolide. Cette
+  // page étant déjà réservée au Chef et à l'ADMIN, tout visiteur légitime
+  // peut donc lire la liste.
   const [rapports, setRapports] = useState([]);
   const [loadingRapports, setLoadingRapports] = useState(false);
   const [errorRapports, setErrorRapports] = useState(null);
@@ -307,8 +307,8 @@ export default function Gouvernance() {
     loadMembers();
     loadMyCerts();
     loadEmblematicFigures();
-    if (peutLireRapports) loadRapports(universityId);
-  }, [hasGovAccess, universityId, peutLireRapports, loadRequests, loadMembers, loadMyCerts, loadEmblematicFigures, loadRapports]);
+    loadRapports(universityId);
+  }, [hasGovAccess, universityId, loadRequests, loadMembers, loadMyCerts, loadEmblematicFigures, loadRapports]);
 
   const handleToggleEmblematic = async (memberId, currentStatus) => {
     if (togglingId) return;
@@ -755,17 +755,7 @@ export default function Gouvernance() {
             accent="var(--color-ember)"
           >
             <div className="space-y-4">
-              {!peutLireRapports ? (
-                <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/25 flex items-start gap-3">
-                  <AlertCircle className="w-5 h-5 text-amber-400 shrink-0 mt-0.5" />
-                  <div className="text-xs text-text-secondary leading-relaxed">
-                    Les rapports mensuels sont déposés par les Responsables de Club et
-                    consultés par le <span className="font-bold text-emerald-400">Secrétariat</span>
-                    {' '}depuis l'Espace CITE. La consultation depuis la Gouvernance n'est pas
-                    encore ouverte au poste de Chef Universitaire.
-                  </div>
-                </div>
-              ) : loadingRapports ? (
+              {loadingRapports ? (
                 <div className="flex items-center justify-center gap-3 py-10 text-text-muted">
                   <Loader2 className="w-5 h-5 animate-spin" />
                   <span className="text-sm">Chargement des rapports…</span>
