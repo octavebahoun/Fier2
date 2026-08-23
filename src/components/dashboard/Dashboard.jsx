@@ -24,11 +24,11 @@ function StatCard({ label, value, icon: Icon, color, onClick }) {
     <motion.div
       whileHover={{ y: -2 }}
       onClick={onClick}
-      className="glass-panel rounded-2xl p-5 border border-border-subtle bg-bg-secondary/60 backdrop-blur-xl flex flex-col gap-3 cursor-pointer group"
+      className="glass-panel chamfer-sm p-5 flex flex-col gap-3 cursor-pointer group"
     >
       <div className="flex items-start justify-between">
         <div
-          className="w-10 h-10 rounded-xl flex items-center justify-center"
+          className="w-10 h-10 rounded-lg flex items-center justify-center"
           style={{ background: mix(color, '10%'), border: `1px solid ${mix(color, '21%')}` }}
         >
           <Icon className="w-5 h-5" style={{ color }} />
@@ -36,8 +36,8 @@ function StatCard({ label, value, icon: Icon, color, onClick }) {
         <ArrowRight className="w-4 h-4 text-text-muted group-hover:text-text-secondary group-hover:translate-x-0.5 transition-all" />
       </div>
       <div>
-        <div className="text-2xl font-black text-text-primary">{value}</div>
-        <div className="text-[11px] font-semibold text-text-muted mt-0.5">{label}</div>
+        <div className="text-2xl font-extrabold text-text-primary font-mono">{value}</div>
+        <div className="eyebrow mt-0.5">{label}</div>
       </div>
     </motion.div>
   )
@@ -119,13 +119,16 @@ export default function Dashboard({ navigate }) {
       <div className="flex flex-col gap-6">
 
         {/* ── En-tête de bienvenue ── */}
-        <div className="glass-panel rounded-3xl p-8 border border-border-subtle bg-bg-secondary/60 backdrop-blur-xl relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-64 h-64 bg-engine/5 blur-[80px] rounded-full pointer-events-none" />
+        <div className="glass-panel chamfer p-8 relative overflow-hidden">
+          <div className="absolute inset-0 dot-grid opacity-40 pointer-events-none" />
           <div className="relative z-10 flex flex-col gap-4">
             <div className="flex items-start justify-between gap-4 flex-wrap">
               <div>
-                <p className="text-[11px] font-black uppercase tracking-[0.25em] text-engine mb-1">Tableau de bord</p>
-                <h1 className="text-2xl md:text-3xl font-extrabold text-text-primary tracking-tight">
+                <span className="eyebrow flex items-center gap-3">
+                  <span className="w-8 h-px bg-ember inline-block" aria-hidden="true" />
+                  Tableau de bord
+                </span>
+                <h1 className="mt-3 text-2xl md:text-3xl font-extrabold text-text-primary tracking-tight font-display">
                   Bonjour, {fullName.split(' ')[0]}
                 </h1>
                 <p className="text-xs text-text-secondary mt-1">
@@ -139,7 +142,7 @@ export default function Dashboard({ navigate }) {
                 {isChercheur && (
                   <button
                     onClick={() => navigate?.('researcher-profile-edit')}
-                    className="px-4 py-2 rounded-xl bg-bg-tertiary border border-white/10 text-xs font-bold text-text-secondary hover:bg-bg-tertiary transition-all"
+                    className="px-4 py-2 chamfer-sm bg-bg-tertiary border border-border-subtle text-xs font-bold text-text-secondary hover:text-text-primary hover:border-border-strong transition-all cursor-pointer"
                   >
                     Modifier mon profil
                   </button>
@@ -148,7 +151,7 @@ export default function Dashboard({ navigate }) {
             </div>
 
             {notifCount > 0 && (
-              <div className="flex items-center gap-3 p-3 rounded-xl bg-engine/8 border border-engine/20 text-xs">
+              <div className="flex items-center gap-3 p-3 rounded-lg bg-engine/8 border border-engine/20 text-xs">
                 <Bell className="w-4 h-4 text-engine shrink-0" />
                 <span className="text-text-secondary">
                   Vous avez{' '}
@@ -187,10 +190,10 @@ export default function Dashboard({ navigate }) {
 
         {/* ── Actions privilégiées (SEULEMENT si le rôle en a) ── */}
         {privilegedActions.length > 0 && (
-          <div className="glass-panel rounded-3xl p-6 border border-border-subtle">
+          <div className="glass-panel chamfer p-6">
             <div className="flex items-center gap-2.5 mb-1">
               <Lock className="w-4 h-4 text-engine" />
-              <h2 className="text-base font-extrabold text-text-primary tracking-tight">Actions privilégiées</h2>
+              <h2 className="text-base font-extrabold text-text-primary tracking-tight font-display">Actions privilégiées</h2>
             </div>
             <p className="text-xs text-text-muted mb-4">Actions réservées à votre rôle sur la plateforme.</p>
 
@@ -199,10 +202,10 @@ export default function Dashboard({ navigate }) {
                 <button
                   key={label + page}
                   onClick={() => navigate?.(page)}
-                  className="flex items-center gap-3 p-4 rounded-2xl border transition-all text-left group hover:-translate-y-0.5"
+                  className="flex items-center gap-3 p-4 rounded-lg border transition-all text-left group hover:-translate-y-0.5 cursor-pointer"
                   style={{ background: mix(color, '5%'), borderColor: mix(color, '19%') }}
                 >
-                  <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0" style={{ background: mix(color, '10%'), border: `1px solid ${mix(color, '25%')}` }}>
+                  <div className="w-10 h-10 rounded-lg flex items-center justify-center shrink-0" style={{ background: mix(color, '10%'), border: `1px solid ${mix(color, '25%')}` }}>
                     <Icon className="w-5 h-5" style={{ color }} />
                   </div>
                   <div className="flex-1 min-w-0">
@@ -217,15 +220,15 @@ export default function Dashboard({ navigate }) {
         )}
 
         {/* ── Section Mes Clubs ── */}
-        <div className="glass-panel rounded-3xl p-6 border border-border-subtle bg-bg-secondary/60 backdrop-blur-xl">
+        <div className="glass-panel chamfer p-6">
           <div className="flex items-center justify-between mb-5">
             <div className="flex items-center gap-2.5">
               <Users className="w-4 h-4 text-engine" />
-              <h2 className="text-base font-extrabold text-text-primary tracking-tight">Mes CITE</h2>
+              <h2 className="text-base font-extrabold text-text-primary tracking-tight font-display">Mes CITE</h2>
             </div>
             <button
               onClick={() => navigate?.('clubs')}
-              className="flex items-center gap-1 text-[11px] font-bold text-engine hover:text-engine/80 transition-colors"
+              className="flex items-center gap-1 text-[11px] font-bold text-engine hover:text-engine/80 transition-colors cursor-pointer"
             >
               Voir tout <ChevronRight className="w-3.5 h-3.5" />
             </button>
@@ -233,7 +236,7 @@ export default function Dashboard({ navigate }) {
 
           {joinedClubs.length === 0 ? (
             <div className="text-center py-10 flex flex-col items-center gap-3">
-              <div className="w-12 h-12 rounded-2xl bg-bg-tertiary border border-border-subtle flex items-center justify-center">
+              <div className="w-12 h-12 chamfer-sm bg-bg-tertiary border border-border-subtle flex items-center justify-center">
                 <Users className="w-5 h-5 text-text-muted" />
               </div>
               <p className="text-sm text-text-secondary">
@@ -243,7 +246,7 @@ export default function Dashboard({ navigate }) {
               </p>
               <button
                 onClick={() => navigate?.('clubs')}
-                className="px-4 py-2 rounded-xl bg-engine text-white text-xs font-bold hover:bg-engine/90 transition-all"
+                className="px-4 py-2 chamfer-sm bg-engine text-white text-xs font-bold hover:bg-engine-deep transition-all cursor-pointer"
               >
                 {clubsCount > 0 ? 'Voir mes clubs' : 'Explorer les clubs'}
               </button>
@@ -259,7 +262,7 @@ export default function Dashboard({ navigate }) {
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: i * 0.06 }}
-                    className="flex items-center gap-3 p-4 rounded-2xl border hover:bg-bg-tertiary transition-all cursor-pointer group"
+                    className="flex items-center gap-3 p-4 rounded-lg border hover:bg-bg-tertiary transition-all cursor-pointer group"
                     style={{
                       background: mix(meta.color, '3%'),
                       borderColor: mix(meta.color, '16%'),
@@ -267,7 +270,7 @@ export default function Dashboard({ navigate }) {
                     onClick={() => navigate?.('clubs')}
                   >
                     <div
-                      className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
+                      className="w-10 h-10 rounded-lg flex items-center justify-center shrink-0"
                       style={{ background: mix(meta.color, '10%'), border: `1px solid ${mix(meta.color, '25%')}` }}
                     >
                       <Icon className="w-5 h-5" style={{ color: meta.color }} />
@@ -277,7 +280,7 @@ export default function Dashboard({ navigate }) {
                       <p className="text-[11px] text-text-muted">{club.membersCount?.toLocaleString('fr-FR')} membres</p>
                     </div>
                     <div
-                      className="text-[11px] font-black px-2 py-0.5 rounded-full"
+                      className="text-[11px] font-extrabold px-2 py-0.5 rounded-full"
                       style={{ background: mix(meta.color, '10%'), color: meta.color }}
                     >
                       Membre
@@ -295,10 +298,10 @@ export default function Dashboard({ navigate }) {
             <button
               key={page}
               onClick={() => navigate?.(page)}
-              className="flex items-center gap-3 p-4 rounded-2xl border border-border-subtle bg-bg-secondary hover:bg-bg-secondary transition-all text-left group"
+              className="flex items-center gap-3 p-4 chamfer-sm border border-border-subtle bg-bg-secondary hover:border-border-strong transition-all text-left group cursor-pointer"
             >
               <div
-                className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0"
+                className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0"
                 style={{ background: mix(color, '9%'), border: `1px solid ${mix(color, '19%')}` }}
               >
                 <Icon className="w-4 h-4" style={{ color }} />

@@ -108,7 +108,7 @@ export default function Projects({ navigate }) {
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4, delay: 0.25 }}
-        className="flex flex-col md:flex-row gap-4 items-center justify-between glass-panel border border-border-subtle rounded-2xl p-4 relative z-10"
+        className="flex flex-col md:flex-row gap-4 items-center justify-between glass-panel border border-border-subtle chamfer-sm p-4 relative z-10"
       >
         {/* Search */}
         <div className="relative w-full md:max-w-md">
@@ -178,7 +178,7 @@ export default function Projects({ navigate }) {
                   variants={cardVariants}
                   className={`${
                     isFeatured ? 'md:col-span-2 flex-col md:flex-row' : 'col-span-1 flex-col'
-                  } group relative glass-panel rounded-3xl overflow-hidden border border-border-subtle bg-bg-secondary/60 backdrop-blur-xl transition-all cursor-pointer flex min-h-[380px]`}
+                  } group relative glass-panel chamfer overflow-hidden transition-all cursor-pointer flex min-h-[380px]`}
                   whileHover={{ 
                     y: -4, 
                     boxShadow: "0 0 30px rgba(59, 130, 246, 0.15)",
@@ -218,7 +218,7 @@ export default function Projects({ navigate }) {
                       {/* Status badge & stars count */}
                       <div className="flex justify-between items-center">
                         <div className="flex items-center gap-2">
-                          <span className={`text-[11px] font-black uppercase tracking-wider px-2.5 py-0.5 rounded-md border ${
+                          <span className={`text-[11px] font-extrabold uppercase tracking-wider px-2.5 py-0.5 rounded-md border ${
                             p.status === 'Actif'
                               ? 'text-emerald-400 bg-emerald-500/10 border-emerald-500/10'
                               : 'text-amber-400 bg-amber-500/10 border-amber-500/10'
@@ -226,7 +226,7 @@ export default function Projects({ navigate }) {
                             {p.status}
                           </span>
                           {isFeatured && (
-                            <span className="text-[11px] font-black uppercase tracking-wider px-2.5 py-0.5 rounded-md text-engine bg-engine/10 border-engine/10 flex items-center gap-1">
+                            <span className="text-[11px] font-extrabold uppercase tracking-wider px-2.5 py-0.5 rounded-md text-engine bg-engine/10 border-engine/10 flex items-center gap-1">
                               <Award className="w-2.5 h-2.5 animate-bounce" />
                               À la Une
                             </span>
@@ -241,7 +241,7 @@ export default function Projects({ navigate }) {
 
                       {/* Main textual representation */}
                       <div className="space-y-2">
-                        <h3 className={`font-black tracking-tight text-text-primary group-hover:text-engine transition-colors leading-tight ${
+                        <h3 className={`font-extrabold tracking-tight text-text-primary group-hover:text-engine transition-colors leading-tight ${
                           isFeatured ? 'text-2xl md:text-3xl' : 'text-lg'
                         }`}>
                           {p.title}
@@ -254,12 +254,12 @@ export default function Projects({ navigate }) {
                       {/* Technologies tags list */}
                       <div className="flex flex-wrap gap-2 pt-2">
                         {p.technologies.slice(0, isFeatured ? 7 : 4).map((tech, idx) => (
-                          <span key={idx} className="text-[11px] font-black text-text-muted bg-bg-tertiary border border-border-subtle px-2 py-0.5 rounded-md">
+                          <span key={idx} className="text-[11px] font-extrabold text-text-muted bg-bg-tertiary border border-border-subtle px-2 py-0.5 rounded-md">
                             {tech}
                           </span>
                         ))}
                         {p.technologies.length > (isFeatured ? 7 : 4) && (
-                          <span className="text-[11px] font-black text-engine bg-engine/5 border border-engine/10 px-2 py-0.5 rounded-md">
+                          <span className="text-[11px] font-extrabold text-engine bg-engine/5 border border-engine/10 px-2 py-0.5 rounded-md">
                             +{p.technologies.length - (isFeatured ? 7 : 4)}
                           </span>
                         )}
@@ -291,13 +291,13 @@ export default function Projects({ navigate }) {
                       {/* Author block and visual Explore link */}
                       <div className="flex justify-between items-center gap-4">
                         <div className="flex items-center gap-2.5">
-                          <span className="w-7 h-7 rounded-full bg-engine/10 border border-border-subtle flex items-center justify-center text-[11px] font-black text-engine shrink-0">
+                          <span className="w-7 h-7 rounded-full bg-engine/10 border border-border-subtle flex items-center justify-center text-[11px] font-extrabold text-engine shrink-0">
                             {p.author ? p.author.charAt(0).toUpperCase() : '?'}
                           </span>
                           <span className="text-[11px] font-bold text-text-primary line-clamp-1">{p.author}</span>
                         </div>
 
-                        <div className="flex items-center gap-1 text-[11px] font-black uppercase tracking-wider text-engine group-hover:translate-x-1 transition-transform">
+                        <div className="flex items-center gap-1 text-[11px] font-extrabold uppercase tracking-wider text-engine group-hover:translate-x-1 transition-transform">
                           Détails
                           <ArrowRight className="w-3 h-3" />
                         </div>
@@ -312,12 +312,12 @@ export default function Projects({ navigate }) {
           </motion.div>
         ) : (
           /* Empty state */
-          <div className="text-center py-20 glass-panel border border-border-subtle rounded-3xl flex flex-col items-center justify-center gap-4 max-w-xl mx-auto">
+          <div className="text-center py-20 glass-panel border border-border-subtle chamfer flex flex-col items-center justify-center gap-4 max-w-xl mx-auto">
             <div className="w-16 h-16 rounded-full bg-bg-tertiary flex items-center justify-center text-text-muted">
               <Compass className="w-8 h-8" />
             </div>
             <div>
-              <h3 className="text-lg font-black text-text-primary">Aucun projet trouvé</h3>
+              <h3 className="text-lg font-extrabold text-text-primary">Aucun projet trouvé</h3>
               <p className="text-xs text-text-secondary mt-1">Ajustez vos termes de recherche ou sélectionnez un autre filtre.</p>
             </div>
           </div>

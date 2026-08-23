@@ -172,7 +172,7 @@ export default function NotificationsModal({ open, onClose, navigate }) {
                   key={notif.id}
                   className={`relative p-3.5 rounded-xl border transition-all cursor-pointer group
                     ${notif.read
-                      ? 'border-transparent bg-transparent opacity-60 hover:opacity-80 hover:bg-bg-tertiary/60'
+                      ? 'border-transparent bg-transparent opacity-60 hover:opacity-80 hover:bg-bg-tertiary'
                       : 'border-engine/15 bg-engine/5 hover:bg-engine/8 hover:border-engine/25'
                     }`}
                   onClick={() => handleNotifClick(notif)}

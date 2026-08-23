@@ -89,7 +89,7 @@ export default function MembersManager({ notify }) {
   };
 
   return (
-    <div className="glass-panel border border-border-subtle bg-bg-secondary/30 rounded-3xl p-6 md:p-8">
+    <div className="glass-panel border border-border-subtle bg-bg-secondary chamfer p-6 md:p-8">
       {/* En-tête + recherche */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-border-subtle pb-6 mb-6">
         <div>
@@ -109,7 +109,7 @@ export default function MembersManager({ notify }) {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Nom, e-mail…"
-              className="w-full md:w-56 bg-bg-secondary/50 border border-border-subtle focus:border-engine/40 rounded-xl py-2 pl-9 pr-3 text-xs text-text-primary outline-none transition-all"
+              className="w-full md:w-56 bg-bg-secondary border border-border-subtle focus:border-engine/40 rounded-xl py-2 pl-9 pr-3 text-xs text-text-primary outline-none transition-all"
             />
           </div>
           <button
@@ -130,7 +130,7 @@ export default function MembersManager({ notify }) {
         </div>
       ) : error ? (
         <div className="py-12 max-w-lg mx-auto text-center flex flex-col items-center gap-3">
-          <div className="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center">
+          <div className="w-12 h-12 chamfer-sm bg-amber-500/10 border border-amber-500/20 flex items-center justify-center">
             <ShieldAlert className="w-5 h-5 text-amber-400" />
           </div>
           <p className="text-xs text-text-secondary leading-relaxed">{error}</p>
@@ -146,7 +146,7 @@ export default function MembersManager({ notify }) {
       ) : (
         <div className="space-y-2">
           {/* En-têtes de colonnes (desktop) */}
-          <div className="hidden md:grid grid-cols-[1fr_auto] gap-4 px-4 pb-2 text-[11px] font-black uppercase tracking-wider text-text-muted">
+          <div className="hidden md:grid grid-cols-[1fr_auto] gap-4 px-4 pb-2 text-[11px] font-extrabold uppercase tracking-wider text-text-muted">
             <span>Membre</span>
             <span className="text-right pr-2">Rôle</span>
           </div>
@@ -160,7 +160,7 @@ export default function MembersManager({ notify }) {
               <motion.div
                 key={member.id}
                 layout
-                className="grid grid-cols-[1fr_auto] gap-4 items-center px-4 py-3 rounded-2xl border border-border-subtle/70 bg-bg-secondary/40 hover:border-engine/20 transition-colors"
+                className="grid grid-cols-[1fr_auto] gap-4 items-center px-4 py-3 chamfer-sm border border-border-subtle/70 bg-bg-secondary hover:border-engine/20 transition-colors"
               >
                 {/* Identité */}
                 <div className="flex items-center gap-3 min-w-0">
@@ -170,7 +170,7 @@ export default function MembersManager({ notify }) {
                   <div className="min-w-0">
                     <p className="text-xs font-bold text-text-primary truncate">
                       {member.firstName} {member.lastName}
-                      {isSelf && <span className="ml-2 text-[11px] font-black uppercase tracking-wider text-engine">(vous)</span>}
+                      {isSelf && <span className="ml-2 text-[11px] font-extrabold uppercase tracking-wider text-engine">(vous)</span>}
                     </p>
                     <p className="text-[11px] text-text-muted truncate">{member.email}</p>
                   </div>
@@ -186,7 +186,7 @@ export default function MembersManager({ notify }) {
                       value={ASSIGNABLE_ROLES.includes(member.role?.toUpperCase()) ? member.role.toUpperCase() : ''}
                       disabled={isBusy}
                       onChange={(e) => changeRole(member, e.target.value)}
-                      className="appearance-none bg-bg-secondary/60 border border-border-subtle focus:border-engine/40 rounded-lg py-1.5 pl-3 pr-8 text-[11px] font-bold text-text-primary outline-none cursor-pointer transition-all disabled:opacity-50 disabled:cursor-wait"
+                      className="appearance-none bg-bg-secondary border border-border-subtle focus:border-engine/40 rounded-lg py-1.5 pl-3 pr-8 text-[11px] font-bold text-text-primary outline-none cursor-pointer transition-all disabled:opacity-50 disabled:cursor-wait"
                       title={isSelf ? "Attention : modifier votre propre rôle" : "Changer le rôle"}
                     >
                       {!ASSIGNABLE_ROLES.includes(member.role?.toUpperCase()) && (

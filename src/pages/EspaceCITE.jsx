@@ -36,7 +36,7 @@ function Toast({ message, type = 'success', onClose }) {
       animate={{ opacity: 1, y: 0, scale: 1 }}
       exit={{ opacity: 0, y: 16, scale: 0.95 }}
       transition={{ type: 'spring', stiffness: 400, damping: 28 }}
-      className={`fixed bottom-6 right-6 z-[100] flex items-center gap-3 px-5 py-3.5 rounded-2xl shadow-2xl backdrop-blur-md border ${bgClass}`}
+      className={`fixed bottom-6 right-6 z-[100] flex items-center gap-3 px-5 py-3.5 chamfer-sm shadow-2xl backdrop-blur-md border ${bgClass}`}
       role="alert"
       aria-live="polite"
     >
@@ -106,7 +106,7 @@ function SectionCard({ icon: Icon, title, subtitle, children, accent = 'var(--co
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
       whileHover={{ y: -4, transition: { duration: 0.2 } }}
-      className="relative rounded-2xl overflow-hidden glass-panel bg-bg-secondary/60 backdrop-blur-xl border border-border-subtle"
+      className="relative chamfer-sm overflow-hidden glass-panel"
     >
       <div
         className="absolute inset-0 opacity-0 hover:opacity-100 transition-opacity duration-300 pointer-events-none"
@@ -527,7 +527,7 @@ export default function EspaceCITE({ navigate }) {
               <ClipboardList className="w-3.5 h-3.5" />
               FIERI Community OS — CITE R&D
             </div>
-            <h1 className="text-3xl font-extrabold text-text-primary tracking-tight">
+            <h1 className="text-3xl font-extrabold text-text-primary tracking-tight font-display">
               {isSecretaryOrAdmin ? "Espace Administration CITE" : (selectedClubObj?.name || "Espace Club de Recherche CITE")}
             </h1>
             <p className="text-text-muted text-sm mt-1">
@@ -539,7 +539,7 @@ export default function EspaceCITE({ navigate }) {
 
           {/* Sélecteur de club pour Secrétariat & Admin */}
           {isSecretaryOrAdmin && (
-            <div className="flex items-center gap-3 bg-white/[0.03] p-3 rounded-2xl border border-border-subtle">
+            <div className="flex items-center gap-3 bg-bg-tertiary p-3 chamfer-sm border border-border-subtle">
               <label className={labelClass + ' mb-0 shrink-0'}>Club Supervisé :</label>
               {clubLoading ? (
                 <span className="text-sm text-text-muted">Chargement…</span>
@@ -561,7 +561,7 @@ export default function EspaceCITE({ navigate }) {
 
         {/* Erreur globale */}
         {error && (
-          <div className="mb-8 flex items-center gap-3 p-4 rounded-2xl bg-red-500/10 border border-red-500/30 text-sm">
+          <div className="mb-8 flex items-center gap-3 p-4 chamfer-sm bg-red-500/10 border border-red-500/30 text-sm">
             <AlertCircle className="w-5 h-5 text-red-400 shrink-0" />
             <p className="text-red-300">{error}</p>
             <button
@@ -586,7 +586,7 @@ export default function EspaceCITE({ navigate }) {
             {/* Membre rattaché à aucun club : le dire, plutôt que d'ouvrir
                 l'espace d'un club auquel il n'appartient pas. */}
             {!clubId && !isSecretaryOrAdmin && (
-              <div className="p-6 rounded-2xl bg-amber-500/5 border border-amber-500/25 flex flex-col sm:flex-row sm:items-center gap-4">
+              <div className="p-6 chamfer-sm bg-amber-500/5 border border-amber-500/25 flex flex-col sm:flex-row sm:items-center gap-4">
                 <AlertCircle className="w-6 h-6 text-amber-400 shrink-0" />
                 <div className="flex-1">
                   <p className="text-sm font-bold text-text-primary">Vous n'êtes membre d'aucun club de recherche.</p>
@@ -620,7 +620,7 @@ export default function EspaceCITE({ navigate }) {
                     {members.map((m, idx) => {
                       const badge = formatRoleBadge(m);
                       return (
-                        <div key={m.memberId || m.id || idx} className="p-3 rounded-xl bg-white/[0.02] border border-border-subtle flex items-center justify-between gap-3">
+                        <div key={m.memberId || m.id || idx} className="p-3 rounded-xl bg-bg-tertiary border border-border-subtle flex items-center justify-between gap-3">
                           <div className="min-w-0">
                             <p className="text-xs font-bold text-text-primary truncate">
                               {m.name || [m.firstName, m.lastName].filter(Boolean).join(' ') || 'Membre'}
@@ -693,7 +693,7 @@ export default function EspaceCITE({ navigate }) {
                     {projects.map((p) => {
                       const badge = statusBadge(p.status);
                       return (
-                        <div key={p.id} className="p-3.5 rounded-xl bg-white/[0.02] border border-border-subtle">
+                        <div key={p.id} className="p-3.5 rounded-xl bg-bg-tertiary border border-border-subtle">
                           <div className="flex items-start justify-between gap-3">
                             <h3 className="text-text-primary font-semibold text-xs leading-snug">{p.title}</h3>
                             <span className={`text-[11px] font-bold uppercase tracking-wide px-2 py-0.5 rounded-full border shrink-0 ${badge.className}`}>
@@ -852,7 +852,7 @@ export default function EspaceCITE({ navigate }) {
               <div className="pt-6 border-t border-border-subtle">
                 <button
                   onClick={() => setShowOtherClubs(!showOtherClubs)}
-                  className="w-full p-4 rounded-2xl bg-white/[0.03] border border-border-subtle hover:bg-white/[0.06] transition-all flex items-center justify-between group cursor-pointer"
+                  className="w-full p-4 chamfer-sm bg-bg-secondary border border-border-subtle hover:bg-bg-tertiary transition-all flex items-center justify-between group cursor-pointer"
                 >
                   <div className="flex items-center gap-3 text-left">
                     <div className="w-10 h-10 rounded-xl bg-engine/10 border border-engine/20 flex items-center justify-center text-engine group-hover:scale-105 transition-transform">
@@ -881,7 +881,7 @@ export default function EspaceCITE({ navigate }) {
                       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                         {clubsList
                           .map((c) => (
-                            <div key={c.id} className="p-4 rounded-2xl bg-bg-secondary/80 border border-border-subtle flex flex-col justify-between gap-4">
+                            <div key={c.id} className="p-4 chamfer-sm bg-bg-secondary border border-border-subtle flex flex-col justify-between gap-4">
                               <div>
                                 <div className="flex items-center justify-between mb-2">
                                   <span className="text-[11px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-engine/10 text-engine border border-engine/20">
@@ -919,7 +919,7 @@ export default function EspaceCITE({ navigate }) {
               <div className="space-y-8 pt-6 border-t border-border-subtle">
                 {/* Rapports d'activité transmis — lecture directe de la base */}
                 {canReadUniversityReports && (
-                <div className="p-6 rounded-2xl bg-white/[0.03] border border-border-subtle backdrop-blur-xl">
+                <div className="p-6 chamfer-sm bg-bg-tertiary border border-border-subtle">
                   <div className="flex items-center justify-between mb-6">
                     <div>
                       <h3 className="text-lg font-bold text-text-primary flex items-center gap-2">
@@ -959,7 +959,7 @@ export default function EspaceCITE({ navigate }) {
                   ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                       {receivedReports.map((rep) => (
-                        <div key={rep.id} className="p-4 rounded-xl bg-black/40 border border-border-subtle flex flex-col justify-between gap-3">
+                        <div key={rep.id} className="p-4 rounded-xl bg-bg-tertiary border border-border-subtle flex flex-col justify-between gap-3">
                           <div>
                             <div className="flex items-center justify-between text-[11px] text-text-muted mb-1">
                               <span className="font-bold text-engine">{rep.clubName}</span>
@@ -980,7 +980,7 @@ export default function EspaceCITE({ navigate }) {
                 )}
 
                 {/* Annuaire Transversal : Membres de l'université */}
-                <div className="p-6 rounded-2xl bg-white/[0.03] border border-border-subtle backdrop-blur-xl">
+                <div className="p-6 chamfer-sm bg-bg-tertiary border border-border-subtle">
                   <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
                     <div>
                       <h3 className="text-lg font-bold text-text-primary flex items-center gap-2">
@@ -1025,7 +1025,7 @@ export default function EspaceCITE({ navigate }) {
                             .map((m, idx) => {
                               const badge = formatRoleBadge(m);
                               return (
-                                <tr key={m.id || idx} className="hover:bg-white/[0.02]">
+                                <tr key={m.id || idx} className="hover:bg-bg-tertiary">
                                   <td className="py-2.5 px-3 font-semibold text-text-primary">
                                     {[m.firstname, m.lastname].filter(Boolean).join(' ') || m.name || 'Membre'}
                                   </td>

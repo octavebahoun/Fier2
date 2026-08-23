@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import { Sparkles, ArrowRight, Target, Users, Trophy, Globe } from 'lucide-react';
+import PageHeader from '../components/ui/PageHeader.jsx';
 
 export default function PAF({ navigate }) {
   const perks = [
@@ -15,22 +16,15 @@ export default function PAF({ navigate }) {
       <div className="absolute bottom-10 right-10 w-[300px] h-[300px] bg-ember/5 rounded-full blur-[100px] pointer-events-none" />
 
       <div className="max-w-5xl mx-auto relative z-10">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="text-center mb-16"
-        >
-          <span className="inline-flex items-center gap-2 text-[11px] font-bold tracking-[0.2em] text-engine uppercase bg-engine/10 border border-engine/30 px-4 py-1.5 rounded-full mb-6">
-            <Sparkles className="w-3 h-3" />
-            PROGRAMME AMBASSADEUR FIERI
-          </span>
-          <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight mb-4 bg-gradient-to-r from-engine via-ember to-ember-soft bg-clip-text text-transparent">
-            Programme Ambassadeur FIERI
-          </h1>
-          <p className="text-text-secondary text-base md:text-lg font-light leading-relaxed max-w-2xl mx-auto">
-            Un programme d'élite pour les talents qui souhaitent porter les valeurs de l'excellence scientifique et devenir les ambassadeurs de la CITE FIERI.
-          </p>
-        </motion.div>
+        <PageHeader
+          tag="Programme ambassadeur FIERI"
+          icon={Sparkles}
+          title="Programme Ambassadeur FIERI"
+          description="Un programme d'élite pour les talents qui souhaitent porter les valeurs de l'excellence scientifique et devenir les ambassadeurs de la CITE FIERI."
+          align="center"
+          variant="hero"
+          className="mb-16"
+        />
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
           {perks.map((item, index) => (
@@ -39,12 +33,12 @@ export default function PAF({ navigate }) {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.1 }}
-              className="bg-bg-secondary/40 backdrop-blur-md border border-border-subtle hover:border-engine/30 rounded-2xl p-6 transition-all group"
+              className="glass-panel chamfer-sm p-6 hover:border-engine/30 transition-all group"
             >
-              <div className="w-10 h-10 rounded-xl bg-engine/10 border border-engine/20 flex items-center justify-center text-engine mb-4 group-hover:scale-110 transition-transform">
+              <div className="w-10 h-10 rounded-lg bg-engine/10 border border-engine/20 flex items-center justify-center text-engine mb-4 group-hover:scale-110 transition-transform">
                 {item.icon}
               </div>
-              <h3 className="text-base font-bold text-text-primary mb-2">{item.title}</h3>
+              <h3 className="text-base font-bold text-text-primary mb-2 font-display">{item.title}</h3>
               <p className="text-sm text-text-secondary font-light">{item.desc}</p>
             </motion.div>
           ))}
@@ -56,11 +50,11 @@ export default function PAF({ navigate }) {
           transition={{ delay: 0.5 }}
           className="text-center"
         >
-          <div className="inline-flex items-center gap-3 p-1 rounded-2xl bg-engine/10 border border-engine/20 backdrop-blur-md">
+          <div className="inline-flex items-center gap-3 p-1 chamfer-sm bg-engine/10 border border-engine/20">
             <span className="text-xs text-text-secondary font-light px-3">Prêt à rejoindre l'élite ?</span>
             <button
               onClick={() => navigate('auth')}
-              className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-engine text-text-primary text-xs font-bold hover:bg-engine/95 transition-all shadow-md cursor-pointer"
+              className="inline-flex items-center gap-2 px-6 py-2.5 chamfer-sm bg-engine text-white text-xs font-bold hover:bg-engine-deep transition-all cursor-pointer"
             >
               Postuler maintenant
               <ArrowRight className="w-4 h-4" />

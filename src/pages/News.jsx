@@ -28,7 +28,7 @@ function Toast({ message, type = 'success', onClose }) {
       animate={{ opacity: 1, y: 0, scale: 1 }}
       exit={{ opacity: 0, y: 16, scale: 0.95 }}
       transition={{ type: 'spring', stiffness: 400, damping: 28 }}
-      className={`fixed bottom-6 right-6 z-[100] flex items-center gap-3 px-5 py-3.5 rounded-2xl shadow-2xl backdrop-blur-md border ${bgClass}`}
+      className={`fixed bottom-6 right-6 z-[100] flex items-center gap-3 px-5 py-3.5 chamfer-sm shadow-2xl backdrop-blur-md border ${bgClass}`}
       role="alert"
       aria-live="polite"
     >
@@ -177,7 +177,7 @@ export default function News({ navigate }) {
 
       {/* Tab Filter: Actualités / Événements */}
       <div className="max-w-7xl mx-auto mb-10">
-        <div className="inline-flex items-center gap-1 p-1 rounded-2xl bg-bg-secondary/60 border border-border-subtle backdrop-blur-md">
+        <div className="inline-flex items-center gap-1 p-1 chamfer-sm bg-bg-secondary border border-border-subtle">
           <button
             onClick={() => setActiveTab('actualites')}
             className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
@@ -229,7 +229,7 @@ export default function News({ navigate }) {
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               onClick={() => setShowWriteModal(true)}
-              className="flex items-center justify-center gap-2 px-6 py-3.5 rounded-2xl bg-gradient-to-r bg-engine hover:bg-engine-deep text-xs font-bold text-white shadow-lg shadow-engine/20 transition-all cursor-pointer w-full md:w-auto"
+              className="flex items-center justify-center gap-2 px-6 py-3.5 chamfer-sm bg-gradient-to-r bg-engine hover:bg-engine-deep text-xs font-bold text-white shadow-lg shadow-engine/20 transition-all cursor-pointer w-full md:w-auto"
             >
               <PlusCircle className="w-4.5 h-4.5" />
               Rédiger un article
@@ -249,7 +249,7 @@ export default function News({ navigate }) {
               className={`px-4 py-2 rounded-xl text-xs font-bold border transition-all whitespace-nowrap cursor-pointer ${
                 selectedCategory === cat
                   ? 'bg-engine/10 border-engine/30 text-engine'
-                  : 'bg-bg-secondary/40 border-border-subtle text-text-secondary hover:text-text-primary'
+                  : 'bg-bg-secondary border-border-subtle text-text-secondary hover:text-text-primary'
               }`}
             >
               {cat}
@@ -265,7 +265,7 @@ export default function News({ navigate }) {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Rechercher par titre, résumé ou chercheur..."
-            className="w-full pl-11 pr-4 py-3 rounded-xl border border-border-subtle bg-bg-secondary/30 text-xs text-text-primary placeholder:text-text-secondary focus:outline-none focus:border-engine/60 focus:bg-bg-secondary/50 transition-all"
+            className="w-full pl-11 pr-4 py-3 rounded-xl border border-border-subtle bg-bg-secondary text-xs text-text-primary placeholder:text-text-secondary focus:outline-none focus:border-engine/60 focus:bg-bg-secondary transition-all"
           />
           {searchQuery && (
             <button
@@ -283,8 +283,8 @@ export default function News({ navigate }) {
         {loading ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {[1, 2, 3].map((n) => (
-              <div key={n} className="glass-panel border border-border-subtle bg-bg-secondary/20 rounded-3xl p-6 h-[400px] animate-pulse flex flex-col justify-between">
-                <div className="w-full h-44 rounded-2xl bg-bg-tertiary mb-4" />
+              <div key={n} className="glass-panel border border-border-subtle bg-bg-secondary chamfer p-6 h-[400px] animate-pulse flex flex-col justify-between">
+                <div className="w-full h-44 chamfer-sm bg-bg-tertiary mb-4" />
                 <div className="h-4 w-1/3 bg-bg-tertiary rounded-md mb-2" />
                 <div className="h-6 w-3/4 bg-bg-tertiary rounded-md mb-4" />
                 <div className="h-4 w-full bg-bg-tertiary rounded-md mb-2" />
@@ -294,7 +294,7 @@ export default function News({ navigate }) {
             ))}
           </div>
         ) : filteredNews.length === 0 ? (
-          <div className="glass-panel border border-border-subtle bg-bg-secondary/10 p-12 rounded-3xl text-center max-w-xl mx-auto">
+          <div className="glass-panel border border-border-subtle bg-bg-secondary p-12 chamfer text-center max-w-xl mx-auto">
             <BookOpen className="w-12 h-12 text-engine/40 mx-auto mb-4" />
             <h3 className="text-base font-bold text-text-primary mb-1">Aucune publication trouvée</h3>
             <p className="text-xs text-text-secondary">
@@ -310,7 +310,7 @@ export default function News({ navigate }) {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4, delay: idx * 0.08 }}
                 whileHover={{ y: -6 }}
-                className="glass-panel border border-border-subtle bg-bg-secondary/25 hover:bg-bg-secondary/40 rounded-3xl overflow-hidden flex flex-col justify-between group transition-all duration-300"
+                className="glass-panel border border-border-subtle bg-bg-secondary hover:bg-bg-tertiary chamfer overflow-hidden flex flex-col justify-between group transition-all duration-300"
               >
                 <div>
                   {/* Article Image Header */}
@@ -324,7 +324,7 @@ export default function News({ navigate }) {
                     
                     {/* Category Pill */}
                     <div className="absolute top-4 left-4">
-                      <span className={`inline-flex items-center px-3 py-1 rounded-xl text-[11px] font-extrabold border backdrop-blur-md bg-bg-primary/60 shadow-lg ${getCategoryClass(item.categorie)}`}>
+                      <span className={`inline-flex items-center px-3 py-1 rounded-xl text-[11px] font-extrabold border bg-bg-primary shadow-lg ${getCategoryClass(item.categorie)}`}>
                         {item.categorie}
                       </span>
                     </div>
@@ -383,7 +383,7 @@ export default function News({ navigate }) {
               animate={{ scale: 1, y: 0 }}
               exit={{ scale: 0.95, y: 30 }}
               transition={{ type: "spring", damping: 30, stiffness: 350 }}
-              className="glass-panel border border-border-subtle bg-bg-secondary w-full max-w-3xl rounded-3xl overflow-hidden shadow-2xl relative max-h-[85vh] flex flex-col"
+              className="glass-panel border border-border-subtle bg-bg-secondary w-full max-w-3xl chamfer overflow-hidden shadow-2xl relative max-h-[85vh] flex flex-col"
             >
               {/* Image banner inside Detail Modal */}
               <div className="relative w-full h-64 md:h-72 overflow-hidden shrink-0">
@@ -397,14 +397,14 @@ export default function News({ navigate }) {
                 {/* Close Button */}
                 <button
                   onClick={() => setReadingArticle(null)}
-                  className="absolute top-4 right-4 p-2 rounded-full bg-black/50 border border-border-subtle hover:border-white/30 text-white hover:scale-105 transition-all cursor-pointer"
+                  className="absolute top-4 right-4 p-2 rounded-full bg-bg-tertiary border border-border-subtle hover:border-white/30 text-white hover:scale-105 transition-all cursor-pointer"
                 >
                   <X className="w-5 h-5" />
                 </button>
 
                 {/* Category badge */}
                 <div className="absolute bottom-6 left-6 flex flex-col gap-2">
-                  <span className={`self-start inline-flex items-center px-3 py-1 rounded-xl text-[11px] font-extrabold border bg-bg-primary/80 backdrop-blur-md shadow-md ${getCategoryClass(readingArticle.categorie)}`}>
+                  <span className={`self-start inline-flex items-center px-3 py-1 rounded-xl text-[11px] font-extrabold border bg-bg-primary shadow-md ${getCategoryClass(readingArticle.categorie)}`}>
                     {readingArticle.categorie}
                   </span>
                   <h2 className="text-xl md:text-2xl font-extrabold text-white tracking-tight leading-tight pr-4">
@@ -461,7 +461,7 @@ export default function News({ navigate }) {
               </div>
 
               {/* Detail Footer */}
-              <div className="p-6 border-t border-border-subtle bg-bg-secondary/40 flex items-center justify-end shrink-0">
+              <div className="p-6 border-t border-border-subtle bg-bg-secondary flex items-center justify-end shrink-0">
                 <button
                   onClick={() => setReadingArticle(null)}
                   className="px-6 py-2.5 rounded-xl border border-border-subtle text-xs font-bold text-text-secondary hover:text-text-primary hover:bg-bg-tertiary transition-all cursor-pointer"
@@ -488,7 +488,7 @@ export default function News({ navigate }) {
               animate={{ scale: 1, y: 0 }}
               exit={{ scale: 0.95, y: 30 }}
               transition={{ type: "spring", damping: 28, stiffness: 300 }}
-              className="glass-panel border border-border-subtle bg-bg-secondary w-full max-w-2xl rounded-3xl shadow-2xl relative max-h-[90vh] flex flex-col"
+              className="glass-panel border border-border-subtle bg-bg-secondary w-full max-w-2xl chamfer shadow-2xl relative max-h-[90vh] flex flex-col"
             >
               {/* Header */}
               <div className="p-6 border-b border-border-subtle flex items-center justify-between shrink-0">
@@ -508,7 +508,7 @@ export default function News({ navigate }) {
               <form onSubmit={handleCreateArticle} className="p-6 overflow-y-auto flex-1 space-y-5 scrollbar-thin scrollbar-thumb-border-subtle">
                 
                 {/* Notice Board */}
-                <div className="p-4 rounded-2xl bg-engine/5 border border-engine/20 text-[11px] text-engine flex items-start gap-3">
+                <div className="p-4 chamfer-sm bg-engine/5 border border-engine/20 text-[11px] text-engine flex items-start gap-3">
                   <Layers className="w-4 h-4 shrink-0 mt-0.5" />
                   <div>
                     <span className="font-bold">Circuit de relecture scientifique (Peer-review) :</span> Votre article sera soumis pour validation au comité de lecture. Il sera automatiquement marqué avec le statut <span className="font-bold text-white bg-engine/30 px-1.5 py-0.5 rounded">PENDING</span> et ne sera visible publiquement qu'après approbation par un administrateur.
@@ -524,7 +524,7 @@ export default function News({ navigate }) {
                     value={newArticle.title}
                     onChange={(e) => setNewArticle({ ...newArticle, title: e.target.value })}
                     placeholder="ex: Modélisation d'un réseau maillé LoRaWAN résilient"
-                    className="w-full px-4 py-3 rounded-xl border border-border-subtle bg-bg-secondary/40 text-xs text-text-primary focus:outline-none focus:border-engine/60 focus:bg-bg-secondary/60 transition-all"
+                    className="w-full px-4 py-3 rounded-xl border border-border-subtle bg-bg-secondary text-xs text-text-primary focus:outline-none focus:border-engine/60 focus:bg-bg-secondary transition-all"
                   />
                 </div>
 
@@ -535,7 +535,7 @@ export default function News({ navigate }) {
                     <select
                       value={newArticle.categorie}
                       onChange={(e) => setNewArticle({ ...newArticle, categorie: e.target.value })}
-                      className="w-full px-4 py-3 rounded-xl border border-border-subtle bg-bg-secondary/40 text-xs text-text-primary focus:outline-none focus:border-engine/60 focus:bg-bg-secondary/60 transition-all"
+                      className="w-full px-4 py-3 rounded-xl border border-border-subtle bg-bg-secondary text-xs text-text-primary focus:outline-none focus:border-engine/60 focus:bg-bg-secondary transition-all"
                     >
                       <option value="Intelligence Artificielle">Intelligence Artificielle</option>
                       <option value="Lancement R&D">Lancement R&D</option>
@@ -553,7 +553,7 @@ export default function News({ navigate }) {
                         value={newArticle.image}
                         onChange={(e) => setNewArticle({ ...newArticle, image: e.target.value })}
                         placeholder="URL de l'image..."
-                        className="w-full px-4 py-3 rounded-xl border border-border-subtle bg-bg-secondary/40 text-xs text-text-primary focus:outline-none focus:border-engine/60 focus:bg-bg-secondary/60 transition-all"
+                        className="w-full px-4 py-3 rounded-xl border border-border-subtle bg-bg-secondary text-xs text-text-primary focus:outline-none focus:border-engine/60 focus:bg-bg-secondary transition-all"
                       />
                     </div>
                   </div>
@@ -595,7 +595,7 @@ export default function News({ navigate }) {
                     value={newArticle.excerpt}
                     onChange={(e) => setNewArticle({ ...newArticle, excerpt: e.target.value })}
                     placeholder="Synthèse courte de vos travaux pour la carte de prévisualisation (max. 150 caractères)..."
-                    className="w-full px-4 py-3 rounded-xl border border-border-subtle bg-bg-secondary/40 text-xs text-text-primary placeholder:text-text-secondary/60 focus:outline-none focus:border-engine/60 focus:bg-bg-secondary/60 transition-all resize-none"
+                    className="w-full px-4 py-3 rounded-xl border border-border-subtle bg-bg-secondary text-xs text-text-primary placeholder:text-text-secondary/60 focus:outline-none focus:border-engine/60 focus:bg-bg-secondary transition-all resize-none"
                   />
                 </div>
 
@@ -608,7 +608,7 @@ export default function News({ navigate }) {
                     value={newArticle.content}
                     onChange={(e) => setNewArticle({ ...newArticle, content: e.target.value })}
                     placeholder="Détail complet de la publication : méthodologie, protocoles expérimentaux, conclusions de recherche..."
-                    className="w-full px-4 py-3 rounded-xl border border-border-subtle bg-bg-secondary/40 text-xs text-text-primary placeholder:text-text-secondary/60 focus:outline-none focus:border-engine/60 focus:bg-bg-secondary/60 transition-all"
+                    className="w-full px-4 py-3 rounded-xl border border-border-subtle bg-bg-secondary text-xs text-text-primary placeholder:text-text-secondary/60 focus:outline-none focus:border-engine/60 focus:bg-bg-secondary transition-all"
                   />
                 </div>
 

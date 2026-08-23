@@ -27,7 +27,7 @@ function Toast({ message, type = 'success', onClose }) {
       animate={{ opacity: 1, y: 0, scale: 1 }}
       exit={{ opacity: 0, y: 16, scale: 0.95 }}
       transition={{ type: 'spring', stiffness: 400, damping: 28 }}
-      className={`fixed bottom-6 right-6 z-[100] flex items-center gap-3 px-5 py-3.5 rounded-2xl shadow-2xl backdrop-blur-md border ${bgClass}`}
+      className={`fixed bottom-6 right-6 z-[100] flex items-center gap-3 px-5 py-3.5 chamfer-sm shadow-2xl backdrop-blur-md border ${bgClass}`}
       role="alert"
       aria-live="polite"
     >
@@ -48,14 +48,14 @@ function ProjectDetailSkeleton() {
       <div className="h-10 bg-bg-tertiary rounded-xl w-36 animate-pulse" />
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2 flex flex-col gap-8">
-          <div className="h-14 bg-bg-tertiary rounded-2xl w-3/4 animate-pulse" />
+          <div className="h-14 bg-bg-tertiary chamfer-sm w-3/4 animate-pulse" />
           <div className="h-6 bg-bg-tertiary rounded-md w-1/4 animate-pulse" />
-          <div className="h-44 bg-bg-tertiary rounded-3xl w-full animate-pulse" />
-          <div className="h-72 bg-bg-tertiary rounded-3xl w-full animate-pulse" />
+          <div className="h-44 bg-bg-tertiary chamfer w-full animate-pulse" />
+          <div className="h-72 bg-bg-tertiary chamfer w-full animate-pulse" />
         </div>
         <div className="flex flex-col gap-8">
-          <div className="h-48 bg-bg-tertiary rounded-3xl w-full animate-pulse" />
-          <div className="h-32 bg-bg-tertiary rounded-3xl w-full animate-pulse" />
+          <div className="h-48 bg-bg-tertiary chamfer w-full animate-pulse" />
+          <div className="h-32 bg-bg-tertiary chamfer w-full animate-pulse" />
         </div>
       </div>
     </motion.div>
@@ -207,14 +207,14 @@ export default function ProjectDetail({ navigate, projectId }) {
           <ShieldAlert className="w-8 h-8" />
         </div>
         <div className="space-y-3">
-          <h2 className="text-2xl font-black tracking-tight text-text-primary">Projet Non Référencé</h2>
+          <h2 className="text-2xl font-extrabold tracking-tight text-text-primary">Projet Non Référencé</h2>
           <p className="text-sm text-text-secondary max-w-md">
             {error || "Les détails de cette initiative scientifique ne sont plus disponibles."}
           </p>
         </div>
         <button
           onClick={() => navigate('projects')}
-          className="px-6 py-3 rounded-2xl text-xs font-bold text-white bg-engine hover:bg-engine/90 shadow-lg shadow-engine/20 transition-all cursor-pointer flex items-center gap-2"
+          className="px-6 py-3 chamfer-sm text-xs font-bold text-white bg-engine hover:bg-engine/90 shadow-lg shadow-engine/20 transition-all cursor-pointer flex items-center gap-2"
         >
           <ArrowLeft className="w-4 h-4" />
           Retourner au Hub R&D
@@ -247,10 +247,10 @@ export default function ProjectDetail({ navigate, projectId }) {
           Retourner au Hub R&D
         </button>
         
-        <div className="flex items-center gap-2 text-[11px] font-black text-text-muted uppercase tracking-widest">
+        <div className="flex items-center gap-2 text-[11px] font-extrabold text-text-muted uppercase tracking-widest">
           <span>Projets</span>
           <ChevronRight className="w-3.5 h-3.5" />
-          <span className="text-engine font-black truncate max-w-[200px]">{project.title}</span>
+          <span className="text-engine font-extrabold truncate max-w-[200px]">{project.title}</span>
         </div>
       </div>
 
@@ -270,7 +270,7 @@ export default function ProjectDetail({ navigate, projectId }) {
             
             {/* Project Cover Image */}
             {project.image && (
-              <div className="relative h-64 md:h-80 rounded-3xl overflow-hidden border border-border-subtle bg-bg-secondary/60 backdrop-blur-xl shadow-2xl">
+              <div className="relative h-64 md:h-80 chamfer overflow-hidden bg-bg-secondary shadow-2xl">
                 <img 
                   src={project.image} 
                   alt={project.title} 
@@ -281,9 +281,9 @@ export default function ProjectDetail({ navigate, projectId }) {
             )}
 
             {/* Header info */}
-            <div className="glass-panel border border-border-subtle rounded-3xl p-8 flex flex-col gap-6 bg-bg-secondary/60 backdrop-blur-xl">
+            <div className="glass-panel chamfer p-8 flex flex-col gap-6">
               <div className="flex justify-between items-start gap-4">
-                <span className="text-[11px] font-black uppercase tracking-wider text-emerald-400 bg-emerald-500/10 border border-emerald-500/10 px-3 py-1 rounded-md">
+                <span className="text-[11px] font-extrabold uppercase tracking-wider text-emerald-400 bg-emerald-500/10 border border-emerald-500/10 px-3 py-1 rounded-md">
                   {project.status}
                 </span>
                 <span className="text-xs font-bold text-text-muted bg-bg-tertiary border border-border-subtle px-3 py-1 rounded-md">
@@ -292,7 +292,7 @@ export default function ProjectDetail({ navigate, projectId }) {
               </div>
 
               <div className="space-y-4">
-                <h1 className="text-3xl md:text-4xl font-black text-text-primary tracking-tight leading-tight">
+                <h1 className="text-3xl md:text-4xl font-extrabold text-text-primary tracking-tight leading-tight">
                   {project.title}
                 </h1>
                 <p className="text-sm text-text-secondary leading-relaxed font-semibold">
@@ -303,7 +303,7 @@ export default function ProjectDetail({ navigate, projectId }) {
               {/* Technologies list */}
               <div className="flex flex-wrap gap-2 pt-2 border-t border-border-subtle">
                 {project.technologies && project.technologies.map((tech, idx) => (
-                  <span key={idx} className="text-[11px] font-black text-text-muted bg-bg-tertiary px-2.5 py-1 rounded-md border border-border-subtle">
+                  <span key={idx} className="text-[11px] font-extrabold text-text-muted bg-bg-tertiary px-2.5 py-1 rounded-md border border-border-subtle">
                     {tech}
                   </span>
                 ))}
@@ -311,8 +311,8 @@ export default function ProjectDetail({ navigate, projectId }) {
             </div>
 
             {/* In-depth research description */}
-            <div className="glass-panel border border-border-subtle rounded-3xl p-8 flex flex-col gap-6 bg-bg-secondary/60 backdrop-blur-xl">
-              <h2 className="text-lg font-black text-text-primary flex items-center gap-2">
+            <div className="glass-panel chamfer p-8 flex flex-col gap-6">
+              <h2 className="text-lg font-extrabold text-text-primary flex items-center gap-2">
                 <Info className="w-5 h-5 text-engine" />
                 Description de l'Initiative
               </h2>
@@ -322,8 +322,8 @@ export default function ProjectDetail({ navigate, projectId }) {
             </div>
 
             {/* Milestone Timeline Component */}
-            <div className="glass-panel border border-border-subtle rounded-3xl p-8 flex flex-col gap-8 bg-bg-secondary/60 backdrop-blur-xl">
-              <h2 className="text-lg font-black text-text-primary flex items-center gap-2">
+            <div className="glass-panel chamfer p-8 flex flex-col gap-8">
+              <h2 className="text-lg font-extrabold text-text-primary flex items-center gap-2">
                 <Trophy className="w-5 h-5 text-engine animate-pulse" />
                 Jalons & Avancement Scientifique
               </h2>
@@ -349,18 +349,18 @@ export default function ProjectDetail({ navigate, projectId }) {
                         ) : isCurrent ? (
                           <ChevronRight className="w-2.5 h-2.5" />
                         ) : (
-                          <span className="w-1.5 h-1.5 rounded-full bg-bg-secondary/600" />
+                          <span className="w-1.5 h-1.5 rounded-full bg-bg-secondary" />
                         )}
                       </span>
 
                       {/* Milestone details block */}
                       <div className="space-y-1.5">
                         <div className="flex flex-col md:flex-row md:items-center justify-between gap-1">
-                          <h4 className={`text-xs md:text-sm font-black transition-colors ${
+                          <h4 className={`text-xs md:text-sm font-extrabold transition-colors ${
                             step.completed
                               ? 'text-text-primary'
                               : isCurrent
-                                ? 'text-engine font-black'
+                                ? 'text-engine font-extrabold'
                                 : 'text-text-muted'
                           }`}>
                             {step.title}
@@ -385,8 +385,8 @@ export default function ProjectDetail({ navigate, projectId }) {
             </div>
 
             {/* Team Members Section */}
-            <div className="glass-panel border border-border-subtle rounded-3xl p-8 flex flex-col gap-6 bg-bg-secondary/60 backdrop-blur-xl">
-              <h2 className="text-lg font-black text-text-primary flex items-center gap-2">
+            <div className="glass-panel chamfer p-8 flex flex-col gap-6">
+              <h2 className="text-lg font-extrabold text-text-primary flex items-center gap-2">
                 <Users className="w-5 h-5 text-engine" />
                 Membres de l'Équipe
               </h2>
@@ -400,9 +400,9 @@ export default function ProjectDetail({ navigate, projectId }) {
                       key={idx}
                       whileHover={{ scale: 1.01 }}
                       onClick={() => navigate('profile', { researcherId })}
-                      className="bg-bg-secondary hover:bg-bg-tertiary border border-border-subtle hover:border-engine/20 p-4 rounded-2xl flex items-center gap-3 transition-all cursor-pointer group/member"
+                      className="bg-bg-secondary hover:bg-bg-tertiary border border-border-subtle hover:border-engine/20 p-4 chamfer-sm flex items-center gap-3 transition-all cursor-pointer group/member"
                     >
-                      <div className="w-9 h-9 rounded-full bg-engine/10 border border-engine/10 flex items-center justify-center font-black text-xs text-engine group-hover/member:bg-engine group-hover/member:text-white transition-all">
+                      <div className="w-9 h-9 rounded-full bg-engine/10 border border-engine/10 flex items-center justify-center font-extrabold text-xs text-engine group-hover/member:bg-engine group-hover/member:text-white transition-all">
                         {member.name.split(' ').map(n => n[0]).join('')}
                       </div>
                       <div>
@@ -423,15 +423,15 @@ export default function ProjectDetail({ navigate, projectId }) {
           <div className="flex flex-col gap-8 col-span-1">
             
             {/* Financial Pledge Progress Bento */}
-            <div className="glass-panel border border-border-subtle rounded-3xl p-6 bg-bg-secondary/60 backdrop-blur-xl flex flex-col gap-6 justify-between relative overflow-hidden">
+            <div className="glass-panel border border-border-subtle chamfer p-6 bg-bg-secondary flex flex-col gap-6 justify-between relative overflow-hidden">
               <div className="absolute top-0 right-0 w-32 h-32 bg-engine/5 rounded-full blur-[40px] pointer-events-none" />
               
               <div className="space-y-4 relative z-10">
-                <div className="flex items-center gap-2 text-[11px] font-black text-engine uppercase tracking-wider">
+                <div className="flex items-center gap-2 text-[11px] font-extrabold text-engine uppercase tracking-wider">
                   <Landmark className="w-4 h-4" />
                   Campagne de Financement
                 </div>
-                <h3 className="text-xl font-black text-text-primary leading-tight">
+                <h3 className="text-xl font-extrabold text-text-primary leading-tight">
                   Budget & Financement Co-opératif
                 </h3>
               </div>
@@ -440,7 +440,7 @@ export default function ProjectDetail({ navigate, projectId }) {
               <div className="space-y-4 relative z-10 pt-4">
                 <div className="flex justify-between items-end text-xs">
                   <span className="text-text-secondary font-bold">Récolté</span>
-                  <span className="text-engine font-black text-lg">{project.budgetRaised} $</span>
+                  <span className="text-engine font-extrabold text-lg">{project.budgetRaised} $</span>
                 </div>
                 
                 <div className="w-full h-2.5 bg-bg-tertiary rounded-full overflow-hidden">
@@ -461,7 +461,7 @@ export default function ProjectDetail({ navigate, projectId }) {
               <div className="space-y-3 relative z-10 pt-4 border-t border-border-subtle">
                 <button
                   onClick={openPledgeModal}
-                  className="w-full py-3.5 rounded-2xl text-xs font-black uppercase tracking-wider text-white bg-engine hover:bg-engine/90 shadow-lg shadow-engine/20 transition-all cursor-pointer text-center flex items-center justify-center gap-2"
+                  className="w-full py-3.5 chamfer-sm text-xs font-extrabold uppercase tracking-wider text-white bg-engine hover:bg-engine/90 shadow-lg shadow-engine/20 transition-all cursor-pointer text-center flex items-center justify-center gap-2"
                 >
                   <Coins className="w-4 h-4" />
                   Soutenir ce projet
@@ -473,13 +473,13 @@ export default function ProjectDetail({ navigate, projectId }) {
             </div>
 
             {/* Interactive Subscription / Follow Card */}
-            <div className="glass-panel border border-border-subtle rounded-3xl p-6 bg-bg-secondary/60 backdrop-blur-xl flex flex-col gap-6 relative overflow-hidden">
+            <div className="glass-panel border border-border-subtle chamfer p-6 bg-bg-secondary flex flex-col gap-6 relative overflow-hidden">
               <div className="space-y-4 relative z-10">
-                <div className="flex items-center gap-2 text-[11px] font-black text-engine uppercase tracking-wider">
+                <div className="flex items-center gap-2 text-[11px] font-extrabold text-engine uppercase tracking-wider">
                   <Star className="w-4 h-4" />
                   Abonnements
                 </div>
-                <h3 className="text-xl font-black text-text-primary leading-tight">
+                <h3 className="text-xl font-extrabold text-text-primary leading-tight">
                   Suivi R&D en Direct
                 </h3>
                 <p className="text-xs text-text-secondary leading-relaxed font-semibold">
@@ -490,7 +490,7 @@ export default function ProjectDetail({ navigate, projectId }) {
               <div className="space-y-2 relative z-10 pt-4 border-t border-border-subtle">
                 <button
                   onClick={handleFollowToggle}
-                  className={`w-full py-3 rounded-2xl text-xs font-black uppercase tracking-wider border transition-all cursor-pointer text-center flex items-center justify-center gap-2 ${
+                  className={`w-full py-3 chamfer-sm text-xs font-extrabold uppercase tracking-wider border transition-all cursor-pointer text-center flex items-center justify-center gap-2 ${
                     isFollowed
                       ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400'
                       : 'bg-bg-secondary border-border-subtle hover:bg-bg-tertiary text-text-primary'
@@ -503,12 +503,12 @@ export default function ProjectDetail({ navigate, projectId }) {
             </div>
 
             {/* Associated Research Club Bento */}
-            <div className="glass-panel border border-border-subtle rounded-3xl p-6 bg-bg-secondary/60 backdrop-blur-xl flex flex-col justify-between relative overflow-hidden group/club">
+            <div className="glass-panel border border-border-subtle chamfer p-6 bg-bg-secondary flex flex-col justify-between relative overflow-hidden group/club">
               <div className="space-y-4">
-                <span className="text-[11px] font-black uppercase tracking-wider text-text-muted">
+                <span className="text-[11px] font-extrabold uppercase tracking-wider text-text-muted">
                   Laboratoire Parent
                 </span>
-                <h3 className="text-base font-black text-text-primary leading-tight group-hover/club:text-engine transition-colors">
+                <h3 className="text-base font-extrabold text-text-primary leading-tight group-hover/club:text-engine transition-colors">
                   Club {project.clubName}
                 </h3>
               </div>
@@ -516,7 +516,7 @@ export default function ProjectDetail({ navigate, projectId }) {
               <div className="pt-6 border-t border-border-subtle mt-4 flex items-center justify-between">
                 <button
                   onClick={() => navigate('clubs')}
-                  className="text-[11px] font-black uppercase tracking-wider text-engine hover:text-engine/80 transition-colors flex items-center gap-1.5 cursor-pointer"
+                  className="text-[11px] font-extrabold uppercase tracking-wider text-engine hover:text-engine/80 transition-colors flex items-center gap-1.5 cursor-pointer"
                 >
                   Visiter le club
                   <ArrowLeft className="w-3 h-3 rotate-180" />
@@ -550,7 +550,7 @@ export default function ProjectDetail({ navigate, projectId }) {
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 15 }}
               transition={{ type: 'spring', duration: 0.4 }}
-              className="glass-panel border border-border-subtle rounded-3xl p-8 max-w-md w-full relative bg-bg-secondary/90 backdrop-blur-2xl shadow-2xl z-10 flex flex-col gap-6"
+              className="glass-panel border border-border-subtle chamfer p-8 max-w-md w-full relative bg-bg-secondary shadow-2xl z-10 flex flex-col gap-6"
               role="dialog"
               aria-modal="true"
               aria-labelledby="modal-title"
@@ -570,7 +570,7 @@ export default function ProjectDetail({ navigate, projectId }) {
                 <div className="mx-auto w-12 h-12 bg-engine/10 border border-engine/20 rounded-full flex items-center justify-center text-engine animate-bounce">
                   <Landmark className="w-6 h-6" />
                 </div>
-                <h3 id="modal-title" className="text-xl font-black text-text-primary tracking-tight">
+                <h3 id="modal-title" className="text-xl font-extrabold text-text-primary tracking-tight">
                   Soutien Financier Virtuel
                 </h3>
                 <p className="text-xs text-text-secondary leading-relaxed max-w-sm mx-auto">
@@ -582,11 +582,11 @@ export default function ProjectDetail({ navigate, projectId }) {
               <form onSubmit={handlePledgeSubmit} className="flex flex-col gap-5">
                 
                 <div className="flex flex-col gap-2">
-                  <label htmlFor="pledge-input" className="text-[11px] font-black uppercase tracking-wider text-text-secondary">
+                  <label htmlFor="pledge-input" className="text-[11px] font-extrabold uppercase tracking-wider text-text-secondary">
                     Montant de la promesse ($)
                   </label>
                   <div className="relative">
-                    <span className="absolute left-4 top-1/2 -translate-y-1/2 font-black text-xs text-text-muted">$</span>
+                    <span className="absolute left-4 top-1/2 -translate-y-1/2 font-extrabold text-xs text-text-muted">$</span>
                     <input
                       ref={inputRef}
                       id="pledge-input"
@@ -611,7 +611,7 @@ export default function ProjectDetail({ navigate, projectId }) {
 
                 {/* Preset quick buttons */}
                 <div className="flex flex-col gap-2">
-                  <span className="text-[11px] font-black uppercase tracking-wider text-text-muted">
+                  <span className="text-[11px] font-extrabold uppercase tracking-wider text-text-muted">
                     Montants Prédéfinis
                   </span>
                   <div className="grid grid-cols-3 gap-3">
@@ -623,7 +623,7 @@ export default function ProjectDetail({ navigate, projectId }) {
                           setPledgeAmount(val.toString());
                           setPledgeError('');
                         }}
-                        className="py-2.5 rounded-xl border border-border-subtle bg-bg-secondary hover:bg-white/8 hover:border-engine/30 text-xs font-black text-text-primary transition-all cursor-pointer"
+                        className="py-2.5 rounded-xl border border-border-subtle bg-bg-secondary hover:bg-bg-tertiary hover:border-engine/30 text-xs font-extrabold text-text-primary transition-all cursor-pointer"
                       >
                         + {val} $
                       </button>
@@ -636,13 +636,13 @@ export default function ProjectDetail({ navigate, projectId }) {
                   <button
                     type="button"
                     onClick={closePledgeModal}
-                    className="flex-1 py-3 rounded-xl border border-border-subtle bg-bg-secondary hover:bg-bg-tertiary text-xs font-black uppercase text-text-secondary tracking-wider transition-all cursor-pointer"
+                    className="flex-1 py-3 rounded-xl border border-border-subtle bg-bg-secondary hover:bg-bg-tertiary text-xs font-extrabold uppercase text-text-secondary tracking-wider transition-all cursor-pointer"
                   >
                     Annuler
                   </button>
                   <button
                     type="submit"
-                    className="flex-1 py-3 rounded-xl bg-engine hover:bg-engine/90 text-white text-xs font-black uppercase tracking-wider shadow-lg shadow-engine/20 transition-all cursor-pointer"
+                    className="flex-1 py-3 rounded-xl bg-engine hover:bg-engine/90 text-white text-xs font-extrabold uppercase tracking-wider shadow-lg shadow-engine/20 transition-all cursor-pointer"
                   >
                     Valider
                   </button>

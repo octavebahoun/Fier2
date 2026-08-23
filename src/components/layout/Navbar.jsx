@@ -151,7 +151,7 @@ export default function Navbar({
             {user ? 'Mon dashboard' : 'Connexion'}
             {!user && <ArrowUpRight className="w-4 h-4" aria-hidden="true" />}
             {user && unreadCount > 0 && (
-              <span className="inline-flex items-center justify-center min-w-[18px] h-[18px] px-1 rounded-full bg-ember text-white text-[11px] font-black">
+              <span className="inline-flex items-center justify-center min-w-[18px] h-[18px] px-1 rounded-full bg-ember text-white text-[11px] font-extrabold">
                 {unreadCount > 99 ? '99+' : unreadCount}
               </span>
             )}

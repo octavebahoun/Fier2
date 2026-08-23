@@ -47,7 +47,7 @@ function Toast({ message, type = 'success', onClose }) {
       animate={{ opacity: 1, y: 0, scale: 1 }}
       exit={{ opacity: 0, y: 16, scale: 0.95 }}
       transition={{ type: 'spring', stiffness: 400, damping: 28 }}
-      className={`fixed bottom-6 right-6 z-[100] flex items-center gap-3 px-5 py-3.5 rounded-2xl shadow-2xl backdrop-blur-md border ${bgClass}`}
+      className={`fixed bottom-6 right-6 z-[100] flex items-center gap-3 px-5 py-3.5 chamfer-sm shadow-2xl backdrop-blur-md border ${bgClass}`}
       role="alert"
       aria-live="polite"
     >
@@ -191,15 +191,15 @@ function ProfileSkeleton() {
       <div className="h-10 bg-bg-tertiary rounded-xl w-36" />
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2 flex flex-col gap-8">
-          <div className="glass-panel rounded-3xl p-8 flex flex-col md:flex-row gap-8 border border-border-subtle">
-            <div className="w-32 h-32 rounded-3xl bg-bg-tertiary shrink-0" />
+          <div className="glass-panel chamfer p-8 flex flex-col md:flex-row gap-8 border border-border-subtle">
+            <div className="w-32 h-32 chamfer bg-bg-tertiary shrink-0" />
             <div className="flex flex-col gap-4 flex-grow justify-center">
               <div className="h-7 bg-bg-tertiary rounded-md w-1/2" />
               <div className="h-4 bg-bg-tertiary rounded-md w-1/3" />
               <div className="h-4 bg-bg-tertiary rounded-md w-2/3" />
             </div>
           </div>
-          <div className="glass-panel rounded-3xl p-8 flex flex-col gap-4 border border-border-subtle">
+          <div className="glass-panel chamfer p-8 flex flex-col gap-4 border border-border-subtle">
             <div className="h-6 bg-bg-tertiary rounded-md w-1/4" />
             <div className="space-y-2">
               <div className="h-4 bg-bg-tertiary rounded-md w-full" />
@@ -208,9 +208,9 @@ function ProfileSkeleton() {
           </div>
         </div>
         <div className="flex flex-col gap-8">
-          <div className="glass-panel rounded-3xl p-8 flex flex-col gap-6 border border-border-subtle">
+          <div className="glass-panel chamfer p-8 flex flex-col gap-6 border border-border-subtle">
             <div className="h-6 bg-bg-tertiary rounded-md w-1/2 mx-auto" />
-            <div className="h-10 bg-bg-tertiary rounded-2xl w-full" />
+            <div className="h-10 bg-bg-tertiary chamfer-sm w-full" />
           </div>
         </div>
       </div>
@@ -408,14 +408,14 @@ export default function ResearcherProfile({ navigate, researcherId }) {
               <Lock className="w-8 h-8" />
             </div>
             <div className="space-y-3">
-              <h2 className="text-2xl font-black tracking-tight text-text-primary">Profil Inaccessible</h2>
+              <h2 className="text-2xl font-extrabold tracking-tight text-text-primary">Profil Inaccessible</h2>
               <p className="text-sm text-text-secondary max-w-md">
                 {error || "Ce profil n'est pas accessible dans l'annuaire FIERI."}
               </p>
             </div>
             <button
               onClick={() => navigate('researchers')}
-              className="px-6 py-3 rounded-2xl text-xs font-bold text-white bg-engine hover:bg-engine/90 shadow-lg cursor-pointer flex items-center gap-2"
+              className="px-6 py-3 chamfer-sm text-xs font-bold text-white bg-engine hover:bg-engine/90 shadow-lg cursor-pointer flex items-center gap-2"
             >
               <ArrowLeft className="w-4 h-4" />
               Retourner à l'annuaire
@@ -435,13 +435,13 @@ export default function ResearcherProfile({ navigate, researcherId }) {
               <div className="flex flex-col gap-2">
                 <button
                   onClick={() => navigate('researchers')}
-                  className="group flex items-center gap-2 text-xs font-black tracking-widest uppercase text-text-muted hover:text-engine transition-colors cursor-pointer w-fit"
+                  className="group flex items-center gap-2 text-xs font-extrabold tracking-widest uppercase text-text-muted hover:text-engine transition-colors cursor-pointer w-fit"
                 >
                   <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
                   Retour à l'annuaire
                 </button>
                 <div className="flex items-center gap-2.5 mt-1">
-                  <span className="text-[11px] font-black tracking-[0.25em] uppercase text-engine">
+                  <span className="text-[11px] font-extrabold tracking-[0.25em] uppercase text-engine">
                     {roleConfig.category}
                   </span>
                   <span className="w-1.5 h-1.5 rounded-full bg-engine/30" />
@@ -455,7 +455,7 @@ export default function ResearcherProfile({ navigate, researcherId }) {
               {canEdit && (
                 <button
                   onClick={() => setIsEditModalOpen(true)}
-                  className="px-5 py-3 rounded-2xl bg-engine/15 hover:bg-engine border border-engine/30 hover:border-engine text-engine hover:text-white font-black text-xs tracking-wide transition-all shadow-lg hover:shadow-[0_0_20px_rgba(108,76,241,0.3)] flex items-center justify-center gap-2.5 cursor-pointer shrink-0"
+                  className="px-5 py-3 chamfer-sm bg-engine/15 hover:bg-engine border border-engine/30 hover:border-engine text-engine hover:text-white font-extrabold text-xs tracking-wide transition-all shadow-lg hover:shadow-[0_0_20px_rgba(108,76,241,0.3)] flex items-center justify-center gap-2.5 cursor-pointer shrink-0"
                 >
                   <Edit3 className="w-4 h-4" />
                   <span>Modifier mon profil</span>
@@ -470,18 +470,18 @@ export default function ResearcherProfile({ navigate, researcherId }) {
               <div className="lg:col-span-2 flex flex-col gap-8">
                 
                 {/* 1. Header Identity Bento Cell with Custom Role Glow */}
-                <div className="glass-panel rounded-3xl p-8 md:p-10 flex flex-col md:flex-row gap-8 items-center md:items-start relative overflow-hidden border border-border-subtle shadow-2xl group">
+                <div className="glass-panel chamfer p-8 md:p-10 flex flex-col md:flex-row gap-8 items-center md:items-start relative overflow-hidden border border-border-subtle shadow-2xl group">
                   {/* Custom Background Radial Glow according to Role */}
-                  <div className={`absolute -inset-px bg-gradient-to-r ${roleConfig.gradientGlow} opacity-60 group-hover:opacity-100 transition-opacity duration-500 rounded-3xl pointer-events-none`} />
+                  <div className={`absolute -inset-px bg-gradient-to-r ${roleConfig.gradientGlow} opacity-60 group-hover:opacity-100 transition-opacity duration-500 chamfer pointer-events-none`} />
 
                   {/* Photo Avatar */}
                   <div className="relative shrink-0 z-10">
                     <img
                       src={researcher.avatar}
                       alt={researcher.name}
-                      className="w-32 h-32 md:w-36 md:h-36 rounded-3xl object-cover border-2 border-white/15 shadow-2xl"
+                      className="w-32 h-32 md:w-36 md:h-36 chamfer object-cover border-2 border-white/15 shadow-2xl"
                     />
-                    <span className="absolute -bottom-2 -right-2 p-2 rounded-2xl bg-bg-secondary border border-border-subtle shadow-lg">
+                    <span className="absolute -bottom-2 -right-2 p-2 chamfer-sm bg-bg-secondary border border-border-subtle shadow-lg">
                       <RoleIcon className={`w-5 h-5 ${roleConfig.iconColor}`} />
                     </span>
                   </div>
@@ -491,7 +491,7 @@ export default function ResearcherProfile({ navigate, researcherId }) {
                     <div className="space-y-2">
                       {/* Role Badge Pill */}
                       <div className="flex flex-wrap items-center justify-center md:justify-start gap-2">
-                        <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-xl text-[11px] font-black uppercase tracking-wider border ${roleConfig.badgeClass}`}>
+                        <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-xl text-[11px] font-extrabold uppercase tracking-wider border ${roleConfig.badgeClass}`}>
                           <RoleIcon className="w-3.5 h-3.5" />
                           {roleConfig.title}
                         </span>
@@ -502,7 +502,7 @@ export default function ResearcherProfile({ navigate, researcherId }) {
                         )}
                       </div>
 
-                      <h1 className="text-2xl md:text-4xl font-black text-text-primary tracking-tight">
+                      <h1 className="text-2xl md:text-4xl font-extrabold text-text-primary tracking-tight">
                         {researcher.name}
                       </h1>
                       <p className="text-sm font-bold text-engine tracking-wide">
@@ -536,13 +536,13 @@ export default function ResearcherProfile({ navigate, researcherId }) {
                 </div>
 
                 {/* 2. SPECIFIC ROLE MATRIX BENTO CELL (Attributions & Prérogatives) */}
-                <div className="glass-panel rounded-3xl p-8 md:p-10 border border-border-subtle shadow-xl relative flex flex-col gap-6 overflow-hidden">
+                <div className="glass-panel chamfer p-8 md:p-10 border border-border-subtle shadow-xl relative flex flex-col gap-6 overflow-hidden">
                   <div className="flex items-center justify-between">
-                    <h2 className="text-lg font-black tracking-tight text-text-primary flex items-center gap-2.5">
+                    <h2 className="text-lg font-extrabold tracking-tight text-text-primary flex items-center gap-2.5">
                       <ShieldCheck className={`w-5 h-5 ${roleConfig.iconColor}`} />
                       Attributions & Prérogatives du Rôle
                     </h2>
-                    <span className={`text-[11px] font-black uppercase px-2.5 py-1 rounded-lg border ${roleConfig.badgeClass}`}>
+                    <span className={`text-[11px] font-extrabold uppercase px-2.5 py-1 rounded-lg border ${roleConfig.badgeClass}`}>
                       Accréditation FIERI
                     </span>
                   </div>
@@ -551,8 +551,8 @@ export default function ResearcherProfile({ navigate, researcherId }) {
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {/* Responsabilités Clés */}
-                    <div className="space-y-4 bg-bg-secondary border border-border-subtle p-5 rounded-2xl">
-                      <h3 className="text-xs font-black uppercase tracking-wider text-text-muted flex items-center gap-2">
+                    <div className="space-y-4 bg-bg-secondary border border-border-subtle p-5 chamfer-sm">
+                      <h3 className="text-xs font-extrabold uppercase tracking-wider text-text-muted flex items-center gap-2">
                         <Check className="w-4 h-4 text-emerald-400" />
                         Missions & Responsabilités
                       </h3>
@@ -567,8 +567,8 @@ export default function ResearcherProfile({ navigate, researcherId }) {
                     </div>
 
                     {/* Fonctionnalités & Capacités Actives */}
-                    <div className="space-y-4 bg-bg-secondary border border-border-subtle p-5 rounded-2xl">
-                      <h3 className="text-xs font-black uppercase tracking-wider text-text-muted flex items-center gap-2">
+                    <div className="space-y-4 bg-bg-secondary border border-border-subtle p-5 chamfer-sm">
+                      <h3 className="text-xs font-extrabold uppercase tracking-wider text-text-muted flex items-center gap-2">
                         <Zap className="w-4 h-4 text-engine" />
                         Capacités & Habilitations Plateforme
                       </h3>
@@ -585,8 +585,8 @@ export default function ResearcherProfile({ navigate, researcherId }) {
                 </div>
 
                 {/* 3. Biography Bento Cell */}
-                <div className="glass-panel rounded-3xl p-8 md:p-10 border border-border-subtle shadow-lg relative flex flex-col gap-5">
-                  <h2 className="text-lg font-black tracking-tight text-text-primary flex items-center gap-2">
+                <div className="glass-panel chamfer p-8 md:p-10 border border-border-subtle shadow-lg relative flex flex-col gap-5">
+                  <h2 className="text-lg font-extrabold tracking-tight text-text-primary flex items-center gap-2">
                     <Activity className="w-5 h-5 text-engine" />
                     Biographie & Orientation R&D
                   </h2>
@@ -602,13 +602,13 @@ export default function ResearcherProfile({ navigate, researcherId }) {
               <div className="flex flex-col gap-8">
                 
                 {/* 1. Subscription Actions Bento Cell */}
-                <div className="glass-panel rounded-3xl p-8 border border-border-subtle shadow-xl relative flex flex-col gap-6 text-center">
+                <div className="glass-panel chamfer p-8 border border-border-subtle shadow-xl relative flex flex-col gap-6 text-center">
                   <div className="flex flex-col items-center gap-1 relative z-10">
                     <Users className="w-8 h-8 text-engine mb-1" />
-                    <span className="text-4xl font-black text-text-primary tracking-tight">
+                    <span className="text-4xl font-extrabold text-text-primary tracking-tight">
                       {followersCount}
                     </span>
-                    <span className="text-xs font-black tracking-widest text-text-muted uppercase">
+                    <span className="text-xs font-extrabold tracking-widest text-text-muted uppercase">
                       Abonnés FIERI
                     </span>
                   </div>
@@ -619,7 +619,7 @@ export default function ResearcherProfile({ navigate, researcherId }) {
                     {isOwnProfile ? (
                       <button
                         onClick={() => setIsEditModalOpen(true)}
-                        className="w-full py-3.5 rounded-2xl text-xs font-bold bg-engine/15 border border-engine/30 text-engine hover:bg-engine hover:text-white transition-all flex items-center justify-center gap-2 cursor-pointer shadow-md"
+                        className="w-full py-3.5 chamfer-sm text-xs font-bold bg-engine/15 border border-engine/30 text-engine hover:bg-engine hover:text-white transition-all flex items-center justify-center gap-2 cursor-pointer shadow-md"
                       >
                         <Edit3 className="w-4 h-4" />
                         Gérer mon profil
@@ -628,7 +628,7 @@ export default function ResearcherProfile({ navigate, researcherId }) {
                       <button
                         onClick={handleFollowToggle}
                         disabled={followLoading}
-                        className={`w-full py-3.5 rounded-2xl text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer shadow-md ${
+                        className={`w-full py-3.5 chamfer-sm text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer shadow-md ${
                           isFollowing
                             ? 'bg-red-500/10 hover:bg-red-500/20 border border-red-500/30 text-red-400'
                             : 'bg-engine hover:bg-engine/90 text-white shadow-[0_0_20px_rgba(108,76,241,0.3)]'
@@ -652,7 +652,7 @@ export default function ResearcherProfile({ navigate, researcherId }) {
                       <div className="space-y-3">
                         <button
                           disabled
-                          className="w-full py-3.5 rounded-2xl text-xs font-bold bg-bg-tertiary border border-border-subtle text-text-muted opacity-60 flex items-center justify-center gap-2 cursor-not-allowed"
+                          className="w-full py-3.5 chamfer-sm text-xs font-bold bg-bg-tertiary border border-border-subtle text-text-muted opacity-60 flex items-center justify-center gap-2 cursor-not-allowed"
                         >
                           <Lock className="w-3.5 h-3.5" />
                           S'abonner
@@ -666,49 +666,49 @@ export default function ResearcherProfile({ navigate, researcherId }) {
                 </div>
 
                 {/* 2. Scientific Work Stats Bento Cell */}
-                <div className="glass-panel rounded-3xl p-8 border border-border-subtle shadow-lg relative flex flex-col gap-5">
-                  <h3 className="text-sm font-black tracking-widest text-text-muted uppercase flex items-center gap-2">
+                <div className="glass-panel chamfer p-8 border border-border-subtle shadow-lg relative flex flex-col gap-5">
+                  <h3 className="text-sm font-extrabold tracking-widest text-text-muted uppercase flex items-center gap-2">
                     <BookOpen className="w-4 h-4 text-engine" />
                     Indicateurs Clés
                   </h3>
                   
                   <div className="flex flex-col gap-3.5">
-                    <div className="flex justify-between items-center bg-bg-secondary border border-border-subtle p-4 rounded-2xl">
+                    <div className="flex justify-between items-center bg-bg-secondary border border-border-subtle p-4 chamfer-sm">
                       <div className="flex items-center gap-3">
                         <div className="w-8 h-8 rounded-xl bg-engine/15 flex items-center justify-center text-engine">
                           <BookOpen className="w-4 h-4" />
                         </div>
                         <span className="text-xs font-bold text-text-secondary">Publications</span>
                       </div>
-                      <span className="text-base font-black text-text-primary">{researcher.publicationsCount || publications.length}</span>
+                      <span className="text-base font-extrabold text-text-primary">{researcher.publicationsCount || publications.length}</span>
                     </div>
 
-                    <div className="flex justify-between items-center bg-bg-secondary border border-border-subtle p-4 rounded-2xl">
+                    <div className="flex justify-between items-center bg-bg-secondary border border-border-subtle p-4 chamfer-sm">
                       <div className="flex items-center gap-3">
                         <div className="w-8 h-8 rounded-xl bg-emerald-500/15 flex items-center justify-center text-emerald-400">
                           <Star className="w-4 h-4" />
                         </div>
                         <span className="text-xs font-bold text-text-secondary">Projets R&D</span>
                       </div>
-                      <span className="text-base font-black text-text-primary">{researcher.projectsCount || 1}</span>
+                      <span className="text-base font-extrabold text-text-primary">{researcher.projectsCount || 1}</span>
                     </div>
 
-                    <div className="flex justify-between items-center bg-bg-secondary border border-border-subtle p-4 rounded-2xl">
+                    <div className="flex justify-between items-center bg-bg-secondary border border-border-subtle p-4 chamfer-sm">
                       <div className="flex items-center gap-3">
                         <div className="w-8 h-8 rounded-xl bg-amber-500/15 flex items-center justify-center text-amber-400">
                           <Award className="w-4 h-4" />
                         </div>
                         <span className="text-xs font-bold text-text-secondary">Votes de confiance</span>
                       </div>
-                      <span className="text-base font-black text-text-primary">{researcher.stars || 42}</span>
+                      <span className="text-base font-extrabold text-text-primary">{researcher.stars || 42}</span>
                     </div>
                   </div>
                 </div>
 
                 {/* External links */}
                 {(researcher.portfolioUrl || researcher.cvUrl) && (
-                  <div className="glass-panel rounded-3xl p-6 border border-border-subtle shadow-lg flex flex-col gap-3">
-                    <h3 className="text-xs font-black tracking-wider text-text-muted uppercase mb-1">
+                  <div className="glass-panel chamfer p-6 border border-border-subtle shadow-lg flex flex-col gap-3">
+                    <h3 className="text-xs font-extrabold tracking-wider text-text-muted uppercase mb-1">
                       Liens Externes & Portfolio
                     </h3>
                     {researcher.portfolioUrl && (
@@ -716,7 +716,7 @@ export default function ResearcherProfile({ navigate, researcherId }) {
                         href={researcher.portfolioUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex items-center justify-between p-3.5 rounded-xl bg-bg-tertiary hover:bg-bg-tertiary border border-border-subtle text-xs font-bold text-text-primary transition-all group"
+                        className="flex items-center justify-between p-3.5 rounded-xl bg-bg-secondary hover:bg-bg-tertiary border border-border-subtle text-xs font-bold text-text-primary transition-all group"
                       >
                         <span className="flex items-center gap-2">
                           <Globe className="w-4 h-4 text-engine" />
@@ -730,7 +730,7 @@ export default function ResearcherProfile({ navigate, researcherId }) {
                         href={researcher.cvUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex items-center justify-between p-3.5 rounded-xl bg-bg-tertiary hover:bg-bg-tertiary border border-border-subtle text-xs font-bold text-text-primary transition-all group"
+                        className="flex items-center justify-between p-3.5 rounded-xl bg-bg-secondary hover:bg-bg-tertiary border border-border-subtle text-xs font-bold text-text-primary transition-all group"
                       >
                         <span className="flex items-center gap-2">
                           <FileText className="w-4 h-4 text-emerald-400" />
@@ -748,9 +748,9 @@ export default function ResearcherProfile({ navigate, researcherId }) {
 
             {/* BOTTOM ROW: Scientific Publications Section */}
             {publications.length > 0 && (
-              <div className="glass-panel rounded-3xl p-8 md:p-10 border border-border-subtle shadow-xl relative flex flex-col gap-6">
+              <div className="glass-panel chamfer p-8 md:p-10 border border-border-subtle shadow-xl relative flex flex-col gap-6">
                 <div className="flex justify-between items-center">
-                  <h3 className="text-lg font-black tracking-tight text-text-primary flex items-center gap-2.5">
+                  <h3 className="text-lg font-extrabold tracking-tight text-text-primary flex items-center gap-2.5">
                     <Newspaper className="w-5 h-5 text-engine" />
                     Publications Récentes de Recherche
                   </h3>
@@ -765,11 +765,11 @@ export default function ResearcherProfile({ navigate, researcherId }) {
                   {publications.map((pub, idx) => (
                     <div
                       key={idx}
-                      className="bg-bg-secondary hover:bg-bg-tertiary border border-border-subtle hover:border-engine/20 p-5 rounded-2xl flex flex-col justify-between gap-5 transition-all group/card shadow-sm"
+                      className="bg-bg-secondary hover:bg-bg-tertiary border border-border-subtle hover:border-engine/20 p-5 chamfer-sm flex flex-col justify-between gap-5 transition-all group/card shadow-sm"
                     >
                       <div className="space-y-2">
                         <div className="flex justify-between items-start gap-2">
-                          <span className="text-[11px] font-black uppercase tracking-wider text-engine bg-engine/10 px-2 py-0.5 rounded-md border border-engine/10">
+                          <span className="text-[11px] font-extrabold uppercase tracking-wider text-engine bg-engine/10 px-2 py-0.5 rounded-md border border-engine/10">
                             {pub.year}
                           </span>
                           <span className="text-[11px] font-bold text-text-muted">
@@ -820,7 +820,7 @@ export default function ResearcherProfile({ navigate, researcherId }) {
               initial={{ opacity: 0, scale: 0.95, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
-              className="relative w-full max-w-3xl glass-panel rounded-3xl border border-border-subtle p-6 md:p-8 shadow-2xl z-10 max-h-[90vh] overflow-y-auto bg-bg-secondary/95"
+              className="relative w-full max-w-3xl glass-panel chamfer border border-border-subtle p-6 md:p-8 shadow-2xl z-10 max-h-[90vh] overflow-y-auto bg-bg-secondary"
             >
               {/* Header */}
               <div className="flex items-center justify-between border-b border-border-subtle pb-4 mb-6">
@@ -835,7 +835,7 @@ export default function ResearcherProfile({ navigate, researcherId }) {
                 </div>
                 <button
                   onClick={() => setIsEditModalOpen(false)}
-                  className="p-2 rounded-xl bg-bg-tertiary hover:bg-bg-tertiary text-text-muted hover:text-white transition-colors cursor-pointer"
+                  className="p-2 rounded-xl bg-bg-secondary hover:bg-bg-tertiary text-text-muted hover:text-white transition-colors cursor-pointer"
                 >
                   <X className="w-5 h-5" />
                 </button>
@@ -854,7 +854,7 @@ export default function ResearcherProfile({ navigate, researcherId }) {
                       required
                       value={editValues.name}
                       onChange={(e) => setEditValues(v => ({ ...v, name: e.target.value }))}
-                      className="w-full px-4 py-3 rounded-2xl bg-bg-tertiary border border-border-subtle text-sm text-text-primary focus:outline-none focus:border-engine"
+                      className="w-full px-4 py-3 chamfer-sm bg-bg-tertiary border border-border-subtle text-sm text-text-primary focus:outline-none focus:border-engine"
                       placeholder="Ex: Dr. Samuel ADANLOKONON"
                     />
                   </div>
@@ -868,7 +868,7 @@ export default function ResearcherProfile({ navigate, researcherId }) {
                       required
                       value={editValues.email}
                       onChange={(e) => setEditValues(v => ({ ...v, email: e.target.value }))}
-                      className="w-full px-4 py-3 rounded-2xl bg-bg-tertiary border border-border-subtle text-sm text-text-primary focus:outline-none focus:border-engine"
+                      className="w-full px-4 py-3 chamfer-sm bg-bg-tertiary border border-border-subtle text-sm text-text-primary focus:outline-none focus:border-engine"
                       placeholder="vous@exemple.com"
                     />
                   </div>
@@ -881,7 +881,7 @@ export default function ResearcherProfile({ navigate, researcherId }) {
                       type="text"
                       value={editValues.university}
                       onChange={(e) => setEditValues(v => ({ ...v, university: e.target.value }))}
-                      className="w-full px-4 py-3 rounded-2xl bg-bg-tertiary border border-border-subtle text-sm text-text-primary focus:outline-none focus:border-engine"
+                      className="w-full px-4 py-3 chamfer-sm bg-bg-tertiary border border-border-subtle text-sm text-text-primary focus:outline-none focus:border-engine"
                       placeholder="Ex: Université d'Abomey-Calavi (EPAC)"
                     />
                   </div>
@@ -894,7 +894,7 @@ export default function ResearcherProfile({ navigate, researcherId }) {
                       type="text"
                       value={editValues.roleTitle}
                       onChange={(e) => setEditValues(v => ({ ...v, roleTitle: e.target.value }))}
-                      className="w-full px-4 py-3 rounded-2xl bg-bg-tertiary border border-border-subtle text-sm text-text-primary focus:outline-none focus:border-engine"
+                      className="w-full px-4 py-3 chamfer-sm bg-bg-tertiary border border-border-subtle text-sm text-text-primary focus:outline-none focus:border-engine"
                       placeholder="Ex: Responsable du Pôle IA"
                     />
                   </div>
@@ -908,14 +908,14 @@ export default function ResearcherProfile({ navigate, researcherId }) {
                     <img
                       src={editValues.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80'}
                       alt="Aperçu"
-                      className="w-14 h-14 rounded-2xl object-cover border border-border-subtle shrink-0"
+                      className="w-14 h-14 chamfer-sm object-cover border border-border-subtle shrink-0"
                     />
                     <input
                       id="edit-avatar"
                       type="url"
                       value={editValues.avatar}
                       onChange={(e) => setEditValues(v => ({ ...v, avatar: e.target.value }))}
-                      className="w-full px-4 py-3 rounded-2xl bg-bg-tertiary border border-border-subtle text-sm text-text-primary focus:outline-none focus:border-engine"
+                      className="w-full px-4 py-3 chamfer-sm bg-bg-tertiary border border-border-subtle text-sm text-text-primary focus:outline-none focus:border-engine"
                       placeholder="https://images.unsplash.com/..."
                     />
                   </div>
@@ -929,7 +929,7 @@ export default function ResearcherProfile({ navigate, researcherId }) {
                     type="text"
                     value={editValues.specialties}
                     onChange={(e) => setEditValues(v => ({ ...v, specialties: e.target.value }))}
-                    className="w-full px-4 py-3 rounded-2xl bg-bg-tertiary border border-border-subtle text-sm text-text-primary focus:outline-none focus:border-engine"
+                    className="w-full px-4 py-3 chamfer-sm bg-bg-tertiary border border-border-subtle text-sm text-text-primary focus:outline-none focus:border-engine"
                     placeholder="Deep Learning, ROS 2, Embedded IoT"
                   />
                 </div>
@@ -942,7 +942,7 @@ export default function ResearcherProfile({ navigate, researcherId }) {
                     rows={4}
                     value={editValues.bio}
                     onChange={(e) => setEditValues(v => ({ ...v, bio: e.target.value }))}
-                    className="w-full px-4 py-3 rounded-2xl bg-bg-tertiary border border-border-subtle text-sm text-text-primary focus:outline-none focus:border-engine resize-none"
+                    className="w-full px-4 py-3 chamfer-sm bg-bg-tertiary border border-border-subtle text-sm text-text-primary focus:outline-none focus:border-engine resize-none"
                     placeholder="Présentez brièvement vos axes de recherche et contributions..."
                   />
                 </div>
@@ -956,7 +956,7 @@ export default function ResearcherProfile({ navigate, researcherId }) {
                       type="url"
                       value={editValues.portfolioUrl}
                       onChange={(e) => setEditValues(v => ({ ...v, portfolioUrl: e.target.value }))}
-                      className="w-full px-4 py-3 rounded-2xl bg-bg-tertiary border border-border-subtle text-sm text-text-primary focus:outline-none focus:border-engine"
+                      className="w-full px-4 py-3 chamfer-sm bg-bg-tertiary border border-border-subtle text-sm text-text-primary focus:outline-none focus:border-engine"
                       placeholder="https://mon-portfolio.com"
                     />
                   </div>
@@ -967,7 +967,7 @@ export default function ResearcherProfile({ navigate, researcherId }) {
                       type="url"
                       value={editValues.cvUrl}
                       onChange={(e) => setEditValues(v => ({ ...v, cvUrl: e.target.value }))}
-                      className="w-full px-4 py-3 rounded-2xl bg-bg-tertiary border border-border-subtle text-sm text-text-primary focus:outline-none focus:border-engine"
+                      className="w-full px-4 py-3 chamfer-sm bg-bg-tertiary border border-border-subtle text-sm text-text-primary focus:outline-none focus:border-engine"
                       placeholder="https://mon-cv.pdf"
                     />
                   </div>
@@ -978,14 +978,14 @@ export default function ResearcherProfile({ navigate, researcherId }) {
                   <button
                     type="button"
                     onClick={() => setIsEditModalOpen(false)}
-                    className="px-5 py-3 rounded-2xl text-xs font-bold text-text-muted hover:text-white bg-bg-tertiary hover:bg-bg-tertiary transition-colors cursor-pointer"
+                    className="px-5 py-3 chamfer-sm text-xs font-bold text-text-muted hover:text-white bg-bg-secondary hover:bg-bg-tertiary transition-colors cursor-pointer"
                   >
                     Annuler
                   </button>
                   <button
                     type="submit"
                     disabled={editSaving}
-                    className="px-6 py-3 rounded-2xl text-xs font-black text-white bg-engine hover:bg-engine/90 shadow-lg shadow-engine/20 transition-all flex items-center gap-2 cursor-pointer disabled:opacity-50"
+                    className="px-6 py-3 chamfer-sm text-xs font-extrabold text-white bg-engine hover:bg-engine/90 shadow-lg shadow-engine/20 transition-all flex items-center gap-2 cursor-pointer disabled:opacity-50"
                   >
                     {editSaving ? (
                       <span className="w-4 h-4 rounded-full border-2 border-white border-t-transparent animate-spin" />

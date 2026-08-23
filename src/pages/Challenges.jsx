@@ -29,7 +29,7 @@ function Toast({ message, type = 'success', onClose }) {
       animate={{ opacity: 1, y: 0, scale: 1 }}
       exit={{ opacity: 0, y: 16, scale: 0.95 }}
       transition={{ type: 'spring', stiffness: 400, damping: 28 }}
-      className={`fixed bottom-6 right-6 z-[100] flex items-center gap-3 px-5 py-3.5 rounded-2xl shadow-2xl backdrop-blur-md border ${styles[type] || styles.success}`}
+      className={`fixed bottom-6 right-6 z-[100] flex items-center gap-3 px-5 py-3.5 chamfer-sm shadow-2xl backdrop-blur-md border ${styles[type] || styles.success}`}
       role="alert"
     >
       <Icon className="w-5 h-5 shrink-0" />
@@ -125,7 +125,7 @@ function CreateChallengeModal({ clubId, onClose, onCreated }) {
         exit={{ opacity: 0, scale: 0.92, y: 20 }}
         transition={{ type: 'spring', stiffness: 380, damping: 28 }}
         onClick={(e) => e.stopPropagation()}
-        className="relative w-full max-w-lg rounded-3xl border border-border-subtle p-7 shadow-2xl bg-bg-secondary/80 backdrop-blur-xl max-h-[90vh] overflow-y-auto"
+        className="relative w-full max-w-lg chamfer border border-border-subtle p-7 shadow-2xl bg-bg-secondary max-h-[90vh] overflow-y-auto"
       >
         <div className="flex items-center gap-3 mb-5">
           <div className="w-11 h-11 rounded-xl flex items-center justify-center bg-engine/15 border border-engine/30">
@@ -204,7 +204,7 @@ function CreateChallengeModal({ clubId, onClose, onCreated }) {
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 py-2.5 rounded-xl text-xs font-bold text-text-secondary bg-bg-tertiary border border-border-subtle hover:bg-bg-tertiary transition-all"
+              className="flex-1 py-2.5 rounded-xl text-xs font-bold text-text-secondary bg-bg-secondary border border-border-subtle hover:bg-bg-tertiary transition-all"
             >
               Annuler
             </button>
@@ -243,7 +243,7 @@ function ChallengeCard({ challenge, onOpen, index }) {
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.05 }}
       whileHover={{ y: -4, transition: { duration: 0.2 } }}
-      className="relative text-left rounded-2xl overflow-hidden backdrop-blur-xl border border-border-subtle bg-bg-secondary/60 shadow-lg hover:border-engine/30 transition-colors"
+      className="relative text-left chamfer-sm overflow-hidden border border-border-subtle bg-bg-secondary shadow-lg hover:border-engine/30 transition-colors"
     >
       <div className="absolute inset-0 pointer-events-none opacity-0 hover:opacity-100 transition-opacity duration-300"
         style={{ background: 'radial-gradient(ellipse at 50% 0%, rgba(108,76,241,0.12) 0%, transparent 70%)' }} />
@@ -299,7 +299,7 @@ function SubmissionRow({ submission, isManager, onEvaluate, onToggleWinner, isWi
   };
 
   return (
-    <div className="p-4 rounded-xl bg-white/[0.03] border border-border-subtle space-y-3">
+    <div className="p-4 rounded-xl bg-bg-tertiary border border-border-subtle space-y-3">
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
           <p className="text-text-primary font-semibold text-sm truncate">{submission.memberName || 'Membre'}</p>
@@ -382,7 +382,7 @@ function SubmissionRow({ submission, isManager, onEvaluate, onToggleWinner, isWi
 // ───────────────────────────── Hackathon Card ─────────────────────────────
 function HackathonCard({ hackathon }) {
   return (
-    <div className="p-5 rounded-2xl border border-border-subtle bg-bg-secondary/60 backdrop-blur-xl shadow-lg">
+    <div className="p-5 chamfer-sm border border-border-subtle bg-bg-secondary shadow-lg">
       <div className="flex items-start justify-between gap-3 mb-2">
         <div className="flex items-center gap-2 text-ember">
           <CalendarDays className="w-5 h-5" />
@@ -599,7 +599,7 @@ export default function Challenges() {
             <Trophy className="w-3.5 h-3.5" />
             Compétitions & Défis
           </div>
-          <h1 className="text-text-primary font-extrabold text-4xl md:text-5xl leading-tight">
+          <h1 className="text-text-primary font-extrabold text-4xl md:text-5xl leading-tight font-display">
             Challenges & Hackathons
           </h1>
           <p className="text-text-secondary text-lg max-w-2xl leading-relaxed">
@@ -622,7 +622,7 @@ export default function Challenges() {
             <select
               value={clubId || ''}
               onChange={(e) => setClubId(e.target.value)}
-              className="bg-bg-secondary/60 backdrop-blur-xl border border-border-subtle rounded-xl px-4 py-2.5 text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-engine/50 min-w-[220px]"
+              className="bg-bg-secondary border border-border-subtle rounded-xl px-4 py-2.5 text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-engine/50 min-w-[220px]"
             >
               {clubs.map((c) => (
                 <option key={c.id} value={c.id}>{c.name || c.title || c.kicker || c.id}</option>
@@ -655,7 +655,7 @@ export default function Challenges() {
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -16 }}
-              className="rounded-3xl border border-border-subtle bg-bg-secondary/60 backdrop-blur-xl p-7 shadow-xl"
+              className="chamfer border border-border-subtle bg-bg-secondary p-7 shadow-xl"
             >
               <button
                 onClick={closeDetail}
@@ -678,13 +678,13 @@ export default function Challenges() {
               <p className="text-text-secondary text-sm leading-relaxed mb-4">{selectedChallenge.description}</p>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-5 text-sm">
-                <div className="p-3 rounded-xl bg-white/[0.03] border border-border-subtle">
+                <div className="p-3 rounded-xl bg-bg-tertiary border border-border-subtle">
                   <p className="text-[11px] font-bold uppercase tracking-wider text-text-secondary mb-1">Date limite</p>
                   <p className="text-text-primary flex items-center gap-1.5">
                     <CalendarDays className="w-4 h-4 text-engine" /> {fmtDate(selectedChallenge.dueDate)}
                   </p>
                 </div>
-                <div className="p-3 rounded-xl bg-white/[0.03] border border-border-subtle">
+                <div className="p-3 rounded-xl bg-bg-tertiary border border-border-subtle">
                   <p className="text-[11px] font-bold uppercase tracking-wider text-text-secondary mb-1">Badge de récompense</p>
                   <p className="text-text-primary flex items-center gap-1.5">
                     <Award className="w-4 h-4 text-amber-400" /> {selectedChallenge.rewardBadgeType || 'Aucun'}
@@ -710,7 +710,7 @@ export default function Challenges() {
                       <Upload className="w-4 h-4" /> Soumettre une solution
                     </button>
                   ) : (
-                    <form onSubmit={handleSubmit} className="space-y-3 p-4 rounded-xl bg-white/[0.03] border border-border-subtle"
+                    <form onSubmit={handleSubmit} className="space-y-3 p-4 rounded-xl bg-bg-tertiary border border-border-subtle"
                       onClick={(e) => e.stopPropagation()}>
                       <p className="text-sm font-bold text-text-primary">Votre lien de rendu</p>
                       {submitError && (
@@ -729,7 +729,7 @@ export default function Challenges() {
                         <button
                           type="button"
                           onClick={() => setShowSubmit(false)}
-                          className="flex-1 py-2 rounded-xl text-xs font-bold text-text-secondary bg-bg-tertiary border border-border-subtle hover:bg-bg-tertiary transition-all"
+                          className="flex-1 py-2 rounded-xl text-xs font-bold text-text-secondary bg-bg-secondary border border-border-subtle hover:bg-bg-tertiary transition-all"
                         >
                           Annuler
                         </button>
@@ -809,7 +809,7 @@ export default function Challenges() {
                 {loadingList ? (
                   <Spinner label="Chargement des challenges…" />
                 ) : challenges.length === 0 ? (
-                  <div className="p-8 rounded-2xl border border-border-subtle bg-bg-secondary/60 text-center text-text-secondary">
+                  <div className="p-8 chamfer-sm border border-border-subtle bg-bg-secondary text-center text-text-secondary">
                     <FlaskConical className="w-8 h-8 mx-auto mb-3 opacity-60" />
                     <p className="text-sm">Aucun challenge pour cette CITE pour le moment.</p>
                     {isManager && (
@@ -845,7 +845,7 @@ export default function Challenges() {
                 {loadingList ? (
                   <Spinner label="Chargement des hackathons…" />
                 ) : hackathons.length === 0 ? (
-                  <div className="p-8 rounded-2xl border border-border-subtle bg-bg-secondary/60 text-center text-text-secondary">
+                  <div className="p-8 chamfer-sm border border-border-subtle bg-bg-secondary text-center text-text-secondary">
                     <CalendarDays className="w-8 h-8 mx-auto mb-3 opacity-60" />
                     <p className="text-sm">Aucun hackathon associé à cette CITE.</p>
                   </div>

@@ -29,7 +29,7 @@ function Toast({ message, type = 'success', onClose }) {
       animate={{ opacity: 1, y: 0, scale: 1 }}
       exit={{ opacity: 0, y: 16, scale: 0.95 }}
       transition={{ type: 'spring', stiffness: 400, damping: 28 }}
-      className={`fixed bottom-6 right-6 z-[100] flex items-center gap-3 px-5 py-3.5 rounded-2xl shadow-2xl backdrop-blur-md border ${styles[type] || styles.success}`}
+      className={`fixed bottom-6 right-6 z-[100] flex items-center gap-3 px-5 py-3.5 chamfer-sm shadow-2xl backdrop-blur-md border ${styles[type] || styles.success}`}
       role="alert"
       aria-live="polite"
     >
@@ -44,7 +44,7 @@ function UniversityField({ universityId, setUniversityId, universities, loading 
   if (universityId && !loading) {
     const current = universities.find((u) => u.id === Number(universityId));
     return (
-      <div className="flex items-center gap-3 p-3 rounded-xl bg-bg-secondary/40 border border-border-subtle">
+      <div className="flex items-center gap-3 p-3 rounded-xl bg-bg-secondary border border-border-subtle">
         <Building2 className="w-5 h-5 text-engine shrink-0" />
         <div className="min-w-0">
           <p className="text-[11px] uppercase tracking-widest text-text-secondary">Université bénéficiaire</p>
@@ -58,7 +58,7 @@ function UniversityField({ universityId, setUniversityId, universities, loading 
 
   if (loading) {
     return (
-      <div className="flex items-center gap-2 p-3 rounded-xl bg-bg-secondary/40 border border-border-subtle text-text-secondary text-sm">
+      <div className="flex items-center gap-2 p-3 rounded-xl bg-bg-secondary border border-border-subtle text-text-secondary text-sm">
         <Loader2 className="w-4 h-4 animate-spin" /> Chargement des universités…
       </div>
     );
@@ -72,7 +72,7 @@ function UniversityField({ universityId, setUniversityId, universities, loading 
       <select
         value={universityId || ''}
         onChange={(e) => setUniversityId(e.target.value ? Number(e.target.value) : null)}
-        className="w-full px-3 py-2.5 rounded-xl bg-bg-secondary/60 border border-border-subtle text-text-primary text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-engine"
+        className="w-full px-3 py-2.5 rounded-xl bg-bg-secondary border border-border-subtle text-text-primary text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-engine"
       >
         <option value="">— Sélectionnez une université —</option>
         {universities.map((u) => (
@@ -155,7 +155,7 @@ function FinancialForm({ universityId, setUniversityId, universities, user, setT
       onSubmit={handleSubmit}
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
-      className="glass-panel bg-bg-secondary/60 backdrop-blur-xl border border-border-subtle rounded-3xl p-7 space-y-5"
+      className="glass-panel chamfer p-7 space-y-5"
     >
       <div className="flex items-center gap-3 mb-1">
         <div className="w-11 h-11 rounded-xl flex items-center justify-center bg-engine/15 border border-engine/30">
@@ -181,7 +181,7 @@ function FinancialForm({ universityId, setUniversityId, universities, user, setT
           value={amount}
           onChange={(e) => setAmount(e.target.value)}
           placeholder="Ex : 25000"
-          className="w-full px-3 py-2.5 rounded-xl bg-bg-secondary/60 border border-border-subtle text-text-primary text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-engine"
+          className="w-full px-3 py-2.5 rounded-xl bg-bg-secondary border border-border-subtle text-text-primary text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-engine"
         />
       </div>
 
@@ -192,7 +192,7 @@ function FinancialForm({ universityId, setUniversityId, universities, user, setT
             type="text" value={donorName}
             onChange={(e) => setDonorName(e.target.value)}
             placeholder="Jean Dupont"
-            className="w-full px-3 py-2.5 rounded-xl bg-bg-secondary/60 border border-border-subtle text-text-primary text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-engine"
+            className="w-full px-3 py-2.5 rounded-xl bg-bg-secondary border border-border-subtle text-text-primary text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-engine"
           />
         </div>
         <div>
@@ -201,7 +201,7 @@ function FinancialForm({ universityId, setUniversityId, universities, user, setT
             type="email" value={donorEmail}
             onChange={(e) => setDonorEmail(e.target.value)}
             placeholder="jean@exemple.com"
-            className="w-full px-3 py-2.5 rounded-xl bg-bg-secondary/60 border border-border-subtle text-text-primary text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-engine"
+            className="w-full px-3 py-2.5 rounded-xl bg-bg-secondary border border-border-subtle text-text-primary text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-engine"
           />
         </div>
       </div>
@@ -213,7 +213,7 @@ function FinancialForm({ universityId, setUniversityId, universities, user, setT
           onChange={(e) => setMessage(e.target.value)}
           rows={3}
           placeholder="Un mot pour l'université…"
-          className="w-full px-3 py-2.5 rounded-xl bg-bg-secondary/60 border border-border-subtle text-text-primary text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-engine resize-none"
+          className="w-full px-3 py-2.5 rounded-xl bg-bg-secondary border border-border-subtle text-text-primary text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-engine resize-none"
         />
       </div>
 
@@ -325,7 +325,7 @@ function PhysicalForm({ universityId, setUniversityId, universities, user, setTo
       onSubmit={handleSubmit}
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
-      className="glass-panel bg-bg-secondary/60 backdrop-blur-xl border border-border-subtle rounded-3xl p-7 space-y-5"
+      className="glass-panel chamfer p-7 space-y-5"
     >
       <div className="flex items-center gap-3 mb-1">
         <div className="w-11 h-11 rounded-xl flex items-center justify-center bg-ember/15 border border-ember/30">
@@ -348,12 +348,12 @@ function PhysicalForm({ universityId, setUniversityId, universities, user, setTo
         <div>
           <label className="block text-[11px] uppercase tracking-widest text-text-secondary mb-1.5">Nom du partenaire *</label>
           <input type="text" value={donorName} onChange={(e) => setDonorName(e.target.value)} placeholder="Nom / Organisation"
-            className="w-full px-3 py-2.5 rounded-xl bg-bg-secondary/60 border border-border-subtle text-text-primary text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-engine" />
+            className="w-full px-3 py-2.5 rounded-xl bg-bg-secondary border border-border-subtle text-text-primary text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-engine" />
         </div>
         <div>
           <label className="block text-[11px] uppercase tracking-widest text-text-secondary mb-1.5">Email *</label>
           <input type="email" value={donorEmail} onChange={(e) => setDonorEmail(e.target.value)} placeholder="contact@exemple.com"
-            className="w-full px-3 py-2.5 rounded-xl bg-bg-secondary/60 border border-border-subtle text-text-primary text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-engine" />
+            className="w-full px-3 py-2.5 rounded-xl bg-bg-secondary border border-border-subtle text-text-primary text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-engine" />
         </div>
       </div>
 
@@ -363,7 +363,7 @@ function PhysicalForm({ universityId, setUniversityId, universities, user, setTo
           <select
             value={physicalType}
             onChange={(e) => setPhysicalType(e.target.value)}
-            className="w-full px-3 py-2.5 rounded-xl bg-bg-secondary/60 border border-border-subtle text-text-primary text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-engine appearance-none pr-9"
+            className="w-full px-3 py-2.5 rounded-xl bg-bg-secondary border border-border-subtle text-text-primary text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-engine appearance-none pr-9"
           >
             <option value="MATERIEL">Matériel</option>
             <option value="LOCAUX">Locaux</option>
@@ -379,7 +379,7 @@ function PhysicalForm({ universityId, setUniversityId, universities, user, setTo
         <textarea
           value={description} onChange={(e) => setDescription(e.target.value)} rows={3}
           placeholder="Décrivez le bien, sa quantité, son état…"
-          className="w-full px-3 py-2.5 rounded-xl bg-bg-secondary/60 border border-border-subtle text-text-primary text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-engine resize-none"
+          className="w-full px-3 py-2.5 rounded-xl bg-bg-secondary border border-border-subtle text-text-primary text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-engine resize-none"
         />
       </div>
 
@@ -402,7 +402,7 @@ function PhysicalForm({ universityId, setUniversityId, universities, user, setTo
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="p-5 rounded-2xl bg-engine/5 border border-engine/20 text-center space-y-4"
+            className="p-5 chamfer-sm bg-engine/5 border border-engine/20 text-center space-y-4"
           >
             <p className="text-xs text-text-secondary">
               Offre <span className="font-mono text-text-primary">#{offerId}</span> enregistrée — dernière étape : signature par empreinte digitale.
@@ -412,7 +412,7 @@ function PhysicalForm({ universityId, setUniversityId, universities, user, setTo
               <motion.div
                 animate={signing && !signed ? { scale: [1, 1.08, 1], opacity: [1, 0.6, 1] } : {}}
                 transition={signing && !signed ? { repeat: Infinity, duration: 1.1 } : {}}
-                className={`w-20 h-20 rounded-2xl flex items-center justify-center border ${
+                className={`w-20 h-20 chamfer-sm flex items-center justify-center border ${
                   signed ? 'bg-emerald-500/15 border-emerald-500/40' : 'bg-engine/10 border-engine/30'
                 }`}
               >
@@ -521,7 +521,7 @@ function TreasurySection({ universityId, setToast }) {
     <motion.section
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
-      className="glass-panel bg-bg-secondary/60 backdrop-blur-xl border border-border-subtle rounded-3xl p-7 space-y-6"
+      className="glass-panel chamfer p-7 space-y-6"
     >
       <div className="flex items-center gap-3">
         <div className="w-11 h-11 rounded-xl flex items-center justify-center bg-emerald-500/15 border border-emerald-500/30">
@@ -551,7 +551,7 @@ function TreasurySection({ universityId, setToast }) {
       ) : (
         <>
           {/* Solde */}
-          <div className="flex items-center justify-between p-5 rounded-2xl bg-bg-secondary/40 border border-border-subtle">
+          <div className="flex items-center justify-between p-5 chamfer-sm bg-bg-secondary border border-border-subtle">
             <div>
               <p className="text-[11px] uppercase tracking-widest text-text-secondary">Solde actuel</p>
               <p className="text-3xl font-extrabold text-text-primary">
@@ -569,7 +569,7 @@ function TreasurySection({ universityId, setToast }) {
                 <select
                   value={txType}
                   onChange={(e) => setTxType(e.target.value)}
-                  className="w-full px-3 py-2.5 rounded-xl bg-bg-secondary/60 border border-border-subtle text-text-primary text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-engine appearance-none pr-9"
+                  className="w-full px-3 py-2.5 rounded-xl bg-bg-secondary border border-border-subtle text-text-primary text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-engine appearance-none pr-9"
                 >
                   <option value="DON">Don (entrée)</option>
                   <option value="EXPENSE">Dépense (sortie)</option>
@@ -581,13 +581,13 @@ function TreasurySection({ universityId, setToast }) {
               <label className="block text-[11px] uppercase tracking-widest text-text-secondary mb-1.5">Montant (FCFA)</label>
               <input type="number" min="0.01" step="any" value={txAmount}
                 onChange={(e) => setTxAmount(e.target.value)} placeholder="0"
-                className="w-full px-3 py-2.5 rounded-xl bg-bg-secondary/60 border border-border-subtle text-text-primary text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-engine" />
+                className="w-full px-3 py-2.5 rounded-xl bg-bg-secondary border border-border-subtle text-text-primary text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-engine" />
             </div>
             <div className="sm:col-span-4">
               <label className="block text-[11px] uppercase tracking-widest text-text-secondary mb-1.5">Libellé</label>
               <input type="text" value={txLabel}
                 onChange={(e) => setTxLabel(e.target.value)} placeholder="Ex : Achat de matériel"
-                className="w-full px-3 py-2.5 rounded-xl bg-bg-secondary/60 border border-border-subtle text-text-primary text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-engine" />
+                className="w-full px-3 py-2.5 rounded-xl bg-bg-secondary border border-border-subtle text-text-primary text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-engine" />
             </div>
             <div className="sm:col-span-2">
               <motion.button
@@ -615,7 +615,7 @@ function TreasurySection({ universityId, setToast }) {
                       key={t.id}
                       initial={{ opacity: 0, x: -8 }}
                       animate={{ opacity: 1, x: 0 }}
-                      className="flex items-center gap-3 p-3 rounded-xl bg-bg-secondary/40 border border-border-subtle"
+                      className="flex items-center gap-3 p-3 rounded-xl bg-bg-secondary border border-border-subtle"
                     >
                       <div className={`w-9 h-9 rounded-lg flex items-center justify-center shrink-0 ${
                         expense ? 'bg-red-500/15 text-red-400' : 'bg-emerald-500/15 text-emerald-400'
@@ -709,7 +709,7 @@ export default function Soutiens() {
             <HeartHandshake className="w-3.5 h-3.5" />
             Engagement & Mécénat
           </div>
-          <h1 className="text-text-primary font-extrabold text-4xl md:text-5xl leading-tight">Soutenir FIERI</h1>
+          <h1 className="text-text-primary font-extrabold text-4xl md:text-5xl leading-tight font-display">Soutenir FIERI</h1>
           <p className="text-text-secondary text-lg max-w-2xl mx-auto leading-relaxed">
             Votre générosité alimente la recherche. Faites un don en ligne ou proposez un soutien matériel,
             validé par signature numérique.
@@ -718,7 +718,7 @@ export default function Soutiens() {
 
         {/* Onglets */}
         <div className="flex items-center justify-center gap-2 mb-8">
-          <div className="inline-flex p-1 rounded-2xl bg-bg-secondary/50 border border-border-subtle backdrop-blur-xl">
+          <div className="inline-flex p-1 chamfer-sm bg-bg-secondary border border-border-subtle">
             {tabs.map((t) => {
               const Icon = t.icon;
               const active = tab === t.id;

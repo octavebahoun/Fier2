@@ -13,6 +13,18 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Exo:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=Roboto+Mono:wght@400;500;600;700&display=swap');
 @import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+@import "@fontsource-variable/inter";
+
+/* ⚠️ Point d'entrée Tailwind UNIQUE. Ne jamais remettre `@import "tailwindcss"`
+   dans un autre fichier CSS (App.css…) : le second import réinjecte le thème
+   par défaut de Tailwind et écrase nos tokens homonymes — `--font-sans` et
+   `--font-mono` repassent en ui-sans-serif/ui-monospace, et toute la typo
+   Inter/Roboto Mono disparaît silencieusement. `components.json` pointe donc
+   `tailwind.css` sur ce fichier. */
+
+@custom-variant dark (&:is(.dark *));
 
 @theme {
   /* ── THÈME SOMBRE (défaut de la plateforme) ── */
@@ -23,6 +35,7 @@
   --color-engine: #2E7CF6;           /* accent bleu ingénierie */
   --color-engine-deep: #1E5BB8;      /* CTA, texte sur fond clair */
   --color-ember: #E8640C;            /* accent chaleur Lab→Market */
+  --color-ember-deep: #C2500C;       /* hover des CTA ember (pendant d'engine-deep) */
   --color-ember-soft: #F59E0B;       /* texte ambre sur fond sombre */
 
   --color-text-primary: #E8ECF4;
@@ -74,7 +87,13 @@
    THÈME CLAIR — PAPER. Reconstruit proprement depuis les tokens : pas de
    surcharges en cascade, les composants parlent la même langue dans les deux
    thèmes. (Un seul bloc de compat interim, marqué ci-dessous.)
+
+   Les tokens sont posés sur <html> ET <body> (ThemeContext met la classe sur les
+   deux) : le pont shadcn plus bas déclare ses variables sur :root, et un var()
+   déclaré sur :root se résout au niveau de :root — s'il n'y avait que
+   `body.light-theme`, les composants shadcn resteraient en palette sombre.
    ═══════════════════════════════════════════════════════════════════════════ */
+html.light-theme,
 body.light-theme {
   --color-bg-primary: #F5F3EE;       /* PAPER */
   --color-bg-secondary: #FFFFFF;     /* CARD */
@@ -83,6 +102,7 @@ body.light-theme {
   --color-engine: #1E5BB8;
   --color-engine-deep: #1A4B93;
   --color-ember: #C2500C;
+  --color-ember-deep: #9A3F09;
   --color-ember-soft: #B45309;
 
   --color-text-primary: #1A2130;
@@ -102,6 +122,104 @@ body.light-theme {
   --color-fieri-blue: #1E5BB8;
   --color-fieri-bleue: #C2500C;
   --color-fieri-orange: #C2500C;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   PONT shadcn/ui → tokens FIERI « La Preuve »
+   Les variables sémantiques de shadcn sont aliasées à nos tokens : tout
+   composant shadcn hérite d'ENGINE/EMBER/INK-PAPER et suit le switch de thème
+   sans classe `.dark` (ce projet utilise `light-theme`).
+   --radius: 0 → la signature du DS reste .chamfer / .chamfer-sm, appliquée à la
+   main ; shadcn ne repose pas ses coins arrondis par défaut.
+   ═══════════════════════════════════════════════════════════════════════════ */
+@theme inline {
+  --font-heading: var(--font-sans);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --color-foreground: var(--foreground);
+  --color-background: var(--background);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+  --font-sans: 'Inter Variable', sans-serif;
+}
+
+:root {
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.145 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.145 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
+  --primary: oklch(0.205 0 0);
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.97 0 0);
+  --secondary-foreground: oklch(0.205 0 0);
+  --muted: oklch(0.97 0 0);
+  --muted-foreground: oklch(0.556 0 0);
+  --accent: oklch(0.97 0 0);
+  --accent-foreground: oklch(0.205 0 0);
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: oklch(0.922 0 0);
+  --input: oklch(0.922 0 0);
+  --ring: oklch(0.708 0 0);
+  --chart-1: oklch(0.87 0 0);
+  --chart-2: oklch(0.556 0 0);
+  --chart-3: oklch(0.439 0 0);
+  --chart-4: oklch(0.371 0 0);
+  --chart-5: oklch(0.269 0 0);
+  --radius: 0.625rem;
+  --sidebar: oklch(0.985 0 0);
+  --sidebar-foreground: oklch(0.145 0 0);
+  --sidebar-primary: oklch(0.205 0 0);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.97 0 0);
+  --sidebar-accent-foreground: oklch(0.205 0 0);
+  --sidebar-border: oklch(0.922 0 0);
+  --sidebar-ring: oklch(0.708 0 0);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  html {
+    @apply font-sans;
+  }
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -306,10 +424,14 @@ body.light-theme [class*="text-violet-400"],
 body.light-theme [class*="text-purple-400"] { color: #4338CA !important; }
 body.light-theme [class*="bg-indigo-500/"] { background-color: #EEF2FF !important; border-color: #C7D2FE !important; color: #3730A3 !important; }
 
-body.light-theme input,
-body.light-theme select,
-body.light-theme textarea {
-  background-color: #FFFFFF !important;
+/* Filet de sécurité pour les champs qui ne déclarent PAS leur propre surface.
+   Le `:not([class*="bg-"])` laisse gagner tout composant qui choisit la sienne :
+   sans ça, un `!important` forçait chaque input en blanc et un champ posé sur
+   une carte blanche devenait invisible (plus aucun effet de creux). */
+body.light-theme input:not([class*="bg-"]),
+body.light-theme select:not([class*="bg-"]),
+body.light-theme textarea:not([class*="bg-"]) {
+  background-color: var(--color-bg-secondary);
   color: var(--color-text-primary);
   border-color: var(--color-border-subtle);
 }
@@ -340,4 +462,38 @@ body.light-theme option {
     scroll-behavior: auto !important;
     transition-duration: 0.01ms !important;
   }
+}
+
+.dark {
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
+  --card: oklch(0.205 0 0);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.205 0 0);
+  --popover-foreground: oklch(0.985 0 0);
+  --primary: oklch(0.922 0 0);
+  --primary-foreground: oklch(0.205 0 0);
+  --secondary: oklch(0.269 0 0);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.269 0 0);
+  --muted-foreground: oklch(0.708 0 0);
+  --accent: oklch(0.269 0 0);
+  --accent-foreground: oklch(0.985 0 0);
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.556 0 0);
+  --chart-1: oklch(0.87 0 0);
+  --chart-2: oklch(0.556 0 0);
+  --chart-3: oklch(0.439 0 0);
+  --chart-4: oklch(0.371 0 0);
+  --chart-5: oklch(0.269 0 0);
+  --sidebar: oklch(0.205 0 0);
+  --sidebar-foreground: oklch(0.985 0 0);
+  --sidebar-primary: oklch(0.488 0.243 264.376);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.269 0 0);
+  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --sidebar-border: oklch(1 0 0 / 10%);
+  --sidebar-ring: oklch(0.556 0 0);
 }

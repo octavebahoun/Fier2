@@ -22,10 +22,10 @@ function MemberCardSkeleton() {
     <motion.div
       animate={{ opacity: [0.3, 0.7, 0.3] }}
       transition={{ repeat: Infinity, duration: 1.5, ease: "easeInOut" }}
-      className="glass-panel rounded-3xl p-6 flex flex-col gap-6 border border-border-subtle"
+      className="glass-panel chamfer p-6 flex flex-col gap-6 border border-border-subtle"
     >
       <div className="flex gap-4 items-start">
-        <div className="w-16 h-16 rounded-2xl bg-bg-tertiary shrink-0" />
+        <div className="w-16 h-16 chamfer-sm bg-bg-tertiary shrink-0" />
         <div className="flex flex-col gap-2 flex-grow">
           <div className="h-5 bg-bg-tertiary rounded-md w-3/4" />
           <div className="h-4 bg-bg-tertiary rounded-md w-1/2" />
@@ -150,7 +150,7 @@ export default function Members({ navigate }) {
           <div className="p-2.5 rounded-xl bg-engine/10 border border-engine/20 text-engine">
             <Users className="w-5 h-5" />
           </div>
-          <span className="text-[11px] font-black tracking-[0.25em] uppercase text-engine">
+          <span className="text-[11px] font-extrabold tracking-[0.25em] uppercase text-engine">
             COMMUNAUTÉ R&D
           </span>
         </div>
@@ -169,7 +169,7 @@ export default function Members({ navigate }) {
       </div>
 
       {/* Filter Interactive Dashboard */}
-      <div className="glass-panel rounded-3xl p-5 md:p-6 mb-12 flex flex-col gap-4 relative z-10 shadow-xl border border-border-subtle">
+      <div className="glass-panel chamfer p-5 md:p-6 mb-12 flex flex-col gap-4 relative z-10 shadow-xl border border-border-subtle">
         <div className="flex flex-col lg:flex-row gap-4 items-stretch lg:items-center">
           
           {/* Text input search */}
@@ -180,7 +180,7 @@ export default function Members({ navigate }) {
               placeholder="Rechercher un chercheur par nom..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-11 pr-4 py-3 bg-bg-tertiary border border-border-subtle rounded-2xl text-sm text-text-primary focus:outline-none focus:border-engine/40 focus:ring-1 focus:ring-engine/30 transition-all placeholder:text-text-muted font-medium"
+              className="w-full pl-11 pr-4 py-3 bg-bg-tertiary border border-border-subtle chamfer-sm text-sm text-text-primary focus:outline-none focus:border-engine/40 focus:ring-1 focus:ring-engine/30 transition-all placeholder:text-text-muted font-medium"
               aria-label="Rechercher par nom"
             />
           </div>
@@ -190,7 +190,7 @@ export default function Members({ navigate }) {
             <select
               value={poleFilter}
               onChange={(e) => setPoleFilter(e.target.value)}
-              className="w-full pl-4 pr-10 py-3 bg-bg-tertiary border border-border-subtle rounded-2xl text-sm text-text-primary focus:outline-none focus:border-engine/40 transition-colors appearance-none cursor-pointer font-medium"
+              className="w-full pl-4 pr-10 py-3 bg-bg-tertiary border border-border-subtle chamfer-sm text-sm text-text-primary focus:outline-none focus:border-engine/40 transition-colors appearance-none cursor-pointer font-medium"
               aria-label="Filtrer par discipline"
             >
               <option value="Toutes" className="bg-bg-secondary text-text-primary">Toutes disciplines</option>
@@ -208,7 +208,7 @@ export default function Members({ navigate }) {
             <select
               value={universityFilter}
               onChange={(e) => setUniversityFilter(e.target.value)}
-              className="w-full pl-4 pr-10 py-3 bg-bg-tertiary border border-border-subtle rounded-2xl text-sm text-text-primary focus:outline-none focus:border-engine/40 transition-colors appearance-none cursor-pointer font-medium"
+              className="w-full pl-4 pr-10 py-3 bg-bg-tertiary border border-border-subtle chamfer-sm text-sm text-text-primary focus:outline-none focus:border-engine/40 transition-colors appearance-none cursor-pointer font-medium"
               aria-label="Filtrer par université ou institution"
             >
               <option value="Toutes" className="bg-bg-secondary text-text-primary">Toutes institutions</option>
@@ -225,7 +225,7 @@ export default function Members({ navigate }) {
           {(searchQuery !== '' || poleFilter !== 'Toutes' || universityFilter !== 'Toutes') && (
             <button
               onClick={handleResetFilters}
-              className="px-5 py-3 rounded-2xl text-xs font-bold text-engine bg-engine/10 hover:bg-engine/20 transition-all flex items-center justify-center gap-2 cursor-pointer grow lg:grow-0"
+              className="px-5 py-3 chamfer-sm text-xs font-bold text-engine bg-engine/10 hover:bg-engine/20 transition-all flex items-center justify-center gap-2 cursor-pointer grow lg:grow-0"
             >
               <RefreshCw className="w-3.5 h-3.5" />
               Réinitialiser
@@ -254,8 +254,8 @@ export default function Members({ navigate }) {
 
       {/* Error State Banner */}
       {error && (
-        <div className="glass-panel border-red-500/20 bg-red-500/5 text-red-400 rounded-3xl p-6 mb-12 flex items-center gap-4 relative z-10">
-          <div className="p-3 rounded-2xl bg-red-500/10 border border-red-500/20 shrink-0">
+        <div className="glass-panel border-red-500/20 bg-red-500/5 text-red-400 chamfer p-6 mb-12 flex items-center gap-4 relative z-10">
+          <div className="p-3 chamfer-sm bg-red-500/10 border border-red-500/20 shrink-0">
             <Award className="w-6 h-6 rotate-180" />
           </div>
           <div>
@@ -316,11 +316,11 @@ export default function Members({ navigate }) {
                   <motion.div
                     key={r.id}
                     variants={cardVariants}
-                    className="glass-panel rounded-3xl p-6 flex flex-col gap-6 relative group overflow-hidden cursor-default border border-border-subtle"
+                    className="glass-panel chamfer p-6 flex flex-col gap-6 relative group overflow-hidden cursor-default border border-border-subtle"
                     style={{ contentVisibility: 'auto' }}
                   >
                     {/* Corner gradient glow halo (UX-DR3) */}
-                    <div className="absolute inset-0 halo-radial opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none rounded-3xl" />
+                    <div className="absolute inset-0 halo-radial opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none chamfer" />
 
                     {/* Member Info Header */}
                     <div className="flex gap-4 items-start relative z-10">
@@ -328,10 +328,10 @@ export default function Members({ navigate }) {
                         <img
                           src={r.avatar}
                           alt={r.name}
-                          className="w-16 h-16 rounded-2xl object-cover border border-border-subtle group-hover:border-engine/40 transition-colors"
+                          className="w-16 h-16 chamfer-sm object-cover border border-border-subtle group-hover:border-engine/40 transition-colors"
                           loading="lazy"
                         />
-                        <span className="absolute -bottom-1 -right-1 w-5 h-5 rounded-lg bg-engine border border-bg-secondary flex items-center justify-center text-[11px] text-white font-black shadow-md">
+                        <span className="absolute -bottom-1 -right-1 w-5 h-5 rounded-lg bg-engine border border-bg-secondary flex items-center justify-center text-[11px] text-white font-extrabold shadow-md">
                           {r.stars > 200 ? '★' : '👤'}
                         </span>
                       </div>
@@ -355,7 +355,7 @@ export default function Members({ navigate }) {
 
                     {/* Tags & Specialties (Badges) */}
                     <div className="flex flex-wrap gap-1.5 relative z-10">
-                      <span className="inline-flex items-center gap-1 text-[11px] font-black uppercase text-engine bg-engine/10 px-2.5 py-1 rounded-full border border-engine/20">
+                      <span className="inline-flex items-center gap-1 text-[11px] font-extrabold uppercase text-engine bg-engine/10 px-2.5 py-1 rounded-full border border-engine/20">
                         <Layers className="w-3 h-3 shrink-0" />
                         {r.pole}
                       </span>
@@ -417,7 +417,7 @@ export default function Members({ navigate }) {
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0 }}
-              className="glass-panel rounded-3xl p-12 text-center max-w-lg mx-auto flex flex-col items-center gap-6 border border-border-subtle relative overflow-hidden"
+              className="glass-panel chamfer p-12 text-center max-w-lg mx-auto flex flex-col items-center gap-6 border border-border-subtle relative overflow-hidden"
             >
               <div className="absolute inset-0 bg-red-500/5 blur-3xl pointer-events-none -z-10" />
               
@@ -444,7 +444,7 @@ export default function Members({ navigate }) {
 
               <button
                 onClick={handleResetFilters}
-                className="px-6 py-3 rounded-2xl text-xs font-bold text-white bg-engine hover:bg-engine/90 shadow-lg shadow-engine/20 hover:shadow-xl hover:shadow-engine/30 transition-all flex items-center gap-2 cursor-pointer"
+                className="px-6 py-3 chamfer-sm text-xs font-bold text-white bg-engine hover:bg-engine/90 shadow-lg shadow-engine/20 hover:shadow-xl hover:shadow-engine/30 transition-all flex items-center gap-2 cursor-pointer"
               >
                 <RefreshCw className="w-3.5 h-3.5" />
                 Réinitialiser la recherche

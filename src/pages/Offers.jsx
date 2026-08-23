@@ -25,7 +25,7 @@ function Toast({ message, type = 'success', onClose }) {
       animate={{ opacity: 1, y: 0, scale: 1 }}
       exit={{ opacity: 0, y: 16, scale: 0.95 }}
       transition={{ type: 'spring', stiffness: 400, damping: 28 }}
-      className={`fixed bottom-6 right-6 z-[100] flex items-center gap-3 px-5 py-3.5 rounded-2xl shadow-2xl backdrop-blur-md border ${bgClass}`}
+      className={`fixed bottom-6 right-6 z-[100] flex items-center gap-3 px-5 py-3.5 chamfer-sm shadow-2xl backdrop-blur-md border ${bgClass}`}
       role="alert"
       aria-live="polite"
     >
@@ -285,7 +285,7 @@ export default function Offers({ navigate }) {
 
         <button
           onClick={openPublishModal}
-          className="px-5 py-3 rounded-2xl text-xs font-black uppercase tracking-wider text-white transition-all cursor-pointer flex items-center gap-2 shadow-lg bg-ember hover:bg-ember-deep shadow-ember/20"
+          className="px-5 py-3 chamfer-sm text-xs font-extrabold uppercase tracking-wider text-white transition-all cursor-pointer flex items-center gap-2 shadow-lg bg-ember hover:bg-ember-deep shadow-ember/20"
         >
           <Plus className="w-4 h-4" />
           Proposer une exclusivité
@@ -294,7 +294,7 @@ export default function Offers({ navigate }) {
 
       {/* Social Partners Directory Section */}
       <div className="flex flex-col gap-4 relative z-10">
-        <h3 className="text-xs font-black uppercase tracking-wider text-text-secondary">
+        <h3 className="text-xs font-extrabold uppercase tracking-wider text-text-secondary">
           Nos partenaires sociaux à la CITE FIERI
         </h3>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -304,9 +304,9 @@ export default function Offers({ navigate }) {
             { name: "Trans-Metro", role: "Mobilité Urbaine", desc: "Navettes & mobilités durables", color: "from-engine/10 to-engine-deep/5 hover:border-engine/30", textColor: "text-engine" },
             { name: "Valkyrie R&D Labs", role: "Équipement & Logiciels", desc: "Dotation technologique", color: "from-ember/10 to-engine/5 hover:border-ember/30", textColor: "text-ember" }
           ].map(partner => (
-            <div key={partner.name} className={`p-5 rounded-2xl bg-gradient-to-br ${partner.color} border border-border-subtle flex flex-col gap-2 transition-all`}>
+            <div key={partner.name} className={`p-5 chamfer-sm bg-gradient-to-br ${partner.color} border border-border-subtle flex flex-col gap-2 transition-all`}>
               <div className="flex justify-between items-start">
-                <span className={`text-base font-black tracking-wider ${partner.textColor}`}>{partner.name}</span>
+                <span className={`text-base font-extrabold tracking-wider ${partner.textColor}`}>{partner.name}</span>
                 <span className="text-[8px] uppercase tracking-wider font-extrabold bg-bg-tertiary px-2 py-0.5 rounded text-text-muted">Partenaire Officiel</span>
               </div>
               <div>
@@ -319,7 +319,7 @@ export default function Offers({ navigate }) {
       </div>
 
       {/* Search & Selection Filter Header */}
-      <div className="flex flex-col md:flex-row gap-4 items-center justify-between glass-panel border border-border-subtle rounded-2xl p-4 relative z-10 bg-bg-secondary/40">
+      <div className="flex flex-col md:flex-row gap-4 items-center justify-between glass-panel border border-border-subtle chamfer-sm p-4 relative z-10 bg-bg-secondary">
         <div className="relative w-full md:max-w-md">
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted" />
           <input
@@ -355,22 +355,22 @@ export default function Offers({ navigate }) {
                   borderColor: "rgba(244, 63, 94, 0.25)",
                   boxShadow: "0 0 30px rgba(244, 63, 94, 0.1)"
                 }}
-                className="glass-panel border bg-bg-secondary/60 backdrop-blur-xl rounded-3xl p-6 md:p-8 flex flex-col justify-between gap-6 transition-all border-ember/20"
+                className="glass-panel border bg-bg-secondary chamfer p-6 md:p-8 flex flex-col justify-between gap-6 transition-all border-ember/20"
               >
                 <div className="space-y-4">
                   {/* Top info row */}
                   <div className="flex justify-between items-center gap-4">
-                    <span className="text-[11px] font-black uppercase tracking-wider px-2.5 py-0.5 rounded-md border text-ember bg-ember/10 border-ember/15">
+                    <span className="text-[11px] font-extrabold uppercase tracking-wider px-2.5 py-0.5 rounded-md border text-ember bg-ember/10 border-ember/15">
                       Partenaire Social
                     </span>
-                    <span className="text-[11px] font-black uppercase tracking-wider bg-bg-tertiary px-2 py-0.5 rounded text-ember-soft">
+                    <span className="text-[11px] font-extrabold uppercase tracking-wider bg-bg-tertiary px-2 py-0.5 rounded text-ember-soft">
                       {opt.discipline}
                     </span>
                   </div>
 
                   {/* Title and author */}
                   <div className="space-y-2">
-                    <h3 className="text-xl font-black tracking-tight text-text-primary">
+                    <h3 className="text-xl font-extrabold tracking-tight text-text-primary">
                       {opt.title}
                     </h3>
                     <p className="text-[11px] text-text-muted flex items-center gap-1">
@@ -381,7 +381,7 @@ export default function Offers({ navigate }) {
                   {/* Body details */}
                   <div className="space-y-3 pt-3 border-t border-border-subtle">
                     <div>
-                      <h4 className="text-[11px] font-black uppercase tracking-wider text-text-secondary mb-1">
+                      <h4 className="text-[11px] font-extrabold uppercase tracking-wider text-text-secondary mb-1">
                         Avantage exclusif
                       </h4>
                       <p className="text-[11px] text-text-secondary leading-relaxed line-clamp-3 font-medium">
@@ -390,7 +390,7 @@ export default function Offers({ navigate }) {
                     </div>
 
                     <div>
-                      <h4 className="text-[11px] font-black uppercase tracking-wider text-text-secondary mb-1">
+                      <h4 className="text-[11px] font-extrabold uppercase tracking-wider text-text-secondary mb-1">
                         Conditions d'accès
                       </h4>
                       <p className="text-[11px] text-text-muted leading-relaxed line-clamp-2">
@@ -402,20 +402,20 @@ export default function Offers({ navigate }) {
 
                 {/* Footer Info & Application CTA */}
                 <div className="flex justify-between items-center pt-4 border-t border-border-subtle">
-                  <div className="flex items-center gap-1.5 text-xs text-ember font-black">
+                  <div className="flex items-center gap-1.5 text-xs text-ember font-extrabold">
                     <Sparkles className="w-4 h-4 text-ember" />
                     <span>{opt.salary}</span>
                   </div>
 
                   {appliedOpportunityIds.has(opt.id) ? (
-                    <span className="px-4 py-2 text-[11px] font-black uppercase tracking-wider text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 rounded-xl flex items-center gap-1.5">
+                    <span className="px-4 py-2 text-[11px] font-extrabold uppercase tracking-wider text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 rounded-xl flex items-center gap-1.5">
                       Offre activée
                       <CheckCircle2 className="w-3.5 h-3.5" />
                     </span>
                   ) : (
                     <button
                       onClick={() => openApplyModal(opt)}
-                      className="px-4 py-2 text-[11px] font-black uppercase tracking-wider text-white transition-all rounded-xl shadow-lg flex items-center gap-1.5 cursor-pointer bg-ember hover:bg-ember-deep shadow-ember/15"
+                      className="px-4 py-2 text-[11px] font-extrabold uppercase tracking-wider text-white transition-all rounded-xl shadow-lg flex items-center gap-1.5 cursor-pointer bg-ember hover:bg-ember-deep shadow-ember/15"
                     >
                       En profiter
                       <ArrowRight className="w-3.5 h-3.5" />
@@ -427,12 +427,12 @@ export default function Offers({ navigate }) {
           </motion.div>
         ) : (
           /* Empty state */
-          <div className="text-center py-20 glass-panel border border-border-subtle rounded-3xl flex flex-col items-center justify-center gap-4 max-w-xl mx-auto">
+          <div className="text-center py-20 glass-panel border border-border-subtle chamfer flex flex-col items-center justify-center gap-4 max-w-xl mx-auto">
             <div className="w-16 h-16 rounded-full bg-bg-tertiary flex items-center justify-center text-text-muted">
               <Briefcase className="w-8 h-8" />
             </div>
             <div>
-              <h3 className="text-lg font-black text-text-primary">Aucune offre active</h3>
+              <h3 className="text-lg font-extrabold text-text-primary">Aucune offre active</h3>
               <p className="text-xs text-text-secondary mt-1">Ajustez vos termes de recherche ou sélectionnez une autre catégorie d'offre.</p>
             </div>
           </div>
@@ -456,7 +456,7 @@ export default function Offers({ navigate }) {
               initial={{ opacity: 0, scale: 0.95, y: 15 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 15 }}
-              className="glass-panel border border-border-subtle rounded-3xl p-8 max-w-lg w-full relative bg-bg-secondary/90 backdrop-blur-2xl shadow-2xl z-10 flex flex-col gap-6"
+              className="glass-panel border border-border-subtle chamfer p-8 max-w-lg w-full relative bg-bg-secondary shadow-2xl z-10 flex flex-col gap-6"
               role="dialog"
               aria-modal="true"
             >
@@ -469,7 +469,7 @@ export default function Offers({ navigate }) {
               </button>
 
               <div className="space-y-1">
-                <h3 className="text-xl font-black text-text-primary tracking-tight leading-tight">
+                <h3 className="text-xl font-extrabold text-text-primary tracking-tight leading-tight">
                   Bénéficier de l'offre partenaire
                 </h3>
                 <p className="text-xs text-text-secondary leading-relaxed">
@@ -487,7 +487,7 @@ export default function Offers({ navigate }) {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="flex flex-col gap-1.5">
-                    <label htmlFor="student-name" className="text-[11px] font-black uppercase tracking-wider text-text-secondary">Nom Complet</label>
+                    <label htmlFor="student-name" className="text-[11px] font-extrabold uppercase tracking-wider text-text-secondary">Nom Complet</label>
                     <div className="relative">
                       <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted" />
                       <input
@@ -503,7 +503,7 @@ export default function Offers({ navigate }) {
                   </div>
 
                   <div className="flex flex-col gap-1.5">
-                    <label htmlFor="student-email" className="text-[11px] font-black uppercase tracking-wider text-text-secondary">Email de contact</label>
+                    <label htmlFor="student-email" className="text-[11px] font-extrabold uppercase tracking-wider text-text-secondary">Email de contact</label>
                     <div className="relative">
                       <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted" />
                       <input
@@ -519,7 +519,7 @@ export default function Offers({ navigate }) {
                 </div>
 
                 <div className="flex flex-col gap-1.5">
-                  <label htmlFor="student-achievements" className="text-[11px] font-black uppercase tracking-wider text-text-secondary">
+                  <label htmlFor="student-achievements" className="text-[11px] font-extrabold uppercase tracking-wider text-text-secondary">
                     Motivations & Justification de la demande d'avantage
                   </label>
                   <textarea
@@ -534,10 +534,10 @@ export default function Offers({ navigate }) {
                 </div>
 
                 <div className="flex flex-col gap-1.5">
-                  <span className="text-[11px] font-black uppercase tracking-wider text-text-secondary">
+                  <span className="text-[11px] font-extrabold uppercase tracking-wider text-text-secondary">
                     Justificatif d'adhésion / Carte d'étudiant
                   </span>
-                  <div className="border border-dashed border-border-subtle rounded-2xl p-4 bg-bg-secondary/60 text-center flex flex-col items-center justify-center gap-2 hover:border-engine/40 hover:bg-bg-secondary transition-colors cursor-pointer relative">
+                  <div className="border border-dashed border-border-subtle chamfer-sm p-4 bg-bg-secondary text-center flex flex-col items-center justify-center gap-2 hover:border-engine/40 hover:bg-bg-tertiary transition-colors cursor-pointer relative">
                     <FileText className="w-6 h-6 text-ember" />
                     <div>
                       <p className="text-[11px] text-text-primary font-bold">
@@ -564,13 +564,13 @@ export default function Offers({ navigate }) {
                   <button
                     type="button"
                     onClick={closeApplyModal}
-                    className="flex-1 py-3 rounded-xl border border-border-subtle bg-bg-secondary hover:bg-bg-tertiary text-xs font-black uppercase text-text-secondary tracking-wider cursor-pointer"
+                    className="flex-1 py-3 rounded-xl border border-border-subtle bg-bg-secondary hover:bg-bg-tertiary text-xs font-extrabold uppercase text-text-secondary tracking-wider cursor-pointer"
                   >
                     Annuler
                   </button>
                   <button
                     type="submit"
-                    className="flex-1 py-3 rounded-xl text-white text-xs font-black uppercase tracking-wider shadow-lg cursor-pointer bg-ember hover:bg-ember-deep shadow-ember/20"
+                    className="flex-1 py-3 rounded-xl text-white text-xs font-extrabold uppercase tracking-wider shadow-lg cursor-pointer bg-ember hover:bg-ember-deep shadow-ember/20"
                   >
                     Activer l'offre
                   </button>
@@ -598,7 +598,7 @@ export default function Offers({ navigate }) {
               initial={{ opacity: 0, scale: 0.95, y: 15 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 15 }}
-              className="glass-panel border border-border-subtle rounded-3xl p-8 max-w-xl w-full relative bg-bg-secondary/90 backdrop-blur-2xl shadow-2xl z-10 flex flex-col gap-6"
+              className="glass-panel border border-border-subtle chamfer p-8 max-w-xl w-full relative bg-bg-secondary shadow-2xl z-10 flex flex-col gap-6"
               role="dialog"
               aria-modal="true"
             >
@@ -611,7 +611,7 @@ export default function Offers({ navigate }) {
               </button>
 
               <div className="space-y-1">
-                <h3 className="text-xl font-black text-text-primary tracking-tight leading-tight">
+                <h3 className="text-xl font-extrabold text-text-primary tracking-tight leading-tight">
                   Proposer une exclusivité partenaire
                 </h3>
                 <p className="text-xs text-text-secondary leading-relaxed">
@@ -629,7 +629,7 @@ export default function Offers({ navigate }) {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="flex flex-col gap-1.5">
-                    <label htmlFor="publish-title" className="text-[11px] font-black uppercase tracking-wider text-text-secondary">Titre de l'Offre</label>
+                    <label htmlFor="publish-title" className="text-[11px] font-extrabold uppercase tracking-wider text-text-secondary">Titre de l'Offre</label>
                     <input
                       ref={publishInputRef}
                       id="publish-title"
@@ -643,7 +643,7 @@ export default function Offers({ navigate }) {
                   </div>
 
                   <div className="flex flex-col gap-1.5">
-                    <label htmlFor="publish-discipline" className="text-[11px] font-black uppercase tracking-wider text-text-secondary">Catégorie</label>
+                    <label htmlFor="publish-discipline" className="text-[11px] font-extrabold uppercase tracking-wider text-text-secondary">Catégorie</label>
                     <input
                       id="publish-discipline"
                       type="text"
@@ -657,7 +657,7 @@ export default function Offers({ navigate }) {
                 </div>
 
                 <div className="flex flex-col gap-1.5">
-                  <label htmlFor="publish-salary" className="text-[11px] font-black uppercase tracking-wider text-text-secondary">Valeur de l'avantage (ex. Remise -50%)</label>
+                  <label htmlFor="publish-salary" className="text-[11px] font-extrabold uppercase tracking-wider text-text-secondary">Valeur de l'avantage (ex. Remise -50%)</label>
                   <input
                     id="publish-salary"
                     type="text"
@@ -670,7 +670,7 @@ export default function Offers({ navigate }) {
                 </div>
 
                 <div className="flex flex-col gap-1.5">
-                  <label htmlFor="publish-desc" className="text-[11px] font-black uppercase tracking-wider text-text-secondary">Description détaillée de l'avantage</label>
+                  <label htmlFor="publish-desc" className="text-[11px] font-extrabold uppercase tracking-wider text-text-secondary">Description détaillée de l'avantage</label>
                   <textarea
                     id="publish-desc"
                     rows="3"
@@ -683,7 +683,7 @@ export default function Offers({ navigate }) {
                 </div>
 
                 <div className="flex flex-col gap-1.5">
-                  <label htmlFor="publish-req" className="text-[11px] font-black uppercase tracking-wider text-text-secondary">Conditions d'éligibilité / Justificatifs requis</label>
+                  <label htmlFor="publish-req" className="text-[11px] font-extrabold uppercase tracking-wider text-text-secondary">Conditions d'éligibilité / Justificatifs requis</label>
                   <textarea
                     id="publish-req"
                     rows="2"
@@ -699,13 +699,13 @@ export default function Offers({ navigate }) {
                   <button
                     type="button"
                     onClick={closePublishModal}
-                    className="flex-1 py-3 rounded-xl border border-border-subtle bg-bg-secondary hover:bg-bg-tertiary text-xs font-black uppercase text-text-secondary tracking-wider cursor-pointer"
+                    className="flex-1 py-3 rounded-xl border border-border-subtle bg-bg-secondary hover:bg-bg-tertiary text-xs font-extrabold uppercase text-text-secondary tracking-wider cursor-pointer"
                   >
                     Annuler
                   </button>
                   <button
                     type="submit"
-                    className="flex-1 py-3 rounded-xl bg-ember hover:bg-ember-deep text-white text-xs font-black uppercase tracking-wider shadow-lg shadow-ember/20 cursor-pointer"
+                    className="flex-1 py-3 rounded-xl bg-ember hover:bg-ember-deep text-white text-xs font-extrabold uppercase tracking-wider shadow-lg shadow-ember/20 cursor-pointer"
                   >
                     Créer l'exclusivité
                   </button>

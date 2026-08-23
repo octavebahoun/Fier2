@@ -317,7 +317,7 @@ export default function CommandPalette({ navigate }) {
             </div>
 
             {/* Footer / Instructions */}
-            <div className="px-4 py-2 bg-bg-tertiary/50 border-t border-border-subtle flex items-center justify-between text-[11px] text-text-muted">
+            <div className="px-4 py-2 bg-bg-tertiary border-t border-border-subtle flex items-center justify-between text-[11px] text-text-muted">
               <div className="flex items-center gap-3">
                 <span className="flex items-center gap-1">
                   <span className="px-1 py-0.5 bg-bg-tertiary rounded border border-border-subtle">↑↓</span> Naviguer

@@ -42,7 +42,7 @@ export default function PartnersSection({ partenaires }) {
                     <Icon className="w-5 h-5 text-engine" />
                   </div>
                   <div className="flex flex-col gap-1 min-w-0">
-                    <span className="text-sm font-black text-text-primary group-hover:text-engine transition-colors truncate">
+                    <span className="text-sm font-extrabold text-text-primary group-hover:text-engine transition-colors truncate">
                       {partner.name}
                     </span>
                     <span className="text-[11px] font-bold uppercase tracking-wider text-text-muted">

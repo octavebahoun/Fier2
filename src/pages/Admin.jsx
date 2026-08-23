@@ -26,7 +26,7 @@ function Toast({ message, type = 'success', onClose }) {
       animate={{ opacity: 1, y: 0, scale: 1 }}
       exit={{ opacity: 0, y: 16, scale: 0.95 }}
       transition={{ type: 'spring', stiffness: 400, damping: 28 }}
-      className={`fixed bottom-6 right-6 z-[100] flex items-center gap-3 px-5 py-3.5 rounded-2xl shadow-2xl backdrop-blur-md border ${bgClass}`}
+      className={`fixed bottom-6 right-6 z-[100] flex items-center gap-3 px-5 py-3.5 chamfer-sm shadow-2xl backdrop-blur-md border ${bgClass}`}
       role="alert"
       aria-live="polite"
     >
@@ -139,7 +139,7 @@ export default function Admin() {
           <div className="p-2.5 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400">
             <Shield className="w-6 h-6" />
           </div>
-          <span className="text-[11px] font-black tracking-[0.25em] uppercase text-red-400">
+          <span className="text-[11px] font-extrabold tracking-[0.25em] uppercase text-red-400">
             ESPACE DE CONTRÔLE
           </span>
         </div>
@@ -152,7 +152,7 @@ export default function Admin() {
       </div>
 
       {/* Onglets de la console d'administration */}
-      <div className="flex items-center gap-1 p-1 rounded-2xl bg-bg-secondary/60 border border-border-subtle w-fit mb-8">
+      <div className="flex items-center gap-1 p-1 chamfer-sm bg-bg-secondary border border-border-subtle w-fit mb-8">
         {[
           { id: 'moderation', label: 'Comité de lecture', icon: BookOpen },
           { id: 'members', label: 'Membres', icon: Users },
@@ -182,44 +182,44 @@ export default function Admin() {
       <>
       {/* Grid d'administration */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        <div className="glass-panel border border-border-subtle bg-bg-secondary/40 p-6 rounded-2xl">
+        <div className="glass-panel border border-border-subtle bg-bg-secondary p-6 chamfer-sm">
           <div className="flex justify-between items-start mb-4">
             <div className="p-2 rounded-lg bg-indigo-500/10 border border-indigo-500/30 text-indigo-400">
               <Users className="w-5 h-5" />
             </div>
-            <span className="text-[11px] font-black uppercase tracking-wider text-text-secondary">Membres</span>
+            <span className="text-[11px] font-extrabold uppercase tracking-wider text-text-secondary">Membres</span>
           </div>
-          <h3 className="text-2xl font-black text-text-primary">1 240</h3>
+          <h3 className="text-2xl font-extrabold text-text-primary">1 240</h3>
           <p className="text-[11px] text-text-secondary mt-1">Utilisateurs inscrits sur la plateforme</p>
         </div>
 
-        <div className="glass-panel border border-border-subtle bg-bg-secondary/40 p-6 rounded-2xl">
+        <div className="glass-panel border border-border-subtle bg-bg-secondary p-6 chamfer-sm">
           <div className="flex justify-between items-start mb-4">
             <div className="p-2 rounded-lg bg-emerald-500/10 border border-emerald-500/30 text-emerald-400">
               <CheckCircle className="w-5 h-5" />
             </div>
-            <span className="text-[11px] font-black uppercase tracking-wider text-text-secondary">Publications</span>
+            <span className="text-[11px] font-extrabold uppercase tracking-wider text-text-secondary">Publications</span>
           </div>
-          <h3 className="text-2xl font-black text-text-primary">{approvedCount} Approuvées</h3>
+          <h3 className="text-2xl font-extrabold text-text-primary">{approvedCount} Approuvées</h3>
           <p className="text-[11px] text-text-secondary mt-1">
             {pendingArticles.length} en attente de comité de lecture
           </p>
         </div>
 
-        <div className="glass-panel border border-border-subtle bg-bg-secondary/40 p-6 rounded-2xl">
+        <div className="glass-panel border border-border-subtle bg-bg-secondary p-6 chamfer-sm">
           <div className="flex justify-between items-start mb-4">
             <div className="p-2 rounded-lg bg-amber-500/10 border border-amber-500/30 text-amber-400">
               <AlertTriangle className="w-5 h-5" />
             </div>
-            <span className="text-[11px] font-black uppercase tracking-wider text-text-secondary">Système</span>
+            <span className="text-[11px] font-extrabold uppercase tracking-wider text-text-secondary">Système</span>
           </div>
-          <h3 className="text-2xl font-black text-text-primary">100% En Ligne</h3>
+          <h3 className="text-2xl font-extrabold text-text-primary">100% En Ligne</h3>
           <p className="text-[11px] text-text-secondary mt-1">Base de données hybride locale</p>
         </div>
       </div>
 
       {/* Comité de lecture Section */}
-      <div className="glass-panel border border-border-subtle bg-bg-secondary/30 rounded-3xl p-6 md:p-8">
+      <div className="glass-panel border border-border-subtle bg-bg-secondary chamfer p-6 md:p-8">
         <div className="flex items-center justify-between border-b border-border-subtle pb-6 mb-6">
           <div>
             <h2 className="text-xl font-bold text-text-primary flex items-center gap-2">
@@ -259,7 +259,7 @@ export default function Admin() {
                   layout
                   initial={{ opacity: 0, y: 15 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="border border-border-subtle/80 bg-bg-secondary/40 rounded-2xl overflow-hidden transition-colors hover:border-indigo-500/20"
+                  className="border border-border-subtle/80 bg-bg-secondary chamfer-sm overflow-hidden transition-colors hover:border-indigo-500/20"
                 >
                   {/* Article Summary Row */}
                   <div className="p-5 flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -289,7 +289,7 @@ export default function Admin() {
                     <div className="flex items-center gap-2 shrink-0 self-end md:self-center">
                       <button
                         onClick={() => toggleExpand(article.id)}
-                        className={`p-2.5 rounded-xl border border-border-subtle hover:text-text-primary hover:bg-bg-tertiary transition-all cursor-pointer flex items-center gap-1.5 text-xs text-text-secondary font-bold ${isExpanded ? 'bg-bg-tertiary' : ''}`}
+                        className={`p-2.5 rounded-xl border border-border-subtle hover:text-text-primary hover:bg-bg-tertiary transition-all cursor-pointer flex items-center gap-1.5 text-xs text-text-secondary font-bold ${isExpanded ? 'bg-bg-secondary' : ''}`}
                       >
                         {isExpanded ? (
                           <>
@@ -331,7 +331,7 @@ export default function Admin() {
                         initial={{ height: 0 }}
                         animate={{ height: "auto" }}
                         exit={{ height: 0 }}
-                        className="overflow-hidden border-t border-border-subtle bg-bg-primary/20"
+                        className="overflow-hidden border-t border-border-subtle bg-bg-primary"
                       >
                         <div className="p-6 md:p-8 space-y-6">
                           {/* Image and core info block */}
@@ -344,7 +344,7 @@ export default function Admin() {
                             <div className="flex-1 space-y-4">
                               <div>
                                 <h4 className="text-xs font-bold text-text-secondary uppercase tracking-wider mb-1">Résumé de pre-visualisation</h4>
-                                <p className="text-xs text-text-primary leading-relaxed bg-bg-secondary/40 p-3.5 rounded-xl border border-border-subtle">
+                                <p className="text-xs text-text-primary leading-relaxed bg-bg-secondary p-3.5 rounded-xl border border-border-subtle">
                                   {article.excerpt}
                                 </p>
                               </div>
@@ -354,7 +354,7 @@ export default function Admin() {
                           {/* Full text body */}
                           <div>
                             <h4 className="text-xs font-bold text-text-secondary uppercase tracking-wider mb-2">Contenu de la publication</h4>
-                            <div className="text-xs md:text-sm text-text-secondary bg-bg-secondary/20 p-5 rounded-2xl border border-border-subtle leading-relaxed whitespace-pre-wrap">
+                            <div className="text-xs md:text-sm text-text-secondary bg-bg-secondary p-5 chamfer-sm border border-border-subtle leading-relaxed whitespace-pre-wrap">
                               {article.content || "Aucun contenu étendu fourni."}
                             </div>
                           </div>

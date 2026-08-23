@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import { Routes, Route, Navigate, useLocation, useParams } from 'react-router-dom'
-import './App.css'
 import AppLayout from './components/layout/AppLayout.jsx'
 import ProtectedRoute from './components/ProtectedRoute.jsx'
 import { useAuth } from './context/AuthContext.jsx'

@@ -81,7 +81,7 @@ function LiveModal({ event, onClose }) {
             animate={{ scale: 1, opacity: 1, y: 0 }}
             exit={{ scale: 0.9, opacity: 0, y: 20 }}
             transition={{ ease: [0.16, 1, 0.3, 1], duration: 0.35 }}
-            className="relative bg-bg-secondary/95 border border-border-subtle rounded-2xl shadow-2xl
+            className="relative bg-bg-secondary border border-border-subtle chamfer-sm shadow-2xl
               w-full max-w-3xl mx-4 overflow-hidden pointer-events-auto"
           >
             {/* Header */}
@@ -150,7 +150,7 @@ function RegistrantsModal({ state, onClose }) {
             animate={{ scale: 1, opacity: 1, y: 0 }}
             exit={{ scale: 0.9, opacity: 0, y: 20 }}
             transition={{ ease: [0.16, 1, 0.3, 1], duration: 0.35 }}
-            className="relative glass-panel bg-bg-secondary/95 border border-border-subtle rounded-2xl shadow-2xl
+            className="relative glass-panel bg-bg-secondary border border-border-subtle chamfer-sm shadow-2xl
               w-full max-w-lg mx-4 overflow-hidden pointer-events-auto max-h-[80vh] flex flex-col"
           >
             {/* Header */}
@@ -244,7 +244,7 @@ function EventCard({ event, user, onRegister, onLiveAccess, isRegistering, canMa
       initial={{ opacity: 0, y: 24 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ ease: [0.16, 1, 0.3, 1], duration: 0.5 }}
-      className="glass-panel rounded-2xl border border-border-subtle overflow-hidden
+      className="glass-panel chamfer-sm border border-border-subtle overflow-hidden
         hover:-translate-y-1 transition-transform duration-200 flex flex-col"
     >
       {/* Card Header */}
@@ -340,7 +340,7 @@ function EventCard({ event, user, onRegister, onLiveAccess, isRegistering, canMa
             className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold
               transition-all duration-200 cursor-pointer
               ${!user
-                ? 'bg-bg-tertiary border border-border-subtle text-text-primary hover:bg-bg-tertiary hover:border-engine/50'
+                ? 'bg-bg-secondary border border-border-subtle text-text-primary hover:bg-bg-tertiary hover:border-engine/50'
                 : 'bg-engine text-white hover:bg-engine/90 active:scale-95 shadow-lg shadow-engine/20'
               }`}
           >
@@ -396,7 +396,7 @@ function EventCard({ event, user, onRegister, onLiveAccess, isRegistering, canMa
               id={`registrants-btn-${event.id}`}
               onClick={() => onViewRegistrants(event)}
               className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold
-                bg-bg-tertiary border border-border-subtle text-text-primary hover:bg-bg-tertiary
+                bg-bg-secondary border border-border-subtle text-text-primary hover:bg-bg-tertiary
                 hover:border-engine/50 transition-all duration-200 active:scale-95 cursor-pointer"
             >
               <ListChecks size={15} className="text-engine" />
@@ -596,21 +596,21 @@ export default function Events({ navigate }) {
           {/* Quick stats */}
           <div className="flex flex-wrap gap-6 mt-8">
             <div className="flex items-center gap-2.5 px-4 py-2.5 rounded-xl
-              bg-bg-secondary/60 border border-border-subtle">
+              bg-bg-secondary border border-border-subtle">
               <Radio size={16} className="text-emerald-400" />
               <span className="text-text-secondary text-sm">
                 <span className="text-text-primary font-bold">{liveCount}</span> en direct
               </span>
             </div>
             <div className="flex items-center gap-2.5 px-4 py-2.5 rounded-xl
-              bg-bg-secondary/60 border border-border-subtle">
+              bg-bg-secondary border border-border-subtle">
               <Users size={16} className="text-engine" />
               <span className="text-text-secondary text-sm">
                 <span className="text-text-primary font-bold">{totalParticipants.toLocaleString()}</span> participants
               </span>
             </div>
             <div className="flex items-center gap-2.5 px-4 py-2.5 rounded-xl
-              bg-bg-secondary/60 border border-border-subtle">
+              bg-bg-secondary border border-border-subtle">
               <Calendar size={16} className="text-engine" />
               <span className="text-text-secondary text-sm">
                 <span className="text-text-primary font-bold">{events.length}</span> événements
@@ -652,7 +652,7 @@ export default function Events({ navigate }) {
         {isLoading && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {[0, 1].map(i => (
-              <div key={i} className="glass-panel rounded-2xl border border-border-subtle p-6 animate-pulse">
+              <div key={i} className="glass-panel chamfer-sm border border-border-subtle p-6 animate-pulse">
                 <div className="h-4 w-24 bg-text-primary/10 rounded mb-4" />
                 <div className="h-6 w-3/4 bg-text-primary/10 rounded mb-2" />
                 <div className="h-4 w-1/2 bg-text-primary/10 rounded mb-6" />

@@ -171,7 +171,7 @@ export default function JournalCarousel({ navigate }) {
                 className={`px-4 py-2 rounded-full text-xs font-bold transition-all cursor-pointer whitespace-nowrap flex items-center gap-2 border ${
                   isActive
                     ? 'bg-engine text-white border-engine'
-                    : 'bg-bg-secondary/70 text-text-secondary border-border-subtle hover:text-text-primary hover:bg-bg-secondary'
+                    : 'bg-bg-secondary/70 text-text-secondary border-border-subtle hover:text-text-primary hover:bg-bg-tertiary'
                 }`}
               >
                 {cat.icon && <cat.icon className="w-3.5 h-3.5" style={{ color: isActive ? '#fff' : cat.color }} />}
@@ -186,14 +186,14 @@ export default function JournalCarousel({ navigate }) {
           <button
             onClick={() => scrollByStep(-1)}
             aria-label="Précédent"
-            className="p-3 rounded-full bg-bg-secondary/80 border border-border-subtle text-text-secondary hover:text-text-primary hover:bg-bg-secondary backdrop-blur-md transition-all cursor-pointer"
+            className="p-3 rounded-full bg-bg-secondary/80 border border-border-subtle text-text-secondary hover:text-text-primary hover:bg-bg-tertiary backdrop-blur-md transition-all cursor-pointer"
           >
             <ChevronLeft className="w-5 h-5" />
           </button>
           <button
             onClick={() => scrollByStep(1)}
             aria-label="Suivant"
-            className="p-3 rounded-full bg-bg-secondary/80 border border-border-subtle text-text-secondary hover:text-text-primary hover:bg-bg-secondary backdrop-blur-md transition-all cursor-pointer"
+            className="p-3 rounded-full bg-bg-secondary/80 border border-border-subtle text-text-secondary hover:text-text-primary hover:bg-bg-tertiary backdrop-blur-md transition-all cursor-pointer"
           >
             <ChevronRight className="w-5 h-5" />
           </button>

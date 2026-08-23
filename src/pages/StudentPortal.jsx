@@ -75,7 +75,7 @@ export default function StudentPortal({ navigate }) {
             <div className="p-2.5 rounded-xl bg-engine/10 border border-engine/20 text-engine">
               <GraduationCap className="w-5 h-5" />
             </div>
-            <span className="text-[11px] font-black tracking-[0.25em] uppercase text-engine">
+            <span className="text-[11px] font-extrabold tracking-[0.25em] uppercase text-engine">
               PORTAL ÉTUDIANT
             </span>
           </div>
@@ -89,7 +89,7 @@ export default function StudentPortal({ navigate }) {
 
           {/* Bandeau invitation connexion si non connecté */}
           {!user && (
-            <div className="flex items-center gap-4 p-4 rounded-2xl bg-engine/8 border border-engine/20 text-sm mt-2">
+            <div className="flex items-center gap-4 p-4 chamfer-sm bg-engine/8 border border-engine/20 text-sm mt-2">
               <Lock className="w-5 h-5 text-engine shrink-0" />
               <p className="text-text-secondary text-xs">
                 <span className="text-text-primary font-semibold">Connectez-vous</span> pour rejoindre des clubs, vous inscrire aux ateliers et accéder à votre tableau de bord.
@@ -114,16 +114,16 @@ export default function StudentPortal({ navigate }) {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.1, type: 'spring', stiffness: 100, damping: 15 }}
                 onClick={() => navigate(section.link)}
-                className="glass-panel rounded-3xl p-7 border border-border-subtle text-left group cursor-pointer relative overflow-hidden"
+                className="glass-panel chamfer p-7 border border-border-subtle text-left group cursor-pointer relative overflow-hidden"
                 whileHover={{ y: -4 }}
               >
                 <div
-                  className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none rounded-3xl"
+                  className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none chamfer"
                   style={{ background: `radial-gradient(ellipse at top, ${section.color}15, transparent 70%)` }}
                 />
                 <div className="relative z-10 flex flex-col gap-5">
                   <div
-                    className="w-12 h-12 rounded-2xl flex items-center justify-center"
+                    className="w-12 h-12 chamfer-sm flex items-center justify-center"
                     style={{ background: `${section.color}20`, border: `1px solid ${section.color}40` }}
                   >
                     <Icon className="w-5 h-5" style={{ color: section.color }} />
@@ -153,13 +153,13 @@ export default function StudentPortal({ navigate }) {
         </div>
 
         {clubs.length > 0 && (
-          <div className="glass-panel rounded-3xl p-8 border border-border-subtle relative overflow-hidden">
+          <div className="glass-panel chamfer p-8 border border-border-subtle relative overflow-hidden">
             <div className="absolute top-0 right-0 w-64 h-64 bg-engine/5 blur-[60px] rounded-full pointer-events-none" />
             <div className="relative z-10 flex flex-col gap-6">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <Users className="w-5 h-5 text-engine" />
-                  <h2 className="text-lg font-black tracking-tight text-text-primary">
+                  <h2 className="text-lg font-extrabold tracking-tight text-text-primary">
                     CITE populaires
                   </h2>
                 </div>
@@ -181,7 +181,7 @@ export default function StudentPortal({ navigate }) {
                       initial={{ opacity: 0, y: 16 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: 0.1 * i }}
-                      className="bg-bg-tertiary border border-border-subtle rounded-2xl p-5 flex items-center gap-4 group hover:bg-bg-tertiary transition-all cursor-pointer"
+                      className="bg-bg-secondary border border-border-subtle chamfer-sm p-5 flex items-center gap-4 group hover:bg-bg-tertiary transition-all cursor-pointer"
                       onClick={() => navigate('clubs')}
                     >
                       <div
@@ -202,7 +202,7 @@ export default function StudentPortal({ navigate }) {
           </div>
         )}
 
-        <div className="mt-12 glass-panel rounded-3xl p-8 border border-border-subtle flex flex-col md:flex-row items-center justify-between gap-6 relative overflow-hidden">
+        <div className="mt-12 glass-panel chamfer p-8 border border-border-subtle flex flex-col md:flex-row items-center justify-between gap-6 relative overflow-hidden">
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-ember/5 blur-[60px] rounded-full pointer-events-none" />
           <div className="relative z-10 flex flex-col gap-2">
             <h3 className="text-lg font-extrabold text-text-primary flex items-center gap-2">
@@ -215,7 +215,7 @@ export default function StudentPortal({ navigate }) {
           </div>
           <button
             onClick={() => navigate('auth')}
-            className="relative z-10 px-6 py-3 rounded-2xl text-xs font-bold text-white bg-engine hover:bg-engine/90 shadow-lg shadow-engine/20 transition-all cursor-pointer shrink-0"
+            className="relative z-10 px-6 py-3 chamfer-sm text-xs font-bold text-white bg-engine hover:bg-engine/90 shadow-lg shadow-engine/20 transition-all cursor-pointer shrink-0"
           >
             Commencer
           </button>

@@ -140,7 +140,7 @@ export default function ResearchersCarousel({ navigate }) {
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-2">
           <Sparkles className="w-4 h-4 text-engine animate-pulse" />
-          <h2 className="text-sm font-black tracking-widest text-text-muted uppercase">
+          <h2 className="text-sm font-extrabold tracking-widest text-text-muted uppercase">
             Membres d'Élite R&D
           </h2>
         </div>
@@ -215,7 +215,7 @@ export default function ResearchersCarousel({ navigate }) {
                 </div>
 
                 <div className="flex flex-col gap-1 overflow-hidden">
-                  <h3 className="text-base font-black text-text-primary group-hover:text-engine transition-colors truncate">
+                  <h3 className="text-base font-extrabold text-text-primary group-hover:text-engine transition-colors truncate">
                     {researcher.name}
                   </h3>
                   <span className="text-[11px] font-bold text-engine tracking-wide uppercase truncate">
@@ -238,7 +238,7 @@ export default function ResearchersCarousel({ navigate }) {
               {/* Card Bottom: Stats & Button */}
               <div className="flex items-center justify-between relative z-10 gap-3">
                 {/* Horizontal Stats */}
-                <div className="flex items-center gap-4 text-[11px] text-text-muted font-black uppercase">
+                <div className="flex items-center gap-4 text-[11px] text-text-muted font-extrabold uppercase">
                   <div className="flex items-center gap-1.5">
                     <BookOpen className="w-3.5 h-3.5 text-engine/80" />
                     <span>{researcher.publicationsCount} Pubs</span>

@@ -40,7 +40,7 @@ function Toast({ message, type = 'success', onClose }) {
       animate={{ opacity: 1, y: 0, scale: 1 }}
       exit={{ opacity: 0, y: 16, scale: 0.95 }}
       transition={{ type: 'spring', stiffness: 400, damping: 28 }}
-      className={`fixed bottom-6 right-6 z-[100] flex items-center gap-3 px-5 py-3.5 rounded-2xl shadow-2xl backdrop-blur-md border ${bgClass}`}
+      className={`fixed bottom-6 right-6 z-[100] flex items-center gap-3 px-5 py-3.5 chamfer-sm shadow-2xl backdrop-blur-md border ${bgClass}`}
       role="alert"
       aria-live="polite"
     >
@@ -71,23 +71,23 @@ function JoinConfirmModal({ club, onConfirm, onCancel }) {
         exit={{ opacity: 0, scale: 0.92, y: 20 }}
         transition={{ type: 'spring', stiffness: 380, damping: 28 }}
         onClick={(e) => e.stopPropagation()}
-        className="relative w-full max-w-md rounded-3xl border p-8 shadow-2xl backdrop-blur-xl"
+        className="relative w-full max-w-md chamfer border p-8 shadow-2xl"
         style={{
-          background: 'var(--panel-glass-strong)',
+          background: 'var(--color-bg-secondary)',
           borderColor: `${club.accent}40`,
           boxShadow: `0 0 60px ${club.accent}20`,
         }}
       >
         {/* Glow accent */}
         <div
-          className="absolute inset-0 rounded-3xl pointer-events-none"
+          className="absolute inset-0 chamfer pointer-events-none"
           style={{ background: `radial-gradient(ellipse at 50% 0%, ${club.accent}12 0%, transparent 65%)` }}
         />
 
         {/* Icone + titre */}
         <div className="flex items-center gap-4 mb-6 relative z-10">
           <div
-            className="w-14 h-14 rounded-2xl flex items-center justify-center shrink-0"
+            className="w-14 h-14 chamfer-sm flex items-center justify-center shrink-0"
             style={{ background: `${club.accent}1A`, border: `1.5px solid ${club.accent}50` }}
           >
             <Icon className="w-7 h-7" style={{ color: club.accent }} />
@@ -117,7 +117,7 @@ function JoinConfirmModal({ club, onConfirm, onCancel }) {
         <div className="flex gap-3 relative z-10">
           <button
             onClick={onCancel}
-            className="flex-1 py-3 rounded-xl text-xs font-bold text-text-secondary bg-bg-tertiary border border-border-subtle hover:bg-bg-tertiary transition-all"
+            className="flex-1 py-3 rounded-xl text-xs font-bold text-text-secondary bg-bg-secondary border border-border-subtle hover:bg-bg-tertiary transition-all"
           >
             Annuler
           </button>
@@ -153,9 +153,9 @@ function ClubCard({ club, user, navigate, onJoin, onLeave, isPending, joiningId,
   return (
     <motion.div
       whileHover={{ y: -4, transition: { duration: 0.2, ease: [0.16, 1, 0.3, 1] } }}
-      className="relative flex flex-col rounded-2xl overflow-hidden backdrop-blur-xl border"
+      className="relative flex flex-col chamfer-sm overflow-hidden border"
       style={{
-        background: 'var(--panel-glass)',
+        background: 'var(--color-bg-secondary)',
         borderColor: `${club.accent}38`,
         boxShadow: `0 4px 32px ${club.accent}12`,
       }}
@@ -313,7 +313,7 @@ function ClubCard({ club, user, navigate, onJoin, onLeave, isPending, joiningId,
           <div className="pt-4 border-t border-border-subtle space-y-2">
             <button
               onClick={() => setShowManage(!showManage)}
-              className="flex items-center justify-between w-full px-3 py-2 rounded-lg bg-bg-tertiary border border-border-subtle text-xs font-bold text-text-secondary hover:text-text-primary hover:bg-bg-tertiary transition-all"
+              className="flex items-center justify-between w-full px-3 py-2 rounded-lg bg-bg-secondary border border-border-subtle text-xs font-bold text-text-secondary hover:text-text-primary hover:bg-bg-tertiary transition-all"
             >
               <div className="flex items-center gap-1.5">
                 <ShieldCheck className="w-4 h-4 text-emerald-400" />
@@ -341,7 +341,7 @@ function ClubCard({ club, user, navigate, onJoin, onLeave, isPending, joiningId,
                       {pendingMembers.map((req) => (
                         <div
                           key={req.id}
-                          className="flex items-center justify-between p-2 rounded-lg bg-white/[0.02] border border-border-subtle text-[11px]"
+                          className="flex items-center justify-between p-2 rounded-lg bg-bg-tertiary border border-border-subtle text-[11px]"
                         >
                           <div className="min-w-0 flex-1 pr-2">
                             {(() => {
@@ -573,7 +573,7 @@ export default function ResearchClubs({ navigate }) {
         {/* ── Bandeau invitation connexion (visiteur) ── */}
         {!user && (
           <FadeInWhenVisible direction="up" delay={0.1}>
-            <div className="mb-10 flex items-center gap-4 p-4 rounded-2xl bg-engine/8 border border-engine/20 text-sm">
+            <div className="mb-10 flex items-center gap-4 p-4 chamfer-sm bg-engine/8 border border-engine/20 text-sm">
               <Lock className="w-5 h-5 text-engine shrink-0" />
               <p className="text-text-secondary">
                 <span className="text-text-primary font-semibold">Connectez-vous</span> pour rejoindre
@@ -620,7 +620,7 @@ export default function ResearchClubs({ navigate }) {
 
         {/* ── Section CTA bas de page ── */}
         <FadeInWhenVisible direction="up" delay={0.15}>
-          <div className="mt-16 text-center p-8 rounded-3xl bg-white/[0.03] border border-white/8">
+          <div className="mt-16 text-center p-8 chamfer bg-bg-tertiary border border-white/8">
             <p className="text-text-secondary text-sm leading-relaxed max-w-xl mx-auto">
               Chaque club dispose de ses propres projets de recherche, ateliers et publications.
               Explorez les{' '}

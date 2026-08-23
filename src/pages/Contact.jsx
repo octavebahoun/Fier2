@@ -28,7 +28,7 @@ function Toast({ message, onClose }) {
       animate={{ opacity: 1, y: 0, scale: 1 }}
       exit={{ opacity: 0, y: 16, scale: 0.95 }}
       transition={{ type: 'spring', stiffness: 400, damping: 28 }}
-      className="fixed bottom-6 right-6 z-[100] flex items-center gap-3 bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 px-5 py-3.5 rounded-2xl shadow-2xl backdrop-blur-md"
+      className="fixed bottom-6 right-6 z-[100] flex items-center gap-3 bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 px-5 py-3.5 chamfer-sm shadow-2xl backdrop-blur-md"
       role="alert"
       aria-live="polite"
     >
@@ -70,7 +70,7 @@ const FAQ_ITEMS = [
 // ─────────────────────────── FAQ Item Component ───────────────────────────
 function FAQItem({ item, isOpen, onToggle }) {
   return (
-    <div className="border border-border-subtle rounded-2xl overflow-hidden">
+    <div className="border border-border-subtle chamfer-sm overflow-hidden">
       <button
         onClick={onToggle}
         aria-expanded={isOpen}
@@ -189,7 +189,7 @@ export default function Contact({ navigate }) {
           <div className="p-2 rounded-xl bg-engine/10 border border-engine/20 text-engine">
             <MessageCircle className="w-5 h-5" />
           </div>
-          <span className="text-[11px] font-black tracking-[0.25em] uppercase text-engine">
+          <span className="text-[11px] font-extrabold tracking-[0.25em] uppercase text-engine">
             SUPPORT & AIDE
           </span>
         </div>
@@ -209,7 +209,7 @@ export default function Contact({ navigate }) {
         <div className="lg:col-span-3 flex flex-col gap-4">
           <div className="flex items-center gap-2 mb-2">
             <HelpCircle className="w-4 h-4 text-text-muted" />
-            <h2 className="text-xs font-black uppercase tracking-widest text-text-muted">Questions fréquentes</h2>
+            <h2 className="text-xs font-extrabold uppercase tracking-widest text-text-muted">Questions fréquentes</h2>
           </div>
           {FAQ_ITEMS.map(item => (
             <FAQItem
@@ -222,7 +222,7 @@ export default function Contact({ navigate }) {
 
           {/* Infos de contact directes */}
           <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div className="glass-panel border border-border-subtle p-5 rounded-2xl flex items-start gap-3">
+            <div className="glass-panel border border-border-subtle p-5 chamfer-sm flex items-start gap-3">
               <div className="p-2 rounded-lg bg-engine/10 border border-engine/20 text-engine shrink-0">
                 <Mail className="w-4 h-4" />
               </div>
@@ -231,7 +231,7 @@ export default function Contact({ navigate }) {
                 <p className="text-xs font-bold text-text-primary mt-0.5">contact@fieri.research</p>
               </div>
             </div>
-            <div className="glass-panel border border-border-subtle p-5 rounded-2xl flex items-start gap-3">
+            <div className="glass-panel border border-border-subtle p-5 chamfer-sm flex items-start gap-3">
               <div className="p-2 rounded-lg bg-ember/10 border border-ember/20 text-engine shrink-0">
                 <MapPin className="w-4 h-4" />
               </div>
@@ -249,11 +249,11 @@ export default function Contact({ navigate }) {
             onSubmit={handleSubmit}
             noValidate
             aria-label="Formulaire de contact"
-            className="glass-panel border border-border-subtle rounded-3xl p-8 flex flex-col gap-5 sticky top-24"
+            className="glass-panel border border-border-subtle chamfer p-8 flex flex-col gap-5 sticky top-24"
           >
             <div className="flex items-center gap-2 mb-2">
               <Send className="w-4 h-4 text-engine" />
-              <h2 className="text-xs font-black uppercase tracking-widest text-text-primary">Envoyer un message</h2>
+              <h2 className="text-xs font-extrabold uppercase tracking-widest text-text-primary">Envoyer un message</h2>
             </div>
 
             {/* Champ Nom */}
@@ -271,7 +271,7 @@ export default function Contact({ navigate }) {
                 aria-invalid={!!errors.name}
                 aria-describedby={errors.name ? 'error-name' : undefined}
                 placeholder="Jean Dupont"
-                className={`bg-bg-primary/60 border rounded-xl px-4 py-2.5 text-xs text-text-primary placeholder:text-text-muted transition-all focus:outline-none ${
+                className={`bg-bg-primary border rounded-xl px-4 py-2.5 text-xs text-text-primary placeholder:text-text-muted transition-all focus:outline-none ${
                   user
                     ? 'border-border-subtle text-text-secondary cursor-not-allowed opacity-70'
                     : errors.name
@@ -299,7 +299,7 @@ export default function Contact({ navigate }) {
                 aria-invalid={!!errors.email}
                 aria-describedby={errors.email ? 'error-email' : undefined}
                 placeholder="vous@universite.edu"
-                className={`bg-bg-primary/60 border rounded-xl px-4 py-2.5 text-xs text-text-primary placeholder:text-text-muted transition-all focus:outline-none ${
+                className={`bg-bg-primary border rounded-xl px-4 py-2.5 text-xs text-text-primary placeholder:text-text-muted transition-all focus:outline-none ${
                   user
                     ? 'border-border-subtle text-text-secondary cursor-not-allowed opacity-70'
                     : errors.email
@@ -326,7 +326,7 @@ export default function Contact({ navigate }) {
                 aria-invalid={!!errors.subject}
                 aria-describedby={errors.subject ? 'error-subject' : undefined}
                 placeholder="Demande d'information — Rejoindre un club"
-                className={`bg-bg-primary/60 border rounded-xl px-4 py-2.5 text-xs text-text-primary placeholder:text-text-muted transition-all focus:outline-none ${
+                className={`bg-bg-primary border rounded-xl px-4 py-2.5 text-xs text-text-primary placeholder:text-text-muted transition-all focus:outline-none ${
                   errors.subject
                     ? 'border-red-500/50 focus:border-red-500'
                     : 'border-border-subtle hover:border-engine/30 focus:border-engine'
@@ -352,7 +352,7 @@ export default function Contact({ navigate }) {
                 aria-invalid={!!errors.message}
                 aria-describedby={errors.message ? 'error-message' : undefined}
                 placeholder="Décrivez votre demande en détail..."
-                className={`bg-bg-primary/60 border rounded-xl px-4 py-2.5 text-xs text-text-primary placeholder:text-text-muted transition-all focus:outline-none resize-none leading-relaxed ${
+                className={`bg-bg-primary border rounded-xl px-4 py-2.5 text-xs text-text-primary placeholder:text-text-muted transition-all focus:outline-none resize-none leading-relaxed ${
                   errors.message
                     ? 'border-red-500/50 focus:border-red-500'
                     : 'border-border-subtle hover:border-engine/30 focus:border-engine'
@@ -367,7 +367,7 @@ export default function Contact({ navigate }) {
             <button
               type="submit"
               disabled={sending}
-              className="mt-1 w-full py-3 rounded-xl bg-engine hover:bg-engine/90 text-white text-xs font-black uppercase tracking-widest transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 shadow-lg hover:shadow-engine/20"
+              className="mt-1 w-full py-3 rounded-xl bg-engine hover:bg-engine/90 text-white text-xs font-extrabold uppercase tracking-widest transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 shadow-lg hover:shadow-engine/20"
             >
               {sending ? (
                 <>

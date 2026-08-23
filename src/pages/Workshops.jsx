@@ -30,7 +30,7 @@ function Toast({ message, type = 'success', onClose }) {
       animate={{ opacity: 1, y: 0, scale: 1 }}
       exit={{ opacity: 0, y: 16, scale: 0.95 }}
       transition={{ type: 'spring', stiffness: 400, damping: 28 }}
-      className={`fixed bottom-6 right-6 z-[100] flex items-center gap-3 px-5 py-3.5 rounded-2xl shadow-2xl backdrop-blur-md border ${bgClass}`}
+      className={`fixed bottom-6 right-6 z-[100] flex items-center gap-3 px-5 py-3.5 chamfer-sm shadow-2xl backdrop-blur-md border ${bgClass}`}
       role="alert"
       aria-live="polite"
     >
@@ -51,9 +51,9 @@ function WorkshopCard({ workshop, club, user, onToggleRegister, isToggling, navi
   return (
     <motion.div
       whileHover={{ y: -4, transition: { duration: 0.2, ease: [0.16, 1, 0.3, 1] } }}
-      className="relative flex flex-col rounded-2xl overflow-hidden backdrop-blur-xl border flex-1"
+      className="relative flex flex-col chamfer-sm overflow-hidden border flex-1"
       style={{
-        background: 'var(--panel-glass)',
+        background: 'var(--color-bg-secondary)',
         borderColor: `${clubAccent}30`,
         boxShadow: `0 4px 32px ${clubAccent}08`,
       }}
@@ -79,7 +79,7 @@ function WorkshopCard({ workshop, club, user, onToggleRegister, isToggling, navi
         <div className="space-y-1.5 flex-1 min-w-0">
           <div className="flex flex-wrap items-center gap-2">
             <span 
-              className="text-[11px] font-black uppercase tracking-widest px-2.5 py-0.5 rounded-full"
+              className="text-[11px] font-extrabold uppercase tracking-widest px-2.5 py-0.5 rounded-full"
               style={{
                 background: `${clubAccent}12`,
                 color: clubAccent,
@@ -89,7 +89,7 @@ function WorkshopCard({ workshop, club, user, onToggleRegister, isToggling, navi
               {workshop.level}
             </span>
             {club && (
-              <span className="text-[11px] font-bold text-text-secondary bg-bg-tertiary border border-white/8 px-2.5 py-0.5 rounded-full truncate">
+              <span className="text-[11px] font-bold text-text-secondary bg-bg-tertiary border border-border-subtle px-2.5 py-0.5 rounded-full truncate">
                 {club.kicker}
               </span>
             )}
@@ -122,7 +122,7 @@ function WorkshopCard({ workshop, club, user, onToggleRegister, isToggling, navi
               style={{ 
                 width: `${progressPercent}%`,
                 background: isFull 
-                  ? 'linear-gradient(90deg, var(--color-ember), var(--color-ember-deep))'
+                  ? 'linear-gradient(90deg, var(--color-ember), var(--color-ember-soft))'
                   : `linear-gradient(90deg, ${clubAccent}, ${clubAccent}80)` 
               }}
             />
@@ -135,7 +135,7 @@ function WorkshopCard({ workshop, club, user, onToggleRegister, isToggling, navi
                 Complet (Waitlist Active)
               </span>
             ) : (
-              <span className="text-[11px] text-emerald-400 font-medium bg-emerald-500/10 border border-emerald-500/18 px-2 py-0.5 rounded-full">
+              <span className="text-[11px] text-ember font-medium bg-ember/10 border border-ember/20 px-2 py-0.5 rounded-full">
                 {workshop.placesLeft} places restantes
               </span>
             )}
@@ -171,15 +171,15 @@ function WorkshopCard({ workshop, club, user, onToggleRegister, isToggling, navi
 
         {/* Mini waitlist preview inside card for real-time visual verification (AC 4.4 proof of FIFO) */}
         {workshop.waitlistUsers && workshop.waitlistUsers.length > 0 && (
-          <div className="mt-3 p-2.5 rounded-xl bg-white/[0.02] border border-border-subtle space-y-1">
-            <div className="text-[11px] font-black uppercase tracking-widest text-text-muted">
+          <div className="mt-3 p-2.5 rounded-lg bg-bg-primary border border-border-subtle space-y-1">
+            <div className="text-[11px] font-extrabold uppercase tracking-widest text-text-muted">
               Liste d'attente ordonnée (FIFO) :
             </div>
             <div className="flex flex-col gap-1">
               {workshop.waitlistUsers.slice(0, 3).map((name, i) => (
                 <div key={i} className="flex items-center justify-between text-[11px] text-text-secondary pl-1 font-mono">
                   <span>{i + 1}. {name}</span>
-                  {i === 0 && <span className="text-[11px] text-amber-500 uppercase font-black tracking-wider animate-pulse">Premier en attente</span>}
+                  {i === 0 && <span className="text-[11px] text-amber-500 uppercase font-extrabold tracking-wider animate-pulse">Premier en attente</span>}
                 </div>
               ))}
               {workshop.waitlistUsers.length > 3 && (
@@ -202,8 +202,8 @@ function WorkshopCard({ workshop, club, user, onToggleRegister, isToggling, navi
               whileTap={{ scale: 0.97 }}
               className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl text-sm font-bold text-white transition-all duration-200 cursor-pointer focus:outline-none"
               style={{
-                background: 'linear-gradient(90deg, var(--color-emerald-500), var(--color-emerald-600))',
-                boxShadow: '0 4px 14px rgba(16, 185, 129, 0.25)'
+                background: 'var(--color-engine)',
+                boxShadow: 'none'
               }}
               aria-label={`Se désinscrire de ${workshop.title}`}
             >
@@ -283,7 +283,7 @@ function WorkshopCard({ workshop, club, user, onToggleRegister, isToggling, navi
           <motion.button
             onClick={() => navigate?.('auth')}
             whileTap={{ scale: 0.97 }}
-            className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl text-sm font-bold text-text-secondary bg-bg-tertiary border border-border-subtle hover:bg-white/8 hover:text-text-primary transition-all duration-200 cursor-pointer focus:outline-none"
+            className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl text-sm font-bold text-text-secondary bg-bg-secondary border border-border-subtle hover:bg-bg-tertiary hover:text-text-primary transition-all duration-200 cursor-pointer focus:outline-none"
             aria-label="Connexion requise pour réserver"
           >
             <Lock className="w-4 h-4" />
@@ -405,40 +405,38 @@ export default function Workshops({ navigate }) {
         
         {/* ── Hero / Title Block ── */}
         <PageHeader
-          align="center"
-          tag="Student Hub · Academic Academy"
           icon={GraduationCap}
-          title="Académie Académique"
-          description="Développez des compétences de pointe dans nos bootcamps techniques. Inscrivez-vous en un clic ou rejoignez la file d'attente FIFO interactive."
+          title="Formations & ateliers"
+          description="Développez vos compétences dans nos bootcamps techniques. Inscrivez-vous en un clic ou rejoignez la file d'attente."
         >
-          {/* Quick Stats Grid */}
-          <div className="flex items-center justify-center flex-wrap gap-6 pt-2">
+          {/* Chiffres clés de la page */}
+          <div className="flex items-center flex-wrap gap-x-6 gap-y-2 pt-4">
               <div className="flex items-center gap-2 text-sm text-text-secondary">
-                <Award className="w-4 h-4 text-emerald-400" />
+                <Award className="w-4 h-4 text-engine" />
                 <span>
-                  <strong className="text-text-primary font-bold">{workshops.length}</strong> bootcamps programmés
+                  <strong className="text-text-primary font-bold font-mono">{workshops.length}</strong> bootcamps programmés
                 </span>
               </div>
               <div className="w-px h-4 bg-border-subtle hidden sm:block" />
               <div className="flex items-center gap-2 text-sm text-text-secondary">
                 <Users className="w-4 h-4 text-engine" />
                 <span>
-                  <strong className="text-text-primary font-bold">{openPlacesSum}</strong> places disponibles
+                  <strong className="text-text-primary font-bold font-mono">{openPlacesSum}</strong> places disponibles
                 </span>
               </div>
-              
+
               {user && (registeredCount > 0 || waitlistCount > 0) && (
                 <>
                   <div className="w-px h-4 bg-border-subtle hidden sm:block" />
-                  <div className="flex items-center gap-2 text-sm text-emerald-400 font-medium">
+                  <div className="flex items-center gap-2 text-sm text-ember font-medium">
                     <CheckCircle className="w-4 h-4" />
                     <span>
                       {registeredCount > 0 && (
-                        <span><strong className="text-text-primary font-bold">{registeredCount}</strong> atelier{registeredCount > 1 ? 's' : ''} inscrit{registeredCount > 1 ? 's' : ''}</span>
+                        <span><strong className="text-text-primary font-bold font-mono">{registeredCount}</strong> atelier{registeredCount > 1 ? 's' : ''} inscrit{registeredCount > 1 ? 's' : ''}</span>
                       )}
-                      {registeredCount > 0 && waitlistCount > 0 && " | "}
+                      {registeredCount > 0 && waitlistCount > 0 && " · "}
                       {waitlistCount > 0 && (
-                        <span className="text-amber-400"><strong className="text-text-primary font-bold">{waitlistCount}</strong> en attente</span>
+                        <span><strong className="text-text-primary font-bold font-mono">{waitlistCount}</strong> en attente</span>
                       )}
                     </span>
                   </div>
@@ -450,14 +448,14 @@ export default function Workshops({ navigate }) {
         {/* ── Connect Banner for Guest Visitors ── */}
         {!user && (
           <FadeInWhenVisible direction="up" delay={0.05}>
-            <div className="mb-10 flex items-center gap-4 p-4.5 rounded-2xl bg-emerald-500/5 border border-emerald-500/15 text-sm">
-              <Lock className="w-5 h-5 text-emerald-400 shrink-0" />
+            <div className="mb-10 flex items-center gap-4 p-4.5 chamfer-sm bg-engine/5 border border-engine/20 text-sm">
+              <Lock className="w-5 h-5 text-engine shrink-0" />
               <p className="text-text-secondary flex-1">
                 <span className="text-text-primary font-semibold">Une session active est requise</span> pour vous inscrire aux ateliers, réserver vos places et participer aux bootcamps.
               </p>
               <button
                 onClick={() => navigate('auth')}
-                className="shrink-0 px-4.5 py-1.5 rounded-xl bg-emerald-500 text-bg-primary text-xs font-black hover:bg-emerald-400 transition-colors cursor-pointer"
+                className="shrink-0 px-4.5 py-1.5 rounded-xl bg-engine text-white text-xs font-bold hover:bg-engine-deep transition-colors cursor-pointer"
               >
                 Se connecter
               </button>
@@ -467,7 +465,7 @@ export default function Workshops({ navigate }) {
 
         {/* ── Search & Dual Filters Block ── */}
         <FadeInWhenVisible direction="up" delay={0.1}>
-          <div className="mb-10 p-6 rounded-2xl bg-white/[0.02] border border-border-subtle space-y-6">
+          <div className="mb-10 p-6 chamfer-sm bg-bg-secondary border border-border-subtle space-y-6">
             
             {/* Row 1: Search and Level Filter */}
             <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
@@ -479,7 +477,7 @@ export default function Workshops({ navigate }) {
                   placeholder="Rechercher un atelier, instructeur, thème..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-11 pr-4 py-3 rounded-xl bg-bg-tertiary border border-white/8 text-sm text-text-primary focus:outline-none focus:border-emerald-500/60 focus:bg-white/8 transition-all font-light"
+                  className="w-full pl-11 pr-4 py-3 rounded-lg bg-bg-primary border border-border-subtle text-sm text-text-primary focus:outline-none focus:border-engine transition-colors"
                 />
               </div>
 
@@ -489,14 +487,14 @@ export default function Workshops({ navigate }) {
                   <Filter className="w-3.5 h-3.5 text-text-muted" />
                   Difficulté :
                 </span>
-                <div className="flex bg-bg-tertiary border border-white/8 rounded-xl p-1 text-xs">
+                <div className="flex bg-bg-primary border border-border-subtle rounded-lg p-1 text-xs">
                   {['ALL', 'Débutant', 'Intermédiaire', 'Avancé'].map((level) => (
                     <button
                       key={level}
                       onClick={() => setSelectedLevel(level)}
                       className={`px-3.5 py-1.5 rounded-lg font-semibold transition-all cursor-pointer ${
                         selectedLevel === level
-                          ? 'bg-emerald-500 text-bg-primary font-black shadow-md'
+                          ? 'bg-engine text-white font-bold'
                           : 'text-text-secondary hover:text-text-primary'
                       }`}
                     >
@@ -519,8 +517,8 @@ export default function Workshops({ navigate }) {
                   onClick={() => setSelectedClubId('ALL')}
                   className={`px-4 py-2 rounded-xl text-xs font-bold border transition-all cursor-pointer ${
                     selectedClubId === 'ALL'
-                      ? 'bg-text-primary text-bg-primary border-text-primary font-black shadow-lg shadow-text-primary/5'
-                      : 'bg-bg-tertiary border-white/8 text-text-secondary hover:text-text-primary hover:bg-white/8'
+                      ? 'bg-text-primary text-bg-primary border-text-primary font-extrabold shadow-lg shadow-text-primary/5'
+                      : 'bg-bg-secondary border-border-subtle text-text-secondary hover:text-text-primary hover:bg-bg-tertiary'
                   }`}
                 >
                   Tous les thèmes
@@ -574,7 +572,7 @@ export default function Workshops({ navigate }) {
         {loading ? (
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6.5">
             {[1, 2, 3].map((n) => (
-              <div key={n} className="glass-panel h-96 rounded-2xl animate-pulse bg-bg-secondary/40 border border-border-subtle" />
+              <div key={n} className="glass-panel h-96 chamfer-sm animate-pulse bg-bg-secondary border border-border-subtle" />
             ))}
           </div>
         ) : filteredWorkshops.length > 0 ? (
@@ -597,7 +595,7 @@ export default function Workshops({ navigate }) {
           </div>
         ) : (
           <FadeInWhenVisible direction="up" delay={0.05}>
-            <div className="text-center py-16 px-6 rounded-2xl bg-white/[0.02] border border-border-subtle">
+            <div className="text-center py-16 px-6 chamfer-sm bg-bg-secondary border border-border-subtle">
               <Info className="w-8 h-8 text-text-muted mx-auto mb-3" />
               <h3 className="text-text-primary font-bold text-base">Aucun atelier trouvé</h3>
               <p className="text-text-secondary text-sm font-light max-w-sm mx-auto mt-1.5 leading-relaxed">
@@ -609,7 +607,7 @@ export default function Workshops({ navigate }) {
                   setSelectedClubId('ALL');
                   setSelectedLevel('ALL');
                 }}
-                className="mt-4 px-5 py-2 text-xs font-bold rounded-xl bg-bg-tertiary border border-white/8 hover:bg-white/8 text-text-primary transition-all cursor-pointer"
+                className="mt-4 px-5 py-2 text-xs font-bold rounded-xl bg-bg-secondary border border-border-subtle hover:bg-bg-tertiary text-text-primary transition-all cursor-pointer"
               >
                 Réinitialiser les filtres
               </button>
@@ -619,13 +617,13 @@ export default function Workshops({ navigate }) {
 
         {/* ── Interactive Waitlist FAQ Panel ── */}
         <FadeInWhenVisible direction="up" delay={0.15}>
-          <div className="mt-16 p-7.5 rounded-2xl bg-white/[0.02] border border-border-subtle space-y-4">
-            <h4 className="text-sm font-black uppercase tracking-widest text-text-primary flex items-center gap-2">
-              <Zap className="w-4 h-4 text-emerald-400 animate-bounce" />
+          <div className="mt-16 p-7.5 chamfer-sm bg-bg-secondary border border-border-subtle space-y-4">
+            <h4 className="text-sm font-extrabold uppercase tracking-widest text-text-primary flex items-center gap-2">
+              <Zap className="w-4 h-4 text-ember" />
               Comment fonctionne le Moteur de File d'Attente FIFO ?
             </h4>
             <p className="text-xs sm:text-sm text-text-secondary leading-relaxed font-light">
-              Notre système attribue de façon automatique et équitable les places libérées. Si un participant inscrit décide de <strong className="text-emerald-400">se désinscrire</strong> d'un atelier complet, sa place est instantanément retirée de façon immuable. 
+              Notre système attribue de façon automatique et équitable les places libérées. Si un participant inscrit décide de <strong className="text-ember">se désinscrire</strong> d'un atelier complet, sa place est instantanément retirée de façon immuable. 
               Le premier membre enregistré sur la <strong className="text-amber-400 font-semibold">liste d'attente</strong> (First-In, First-Out) est immédiatement promu au rang d'inscrit sans que le nombre de places restantes ne change. 
               Le nouveau membre promu reçoit instantanément une notification système dans son centre de contrôle.
             </p>

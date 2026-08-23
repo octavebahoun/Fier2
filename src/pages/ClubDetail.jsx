@@ -51,7 +51,7 @@ export default function ClubDetail({ navigate, clubId }) {
       <div className="max-w-4xl mx-auto px-6 py-16">
         <div className="animate-pulse flex flex-col gap-4">
           <div className="h-8 w-1/2 rounded-lg bg-bg-tertiary" />
-          <div className="h-40 w-full rounded-2xl bg-bg-tertiary" />
+          <div className="h-40 w-full chamfer-sm bg-bg-tertiary" />
         </div>
       </div>
     )
@@ -79,9 +79,9 @@ export default function ClubDetail({ navigate, clubId }) {
       </button>
 
       {/* En-tête */}
-      <div className="glass-panel rounded-3xl p-6 md:p-8 flex flex-col gap-4" style={{ borderColor: `${accent}30` }}>
+      <div className="glass-panel chamfer p-6 md:p-8 flex flex-col gap-4" style={{ borderColor: `${accent}30` }}>
         <div className="flex items-start gap-4 flex-wrap">
-          <div className="w-14 h-14 rounded-2xl flex items-center justify-center shrink-0" style={{ background: `${accent}1A`, border: `1px solid ${accent}40` }}>
+          <div className="w-14 h-14 chamfer-sm flex items-center justify-center shrink-0" style={{ background: `${accent}1A`, border: `1px solid ${accent}40` }}>
             <Users className="w-7 h-7" style={{ color: accent }} />
           </div>
           <div className="flex-1 min-w-0">
@@ -99,7 +99,7 @@ export default function ClubDetail({ navigate, clubId }) {
           <button
             onClick={handleJoinToggle}
             disabled={busy}
-            className={`px-4 py-2 rounded-xl text-xs font-black uppercase tracking-wider transition-all disabled:opacity-50 ${
+            className={`px-4 py-2 rounded-xl text-xs font-extrabold uppercase tracking-wider transition-all disabled:opacity-50 ${
               club.joined ? 'bg-bg-tertiary text-text-secondary border border-border-subtle' : 'bg-engine text-white'
             }`}
           >
@@ -120,7 +120,7 @@ export default function ClubDetail({ navigate, clubId }) {
       )}
 
       {/* Membres */}
-      <section className="glass-panel rounded-3xl p-6">
+      <section className="glass-panel chamfer p-6">
         <h2 className="text-base font-extrabold text-text-primary tracking-tight mb-4">Membres</h2>
         {members.length === 0 ? (
           <p className="text-xs text-text-muted">La liste des membres n'est pas encore disponible.</p>
@@ -132,7 +132,7 @@ export default function ClubDetail({ navigate, clubId }) {
                 <button
                   key={m.id}
                   onClick={() => navigate?.('profile', { researcherId: m.id })}
-                  className="flex items-center gap-3 p-3 rounded-2xl bg-bg-tertiary/50 border border-border-subtle hover:border-engine/40 transition-all text-left"
+                  className="flex items-center gap-3 p-3 chamfer-sm bg-bg-tertiary border border-border-subtle hover:border-engine/40 transition-all text-left"
                 >
                   <div className="w-9 h-9 rounded-full bg-engine/15 border border-engine/25 flex items-center justify-center shrink-0 text-xs font-bold text-text-primary uppercase">
                     {name[0]}

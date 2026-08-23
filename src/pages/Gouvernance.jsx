@@ -44,7 +44,7 @@ function Toast({ message, type = 'success', onClose }) {
       animate={{ opacity: 1, y: 0, scale: 1 }}
       exit={{ opacity: 0, y: 16, scale: 0.95 }}
       transition={{ type: 'spring', stiffness: 400, damping: 28 }}
-      className={`fixed bottom-6 right-6 z-[100] flex items-center gap-3 px-5 py-3.5 rounded-2xl shadow-2xl backdrop-blur-md border ${bgClass}`}
+      className={`fixed bottom-6 right-6 z-[100] flex items-center gap-3 px-5 py-3.5 chamfer-sm shadow-2xl backdrop-blur-md border ${bgClass}`}
       role="alert"
       aria-live="polite"
     >
@@ -63,11 +63,11 @@ function SectionCard({ icon: Icon, title, subtitle, accent, children }) {
     <FadeInWhenVisible direction="up" delay={0.05}>
       <motion.section
         whileHover={{ y: -4 }}
-        className="glass-panel bg-bg-secondary/60 backdrop-blur-xl border border-border-subtle rounded-3xl p-6 md:p-8 shadow-xl"
+        className="glass-panel chamfer p-6 md:p-8 shadow-xl"
       >
         <div className="flex items-center gap-3 mb-6">
           <div
-            className="w-11 h-11 rounded-2xl flex items-center justify-center shrink-0"
+            className="w-11 h-11 chamfer-sm flex items-center justify-center shrink-0"
             style={{ background: `${accent}1A`, border: `1px solid ${accent}40` }}
           >
             <Icon className="w-5 h-5" style={{ color: accent }} />
@@ -404,7 +404,7 @@ export default function Gouvernance() {
         <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden" aria-hidden="true">
         </div>
         <div className="relative z-10 max-w-3xl mx-auto w-full py-24 px-6 text-center">
-          <div className="glass-panel bg-bg-secondary/60 backdrop-blur-xl border border-border-subtle rounded-3xl p-10">
+          <div className="glass-panel chamfer p-10">
             <ShieldCheck className="w-12 h-12 text-red-400 mx-auto mb-4" />
             <h1 className="text-text-primary font-extrabold text-2xl mb-2">Accès réservé</h1>
             <p className="text-text-secondary text-sm leading-relaxed">
@@ -427,7 +427,7 @@ export default function Gouvernance() {
           <p className="text-text-secondary text-sm mb-8">
             Sélectionnez votre université pour accéder aux outils de gouvernance.
           </p>
-          <div className="glass-panel bg-bg-secondary/60 backdrop-blur-xl border border-border-subtle rounded-3xl p-6 space-y-4">
+          <div className="glass-panel chamfer p-6 space-y-4">
             {errorRequests && (
               <div className="flex items-center gap-2 text-red-400 text-sm bg-red-500/10 border border-red-500/30 rounded-xl px-4 py-3">
                 <AlertCircle className="w-4 h-4 shrink-0" /> {errorRequests}
@@ -515,7 +515,7 @@ export default function Gouvernance() {
                     key={req.memberId}
                     initial={{ opacity: 0, y: 8 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="rounded-2xl bg-white/[0.03] border border-white/8 p-4 space-y-3"
+                    className="chamfer-sm bg-bg-tertiary border border-white/8 p-4 space-y-3"
                   >
                     <div className="flex items-start justify-between gap-3">
                       <div className="min-w-0">
@@ -578,21 +578,21 @@ export default function Gouvernance() {
           >
             <form onSubmit={handleIssue} className="space-y-4">
               {/* ── Signature / Griffe Manuscrite Officielle ── */}
-              <div className="p-4 rounded-2xl bg-white/[0.03] border border-border-subtle">
+              <div className="p-4 chamfer-sm bg-bg-tertiary border border-border-subtle">
                 <div className="flex items-center justify-between mb-2">
                   <label className="text-xs font-bold uppercase tracking-widest text-text-muted flex items-center gap-2">
                     <PenTool className="w-3.5 h-3.5 text-engine" />
                     Signature & Griffe Officielle (Requis)
                   </label>
                   {signatureUrl && (
-                    <span className="text-[11px] font-black uppercase text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20 flex items-center gap-1">
+                    <span className="text-[11px] font-extrabold uppercase text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20 flex items-center gap-1">
                       <CheckCircle2 className="w-3 h-3" /> Griffe Active
                     </span>
                   )}
                 </div>
 
                 {signatureUrl ? (
-                  <div className="flex items-center justify-between gap-3 p-3 rounded-xl bg-black/40 border border-border-subtle">
+                  <div className="flex items-center justify-between gap-3 p-3 rounded-xl bg-bg-tertiary border border-border-subtle">
                     <div className="flex items-center gap-3">
                       <div className="w-16 h-10 rounded-lg bg-bg-tertiary border border-white/20 flex items-center justify-center p-1 overflow-hidden">
                         <img src={signatureUrl} alt="Signature officielle" className="max-h-full max-w-full object-contain filter invert opacity-90" />
@@ -603,14 +603,14 @@ export default function Gouvernance() {
                       </div>
                     </div>
                     <div className="flex items-center gap-2">
-                      <label className="px-3 py-1.5 rounded-lg bg-bg-tertiary hover:bg-bg-tertiary border border-border-subtle text-xs font-bold text-text-secondary hover:text-text-primary cursor-pointer transition-colors">
+                      <label className="px-3 py-1.5 rounded-lg bg-bg-secondary hover:bg-bg-tertiary border border-border-subtle text-xs font-bold text-text-secondary hover:text-text-primary cursor-pointer transition-colors">
                         Modifier
                         <input type="file" accept="image/*" onChange={handleUploadSignature} className="hidden" />
                       </label>
                     </div>
                   </div>
                 ) : (
-                  <label className="flex flex-col items-center justify-center gap-2 p-4 rounded-xl border-2 border-dashed border-white/15 bg-white/[0.01] hover:bg-white/[0.04] cursor-pointer transition-colors group">
+                  <label className="flex flex-col items-center justify-center gap-2 p-4 rounded-xl border-2 border-dashed border-white/15 bg-bg-secondary hover:bg-bg-tertiary cursor-pointer transition-colors group">
                     {uploadingSignature ? (
                       <Loader2 className="w-5 h-5 animate-spin text-engine" />
                     ) : (
@@ -700,10 +700,10 @@ export default function Gouvernance() {
         <FadeInWhenVisible direction="up" delay={0.1}>
           <motion.section
             whileHover={{ y: -4 }}
-            className="glass-panel bg-bg-secondary/60 backdrop-blur-xl border border-border-subtle rounded-3xl p-6 md:p-8 shadow-xl mt-6"
+            className="glass-panel chamfer p-6 md:p-8 shadow-xl mt-6"
           >
             <div className="flex items-center gap-3 mb-6">
-              <div className="w-11 h-11 rounded-2xl flex items-center justify-center" style={{ background: 'color-mix(in srgb, var(--color-emerald-500) 10%, transparent)', border: '1px solid color-mix(in srgb, var(--color-emerald-500) 25%, transparent)' }}>
+              <div className="w-11 h-11 chamfer-sm flex items-center justify-center" style={{ background: 'color-mix(in srgb, var(--color-emerald-500) 10%, transparent)', border: '1px solid color-mix(in srgb, var(--color-emerald-500) 25%, transparent)' }}>
                 <Award className="w-5 h-5 text-emerald-400" />
               </div>
               <div>
@@ -724,7 +724,7 @@ export default function Gouvernance() {
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {myCerts.map((c) => (
-                  <div key={c.id} className="rounded-2xl bg-white/[0.03] border border-white/8 p-4">
+                  <div key={c.id} className="chamfer-sm bg-bg-tertiary border border-white/8 p-4">
                     <div className="flex items-start gap-3">
                       <GraduationCap className="w-5 h-5 text-emerald-400 shrink-0 mt-0.5" />
                       <div className="min-w-0">
@@ -761,7 +761,7 @@ export default function Gouvernance() {
                   <span className="text-sm">Chargement des rapports…</span>
                 </div>
               ) : errorRapports ? (
-                <div className="p-4 rounded-2xl bg-red-500/10 border border-red-500/30 flex items-start gap-3">
+                <div className="p-4 chamfer-sm bg-red-500/10 border border-red-500/30 flex items-start gap-3">
                   <AlertCircle className="w-5 h-5 text-red-400 shrink-0 mt-0.5" />
                   <p className="text-xs text-red-300 leading-relaxed">{errorRapports}</p>
                 </div>
@@ -776,11 +776,11 @@ export default function Gouvernance() {
               ) : (
                 <div className="space-y-3">
                   {rapports.map((r) => (
-                    <div key={r.id} className="rounded-2xl border border-border-subtle bg-white/[0.03] p-5 space-y-3">
+                    <div key={r.id} className="chamfer-sm border border-border-subtle bg-bg-tertiary p-5 space-y-3">
                       <div className="flex flex-wrap items-start justify-between gap-2 border-b border-border-subtle pb-3">
                         <div className="min-w-0">
                           <div className="flex flex-wrap items-center gap-2">
-                            <span className="text-xs font-black uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">
+                            <span className="text-xs font-extrabold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">
                               Période {r.period}
                             </span>
                             <span className="text-xs font-medium text-text-muted">· {r.clubName}</span>
@@ -795,7 +795,7 @@ export default function Gouvernance() {
                         </span>
                       </div>
                       {r.content && (
-                        <div className="text-xs text-text-secondary bg-black/20 p-3 rounded-xl border border-border-subtle leading-relaxed whitespace-pre-line">
+                        <div className="text-xs text-text-secondary bg-bg-tertiary p-3 rounded-xl border border-border-subtle leading-relaxed whitespace-pre-line">
                           {r.content}
                         </div>
                       )}
@@ -811,10 +811,10 @@ export default function Gouvernance() {
         <FadeInWhenVisible direction="up" delay={0.15}>
           <motion.section
             whileHover={{ y: -4 }}
-            className="glass-panel bg-bg-secondary/60 backdrop-blur-xl border border-border-subtle rounded-3xl p-6 md:p-8 shadow-xl mt-6"
+            className="glass-panel chamfer p-6 md:p-8 shadow-xl mt-6"
           >
             <div className="flex items-center gap-3 mb-6">
-              <div className="w-11 h-11 rounded-2xl flex items-center justify-center" style={{ background: 'color-mix(in srgb, var(--color-engine) 10%, transparent)', border: '1px solid color-mix(in srgb, var(--color-engine) 25%, transparent)' }}>
+              <div className="w-11 h-11 chamfer-sm flex items-center justify-center" style={{ background: 'color-mix(in srgb, var(--color-engine) 10%, transparent)', border: '1px solid color-mix(in srgb, var(--color-engine) 25%, transparent)' }}>
                 <Sparkles className="w-5 h-5 text-purple-400" />
               </div>
               <div>
@@ -840,17 +840,17 @@ export default function Gouvernance() {
                   return (
                     <div
                       key={m.id}
-                      className={`rounded-2xl border p-4 flex items-center justify-between transition-all ${
+                      className={`chamfer-sm border p-4 flex items-center justify-between transition-all ${
                         isEmblematic
                           ? 'bg-purple-500/10 border-purple-500/30'
-                          : 'bg-white/[0.03] border-white/8 hover:border-white/20'
+                          : 'bg-bg-tertiary border-white/8 hover:border-white/20'
                       }`}
                     >
                       <div className="min-w-0 pr-3">
                         <div className="flex items-center gap-2">
                           <p className="text-text-primary font-bold text-sm truncate">{name}</p>
                           {isEmblematic && (
-                            <span className="shrink-0 text-[11px] font-black uppercase px-2 py-0.5 rounded-full bg-purple-500/20 text-purple-300 border border-purple-500/40">
+                            <span className="shrink-0 text-[11px] font-extrabold uppercase px-2 py-0.5 rounded-full bg-purple-500/20 text-purple-300 border border-purple-500/40">
                               Emblématique
                             </span>
                           )}
@@ -865,7 +865,7 @@ export default function Gouvernance() {
                         className={`shrink-0 p-2.5 rounded-xl border text-xs font-bold transition-all cursor-pointer ${
                           isEmblematic
                             ? 'bg-purple-600 text-white border-purple-400 hover:bg-purple-700'
-                            : 'bg-bg-tertiary text-text-secondary border-border-subtle hover:text-text-primary hover:bg-bg-tertiary'
+                            : 'bg-bg-secondary text-text-secondary border-border-subtle hover:text-text-primary hover:bg-bg-tertiary'
                         }`}
                         title={isEmblematic ? 'Retirer des figures emblématiques' : 'Marquer comme figure emblématique'}
                       >
@@ -909,16 +909,16 @@ export default function Gouvernance() {
                   return (
                     <div
                       key={m.id}
-                      className="p-3.5 rounded-2xl bg-white/[0.02] hover:bg-white/[0.05] border border-white/8 transition-all flex items-start gap-3"
+                      className="p-3.5 chamfer-sm bg-bg-secondary hover:bg-bg-tertiary border border-white/8 transition-all flex items-start gap-3"
                     >
-                      <div className="w-10 h-10 rounded-xl bg-engine/15 border border-engine/30 flex items-center justify-center font-black text-engine shrink-0">
+                      <div className="w-10 h-10 rounded-xl bg-engine/15 border border-engine/30 flex items-center justify-center font-extrabold text-engine shrink-0">
                         {name.charAt(0)}
                       </div>
                       <div className="min-w-0 flex-1">
                         <div className="flex items-center justify-between gap-2">
                           <p className="text-text-primary font-bold text-xs truncate">{name}</p>
                           <span
-                            className={`text-[11px] font-black uppercase px-2 py-0.5 rounded-full shrink-0 border ${
+                            className={`text-[11px] font-extrabold uppercase px-2 py-0.5 rounded-full shrink-0 border ${
                               isLead
                                 ? 'bg-amber-500/15 text-amber-300 border-amber-500/30'
                                 : 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30'

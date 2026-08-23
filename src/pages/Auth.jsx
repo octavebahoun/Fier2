@@ -221,7 +221,7 @@ export default function Auth({ navigate, redirectTo, onAuthComplete }) {
           {/* Badge Eyebrow */}
           <div className="flex items-center gap-2">
             <span className="w-2.5 h-2.5 rounded-full bg-engine animate-pulse-dot" />
-            <span className="text-[11px] font-black tracking-[0.25em] uppercase text-engine">
+            <span className="text-[11px] font-extrabold tracking-[0.25em] uppercase text-engine">
               FIERI RESEARCH
             </span>
           </div>
@@ -250,18 +250,18 @@ export default function Auth({ navigate, redirectTo, onAuthComplete }) {
           </div>
 
           {/* Bento Card des Statistiques */}
-          <div className="glass-panel border border-border-subtle/80 bg-bg-secondary/45 p-5 md:p-6 rounded-2xl shadow-2xl backdrop-blur-md hidden sm:block">
+          <div className="glass-panel border border-border-subtle/80 bg-bg-secondary p-5 md:p-6 chamfer-sm shadow-2xl backdrop-blur-md hidden sm:block">
             <div className="grid grid-cols-3 gap-4">
               <div>
-                <div className="text-xl lg:text-2xl font-black text-engine">5 000+</div>
+                <div className="text-xl lg:text-2xl font-extrabold text-engine">5 000+</div>
                 <div className="text-[11px] uppercase tracking-wider text-text-secondary font-bold mt-1">MEMBRES</div>
               </div>
               <div className="border-l border-border-subtle pl-4">
-                <div className="text-xl lg:text-2xl font-black text-engine">12</div>
+                <div className="text-xl lg:text-2xl font-extrabold text-engine">12</div>
                 <div className="text-[11px] uppercase tracking-wider text-text-secondary font-bold mt-1">PAYS</div>
               </div>
               <div className="border-l border-border-subtle pl-4">
-                <div className="text-xl lg:text-2xl font-black text-engine">6</div>
+                <div className="text-xl lg:text-2xl font-extrabold text-engine">6</div>
                 <div className="text-[11px] uppercase tracking-wider text-text-secondary font-bold mt-1">CLUBS</div>
               </div>
             </div>
@@ -356,7 +356,7 @@ export default function Auth({ navigate, redirectTo, onAuthComplete }) {
                 <form onSubmit={handleLoginSubmit} className="flex flex-col gap-4">
                   {/* Email */}
                   <div className="flex flex-col gap-1.5">
-                    <label htmlFor="login-email" className="text-[11px] font-black uppercase tracking-wider text-text-secondary">
+                    <label htmlFor="login-email" className="text-[11px] font-extrabold uppercase tracking-wider text-text-secondary">
                       ADRESSE EMAIL <span className="text-engine">*</span>
                     </label>
                     <div className="relative">
@@ -374,7 +374,7 @@ export default function Auth({ navigate, redirectTo, onAuthComplete }) {
                         onChange={(e) => setLoginData({ ...loginData, email: e.target.value })}
                         aria-invalid={!!errorMsg}
                         aria-describedby={errorMsg ? "auth-error-message" : undefined}
-                        className="w-full bg-bg-secondary/60 border border-border-subtle focus:border-engine/50 rounded-xl py-3 pl-11 pr-4 text-sm text-text-primary outline-none transition-all placeholder:text-text-muted"
+                        className="w-full bg-bg-secondary border border-border-subtle focus:border-engine/50 rounded-xl py-3 pl-11 pr-4 text-sm text-text-primary outline-none transition-all placeholder:text-text-muted"
                       />
                     </div>
                   </div>
@@ -382,7 +382,7 @@ export default function Auth({ navigate, redirectTo, onAuthComplete }) {
                   {/* Mot de passe */}
                   <div className="flex flex-col gap-1.5">
                     <div className="flex justify-between items-center">
-                      <label htmlFor="login-password" className="text-[11px] font-black uppercase tracking-wider text-text-secondary">
+                      <label htmlFor="login-password" className="text-[11px] font-extrabold uppercase tracking-wider text-text-secondary">
                         MOT DE PASSE <span className="text-engine">*</span>
                       </label>
                     </div>
@@ -399,7 +399,7 @@ export default function Auth({ navigate, redirectTo, onAuthComplete }) {
                         onChange={(e) => setLoginData({ ...loginData, password: e.target.value })}
                         aria-invalid={!!errorMsg}
                         aria-describedby={errorMsg ? "auth-error-message" : undefined}
-                        className="w-full bg-bg-secondary/60 border border-border-subtle focus:border-engine/50 rounded-xl py-3 pl-11 pr-12 text-sm text-text-primary outline-none transition-all placeholder:text-text-muted"
+                        className="w-full bg-bg-secondary border border-border-subtle focus:border-engine/50 rounded-xl py-3 pl-11 pr-12 text-sm text-text-primary outline-none transition-all placeholder:text-text-muted"
                       />
                       <button
                         type="button"
@@ -462,13 +462,13 @@ export default function Auth({ navigate, redirectTo, onAuthComplete }) {
                 <div className="flex items-center gap-3 py-1 px-0.5 select-none">
                   {/* Étape 1 */}
                   <div className="flex items-center gap-2">
-                    <div className={`w-6 h-6 rounded-full flex items-center justify-center text-[11px] font-black transition-colors ${registerStep === 1
+                    <div className={`w-6 h-6 rounded-full flex items-center justify-center text-[11px] font-extrabold transition-colors ${registerStep === 1
                       ? 'bg-engine text-white'
                       : 'bg-emerald-950/40 border border-emerald-500/40 text-emerald-400'
                       }`}>
                       {registerStep > 1 ? <Check className="w-3.5 h-3.5" /> : "1"}
                     </div>
-                    <span className={`text-[11px] font-black uppercase tracking-wider ${registerStep === 1 ? 'text-engine' : 'text-emerald-400'
+                    <span className={`text-[11px] font-extrabold uppercase tracking-wider ${registerStep === 1 ? 'text-engine' : 'text-emerald-400'
                       }`}>
                       IDENTITÉ
                     </span>
@@ -480,13 +480,13 @@ export default function Auth({ navigate, redirectTo, onAuthComplete }) {
 
                   {/* Étape 2 */}
                   <div className="flex items-center gap-2">
-                    <div className={`w-6 h-6 rounded-full flex items-center justify-center text-[11px] font-black border transition-colors ${registerStep === 2
+                    <div className={`w-6 h-6 rounded-full flex items-center justify-center text-[11px] font-extrabold border transition-colors ${registerStep === 2
                       ? 'bg-engine border-transparent text-white'
                       : 'bg-bg-secondary border-border-subtle text-text-muted'
                       }`}>
                       2
                     </div>
-                    <span className={`text-[11px] font-black uppercase tracking-wider ${registerStep === 2 ? 'text-engine' : 'text-text-muted'
+                    <span className={`text-[11px] font-extrabold uppercase tracking-wider ${registerStep === 2 ? 'text-engine' : 'text-text-muted'
                       }`}>
                       AFFILIATION
                     </span>
@@ -509,7 +509,7 @@ export default function Auth({ navigate, redirectTo, onAuthComplete }) {
                       {/* Prénom & Nom */}
                       <div className="grid grid-cols-2 gap-4">
                         <div className="flex flex-col gap-1.5">
-                          <label htmlFor="register-first-name" className="text-[11px] font-black uppercase tracking-wider text-text-secondary">
+                          <label htmlFor="register-first-name" className="text-[11px] font-extrabold uppercase tracking-wider text-text-secondary">
                             PRÉNOM <span className="text-engine">*</span>
                           </label>
                           <div className="relative">
@@ -525,13 +525,13 @@ export default function Auth({ navigate, redirectTo, onAuthComplete }) {
                               onChange={(e) => setRegisterData({ ...registerData, firstName: e.target.value })}
                               aria-invalid={!!errorMsg}
                               aria-describedby={errorMsg ? "auth-error-message" : undefined}
-                              className="w-full bg-bg-secondary/60 border border-border-subtle focus:border-engine/50 rounded-xl py-3 pl-11 pr-4 text-sm text-text-primary outline-none transition-all placeholder:text-text-muted"
+                              className="w-full bg-bg-secondary border border-border-subtle focus:border-engine/50 rounded-xl py-3 pl-11 pr-4 text-sm text-text-primary outline-none transition-all placeholder:text-text-muted"
                             />
                           </div>
                         </div>
 
                         <div className="flex flex-col gap-1.5">
-                          <label htmlFor="register-last-name" className="text-[11px] font-black uppercase tracking-wider text-text-secondary">
+                          <label htmlFor="register-last-name" className="text-[11px] font-extrabold uppercase tracking-wider text-text-secondary">
                             NOM <span className="text-engine">*</span>
                           </label>
                           <div className="relative">
@@ -547,7 +547,7 @@ export default function Auth({ navigate, redirectTo, onAuthComplete }) {
                               onChange={(e) => setRegisterData({ ...registerData, lastName: e.target.value })}
                               aria-invalid={!!errorMsg}
                               aria-describedby={errorMsg ? "auth-error-message" : undefined}
-                              className="w-full bg-bg-secondary/60 border border-border-subtle focus:border-engine/50 rounded-xl py-3 pl-11 pr-4 text-sm text-text-primary outline-none transition-all placeholder:text-text-muted"
+                              className="w-full bg-bg-secondary border border-border-subtle focus:border-engine/50 rounded-xl py-3 pl-11 pr-4 text-sm text-text-primary outline-none transition-all placeholder:text-text-muted"
                             />
                           </div>
                         </div>
@@ -555,7 +555,7 @@ export default function Auth({ navigate, redirectTo, onAuthComplete }) {
 
                       {/* Email */}
                       <div className="flex flex-col gap-1.5">
-                        <label htmlFor="register-email" className="text-[11px] font-black uppercase tracking-wider text-text-secondary">
+                        <label htmlFor="register-email" className="text-[11px] font-extrabold uppercase tracking-wider text-text-secondary">
                           EMAIL <span className="text-engine">*</span>
                         </label>
                         <div className="relative">
@@ -573,14 +573,14 @@ export default function Auth({ navigate, redirectTo, onAuthComplete }) {
                             onChange={(e) => setRegisterData({ ...registerData, email: e.target.value })}
                             aria-invalid={!!errorMsg}
                             aria-describedby={errorMsg ? "auth-error-message" : undefined}
-                            className="w-full bg-bg-secondary/60 border border-border-subtle focus:border-engine/50 rounded-xl py-3 pl-11 pr-4 text-sm text-text-primary outline-none transition-all placeholder:text-text-muted"
+                            className="w-full bg-bg-secondary border border-border-subtle focus:border-engine/50 rounded-xl py-3 pl-11 pr-4 text-sm text-text-primary outline-none transition-all placeholder:text-text-muted"
                           />
                         </div>
                       </div>
 
                       {/* Mot de passe */}
                       <div className="flex flex-col gap-1.5">
-                        <label htmlFor="register-password" className="text-[11px] font-black uppercase tracking-wider text-text-secondary">
+                        <label htmlFor="register-password" className="text-[11px] font-extrabold uppercase tracking-wider text-text-secondary">
                           MOT DE PASSE <span className="text-engine">*</span>
                         </label>
                         <div className="relative">
@@ -596,7 +596,7 @@ export default function Auth({ navigate, redirectTo, onAuthComplete }) {
                             onChange={(e) => setRegisterData({ ...registerData, password: e.target.value })}
                             aria-invalid={!!errorMsg}
                             aria-describedby={errorMsg ? "auth-error-message" : undefined}
-                            className="w-full bg-bg-secondary/60 border border-border-subtle focus:border-engine/50 rounded-xl py-3 pl-11 pr-12 text-sm text-text-primary outline-none transition-all placeholder:text-text-muted"
+                            className="w-full bg-bg-secondary border border-border-subtle focus:border-engine/50 rounded-xl py-3 pl-11 pr-12 text-sm text-text-primary outline-none transition-all placeholder:text-text-muted"
                           />
                           <button
                             type="button"
@@ -612,7 +612,7 @@ export default function Auth({ navigate, redirectTo, onAuthComplete }) {
 
                       {/* Confirmer le Mot de passe */}
                       <div className="flex flex-col gap-1.5">
-                        <label htmlFor="register-confirm-password" className="text-[11px] font-black uppercase tracking-wider text-text-secondary">
+                        <label htmlFor="register-confirm-password" className="text-[11px] font-extrabold uppercase tracking-wider text-text-secondary">
                           CONFIRMER LE MOT DE PASSE <span className="text-engine">*</span>
                         </label>
                         <div className="relative">
@@ -628,7 +628,7 @@ export default function Auth({ navigate, redirectTo, onAuthComplete }) {
                             onChange={(e) => setRegisterData({ ...registerData, confirmPassword: e.target.value })}
                             aria-invalid={!!errorMsg}
                             aria-describedby={errorMsg ? "auth-error-message" : undefined}
-                            className="w-full bg-bg-secondary/60 border border-border-subtle focus:border-engine/50 rounded-xl py-3 pl-11 pr-12 text-sm text-text-primary outline-none transition-all placeholder:text-text-muted"
+                            className="w-full bg-bg-secondary border border-border-subtle focus:border-engine/50 rounded-xl py-3 pl-11 pr-12 text-sm text-text-primary outline-none transition-all placeholder:text-text-muted"
                           />
                           <button
                             type="button"
@@ -664,7 +664,7 @@ export default function Auth({ navigate, redirectTo, onAuthComplete }) {
                     >
                       {/* Pays */}
                       <div className="flex flex-col gap-1.5">
-                        <label htmlFor="register-country" className="text-[11px] font-black uppercase tracking-wider text-text-secondary">
+                        <label htmlFor="register-country" className="text-[11px] font-extrabold uppercase tracking-wider text-text-secondary">
                           PAYS DE RECHERCHE <span className="text-engine">*</span>
                         </label>
                         <div className="relative">
@@ -686,7 +686,7 @@ export default function Auth({ navigate, redirectTo, onAuthComplete }) {
                             }}
                             aria-invalid={!!errorMsg}
                             aria-describedby={errorMsg ? "auth-error-message" : undefined}
-                            className="w-full bg-bg-secondary/60 border border-border-subtle focus:border-engine/50 rounded-xl py-3.5 pl-11 pr-4 text-sm text-text-primary outline-none transition-all appearance-none cursor-pointer"
+                            className="w-full bg-bg-secondary border border-border-subtle focus:border-engine/50 rounded-xl py-3.5 pl-11 pr-4 text-sm text-text-primary outline-none transition-all appearance-none cursor-pointer"
                           >
                             <option value="">Sélectionnez un pays</option>
                             {countries.map(c => (
@@ -703,7 +703,7 @@ export default function Auth({ navigate, redirectTo, onAuthComplete }) {
 
                       {/* Université (Désactivé si aucun pays sélectionné) */}
                       <div className="flex flex-col gap-1.5">
-                        <label htmlFor="register-university" className="text-[11px] font-black uppercase tracking-wider text-text-secondary">
+                        <label htmlFor="register-university" className="text-[11px] font-extrabold uppercase tracking-wider text-text-secondary">
                           UNIVERSITÉ PARTENAIRE <span className="text-engine">*</span>
                         </label>
                         <div className="relative">
@@ -724,7 +724,7 @@ export default function Auth({ navigate, redirectTo, onAuthComplete }) {
                             }}
                             aria-invalid={!!errorMsg}
                             aria-describedby={errorMsg ? "auth-error-message" : undefined}
-                            className="w-full bg-bg-secondary/60 border border-border-subtle focus:border-engine/50 rounded-xl py-3.5 pl-11 pr-4 text-sm text-text-primary outline-none transition-all appearance-none cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
+                            className="w-full bg-bg-secondary border border-border-subtle focus:border-engine/50 rounded-xl py-3.5 pl-11 pr-4 text-sm text-text-primary outline-none transition-all appearance-none cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
                           >
                             <option value="">
                               {loadingMeta ? "Chargement..." : "Sélectionnez votre université"}
@@ -743,7 +743,7 @@ export default function Auth({ navigate, redirectTo, onAuthComplete }) {
 
                       {/* Branche / Pôle (Désactivé si aucune université sélectionnée) */}
                       <div className="flex flex-col gap-1.5">
-                        <label htmlFor="register-branch" className="text-[11px] font-black uppercase tracking-wider text-text-secondary">
+                        <label htmlFor="register-branch" className="text-[11px] font-extrabold uppercase tracking-wider text-text-secondary">
                           BRANCHE / PÔLE ACADÉMIQUE <span className="text-engine">*</span>
                         </label>
                         <div className="relative">
@@ -757,7 +757,7 @@ export default function Auth({ navigate, redirectTo, onAuthComplete }) {
                             onChange={(e) => setRegisterData(prev => ({ ...prev, branchId: e.target.value }))}
                             aria-invalid={!!errorMsg}
                             aria-describedby={errorMsg ? "auth-error-message" : undefined}
-                            className="w-full bg-bg-secondary/60 border border-border-subtle focus:border-engine/50 rounded-xl py-3.5 pl-11 pr-4 text-sm text-text-primary outline-none transition-all appearance-none cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
+                            className="w-full bg-bg-secondary border border-border-subtle focus:border-engine/50 rounded-xl py-3.5 pl-11 pr-4 text-sm text-text-primary outline-none transition-all appearance-none cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
                           >
                             <option value="">
                               {loadingMeta ? "Chargement..." : "Sélectionnez votre branche"}

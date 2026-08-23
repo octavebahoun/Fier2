@@ -84,7 +84,7 @@ export default function NewsDetail({ navigate, newsId }) {
       </button>
 
       <header className="flex flex-col gap-4">
-        <div className="flex items-center gap-2 flex-wrap text-[11px] font-black uppercase tracking-wider">
+        <div className="flex items-center gap-2 flex-wrap text-[11px] font-extrabold uppercase tracking-wider">
           {article.categorie && (
             <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-engine/12 border border-engine/25 text-engine">
               <Tag className="w-3 h-3" /> {article.categorie}
@@ -104,7 +104,7 @@ export default function NewsDetail({ navigate, newsId }) {
         </div>
       </header>
 
-      <div className="glass-panel rounded-3xl p-6 md:p-8">
+      <div className="glass-panel chamfer p-6 md:p-8">
         <div className="text-sm text-text-secondary leading-relaxed whitespace-pre-line">
           {article.content || article.excerpt || 'Contenu indisponible.'}
         </div>
@@ -120,7 +120,7 @@ export default function NewsDetail({ navigate, newsId }) {
                 onClick={() => navigate?.('news-detail', { newsId: r.id })}
                 className="text-left p-4 rounded-2xl glass-panel hover:-translate-y-0.5 transition-all"
               >
-                {r.categorie && <span className="text-[11px] font-black uppercase tracking-wider text-engine">{r.categorie}</span>}
+                {r.categorie && <span className="text-[11px] font-extrabold uppercase tracking-wider text-engine">{r.categorie}</span>}
                 <p className="text-xs font-bold text-text-primary line-clamp-3 mt-1">{r.title}</p>
               </button>
             ))}

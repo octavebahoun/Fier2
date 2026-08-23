@@ -506,7 +506,7 @@ export default function CiteIntegration({ navigate }) {
             <div className="max-w-2xl lg:max-w-[45%]">
               <button
                 onClick={() => navigate('home')}
-                className="inline-flex items-center gap-2 text-[11px] uppercase tracking-widest font-black text-text-secondary hover:text-text-primary transition-colors cursor-pointer mb-5"
+                className="inline-flex items-center gap-2 text-[11px] uppercase tracking-widest font-extrabold text-text-secondary hover:text-text-primary transition-colors cursor-pointer mb-5"
               >
                 <ArrowLeft className="w-3.5 h-3.5" />
                 Retour à l’accueil
@@ -524,7 +524,7 @@ export default function CiteIntegration({ navigate }) {
             </div>
 
             <div className="lg:max-w-[48%] relative">
-              <div className="rounded-2xl overflow-hidden border border-border-subtle shadow-2xl shadow-black/30">
+              <div className="chamfer-sm overflow-hidden border border-border-subtle shadow-2xl shadow-black/30">
                 <img
                   src={citeImage}
                   alt="Étudiants FIERI"
@@ -536,8 +536,8 @@ export default function CiteIntegration({ navigate }) {
             </div>
           </header>
 
-            <div className="glass-panel rounded-2xl p-4 min-w-0 lg:min-w-[320px]">
-              <div className="text-[11px] uppercase tracking-widest font-black text-text-muted mb-3">Position actuelle</div>
+            <div className="glass-panel chamfer-sm p-4 min-w-0 lg:min-w-[320px]">
+              <div className="text-[11px] uppercase tracking-widest font-extrabold text-text-muted mb-3">Position actuelle</div>
               <div className="flex flex-wrap items-center gap-2 text-xs text-text-secondary">
                 <Crumb label="International" active={view === 'countries' || view === 'global'} onClick={goCountries} />
                 {selectedCountry && <Crumb label={selectedCountry.name} active={view === 'country' || view === 'national'} onClick={() => goCountry()} />}
@@ -555,7 +555,7 @@ export default function CiteIntegration({ navigate }) {
             {loading ? (
               <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
                 {[1, 2, 3].map((n) => (
-                  <div key={n} className="glass-panel h-48 rounded-2xl animate-pulse bg-bg-secondary/40 border border-border-subtle" />
+                  <div key={n} className="glass-panel h-48 chamfer-sm animate-pulse bg-bg-secondary border border-border-subtle" />
                 ))}
               </div>
             ) : (
@@ -665,7 +665,7 @@ function Crumb({ label, active, onClick }) {
   return (
     <button
       onClick={onClick}
-      className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-[11px] uppercase tracking-wider font-black cursor-pointer transition-all ${
+      className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-[11px] uppercase tracking-wider font-extrabold cursor-pointer transition-all ${
         active
           ? 'bg-engine/20 border-engine/35 text-text-primary'
           : 'border-border-subtle text-text-secondary hover:text-text-primary hover:bg-bg-tertiary'
@@ -685,7 +685,7 @@ function SearchBox({ value, onChange, placeholder }) {
         value={value}
         onChange={(event) => onChange(event.target.value)}
         placeholder={placeholder}
-        className="w-full rounded-full bg-bg-secondary/80 border border-border-subtle pl-11 pr-4 py-3 text-sm text-text-primary placeholder:text-text-muted outline-none focus:border-engine/60 transition-colors"
+        className="w-full rounded-full bg-bg-secondary border border-border-subtle pl-11 pr-4 py-3 text-sm text-text-primary placeholder:text-text-muted outline-none focus:border-engine/60 transition-colors"
       />
     </label>
   );
@@ -693,9 +693,9 @@ function SearchBox({ value, onChange, placeholder }) {
 
 function Metric({ icon: Icon, label, value }) {
   return (
-    <div className="rounded-2xl border border-border-subtle bg-bg-secondary/45 p-4">
+    <div className="chamfer-sm border border-border-subtle bg-bg-secondary p-4">
       <Icon className="w-5 h-5 text-ember mb-3" />
-      <div className="text-2xl font-black">{value}</div>
+      <div className="text-2xl font-extrabold">{value}</div>
       <div className="text-[11px] uppercase tracking-widest font-bold text-text-muted mt-1">{label}</div>
     </div>
   );
@@ -718,7 +718,7 @@ function CountriesView({ countries, query, setQuery, onCountrySelect, onGlobalGo
 
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
-          <h2 className="text-2xl font-black">Choisissez votre pays</h2>
+          <h2 className="text-2xl font-extrabold">Choisissez votre pays</h2>
           <p className="text-sm text-text-secondary mt-1">C’est la première porte d’entrée dans la cité FIERI.</p>
         </div>
         <SearchBox value={query} onChange={setQuery} placeholder="Rechercher un pays..." />
@@ -729,18 +729,18 @@ function CountriesView({ countries, query, setQuery, onCountrySelect, onGlobalGo
           <button
             key={country.id}
             onClick={() => onCountrySelect(country.id)}
-            className="glass-panel rounded-2xl p-5 text-left cursor-pointer group"
+            className="glass-panel chamfer-sm p-5 text-left cursor-pointer group"
           >
             <div className="flex items-start justify-between gap-4">
-              <div className="w-12 h-12 rounded-2xl bg-engine/15 border border-engine/25 flex items-center justify-center font-black">
+              <div className="w-12 h-12 chamfer-sm bg-engine/15 border border-engine/25 flex items-center justify-center font-extrabold">
                 {country.flag}
               </div>
               <ArrowRight className="w-4 h-4 text-text-muted group-hover:text-ember transition-colors" />
             </div>
-            <h3 className="mt-5 text-xl font-black">{country.name}</h3>
+            <h3 className="mt-5 text-xl font-extrabold">{country.name}</h3>
             <p className="text-xs uppercase tracking-widest font-bold text-ember mt-1">{country.region}</p>
             <p className="text-sm text-text-secondary mt-4 leading-relaxed">{country.summary}</p>
-            <div className="flex gap-2 mt-5 text-[11px] uppercase tracking-wider font-black text-text-muted">
+            <div className="flex gap-2 mt-5 text-[11px] uppercase tracking-wider font-extrabold text-text-muted">
               <span>{country.universities.length} université(s)</span>
               <span>•</span>
               <span>{country.universities.reduce((sum, university) => sum + university.clubs.length, 0)} club(s)</span>
@@ -752,7 +752,7 @@ function CountriesView({ countries, query, setQuery, onCountrySelect, onGlobalGo
       <div className="flex justify-center pt-2">
         <button
           onClick={onGlobalGovernance}
-          className="inline-flex items-center justify-center gap-2 rounded-full border border-ember/30 bg-ember/10 px-6 py-3 text-xs uppercase tracking-widest font-black text-text-primary hover:bg-ember/15 transition-all cursor-pointer"
+          className="inline-flex items-center justify-center gap-2 rounded-full border border-ember/30 bg-ember/10 px-6 py-3 text-xs uppercase tracking-widest font-extrabold text-text-primary hover:bg-ember/15 transition-all cursor-pointer"
         >
           <Crown className="w-4 h-4" />
           Voir la Gouvernance Globale
@@ -773,26 +773,26 @@ function GovernanceView({ title, subtitle, people, board, onBack }) {
         Retour
       </button>
       <div>
-        <h2 className="text-2xl md:text-4xl font-black">{title}</h2>
+        <h2 className="text-2xl md:text-4xl font-extrabold">{title}</h2>
         <p className="text-sm text-text-secondary max-w-2xl mt-3">{subtitle}</p>
       </div>
       <div className="grid grid-cols-1 lg:grid-cols-[1.5fr_0.8fr] gap-5">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           {people.map((person) => (
-            <article key={`${person.name}-${person.role}`} className="glass-panel rounded-2xl p-5">
-              <div className="w-12 h-12 rounded-2xl bg-engine/15 border border-engine/25 flex items-center justify-center mb-5">
+            <article key={`${person.name}-${person.role}`} className="glass-panel chamfer-sm p-5">
+              <div className="w-12 h-12 chamfer-sm bg-engine/15 border border-engine/25 flex items-center justify-center mb-5">
                 <Users className="w-5 h-5 text-ember" />
               </div>
-              <h3 className="text-lg font-black">{person.name}</h3>
-              <p className="text-xs uppercase tracking-widest text-ember font-black mt-1">{person.role}</p>
+              <h3 className="text-lg font-extrabold">{person.name}</h3>
+              <p className="text-xs uppercase tracking-widest text-ember font-extrabold mt-1">{person.role}</p>
               <p className="text-sm text-text-secondary mt-4">
                 {person.bio ?? (canSeeContacts ? person.contact : 'Coordonnées masquées (Connexion Étudiant requise)')}
               </p>
             </article>
           ))}
         </div>
-        <aside className="glass-panel rounded-2xl p-5 h-fit">
-          <h3 className="text-sm uppercase tracking-widest font-black mb-4">Axes de gouvernance</h3>
+        <aside className="glass-panel chamfer-sm p-5 h-fit">
+          <h3 className="text-sm uppercase tracking-widest font-extrabold mb-4">Axes de gouvernance</h3>
           <div className="flex flex-col gap-3">
             {board.map((item) => (
               <div key={item} className="flex items-center gap-3 text-sm text-text-secondary">
@@ -812,7 +812,6 @@ function CountryView({ country, universities, query, setQuery, onUniversitySelec
     <div className="flex flex-col gap-8">
       <LevelHeader
         icon={Flag}
-        eyebrow="Vue pays"
         title={country.name}
         subtitle={country.summary}
         metrics={[
@@ -821,20 +820,20 @@ function CountryView({ country, universities, query, setQuery, onUniversitySelec
         ]}
       />
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-        <h2 className="text-2xl font-black">Universités disponibles</h2>
+        <h2 className="text-2xl font-extrabold">Universités disponibles</h2>
         <SearchBox value={query} onChange={setQuery} placeholder="Rechercher une université..." />
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
         {universities.map((university) => (
-          <button key={university.id} onClick={() => onUniversitySelect(university.id)} className="glass-panel rounded-2xl p-5 text-left cursor-pointer group">
+          <button key={university.id} onClick={() => onUniversitySelect(university.id)} className="glass-panel chamfer-sm p-5 text-left cursor-pointer group">
             <Building2 className="w-6 h-6 text-ember" />
-            <h3 className="text-xl font-black mt-4">{university.name}</h3>
+            <h3 className="text-xl font-extrabold mt-4">{university.name}</h3>
             <p className="text-sm text-text-secondary mt-2 flex items-center gap-2">
               <MapPin className="w-4 h-4" />
               {university.city}
             </p>
             <div className="flex items-center justify-between mt-5">
-              <span className="text-[11px] uppercase tracking-widest font-black text-text-muted">{university.clubs.length} club(s)</span>
+              <span className="text-[11px] uppercase tracking-widest font-extrabold text-text-muted">{university.clubs.length} club(s)</span>
               <ArrowRight className="w-4 h-4 text-text-muted group-hover:text-ember transition-colors" />
             </div>
           </button>
@@ -850,26 +849,25 @@ function UniversityView({ university, clubs, query, setQuery, onClubSelect, onUn
     <div className="flex flex-col gap-8">
       <LevelHeader
         icon={GraduationCap}
-        eyebrow="Vue université"
         title={university.name}
         subtitle={`Campus ${university.city}. Retrouvez les clubs actifs et les responsables FIERI de cette université.`}
         metrics={[`${university.clubs.length} club(s)`, `${university.leaders.length} responsable(s)`]}
       />
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-        <h2 className="text-2xl font-black">CITE FIERI de l’université</h2>
+        <h2 className="text-2xl font-extrabold">CITE FIERI de l’université</h2>
         <SearchBox value={query} onChange={setQuery} placeholder="Rechercher un club..." />
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
         {clubs.map((club) => (
-          <button key={club.id} onClick={() => onClubSelect(club.id)} className="glass-panel rounded-2xl p-5 text-left cursor-pointer group">
+          <button key={club.id} onClick={() => onClubSelect(club.id)} className="glass-panel chamfer-sm p-5 text-left cursor-pointer group">
             <Award className="w-6 h-6 text-ember" />
-            <h3 className="text-xl font-black mt-4">{club.name}</h3>
+            <h3 className="text-xl font-extrabold mt-4">{club.name}</h3>
             <p className="text-sm text-text-secondary mt-2">{club.domain}</p>
             <div className="flex flex-wrap gap-2 mt-5">
-              <span className="rounded-full bg-engine/15 border border-engine/25 px-3 py-1 text-[11px] uppercase tracking-widest font-black">
+              <span className="rounded-full bg-engine/15 border border-engine/25 px-3 py-1 text-[11px] uppercase tracking-widest font-extrabold">
                 {club.members} membres
               </span>
-              <span className="rounded-full bg-ember/10 border border-ember/20 px-3 py-1 text-[11px] uppercase tracking-widest font-black">
+              <span className="rounded-full bg-ember/10 border border-ember/20 px-3 py-1 text-[11px] uppercase tracking-widest font-extrabold">
                 Recrutement ouvert
               </span>
             </div>
@@ -881,12 +879,11 @@ function UniversityView({ university, clubs, query, setQuery, onClubSelect, onUn
   );
 }
 
-function ClubView({ club, university, country, onChief, onJoin }) {
+function ClubView({ club, onChief, onJoin }) {
   return (
     <div className="flex flex-col gap-7">
       <LevelHeader
         icon={Award}
-        eyebrow={`${country.name} · ${university.name}`}
         title={club.name}
         subtitle={club.domain}
         metrics={[`${club.members} membres`, 'Adhésion ouverte']}
@@ -899,18 +896,18 @@ function ClubView({ club, university, country, onChief, onJoin }) {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <button
           onClick={onChief}
-          className="rounded-2xl border border-border-subtle bg-bg-secondary/60 p-5 text-left hover:border-engine/35 transition-all cursor-pointer"
+          className="chamfer-sm border border-border-subtle bg-bg-secondary p-5 text-left hover:border-engine/35 transition-all cursor-pointer"
         >
           <Users className="w-5 h-5 text-ember mb-3" />
-          <span className="text-sm font-black">Voir le Responsable du Club</span>
+          <span className="text-sm font-extrabold">Voir le Responsable du Club</span>
           <p className="text-xs text-text-secondary mt-2">Profil du chef de club et informations de contact.</p>
         </button>
         <button
           onClick={onJoin}
-          className="rounded-2xl bg-engine border border-transparent p-5 text-left text-white hover:bg-engine/90 transition-all cursor-pointer shadow-[0_12px_35px_rgba(27,111,216,0.28)]"
+          className="chamfer-sm bg-engine border border-transparent p-5 text-left text-white hover:bg-engine/90 transition-all cursor-pointer shadow-[0_12px_35px_rgba(27,111,216,0.28)]"
         >
           <ArrowRight className="w-5 h-5 mb-3" />
-          <span className="text-sm font-black">Rejoindre / Intégrer le Club</span>
+          <span className="text-sm font-extrabold">Rejoindre / Intégrer le Club</span>
           <p className="text-xs text-white/80 mt-2">Envoyer une demande d’adhésion au bureau du club.</p>
         </button>
       </div>
@@ -928,12 +925,12 @@ function ChiefView({ club, onBack }) {
         <ArrowLeft className="w-4 h-4" />
         Retour au club
       </button>
-      <article className="glass-panel rounded-2xl p-6">
-        <div className="w-14 h-14 rounded-2xl bg-engine/15 border border-engine/25 flex items-center justify-center mb-5">
+      <article className="glass-panel chamfer-sm p-6">
+        <div className="w-14 h-14 chamfer-sm bg-engine/15 border border-engine/25 flex items-center justify-center mb-5">
           <Users className="w-6 h-6 text-ember" />
         </div>
-        <h2 className="text-3xl font-black">{club.chief.name}</h2>
-        <p className="text-xs uppercase tracking-widest font-black text-ember mt-1">{club.chief.role}</p>
+        <h2 className="text-3xl font-extrabold">{club.chief.name}</h2>
+        <p className="text-xs uppercase tracking-widest font-extrabold text-ember mt-1">{club.chief.role}</p>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
           <ContactTile
             icon={Phone}
@@ -959,33 +956,33 @@ function JoinView({ club, form, submitted, onBack, onChange, onSubmit }) {
         Retour au club
       </button>
       <div className="grid grid-cols-1 lg:grid-cols-[0.8fr_1.2fr] gap-5">
-        <aside className="glass-panel rounded-2xl p-6 h-fit">
-          <h2 className="text-2xl font-black">Intégrer {club.name}</h2>
+        <aside className="glass-panel chamfer-sm p-6 h-fit">
+          <h2 className="text-2xl font-extrabold">Intégrer {club.name}</h2>
           <p className="text-sm text-text-secondary mt-3">
             Ce formulaire est une simulation locale pour l’essai. Aucune donnée n’est envoyée à un serveur.
           </p>
           {submitted && (
-            <div className="mt-5 rounded-2xl border border-ember/25 bg-ember/10 p-4 text-sm text-text-primary">
+            <div className="mt-5 chamfer-sm border border-ember/25 bg-ember/10 p-4 text-sm text-text-primary">
               Demande enregistrée dans le prototype. Le bureau du club pourra vous contacter.
             </div>
           )}
         </aside>
-        <form onSubmit={onSubmit} className="glass-panel rounded-2xl p-6 grid grid-cols-1 gap-4">
+        <form onSubmit={onSubmit} className="glass-panel chamfer-sm p-6 grid grid-cols-1 gap-4">
           <FormField label="Nom complet" value={form.fullName} onChange={(value) => onChange('fullName', value)} required />
           <FormField label="Email" type="email" value={form.email} onChange={(value) => onChange('email', value)} required />
           <FormField label="Téléphone" value={form.phone} onChange={(value) => onChange('phone', value)} required />
           <FormField label="Filière / spécialité" value={form.field} onChange={(value) => onChange('field', value)} required />
           <label className="grid gap-2">
-            <span className="text-[11px] uppercase tracking-widest font-black text-text-muted">Motivation</span>
+            <span className="text-[11px] uppercase tracking-widest font-extrabold text-text-muted">Motivation</span>
             <textarea
               value={form.motivation}
               onChange={(event) => onChange('motivation', event.target.value)}
               required
               rows={4}
-              className="rounded-2xl bg-bg-primary/70 border border-border-subtle px-4 py-3 text-sm text-text-primary outline-none focus:border-engine/60 transition-colors resize-none"
+              className="chamfer-sm bg-bg-primary border border-border-subtle px-4 py-3 text-sm text-text-primary outline-none focus:border-engine/60 transition-colors resize-none"
             />
           </label>
-          <button className="mt-2 rounded-full bg-engine text-white px-6 py-3 text-xs uppercase tracking-widest font-black hover:bg-engine/90 transition-all cursor-pointer">
+          <button className="mt-2 rounded-full bg-engine text-white px-6 py-3 text-xs uppercase tracking-widest font-extrabold hover:bg-engine/90 transition-all cursor-pointer">
             Envoyer la demande
           </button>
         </form>
@@ -994,21 +991,22 @@ function JoinView({ club, form, submitted, onBack, onChange, onSubmit }) {
   );
 }
 
-function LevelHeader({ icon: Icon, eyebrow, title, subtitle, metrics }) {
+function LevelHeader({ icon: Icon, title, subtitle, metrics }) {
   return (
-    <div className="glass-panel rounded-2xl p-6 md:p-8">
+    <div className="glass-panel chamfer p-6 md:p-8">
       <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6">
         <div className="max-w-3xl">
-          <div className="inline-flex items-center gap-2 text-[11px] uppercase tracking-widest font-black text-ember mb-4">
-            <Icon className="w-4 h-4" />
-            {eyebrow}
+          <div className="flex items-center gap-3 mb-3">
+            <div className="w-9 h-9 chamfer-sm bg-ember/10 border border-ember/25 flex items-center justify-center shrink-0">
+              <Icon className="w-4 h-4 text-ember" />
+            </div>
+            <h2 className="text-3xl md:text-5xl font-extrabold leading-tight font-display">{title}</h2>
           </div>
-          <h2 className="text-3xl md:text-5xl font-black leading-tight">{title}</h2>
-          <p className="text-sm md:text-base text-text-secondary mt-4">{subtitle}</p>
+          <p className="text-sm md:text-base text-text-secondary mt-1">{subtitle}</p>
         </div>
         <div className="flex flex-wrap gap-2">
           {metrics.map((metric) => (
-            <span key={metric} className="rounded-full border border-border-subtle bg-bg-tertiary px-4 py-2 text-[11px] uppercase tracking-widest font-black text-text-secondary">
+            <span key={metric} className="chamfer-sm border border-border-subtle bg-bg-tertiary px-4 py-2 text-[11px] uppercase tracking-widest font-extrabold text-text-secondary">
               {metric}
             </span>
           ))}
@@ -1020,9 +1018,9 @@ function LevelHeader({ icon: Icon, eyebrow, title, subtitle, metrics }) {
 
 function InfoPanel({ icon: Icon, title, text }) {
   return (
-    <article className="glass-panel rounded-2xl p-5">
+    <article className="glass-panel chamfer-sm p-5">
       <Icon className="w-6 h-6 text-ember" />
-      <h3 className="text-lg font-black mt-4">{title}</h3>
+      <h3 className="text-lg font-extrabold mt-4">{title}</h3>
       <p className="text-sm text-text-secondary mt-3 leading-relaxed">{text}</p>
     </article>
   );
@@ -1030,9 +1028,9 @@ function InfoPanel({ icon: Icon, title, text }) {
 
 function ContactTile({ icon: Icon, label, value }) {
   return (
-    <div className="rounded-2xl border border-border-subtle bg-bg-primary/50 p-4">
+    <div className="chamfer-sm border border-border-subtle bg-bg-primary p-4">
       <Icon className="w-4 h-4 text-ember mb-3" />
-      <div className="text-[11px] uppercase tracking-widest font-black text-text-muted">{label}</div>
+      <div className="text-[11px] uppercase tracking-widest font-extrabold text-text-muted">{label}</div>
       <div className="text-sm font-bold mt-1 break-words">{value}</div>
     </div>
   );
@@ -1041,13 +1039,13 @@ function ContactTile({ icon: Icon, label, value }) {
 function FormField({ label, value, onChange, type = 'text', required = false }) {
   return (
     <label className="grid gap-2">
-      <span className="text-[11px] uppercase tracking-widest font-black text-text-muted">{label}</span>
+      <span className="text-[11px] uppercase tracking-widest font-extrabold text-text-muted">{label}</span>
       <input
         type={type}
         value={value}
         onChange={(event) => onChange(event.target.value)}
         required={required}
-        className="rounded-full bg-bg-primary/70 border border-border-subtle px-4 py-3 text-sm text-text-primary outline-none focus:border-engine/60 transition-colors"
+        className="rounded-full bg-bg-primary border border-border-subtle px-4 py-3 text-sm text-text-primary outline-none focus:border-engine/60 transition-colors"
       />
     </label>
   );
@@ -1058,7 +1056,7 @@ function PrimaryFooterButton({ icon: Icon, label, onClick }) {
     <div className="flex justify-center pt-2">
       <button
         onClick={onClick}
-        className="inline-flex items-center justify-center gap-2 rounded-full bg-engine text-white px-6 py-3 text-xs uppercase tracking-widest font-black hover:bg-engine/90 transition-all cursor-pointer shadow-[0_10px_30px_rgba(27,111,216,0.24)]"
+        className="inline-flex items-center justify-center gap-2 rounded-full bg-engine text-white px-6 py-3 text-xs uppercase tracking-widest font-extrabold hover:bg-engine/90 transition-all cursor-pointer shadow-[0_10px_30px_rgba(27,111,216,0.24)]"
       >
         <Icon className="w-4 h-4" />
         {label}

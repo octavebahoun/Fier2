@@ -47,7 +47,7 @@ export function AuthGateProvider({ children }) {
                 </p>
               </div>
               <div className="flex flex-col gap-2 mt-1">
-                <button onClick={goToLogin} className="flex items-center justify-center gap-2 py-2.5 rounded-xl bg-engine text-white text-xs font-black uppercase tracking-wider hover:bg-engine/90 transition-all">
+                <button onClick={goToLogin} className="flex items-center justify-center gap-2 py-2.5 rounded-xl bg-engine text-white text-xs font-extrabold uppercase tracking-wider hover:bg-engine/90 transition-all">
                   <LogIn className="w-4 h-4" /> Se connecter
                 </button>
                 <button onClick={goToLogin} className="flex items-center justify-center gap-2 py-2.5 rounded-xl border border-border-subtle text-text-primary text-xs font-bold hover:bg-bg-tertiary transition-all">

@@ -108,14 +108,14 @@ export default function ResearchClubsSection({ clubs, navigate }) {
               <button
                 onClick={() => scrollByStep(-1)}
                 aria-label="Précédent"
-                className="p-3 rounded-full bg-bg-secondary/80 border border-border-subtle text-text-secondary hover:text-text-primary hover:bg-bg-secondary backdrop-blur-md transition-all cursor-pointer"
+                className="p-3 rounded-full bg-bg-secondary/80 border border-border-subtle text-text-secondary hover:text-text-primary hover:bg-bg-tertiary backdrop-blur-md transition-all cursor-pointer"
               >
                 <ChevronLeft className="w-5 h-5" />
               </button>
               <button
                 onClick={() => scrollByStep(1)}
                 aria-label="Suivant"
-                className="p-3 rounded-full bg-bg-secondary/80 border border-border-subtle text-text-secondary hover:text-text-primary hover:bg-bg-secondary backdrop-blur-md transition-all cursor-pointer"
+                className="p-3 rounded-full bg-bg-secondary/80 border border-border-subtle text-text-secondary hover:text-text-primary hover:bg-bg-tertiary backdrop-blur-md transition-all cursor-pointer"
               >
                 <ChevronRight className="w-5 h-5" />
               </button>
