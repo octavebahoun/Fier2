@@ -64,10 +64,6 @@ export default function Projects({ navigate }) {
   return (
     <div className="max-w-[88rem] mx-auto w-full py-24 px-6 md:px-12 lg:px-12 flex flex-col gap-12 relative min-h-screen">
       
-      {/* Decorative cosmic glows */}
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[500px] h-[500px] bg-engine/5 rounded-full blur-[140px] pointer-events-none" />
-      <div className="absolute bottom-10 left-10 w-[300px] h-[300px] bg-indigo-500/5 rounded-full blur-[100px] pointer-events-none" />
-
       {/* Header section with neat design */}
       <div className="flex flex-col gap-4 max-w-3xl relative z-10">
         <motion.div 
@@ -128,7 +124,7 @@ export default function Projects({ navigate }) {
             onClick={() => setActiveFilter('all')}
             className={`px-4 py-2 rounded-xl text-xs font-bold border transition-all shrink-0 cursor-pointer ${
               activeFilter === 'all' 
-                ? 'bg-engine border-engine text-white shadow-lg shadow-engine/10' 
+                ? 'bg-engine border-engine text-on-accent shadow-lg' 
                 : 'bg-bg-secondary border-border-subtle text-text-secondary hover:text-text-primary'
             }`}
           >
@@ -138,7 +134,7 @@ export default function Projects({ navigate }) {
             onClick={() => setActiveFilter('active')}
             className={`px-4 py-2 rounded-xl text-xs font-bold border transition-all shrink-0 cursor-pointer ${
               activeFilter === 'active' 
-                ? 'bg-engine border-engine text-white shadow-lg shadow-engine/10' 
+                ? 'bg-engine border-engine text-on-accent shadow-lg' 
                 : 'bg-bg-secondary border-border-subtle text-text-secondary hover:text-text-primary'
             }`}
           >
@@ -148,7 +144,7 @@ export default function Projects({ navigate }) {
             onClick={() => setActiveFilter('rd')}
             className={`px-4 py-2 rounded-xl text-xs font-bold border transition-all shrink-0 cursor-pointer ${
               activeFilter === 'rd' 
-                ? 'bg-engine border-engine text-white shadow-lg shadow-engine/10' 
+                ? 'bg-engine border-engine text-on-accent shadow-lg' 
                 : 'bg-bg-secondary border-border-subtle text-text-secondary hover:text-text-primary'
             }`}
           >
@@ -220,21 +216,21 @@ export default function Projects({ navigate }) {
                         <div className="flex items-center gap-2">
                           <span className={`text-[11px] font-extrabold uppercase tracking-wider px-2.5 py-0.5 rounded-md border ${
                             p.status === 'Actif'
-                              ? 'text-emerald-400 bg-emerald-500/10 border-emerald-500/10'
-                              : 'text-amber-400 bg-amber-500/10 border-amber-500/10'
+                              ? 'text-success bg-success-wash border-success'
+                              : 'text-warning bg-warning-wash border-warning'
                           }`}>
                             {p.status}
                           </span>
                           {isFeatured && (
-                            <span className="text-[11px] font-extrabold uppercase tracking-wider px-2.5 py-0.5 rounded-md text-engine bg-engine/10 border-engine/10 flex items-center gap-1">
+                            <span className="text-[11px] font-extrabold uppercase tracking-wider px-2.5 py-0.5 rounded-md text-engine bg-engine-wash border-engine/10 flex items-center gap-1">
                               <Award className="w-2.5 h-2.5 animate-bounce" />
                               À la Une
                             </span>
                           )}
                         </div>
                         
-                        <div className="flex items-center gap-1 text-text-secondary group-hover:text-amber-400 transition-colors">
-                          <Star className={`w-3.5 h-3.5 ${p.starred ? 'fill-amber-400 text-amber-400' : ''}`} />
+                        <div className="flex items-center gap-1 text-text-secondary group-hover:text-warning transition-colors">
+                          <Star className={`w-3.5 h-3.5 ${p.starred ? 'fill-warning text-warning' : ''}`} />
                           <span className="text-[11px] font-bold">{p.stars}</span>
                         </div>
                       </div>
@@ -259,7 +255,7 @@ export default function Projects({ navigate }) {
                           </span>
                         ))}
                         {p.technologies.length > (isFeatured ? 7 : 4) && (
-                          <span className="text-[11px] font-extrabold text-engine bg-engine/5 border border-engine/10 px-2 py-0.5 rounded-md">
+                          <span className="text-[11px] font-extrabold text-engine bg-engine-wash border border-engine/10 px-2 py-0.5 rounded-md">
                             +{p.technologies.length - (isFeatured ? 7 : 4)}
                           </span>
                         )}
@@ -291,7 +287,7 @@ export default function Projects({ navigate }) {
                       {/* Author block and visual Explore link */}
                       <div className="flex justify-between items-center gap-4">
                         <div className="flex items-center gap-2.5">
-                          <span className="w-7 h-7 rounded-full bg-engine/10 border border-border-subtle flex items-center justify-center text-[11px] font-extrabold text-engine shrink-0">
+                          <span className="w-7 h-7 rounded-full bg-engine-wash border border-border-subtle flex items-center justify-center text-[11px] font-extrabold text-engine shrink-0">
                             {p.author ? p.author.charAt(0).toUpperCase() : '?'}
                           </span>
                           <span className="text-[11px] font-bold text-text-primary line-clamp-1">{p.author}</span>

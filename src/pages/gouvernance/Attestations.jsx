@@ -164,7 +164,7 @@ export default function Attestations() {
                   <div className="flex h-12 w-24 items-center justify-center border border-border-strong bg-bg-primary p-1">
                     <img src={signatureUrl} alt="Votre griffe officielle" className="max-h-full max-w-full object-contain" />
                   </div>
-                  <span className="inline-flex items-center gap-1.5 text-sm font-semibold text-emerald-400">
+                  <span className="inline-flex items-center gap-1.5 text-sm font-semibold text-success">
                     <CheckCircle2 className="h-4 w-4" aria-hidden="true" /> Griffe active
                   </span>
                 </div>
@@ -211,7 +211,7 @@ export default function Attestations() {
                   ))}
                 </select>
                 {loadingMembers && <p className="mt-1 text-sm text-text-muted">Chargement des membres…</p>}
-                {errorMembers && <p className="mt-1 text-sm text-red-400" role="alert">{errorMembers}</p>}
+                {errorMembers && <p className="mt-1 text-sm text-danger" role="alert">{errorMembers}</p>}
                 {!loadingMembers && !errorMembers && members.length === 0 && (
                   <p className="mt-1 text-sm text-text-muted">
                     Aucun membre rattaché à cette université : une attestation ne peut être émise que
@@ -260,8 +260,8 @@ export default function Attestations() {
             </form>
 
             {derniere && (
-              <div className="mt-4 flex flex-wrap items-center justify-between gap-3 border border-emerald-500 bg-emerald-500/12 px-4 py-3">
-                <p className="text-sm text-emerald-300">
+              <div className="mt-4 flex flex-wrap items-center justify-between gap-3 border border-success bg-success-wash px-4 py-3">
+                <p className="text-sm text-success">
                   « {derniere.title} » émise pour {derniere.recipientName}.
                 </p>
                 {derniere.fileUrl && (
@@ -269,7 +269,7 @@ export default function Attestations() {
                     href={derniere.fileUrl}
                     target="_blank"
                     rel="noreferrer"
-                    className="inline-flex min-h-11 items-center gap-2 border border-emerald-500 px-4 text-sm font-bold text-emerald-300 transition-colors hover:bg-emerald-500/20"
+                    className="inline-flex min-h-11 items-center gap-2 border border-success px-4 text-sm font-bold text-success transition-colors hover:bg-success-wash"
                   >
                     <Download className="h-4 w-4" aria-hidden="true" /> Ouvrir le PDF
                   </a>

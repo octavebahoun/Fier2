@@ -118,7 +118,7 @@ export default function ContactSection({ contact }) {
                   href="https://wa.me/+22941642355?text=Bonjour,%20FIERI"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-6 py-3.5 chamfer-sm bg-ember hover:bg-ember-soft text-white font-bold text-sm transition-colors duration-300 cursor-pointer"
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-6 py-3.5 chamfer-sm bg-ember hover:bg-ember-soft text-on-accent font-bold text-sm transition-colors duration-300 cursor-pointer"
                 >
                   <MessageIcon className="w-5 h-5 fill-current" />
                   Échanger directement sur WhatsApp
@@ -142,7 +142,7 @@ export default function ContactSection({ contact }) {
                       className="space-y-5"
                     >
                       {submitError && (
-                        <div className="p-3 rounded-lg bg-red-500/10 border border-red-500/30 text-red-400 text-xs font-medium">
+                        <div className="p-3 rounded-lg bg-danger-wash border border-danger text-danger text-xs font-medium">
                           {submitError}
                         </div>
                       )}
@@ -156,9 +156,9 @@ export default function ContactSection({ contact }) {
                             value={formState.name}
                             onChange={(e) => handleChange('name', e.target.value)}
                             placeholder="Nom complet"
-                            className={`w-full px-4 py-3 rounded-lg bg-bg-primary/80 border ${errors.name ? 'border-red-500/50' : 'border-border-subtle focus:border-engine'} focus:outline-none text-text-primary text-xs sm:text-sm font-medium transition-all`}
+                            className={`w-full px-4 py-3 rounded-lg bg-bg-primary/80 border ${errors.name ? 'border-danger' : 'border-border-subtle focus:border-engine'} focus:outline-none text-text-primary text-xs sm:text-sm font-medium transition-all`}
                           />
-                          {errors.name && <span className="text-[11px] text-red-400 mt-1 block">{errors.name}</span>}
+                          {errors.name && <span className="text-[11px] text-danger mt-1 block">{errors.name}</span>}
                         </div>
                         <div>
                           <label className="block text-[11px] font-bold tracking-widest text-text-secondary uppercase mb-2">Adresse E-mail</label>
@@ -168,9 +168,9 @@ export default function ContactSection({ contact }) {
                             value={formState.email}
                             onChange={(e) => handleChange('email', e.target.value)}
                             placeholder="adresse@mail.com"
-                            className={`w-full px-4 py-3 rounded-lg bg-bg-primary/80 border ${errors.email ? 'border-red-500/50' : 'border-border-subtle focus:border-engine'} focus:outline-none text-text-primary text-xs sm:text-sm font-medium transition-all`}
+                            className={`w-full px-4 py-3 rounded-lg bg-bg-primary/80 border ${errors.email ? 'border-danger' : 'border-border-subtle focus:border-engine'} focus:outline-none text-text-primary text-xs sm:text-sm font-medium transition-all`}
                           />
-                          {errors.email && <span className="text-[11px] text-red-400 mt-1 block">{errors.email}</span>}
+                          {errors.email && <span className="text-[11px] text-danger mt-1 block">{errors.email}</span>}
                         </div>
                       </div>
 
@@ -193,15 +193,15 @@ export default function ContactSection({ contact }) {
                           value={formState.message}
                           onChange={(e) => handleChange('message', e.target.value)}
                           placeholder="Décrivez votre idée de projet, vos besoins..."
-                          className={`w-full px-4 py-3 rounded-lg bg-bg-primary/80 border ${errors.message ? 'border-red-500/50' : 'border-border-subtle focus:border-engine'} focus:outline-none text-text-primary text-xs sm:text-sm font-medium transition-all resize-none`}
+                          className={`w-full px-4 py-3 rounded-lg bg-bg-primary/80 border ${errors.message ? 'border-danger' : 'border-border-subtle focus:border-engine'} focus:outline-none text-text-primary text-xs sm:text-sm font-medium transition-all resize-none`}
                         />
-                        {errors.message && <span className="text-[11px] text-red-400 mt-1 block">{errors.message}</span>}
+                        {errors.message && <span className="text-[11px] text-danger mt-1 block">{errors.message}</span>}
                       </div>
 
                       <button
                         type="submit"
                         disabled={loading}
-                        className="w-full py-3.5 chamfer-sm bg-engine hover:bg-engine-deep disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold text-sm transition-colors duration-300 flex items-center justify-center gap-2 cursor-pointer"
+                        className="w-full py-3.5 chamfer-sm bg-engine hover:bg-engine-deep disabled:opacity-50 disabled:cursor-not-allowed text-on-accent font-bold text-sm transition-colors duration-300 flex items-center justify-center gap-2 cursor-pointer"
                       >
                         {loading ? (
                           <>
@@ -227,7 +227,7 @@ export default function ContactSection({ contact }) {
                       exit={{ opacity: 0 }}
                       className="py-12 text-center"
                     >
-                      <div className="w-16 h-16 rounded-full bg-engine/20 border border-engine/40 flex items-center justify-center mx-auto text-engine mb-6">
+                      <div className="w-16 h-16 rounded-full bg-engine-wash border border-engine/40 flex items-center justify-center mx-auto text-engine mb-6">
                         <CheckCircle2 className="w-8 h-8" />
                       </div>
                       <h3 className="text-xl font-bold text-text-primary mb-2">Message transmis avec succès !</h3>

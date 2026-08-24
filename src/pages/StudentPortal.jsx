@@ -72,7 +72,7 @@ export default function StudentPortal({ navigate }) {
       <div className="relative z-10">
         <div className="flex flex-col gap-4 mb-16 max-w-3xl">
           <div className="flex items-center gap-3">
-            <div className="p-2.5 rounded-xl bg-engine/10 border border-engine/20 text-engine">
+            <div className="p-2.5 rounded-xl bg-engine-wash border border-engine/20 text-engine">
               <GraduationCap className="w-5 h-5" />
             </div>
             <span className="text-[11px] font-extrabold tracking-[0.25em] uppercase text-engine">
@@ -89,14 +89,14 @@ export default function StudentPortal({ navigate }) {
 
           {/* Bandeau invitation connexion si non connecté */}
           {!user && (
-            <div className="flex items-center gap-4 p-4 chamfer-sm bg-engine/8 border border-engine/20 text-sm mt-2">
+            <div className="flex items-center gap-4 p-4 chamfer-sm bg-engine-wash border border-engine/20 text-sm mt-2">
               <Lock className="w-5 h-5 text-engine shrink-0" />
               <p className="text-text-secondary text-xs">
                 <span className="text-text-primary font-semibold">Connectez-vous</span> pour rejoindre des clubs, vous inscrire aux ateliers et accéder à votre tableau de bord.
               </p>
               <button
                 onClick={() => navigate('auth')}
-                className="ml-auto shrink-0 px-4 py-1.5 rounded-xl bg-engine text-white text-xs font-bold hover:bg-engine/85 transition-colors"
+                className="ml-auto shrink-0 px-4 py-1.5 rounded-xl bg-engine text-on-accent text-xs font-bold hover:bg-engine transition-colors"
               >
                 Se connecter
               </button>
@@ -154,7 +154,6 @@ export default function StudentPortal({ navigate }) {
 
         {clubs.length > 0 && (
           <div className="glass-panel chamfer p-8 border border-border-subtle relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-64 h-64 bg-engine/5 blur-[60px] rounded-full pointer-events-none" />
             <div className="relative z-10 flex flex-col gap-6">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
@@ -203,7 +202,6 @@ export default function StudentPortal({ navigate }) {
         )}
 
         <div className="mt-12 glass-panel chamfer p-8 border border-border-subtle flex flex-col md:flex-row items-center justify-between gap-6 relative overflow-hidden">
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-ember/5 blur-[60px] rounded-full pointer-events-none" />
           <div className="relative z-10 flex flex-col gap-2">
             <h3 className="text-lg font-extrabold text-text-primary flex items-center gap-2">
               <Sparkles className="w-5 h-5 text-ember" />
@@ -215,7 +213,7 @@ export default function StudentPortal({ navigate }) {
           </div>
           <button
             onClick={() => navigate('auth')}
-            className="relative z-10 px-6 py-3 chamfer-sm text-xs font-bold text-white bg-engine hover:bg-engine/90 shadow-lg shadow-engine/20 transition-all cursor-pointer shrink-0"
+            className="relative z-10 px-6 py-3 chamfer-sm chamfer-shadow text-xs font-bold text-on-accent bg-engine hover:bg-engine transition-all cursor-pointer shrink-0"
           >
             Commencer
           </button>

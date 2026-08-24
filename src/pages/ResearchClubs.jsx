@@ -2,56 +2,15 @@ import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Users, CheckCircle, Lock, Cpu, Leaf, Building2,
-  Brain, Rocket, Zap, ChevronRight, Star, AlertCircle, X,
+  Brain, Rocket, Zap, ChevronRight, Star,
   Clock, ShieldCheck, Check, Ban
 } from 'lucide-react';
 import api from '../services/api.js';
 import { useAuth } from '../context/AuthContext.jsx';
 import FadeInWhenVisible from '../components/home/FadeInWhenVisible.jsx';
 import PageHeader from '../components/ui/PageHeader.jsx';
+import { useToast } from '../components/ui/Toast.jsx'
 
-// ───────────────────────────── Toast Component ───────────────────────────────
-function Toast({ message, type = 'success', onClose }) {
-  useEffect(() => {
-    const timer = setTimeout(onClose, 4000);
-    return () => clearTimeout(timer);
-  }, [onClose]);
-
-  const styles = {
-    success: 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400',
-    error:   'bg-red-500/10 border-red-500/30 text-red-400',
-    info:    'bg-engine/10 border-engine/30 text-engine',
-    warning: 'bg-amber-500/10 border-amber-500/30 text-amber-400',
-  };
-
-  const icons = {
-    success: CheckCircle,
-    error: AlertCircle,
-    info: AlertCircle,
-    warning: AlertCircle,
-  };
-
-  const Icon = icons[type] || CheckCircle;
-  const bgClass = styles[type] || styles.success;
-
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 24, scale: 0.95 }}
-      animate={{ opacity: 1, y: 0, scale: 1 }}
-      exit={{ opacity: 0, y: 16, scale: 0.95 }}
-      transition={{ type: 'spring', stiffness: 400, damping: 28 }}
-      className={`fixed bottom-6 right-6 z-[100] flex items-center gap-3 px-5 py-3.5 chamfer-sm shadow-2xl backdrop-blur-md border ${bgClass}`}
-      role="alert"
-      aria-live="polite"
-    >
-      <Icon className="w-5 h-5 shrink-0" />
-      <span className="text-xs font-bold">{message}</span>
-      <button onClick={onClose} className="ml-2 opacity-60 hover:opacity-100 transition-opacity">
-        <X className="w-3.5 h-3.5" />
-      </button>
-    </motion.div>
-  );
-}
 
 // ────────────────────────────── Join Confirm Modal ────────────────────────────
 function JoinConfirmModal({ club, onConfirm, onCancel }) {
@@ -62,7 +21,7 @@ function JoinConfirmModal({ club, onConfirm, onCancel }) {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+      className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-scrim backdrop-blur-sm"
       onClick={onCancel}
     >
       <motion.div
@@ -71,7 +30,7 @@ function JoinConfirmModal({ club, onConfirm, onCancel }) {
         exit={{ opacity: 0, scale: 0.92, y: 20 }}
         transition={{ type: 'spring', stiffness: 380, damping: 28 }}
         onClick={(e) => e.stopPropagation()}
-        className="relative w-full max-w-md chamfer border p-8 shadow-2xl"
+        className="relative w-full max-w-md chamfer chamfer-shadow border p-8 "
         style={{
           background: 'var(--color-bg-secondary)',
           borderColor: `${club.accent}40`,
@@ -217,7 +176,7 @@ function ClubCard({ club, user, navigate, onJoin, onLeave, isPending, joiningId,
             {club.divisions.map((div) => (
               <span
                 key={div}
-                className="text-[11px] font-medium px-2 py-0.5 rounded-full bg-bg-tertiary text-text-secondary border border-white/8"
+                className="text-[11px] font-medium px-2 py-0.5 rounded-full bg-bg-tertiary text-text-secondary border border-border-subtle"
               >
                 {div}
               </span>
@@ -316,10 +275,10 @@ function ClubCard({ club, user, navigate, onJoin, onLeave, isPending, joiningId,
               className="flex items-center justify-between w-full px-3 py-2 rounded-lg bg-bg-secondary border border-border-subtle text-xs font-bold text-text-secondary hover:text-text-primary hover:bg-bg-tertiary transition-all"
             >
               <div className="flex items-center gap-1.5">
-                <ShieldCheck className="w-4 h-4 text-emerald-400" />
+                <ShieldCheck className="w-4 h-4 text-success" />
                 <span>Gérer les adhésions</span>
               </div>
-              <span className="px-2 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-[11px] text-emerald-400">
+              <span className="px-2 py-0.5 rounded-full bg-success-wash border border-success text-[11px] text-success">
                 {pendingMembers.length} en attente
               </span>
             </button>
@@ -333,7 +292,7 @@ function ClubCard({ club, user, navigate, onJoin, onLeave, isPending, joiningId,
                   className="overflow-hidden space-y-2 pt-1"
                 >
                   {pendingMembers.length === 0 ? (
-                    <p className="text-[11px] text-emerald-400/80 italic text-center py-1">
+                    <p className="text-[11px] text-success italic text-center py-1">
                       Aucune demande d'adhésion en attente.
                     </p>
                   ) : (
@@ -363,14 +322,14 @@ function ClubCard({ club, user, navigate, onJoin, onLeave, isPending, joiningId,
                           <div className="flex gap-1 shrink-0">
                             <button
                               onClick={() => onApproveRequest(req.id)}
-                              className="p-1 rounded bg-emerald-500/20 text-emerald-400 hover:bg-emerald-500 hover:text-white transition-all"
+                              className="p-1 rounded bg-success-wash text-on-accent hover:bg-success hover:text-on-accent transition-all"
                               title="Approuver"
                             >
                               <Check className="w-3.5 h-3.5" />
                             </button>
                             <button
                               onClick={() => onRejectRequest(req.id)}
-                              className="p-1 rounded bg-red-500/20 text-red-400 hover:bg-red-500 hover:text-white transition-all"
+                              className="p-1 rounded bg-danger-wash text-on-accent hover:bg-danger hover:text-on-accent transition-all"
                               title="Rejeter"
                             >
                               <Ban className="w-3.5 h-3.5" />
@@ -397,7 +356,7 @@ export default function ResearchClubs({ navigate }) {
   const [clubs, setClubs] = useState([]);
   const [myRequests, setMyRequests] = useState([]);
   const [pendingRequests, setPendingRequests] = useState({});
-  const [toast, setToast] = useState(null);
+  const { notify } = useToast()
   const [joiningId, setJoiningId] = useState(null);
   const [confirmClub, setConfirmClub] = useState(null); // Club en attente de confirmation
 
@@ -478,10 +437,10 @@ export default function ResearchClubs({ navigate }) {
     setJoiningId(clubId);
     const res = await api.memberships.leave(clubId, userId);
     if (res.success) {
-      setToast({ message: res.message, type: 'info' });
+      notify(res.message, 'info');
       loadData();
     } else {
-      setToast({ message: res.message, type: 'error' });
+      notify(res.message, 'error');
     }
     setJoiningId(null);
   };
@@ -495,10 +454,10 @@ export default function ResearchClubs({ navigate }) {
 
     const res = await api.memberships.requestJoin(clubId, user);
     if (res.success) {
-      setToast({ message: res.message, type: 'success' });
+      notify(res.message, 'success');
       loadData();
     } else {
-      setToast({ message: res.message, type: 'error' });
+      notify(res.message, 'error');
     }
     setJoiningId(null);
   };
@@ -507,10 +466,10 @@ export default function ResearchClubs({ navigate }) {
   const handleApproveRequest = async (requestId) => {
     const res = await api.memberships.approve(requestId);
     if (res.success) {
-      setToast({ message: 'Adhésion approuvée avec succès !', type: 'success' });
+      notify('Adhésion approuvée avec succès !', 'success');
       loadData();
     } else {
-      setToast({ message: res.message, type: 'error' });
+      notify(res.message, 'error');
     }
   };
 
@@ -518,10 +477,10 @@ export default function ResearchClubs({ navigate }) {
   const handleRejectRequest = async (requestId) => {
     const res = await api.memberships.reject(requestId, 'Demande rejetée par le Responsable.');
     if (res.success) {
-      setToast({ message: 'Demande d\'adhésion refusée.', type: 'info' });
+      notify('Demande d\'adhésion refusée.', 'info');
       loadData();
     } else {
-      setToast({ message: res.message, type: 'error' });
+      notify(res.message, 'error');
     }
   };
 
@@ -559,7 +518,7 @@ export default function ResearchClubs({ navigate }) {
               {user && joinedCount > 0 && (
                 <>
                   <div className="w-px h-4 bg-border-subtle hidden sm:block" />
-                  <div className="flex items-center gap-2 text-sm text-emerald-400">
+                  <div className="flex items-center gap-2 text-sm text-success">
                     <CheckCircle className="w-4 h-4" />
                     <span>
                       <strong className="font-bold">{joinedCount}</strong> club
@@ -574,7 +533,7 @@ export default function ResearchClubs({ navigate }) {
         {/* ── Bandeau invitation connexion (visiteur) ── */}
         {!user && (
           <FadeInWhenVisible direction="up" delay={0.1}>
-            <div className="mb-10 flex items-center gap-4 p-4 chamfer-sm bg-engine/8 border border-engine/20 text-sm">
+            <div className="mb-10 flex items-center gap-4 p-4 chamfer-sm bg-engine-wash border border-engine/20 text-sm">
               <Lock className="w-5 h-5 text-engine shrink-0" />
               <p className="text-text-secondary">
                 <span className="text-text-primary font-semibold">Connectez-vous</span> pour rejoindre
@@ -583,7 +542,7 @@ export default function ResearchClubs({ navigate }) {
               {navigate && (
                 <button
                   onClick={() => navigate('auth')}
-                  className="ml-auto shrink-0 px-4 py-1.5 rounded-xl bg-engine text-white text-xs font-bold hover:bg-engine/85 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-engine"
+                  className="ml-auto shrink-0 px-4 py-1.5 rounded-xl bg-engine text-on-accent text-xs font-bold hover:bg-engine transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-engine"
                 >
                   Se connecter
                 </button>
@@ -621,7 +580,7 @@ export default function ResearchClubs({ navigate }) {
 
         {/* ── Section CTA bas de page ── */}
         <FadeInWhenVisible direction="up" delay={0.15}>
-          <div className="mt-16 text-center p-8 chamfer bg-bg-tertiary border border-white/8">
+          <div className="mt-16 text-center p-8 chamfer bg-bg-tertiary border border-border-subtle">
             <p className="text-text-secondary text-sm leading-relaxed max-w-xl mx-auto">
               Chaque club dispose de ses propres projets de recherche, ateliers et publications.
               Explorez les{' '}
@@ -645,16 +604,7 @@ export default function ResearchClubs({ navigate }) {
       </div>
 
       {/* ── Toast notifications ── */}
-      <AnimatePresence>
-        {toast && (
-          <Toast
-            key={toast.message}
-            message={toast.message}
-            type={toast.type}
-            onClose={() => setToast(null)}
-          />
-        )}
-      </AnimatePresence>
+
 
       {/* ── Modale de confirmation d'adhésion ── */}
       <AnimatePresence>

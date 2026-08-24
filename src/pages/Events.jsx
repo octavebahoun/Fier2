@@ -9,35 +9,15 @@ import { useAuth } from '@/context/AuthContext.jsx';
 import PageHeader from '../components/ui/PageHeader.jsx';
 import { useAuthGate } from '@/context/AuthGateContext.jsx';
 import { api } from '@/services/api.js';
+import { useToast } from '../components/ui/Toast.jsx'
 
-// ─── Toast Component ────────────────────────────────────────────────────────
-function Toast({ toast }) {
-  if (!toast) return null;
-  const styles = {
-    success: 'bg-emerald-900/80 border-emerald-500/40 text-emerald-100',
-    warning: 'bg-amber-900/80 border-amber-500/40 text-amber-100',
-    error:   'bg-red-900/80 border-red-500/40 text-red-100',
-  };
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 20, scale: 0.95 }}
-      animate={{ opacity: 1, y: 0, scale: 1 }}
-      exit={{ opacity: 0, y: 10, scale: 0.95 }}
-      className={`fixed bottom-6 right-6 z-[100] px-5 py-3 rounded-xl text-sm font-medium
-        shadow-2xl border backdrop-blur-md pointer-events-auto max-w-sm
-        ${styles[toast.type] || styles.success}`}
-    >
-      {toast.message}
-    </motion.div>
-  );
-}
 
 // ─── Live Badge ──────────────────────────────────────────────────────────────
 function LiveBadge() {
   return (
     <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full
-      bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 text-xs font-bold tracking-wider">
-      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse-live inline-block" />
+      bg-success-wash border border-success text-success text-xs font-bold tracking-wider">
+      <span className="w-1.5 h-1.5 rounded-full bg-success animate-pulse-live inline-block" />
       LIVE
     </span>
   );
@@ -52,8 +32,8 @@ function TimelineItem({ item, index }) {
       transition={{ delay: index * 0.08, ease: [0.16, 1, 0.3, 1] }}
       className="flex items-start gap-3"
     >
-      <div className="flex-shrink-0 w-7 h-7 rounded-full bg-engine/20 border border-engine/40
-        flex items-center justify-center mt-0.5 animate-timeline-glow">
+      <div className="flex-shrink-0 w-7 h-7 rounded-full bg-engine-wash border border-engine
+        flex items-center justify-center mt-0.5">
         <Clock size={12} className="text-engine" />
       </div>
       <div>
@@ -73,7 +53,7 @@ function LiveModal({ event, onClose }) {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm pointer-events-auto"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-scrim backdrop-blur-sm pointer-events-auto"
           onClick={(e) => e.target === e.currentTarget && onClose()}
         >
           <motion.div
@@ -81,7 +61,7 @@ function LiveModal({ event, onClose }) {
             animate={{ scale: 1, opacity: 1, y: 0 }}
             exit={{ scale: 0.9, opacity: 0, y: 20 }}
             transition={{ ease: [0.16, 1, 0.3, 1], duration: 0.35 }}
-            className="relative bg-bg-secondary border border-border-subtle chamfer-sm shadow-2xl
+            className="relative bg-bg-secondary border border-border-subtle chamfer-sm chamfer-shadow
               w-full max-w-3xl mx-4 overflow-hidden pointer-events-auto"
           >
             {/* Header */}
@@ -142,7 +122,7 @@ function RegistrantsModal({ state, onClose }) {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm pointer-events-auto"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-scrim backdrop-blur-sm pointer-events-auto"
           onClick={(e) => e.target === e.currentTarget && onClose()}
         >
           <motion.div
@@ -150,13 +130,13 @@ function RegistrantsModal({ state, onClose }) {
             animate={{ scale: 1, opacity: 1, y: 0 }}
             exit={{ scale: 0.9, opacity: 0, y: 20 }}
             transition={{ ease: [0.16, 1, 0.3, 1], duration: 0.35 }}
-            className="relative glass-panel bg-bg-secondary border border-border-subtle chamfer-sm shadow-2xl
+            className="relative glass-panel bg-bg-secondary border border-border-subtle chamfer-sm
               w-full max-w-lg mx-4 overflow-hidden pointer-events-auto max-h-[80vh] flex flex-col"
           >
             {/* Header */}
             <div className="flex items-center justify-between px-5 py-4 border-b border-border-subtle">
               <div className="flex items-center gap-3 min-w-0">
-                <span className="p-1.5 rounded-lg bg-engine/15 border border-engine/30">
+                <span className="p-1.5 rounded-lg bg-engine-wash border border-engine/30">
                   <ListChecks size={16} className="text-engine" />
                 </span>
                 <div className="min-w-0">
@@ -186,7 +166,7 @@ function RegistrantsModal({ state, onClose }) {
               )}
 
               {state.error && (
-                <div className="py-6 text-center text-sm text-red-300">
+                <div className="py-6 text-center text-sm text-danger">
                   {state.error}
                 </div>
               )}
@@ -216,8 +196,8 @@ function RegistrantsModal({ state, onClose }) {
                           )}
                           {r.attended && (
                             <span className="inline-flex items-center gap-1 text-[11px] uppercase tracking-wider
-                              px-2 py-0.5 rounded-full bg-emerald-500/20 border border-emerald-500/40
-                              text-emerald-300 whitespace-nowrap">
+                              px-2 py-0.5 rounded-full bg-success-wash border border-success
+                              text-success whitespace-nowrap">
                               <CheckCircle2 size={10} /> Présent
                             </span>
                           )}
@@ -249,17 +229,13 @@ function EventCard({ event, user, onRegister, onLiveAccess, isRegistering, canMa
     >
       {/* Card Header */}
       <div className="relative px-6 pt-6 pb-4">
-        {/* Ambient glow */}
-        <div className="absolute -top-10 -right-10 w-40 h-40 rounded-full
-          bg-engine/10 blur-[40px] pointer-events-none" />
-
         <div className="flex items-start justify-between gap-3 mb-3">
           <div className="flex-1">
             <div className="flex items-center gap-2 mb-2 flex-wrap">
               {event.isLive && <LiveBadge />}
               {event.prizePool !== 'Accès libre' && (
                 <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full
-                  bg-amber-500/20 border border-amber-500/30 text-amber-300 text-xs font-medium">
+                  bg-warning-wash border border-warning text-warning text-xs font-medium">
                   <Trophy size={10} />
                   {event.prizePool}
                 </span>
@@ -341,11 +317,11 @@ function EventCard({ event, user, onRegister, onLiveAccess, isRegistering, canMa
               transition-all duration-200 cursor-pointer
               ${!user
                 ? 'bg-bg-secondary border border-border-subtle text-text-primary hover:bg-bg-tertiary hover:border-engine/50'
-                : 'bg-engine text-white hover:bg-engine/90 active:scale-95 shadow-lg shadow-engine/20'
+                : 'bg-engine text-on-accent hover:bg-engine active:scale-95 shadow-lg'
               }`}
           >
             {isRegistering === event.id ? (
-              <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+              <span className="w-4 h-4 border-2 border-border-strong border-t-white rounded-full animate-spin" />
             ) : (
               <CheckCircle2 size={15} />
             )}
@@ -354,7 +330,7 @@ function EventCard({ event, user, onRegister, onLiveAccess, isRegistering, canMa
         ) : (
           <div className="flex items-center gap-2">
             <div className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold
-              bg-emerald-500/20 border border-emerald-500/40 text-emerald-300">
+              bg-success-wash border border-success text-success">
               <CheckCircle2 size={15} />
               Inscrit ✓
             </div>
@@ -381,8 +357,8 @@ function EventCard({ event, user, onRegister, onLiveAccess, isRegistering, canMa
             id={`live-btn-${event.id}`}
             onClick={() => onLiveAccess(event)}
             className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold
-              bg-emerald-600 hover:bg-emerald-500 text-white transition-all duration-200
-              active:scale-95 shadow-lg shadow-emerald-500/20 cursor-pointer"
+              bg-success hover:bg-success-wash hover:text-success text-on-accent transition-colors
+              active:scale-95 cursor-pointer"
           >
             <Radio size={15} className="animate-pulse" />
             Rejoindre le Live
@@ -408,8 +384,8 @@ function EventCard({ event, user, onRegister, onLiveAccess, isRegistering, canMa
               onClick={() => onPublishSocial(event)}
               disabled={isPublishing === event.id}
               className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold
-                bg-engine text-white hover:bg-engine/90 transition-all duration-200
-                active:scale-95 shadow-lg shadow-engine/20 cursor-pointer disabled:opacity-60
+                bg-engine text-on-accent hover:bg-engine-deep transition-colors
+                active:scale-95 cursor-pointer disabled:opacity-60
                 disabled:cursor-not-allowed"
             >
               {isPublishing === event.id ? (
@@ -437,15 +413,10 @@ export default function Events({ navigate }) {
   const [isPublishing, setIsPublishing] = React.useState(null);
   const [activeLiveEvent, setActiveLiveEvent] = React.useState(null);
   const [registrantsModal, setRegistrantsModal] = React.useState(null);
-  const [toast, setToast] = React.useState(null);
+  const { notify } = useToast();
 
   // App.jsx fournit navigate à toutes les pages; Events ne route pas directement.
   void navigate;
-
-  const showToast = (message, type = 'success') => {
-    setToast({ message, type });
-    setTimeout(() => setToast(null), 4000);
-  };
 
   // Droit de gestion d'un événement (inscrits, présences, publication réseaux) :
   // ADMIN, ou Responsable Communication / Chef Universitaire de son université.
@@ -464,9 +435,9 @@ export default function Events({ navigate }) {
           ? await api.events.getAll()
           : await api.events.getHistory();
         if (res.success) setEvents(res.data || []);
-        else showToast(res.message || 'Erreur lors du chargement des événements.', 'error');
+        else notify(res.message || 'Erreur lors du chargement des événements.', 'error');
       } catch (err) {
-        showToast(err?.serverMessage || "Impossible de charger les événements.", 'error');
+        notify(err?.serverMessage || "Impossible de charger les événements.", 'error');
       } finally {
         setIsLoading(false);
       }
@@ -505,16 +476,16 @@ export default function Events({ navigate }) {
               }
             : ev
         ));
-        showToast(
+        notify(
           res.message ||
             (etaitInscrit ? 'Inscription annulée.' : 'Inscription confirmée !'),
           'success',
         );
       } else {
-        showToast(res?.message || echec, 'error');
+        notify(res?.message || echec, 'error');
       }
     } catch (err) {
-      showToast(err?.serverMessage || err?.message || echec, 'error');
+      notify(err?.serverMessage || err?.message || echec, 'error');
     } finally {
       setIsRegistering(null);
     }
@@ -527,7 +498,7 @@ export default function Events({ navigate }) {
       return;
     }
     if (!event.registered) {
-      showToast('Inscription requise pour ce Live. Enregistrez-vous d\'abord !', 'warning');
+      notify('Inscription requise pour ce Live. Enregistrez-vous d\'abord !', 'warning');
       return;
     }
     // Access granted
@@ -560,12 +531,12 @@ export default function Events({ navigate }) {
       const res = await api.events.publishSocial(event.id);
       if (res.success) {
         const msg = res.data?.message || res.message || 'Événement publié sur les réseaux sociaux.';
-        showToast(msg, 'success');
+        notify(msg, 'success');
       } else {
-        showToast(res.message || 'Échec de la publication.', 'error');
+        notify(res.message || 'Échec de la publication.', 'error');
       }
     } catch (err) {
-      showToast(err?.serverMessage || "Publication impossible pour le moment.", 'error');
+      notify(err?.serverMessage || "Publication impossible pour le moment.", 'error');
     } finally {
       setIsPublishing(null);
     }
@@ -579,10 +550,6 @@ export default function Events({ navigate }) {
     <div className="min-h-screen bg-bg-primary relative">
       {/* Background halos */}
       <div className="pointer-events-none fixed inset-0 z-0 overflow-hidden">
-        <div className="absolute top-0 left-1/4 w-[500px] h-[500px] rounded-full
-          bg-engine/5 blur-[120px]" />
-        <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] rounded-full
-          bg-emerald-500/5 blur-[100px]" />
       </div>
 
       <div className="relative z-10 max-w-[92rem] mx-auto w-full py-24 px-6 md:px-12 lg:px-12">
@@ -597,7 +564,7 @@ export default function Events({ navigate }) {
           <div className="flex flex-wrap gap-6 mt-8">
             <div className="flex items-center gap-2.5 px-4 py-2.5 rounded-xl
               bg-bg-secondary border border-border-subtle">
-              <Radio size={16} className="text-emerald-400" />
+              <Radio size={16} className="text-success" />
               <span className="text-text-secondary text-sm">
                 <span className="text-text-primary font-bold">{liveCount}</span> en direct
               </span>
@@ -633,7 +600,7 @@ export default function Events({ navigate }) {
                 id={`tab-${t.key}`}
                 onClick={() => setTab(t.key)}
                 className={`relative px-5 py-2 rounded-xl text-sm font-semibold transition-colors
-                  cursor-pointer ${active ? 'text-white' : 'text-text-secondary hover:text-text-primary'}`}
+                  cursor-pointer ${active ? 'text-on-accent' : 'text-text-secondary hover:text-text-primary'}`}
               >
                 {active && (
                   <motion.span
@@ -726,7 +693,7 @@ export default function Events({ navigate }) {
             {/* Empty state */}
             {events.length === 0 && (
               <div className="flex flex-col items-center justify-center py-32 text-center">
-                <div className="w-16 h-16 rounded-full bg-engine/10 flex items-center justify-center mb-4">
+                <div className="w-16 h-16 rounded-full bg-engine-wash flex items-center justify-center mb-4">
                   <Calendar size={28} className="text-engine" />
                 </div>
                 <p className="text-text-primary font-semibold text-lg mb-2">
@@ -754,9 +721,7 @@ export default function Events({ navigate }) {
       />
 
       {/* Toast */}
-      <AnimatePresence>
-        <Toast toast={toast} />
-      </AnimatePresence>
+
     </div>
   );
 }

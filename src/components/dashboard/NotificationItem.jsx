@@ -28,7 +28,7 @@ export default function NotificationItem({ notification, onMarkRead, onClick }) 
             <div className="text-[11px] text-text-muted mt-1">{createdAt || date}</div>
           </div>
           <div className="flex flex-col items-end gap-2 shrink-0">
-            {!read && <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse" />}
+            {!read && <span className="w-2.5 h-2.5 rounded-full bg-success animate-pulse" />}
             <button
               onClick={(e) => {
                 e.stopPropagation()

@@ -11,9 +11,6 @@ export default function SpecimenCard() {
 
   return (
     <div className="relative select-none" aria-hidden="true">
-      {/* Halo discret derrière la carte (pas de néon) */}
-      <div className="absolute -inset-8 rounded-full bg-engine/8 blur-[60px] pointer-events-none" />
-
       <motion.svg
         viewBox="0 0 520 400"
         fill="none"

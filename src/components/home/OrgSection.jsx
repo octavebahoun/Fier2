@@ -8,16 +8,16 @@ export default function OrgSection({ organisation, navigate }) {
       case 0:
         return {
           icon: <Compass className="w-5.5 h-5.5 text-ember" />,
-          badge: 'text-ember border-ember/30 bg-ember/8',
-          cta: 'bg-ember/10 border-ember/30 text-ember hover:bg-ember/20',
-          chip: 'text-ember bg-ember/12 border-ember/25',
+          badge: 'text-ember border-ember/30 bg-ember-wash',
+          cta: 'bg-ember-wash border-ember/30 text-ember hover:bg-ember-wash',
+          chip: 'text-ember bg-ember-wash border-ember/25',
         };
       case 1:
         return {
           icon: <GraduationCap className="w-5.5 h-5.5 text-engine" />,
-          badge: 'text-engine border-engine/30 bg-engine/8',
-          cta: 'bg-engine/10 border-engine/30 text-engine hover:bg-engine/20',
-          chip: 'text-engine bg-engine/12 border-engine/25',
+          badge: 'text-engine border-engine/30 bg-engine-wash',
+          cta: 'bg-engine-wash border-engine/30 text-engine hover:bg-engine-wash',
+          chip: 'text-engine bg-engine-wash border-engine/25',
         };
       case 2:
       default:

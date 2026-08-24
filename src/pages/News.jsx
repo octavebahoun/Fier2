@@ -2,47 +2,21 @@ import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   BookOpen, Calendar, User, Search, PlusCircle, X,
-  Clock, ArrowRight, BookMarked, Layers, FileText, CheckCircle, Image,
+  Clock, ArrowRight, BookMarked, Layers, FileText, Image,
   Newspaper, CalendarDays
 } from 'lucide-react';
 import Events from './Events.jsx';
 import { api } from '../services/api';
 import { useAuth } from '../context/AuthContext.jsx';
 import FadeInWhenVisible from '../components/home/FadeInWhenVisible.jsx';
+import { useToast } from '../components/ui/Toast.jsx'
 
-// ─────────────────────────── Toast Component ───────────────────────────
-function Toast({ message, type = 'success', onClose }) {
-  useEffect(() => {
-    const timer = setTimeout(onClose, 4000);
-    return () => clearTimeout(timer);
-  }, [onClose]);
-
-  const bgClass =
-    type === 'success'
-      ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'
-      : 'bg-red-500/10 border-red-500/30 text-red-400';
-
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 24, scale: 0.95 }}
-      animate={{ opacity: 1, y: 0, scale: 1 }}
-      exit={{ opacity: 0, y: 16, scale: 0.95 }}
-      transition={{ type: 'spring', stiffness: 400, damping: 28 }}
-      className={`fixed bottom-6 right-6 z-[100] flex items-center gap-3 px-5 py-3.5 chamfer-sm shadow-2xl backdrop-blur-md border ${bgClass}`}
-      role="alert"
-      aria-live="polite"
-    >
-      <CheckCircle className="w-5 h-5 shrink-0" />
-      <span className="text-xs font-bold">{message}</span>
-    </motion.div>
-  );
-}
 
 // ─────────────────────────── Category Color Mapping ───────────────────────────
 const CATEGORY_COLORS = {
   "Intelligence Artificielle": "from-engine/20 to-engine-deep/20 border-engine/30 text-engine",
-  "Lancement R&D": "from-amber-500/20 to-orange-500/20 border-amber-500/30 text-amber-400",
-  "Éco-énergie": "from-emerald-500/20 to-teal-500/20 border-emerald-500/30 text-emerald-400",
+  "Lancement R&D": "from-warning to-ember border-warning text-warning",
+  "Éco-énergie": "from-success to-success/20 border-success text-success",
   "Bio-Tech": "from-ember/20 to-ember-soft/20 border-ember/30 text-ember",
   "Robotique": "from-ember/20 to-ember-soft/20 border-ember/30 text-ember"
 };
@@ -92,7 +66,7 @@ export default function News({ navigate }) {
 
   // Reading modal state
   const [readingArticle, setReadingArticle] = useState(null);
-  const [toast, setToast] = useState(null);
+  const { notify } = useToast()
 
   const fetchNews = async () => {
     setLoading(true);
@@ -115,7 +89,7 @@ export default function News({ navigate }) {
   const handleCreateArticle = async (e) => {
     e.preventDefault();
     if (!newArticle.title || !newArticle.excerpt || !newArticle.content) {
-      setToast({ message: "Veuillez remplir tous les champs requis.", type: "error" });
+      notify("Veuillez remplir tous les champs requis.", "error");
       return;
     }
 
@@ -131,10 +105,7 @@ export default function News({ navigate }) {
 
       const res = await api.news.submit(payload);
       if (res.success) {
-        setToast({
-          message: "Article soumis avec succès au comité de lecture !",
-          type: "success"
-        });
+        notify("Article soumis avec succès au comité de lecture !", "success");
         // Reset form
         setNewArticle({
           title: '',
@@ -146,11 +117,11 @@ export default function News({ navigate }) {
         setShowWriteModal(false);
         // We do not refresh public feed because newly submitted articles are PENDING
       } else {
-        setToast({ message: "Erreur lors de la soumission de l'article.", type: "error" });
+        notify("Erreur lors de la soumission de l'article.", "error");
       }
     } catch (err) {
       console.error(err);
-      setToast({ message: "Une erreur inattendue est survenue.", type: "error" });
+      notify("Une erreur inattendue est survenue.", "error");
     } finally {
       setSubmitting(false);
     }
@@ -172,9 +143,6 @@ export default function News({ navigate }) {
 
   return (
     <div className="min-h-screen bg-bg-primary text-text-primary pt-24 pb-16 px-4 md:px-8 relative overflow-hidden">
-      {/* Background Decorative Gradient Orbs */}
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[500px] h-[500px] bg-engine/10 rounded-full blur-[120px] pointer-events-none" />
-
       {/* Tab Filter: Actualités / Événements */}
       <div className="max-w-7xl mx-auto mb-10">
         <div className="inline-flex items-center gap-1 p-1 chamfer-sm bg-bg-secondary border border-border-subtle">
@@ -182,7 +150,7 @@ export default function News({ navigate }) {
             onClick={() => setActiveTab('actualites')}
             className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
               activeTab === 'actualites'
-                ? 'bg-engine/20 border border-engine/30 text-engine shadow-sm'
+                ? 'bg-engine-wash border border-engine/30 text-engine shadow-sm'
                 : 'text-text-secondary hover:text-text-primary border border-transparent'
             }`}
           >
@@ -193,7 +161,7 @@ export default function News({ navigate }) {
             onClick={() => setActiveTab('evenements')}
             className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
               activeTab === 'evenements'
-                ? 'bg-engine/20 border border-engine/30 text-engine shadow-sm'
+                ? 'bg-engine-wash border border-engine/30 text-engine shadow-sm'
                 : 'text-text-secondary hover:text-text-primary border border-transparent'
             }`}
           >
@@ -229,7 +197,7 @@ export default function News({ navigate }) {
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               onClick={() => setShowWriteModal(true)}
-              className="flex items-center justify-center gap-2 px-6 py-3.5 chamfer-sm bg-gradient-to-r bg-engine hover:bg-engine-deep text-xs font-bold text-white shadow-lg shadow-engine/20 transition-all cursor-pointer w-full md:w-auto"
+              className="flex items-center justify-center gap-2 px-6 py-3.5 chamfer-sm chamfer-shadow bg-gradient-to-r bg-engine hover:bg-engine-deep text-xs font-bold text-on-accent transition-all cursor-pointer w-full md:w-auto"
             >
               <PlusCircle className="w-4.5 h-4.5" />
               Rédiger un article
@@ -248,7 +216,7 @@ export default function News({ navigate }) {
               onClick={() => setSelectedCategory(cat)}
               className={`px-4 py-2 rounded-xl text-xs font-bold border transition-all whitespace-nowrap cursor-pointer ${
                 selectedCategory === cat
-                  ? 'bg-engine/10 border-engine/30 text-engine'
+                  ? 'bg-engine-wash border-engine/30 text-engine'
                   : 'bg-bg-secondary border-border-subtle text-text-secondary hover:text-text-primary'
               }`}
             >
@@ -357,7 +325,7 @@ export default function News({ navigate }) {
                 <div className="px-6 pb-6 pt-4">
                   <button
                     onClick={() => navigate?.('news-detail', { newsId: item.id })}
-                    className="w-full flex items-center justify-center gap-2 py-3 rounded-xl border border-border-subtle hover:border-engine/40 bg-bg-tertiary hover:bg-engine/10 text-xs font-bold text-text-primary hover:text-engine transition-all cursor-pointer"
+                    className="w-full flex items-center justify-center gap-2 py-3 rounded-xl border border-border-subtle hover:border-engine/40 bg-bg-tertiary hover:bg-engine-wash text-xs font-bold text-text-primary hover:text-engine transition-all cursor-pointer"
                   >
                     <span>Consulter la publication</span>
                     <ArrowRight className="w-4 h-4" />
@@ -376,14 +344,14 @@ export default function News({ navigate }) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center px-4 backdrop-blur-md bg-black/60"
+            className="fixed inset-0 z-50 flex items-center justify-center px-4 backdrop-blur-md bg-scrim"
           >
             <motion.div
               initial={{ scale: 0.95, y: 30 }}
               animate={{ scale: 1, y: 0 }}
               exit={{ scale: 0.95, y: 30 }}
               transition={{ type: "spring", damping: 30, stiffness: 350 }}
-              className="glass-panel border border-border-subtle bg-bg-secondary w-full max-w-3xl chamfer overflow-hidden shadow-2xl relative max-h-[85vh] flex flex-col"
+              className="glass-panel border border-border-subtle bg-bg-secondary w-full max-w-3xl chamfer chamfer-shadow overflow-hidden relative max-h-[85vh] flex flex-col"
             >
               {/* Image banner inside Detail Modal */}
               <div className="relative w-full h-64 md:h-72 overflow-hidden shrink-0">
@@ -397,7 +365,7 @@ export default function News({ navigate }) {
                 {/* Close Button */}
                 <button
                   onClick={() => setReadingArticle(null)}
-                  className="absolute top-4 right-4 p-2 rounded-full bg-bg-tertiary border border-border-subtle hover:border-white/30 text-white hover:scale-105 transition-all cursor-pointer"
+                  className="absolute top-4 right-4 p-2 rounded-full bg-bg-tertiary border border-border-subtle hover:border-border-strong text-white hover:scale-105 transition-all cursor-pointer"
                 >
                   <X className="w-5 h-5" />
                 </button>
@@ -418,7 +386,7 @@ export default function News({ navigate }) {
                 {/* Metadata details */}
                 <div className="flex flex-wrap items-center gap-6 text-xs text-text-secondary border-b border-border-subtle pb-4 mb-6">
                   <div className="flex items-center gap-2">
-                    <div className="w-8 h-8 rounded-full bg-engine/20 border border-engine/30 flex items-center justify-center text-[11px] text-engine font-bold uppercase shadow-sm">
+                    <div className="w-8 h-8 rounded-full bg-engine-wash border border-engine/30 flex items-center justify-center text-[11px] text-engine font-bold uppercase shadow-sm">
                       {readingArticle.author.substring(0, 2)}
                     </div>
                     <div>
@@ -445,7 +413,7 @@ export default function News({ navigate }) {
                 </div>
 
                 {/* Excerpt Section */}
-                <div className="bg-engine/5 border-l-2 border-engine/50 p-4 rounded-r-xl text-xs font-semibold text-text-primary/90 italic mb-6">
+                <div className="bg-engine-wash border-l-2 border-engine/50 p-4 rounded-r-xl text-xs font-semibold text-text-primary/90 italic mb-6">
                   {readingArticle.excerpt}
                 </div>
 
@@ -481,14 +449,14 @@ export default function News({ navigate }) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center px-4 backdrop-blur-md bg-black/60"
+            className="fixed inset-0 z-50 flex items-center justify-center px-4 backdrop-blur-md bg-scrim"
           >
             <motion.div
               initial={{ scale: 0.95, y: 30 }}
               animate={{ scale: 1, y: 0 }}
               exit={{ scale: 0.95, y: 30 }}
               transition={{ type: "spring", damping: 28, stiffness: 300 }}
-              className="glass-panel border border-border-subtle bg-bg-secondary w-full max-w-2xl chamfer shadow-2xl relative max-h-[90vh] flex flex-col"
+              className="glass-panel border border-border-subtle bg-bg-secondary w-full max-w-2xl chamfer chamfer-shadow relative max-h-[90vh] flex flex-col"
             >
               {/* Header */}
               <div className="p-6 border-b border-border-subtle flex items-center justify-between shrink-0">
@@ -508,10 +476,10 @@ export default function News({ navigate }) {
               <form onSubmit={handleCreateArticle} className="p-6 overflow-y-auto flex-1 space-y-5 scrollbar-thin scrollbar-thumb-border-subtle">
                 
                 {/* Notice Board */}
-                <div className="p-4 chamfer-sm bg-engine/5 border border-engine/20 text-[11px] text-engine flex items-start gap-3">
+                <div className="p-4 chamfer-xs bg-engine-wash border border-engine/20 text-[11px] text-engine flex items-start gap-3">
                   <Layers className="w-4 h-4 shrink-0 mt-0.5" />
                   <div>
-                    <span className="font-bold">Circuit de relecture scientifique (Peer-review) :</span> Votre article sera soumis pour validation au comité de lecture. Il sera automatiquement marqué avec le statut <span className="font-bold text-white bg-engine/30 px-1.5 py-0.5 rounded">PENDING</span> et ne sera visible publiquement qu'après approbation par un administrateur.
+                    <span className="font-bold">Circuit de relecture scientifique (Peer-review) :</span> Votre article sera soumis pour validation au comité de lecture. Il sera automatiquement marqué avec le statut <span className="font-bold text-engine bg-engine-wash px-1.5 py-0.5 rounded">PENDING</span> et ne sera visible publiquement qu'après approbation par un administrateur.
                   </div>
                 </div>
 
@@ -578,7 +546,7 @@ export default function News({ navigate }) {
                         }`}
                       >
                         <img src={preset.url} alt={preset.name} className="w-full h-full object-cover" />
-                        <div className="absolute inset-0 bg-black/60 flex items-center justify-center p-1 text-center">
+                        <div className="absolute inset-0 bg-scrim flex items-center justify-center p-1 text-center">
                           <span className="text-[11px] font-bold text-white leading-tight group-hover:scale-105 transition-transform">{preset.name}</span>
                         </div>
                       </button>
@@ -626,7 +594,7 @@ export default function News({ navigate }) {
                     whileTap={{ scale: 0.98 }}
                     type="submit"
                     disabled={submitting}
-                    className="px-6 py-3 rounded-xl bg-gradient-to-r bg-engine hover:bg-engine-deep text-xs font-bold text-white shadow-lg shadow-engine/10 transition-all cursor-pointer disabled:opacity-50"
+                    className="px-6 py-3 rounded-xl bg-gradient-to-r bg-engine hover:bg-engine-deep text-xs font-bold text-on-accent shadow-lg transition-all cursor-pointer disabled:opacity-50"
                   >
                     {submitting ? "Soumission en cours..." : "Soumettre à l'approbation"}
                   </motion.button>
@@ -643,15 +611,7 @@ export default function News({ navigate }) {
       )}
 
       {/* Toast popup */}
-      <AnimatePresence>
-        {toast && (
-          <Toast
-            message={toast.message}
-            type={toast.type}
-            onClose={() => setToast(null)}
-          />
-        )}
-      </AnimatePresence>
+
     </div>
   );
 }

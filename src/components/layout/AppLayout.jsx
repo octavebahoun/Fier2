@@ -86,7 +86,7 @@ export default function AppLayout({
   const skipLink = (
     <a
       href="#main-content"
-      className="sr-only focus:not-sr-only focus:absolute focus:z-[100] focus:top-3 focus:left-3 focus:px-4 focus:py-2 focus:rounded-lg focus:bg-engine focus:text-white focus:font-bold focus:shadow-lg"
+      className="sr-only focus:not-sr-only focus:absolute focus:z-[100] focus:top-3 focus:left-3 focus:px-4 focus:py-2 focus:rounded-lg focus:bg-engine focus:text-on-accent focus:font-bold focus:shadow-lg"
     >
       Aller au contenu principal
     </a>
@@ -125,7 +125,7 @@ export default function AppLayout({
 
   return (
     <ToastProvider>
-    <div className="min-h-screen flex flex-col relative bg-bg-primary text-text-primary selection:bg-engine selection:text-white">
+    <div className="min-h-screen flex flex-col relative bg-bg-primary text-text-primary selection:bg-engine selection:text-on-accent">
       {skipLink}
       <CommandPalette navigate={navigate} />
       <Navbar
@@ -167,7 +167,7 @@ export default function AppLayout({
                       Newsletter
                     </label>
                     {newsletterSubscribed ? (
-                      <div className="text-[13px] text-ember bg-ember/10 border border-ember/25 p-2.5 rounded-lg font-medium" role="status" aria-live="polite">
+                      <div className="text-[13px] text-ember bg-ember-wash border border-ember/25 p-2.5 rounded-lg font-medium" role="status" aria-live="polite">
                         ✓ Abonnement validé avec succès !
                       </div>
                     ) : (
@@ -185,17 +185,17 @@ export default function AppLayout({
                             aria-invalid={!!newsletterError}
                             aria-describedby={newsletterError ? 'footer-newsletter-error' : undefined}
                             onChange={(e) => { setNewsletterEmail(e.target.value); if (newsletterError) setNewsletterError(null); }}
-                            className={`bg-bg-secondary border ${newsletterError ? 'border-red-500/60' : 'border-border-subtle hover:border-border-strong focus:border-engine'} rounded-lg px-3 py-2 text-[13px] text-text-primary placeholder:text-text-muted transition-[border-color,background-color,box-shadow] flex-grow min-w-0`}
+                            className={`bg-bg-secondary border ${newsletterError ? 'border-danger' : 'border-border-subtle hover:border-border-strong focus:border-engine'} rounded-lg px-3 py-2 text-[13px] text-text-primary placeholder:text-text-muted transition-[border-color,background-color,box-shadow] flex-grow min-w-0`}
                           />
                           <button
                             type="submit"
-                            className="min-h-11 min-w-11 bg-engine hover:bg-engine-deep text-white px-4 rounded-lg text-[13px] font-bold transition-colors cursor-pointer shrink-0"
+                            className="min-h-11 min-w-11 bg-engine hover:bg-engine-deep text-on-accent px-4 rounded-lg text-[13px] font-bold transition-colors cursor-pointer shrink-0"
                           >
                             OK
                           </button>
                         </div>
                         {newsletterError && (
-                          <span id="footer-newsletter-error" className="text-xs text-red-400" role="alert">{newsletterError}</span>
+                          <span id="footer-newsletter-error" className="text-xs text-danger" role="alert">{newsletterError}</span>
                         )}
                       </form>
                     )}

@@ -1,13 +1,14 @@
 import { ChevronDown } from 'lucide-react'
+import { buttonVariants } from '../../components/ui/button.jsx'
 import { getRolePresentation, getPostPresentation } from '../../context/AuthContext.jsx'
 import { readIdentity } from '../../auth/access.js'
 
 /** Statuts de projet et d'activité, libellés une fois. */
 const STATUS_META = {
-  TODO:        { label: 'À faire',  className: 'border-amber-500 text-amber-400' },
+  TODO:        { label: 'À faire',  className: 'border-warning text-warning' },
   IN_PROGRESS: { label: 'En cours', className: 'border-engine text-engine' },
-  DONE:        { label: 'Terminée', className: 'border-emerald-500 text-emerald-400' },
-  ACTIVE:      { label: 'Actif',    className: 'border-emerald-500 text-emerald-400' },
+  DONE:        { label: 'Terminée', className: 'border-success text-success' },
+  ACTIVE:      { label: 'Actif',    className: 'border-success text-success' },
   ARCHIVED:    { label: 'Archivé',  className: 'border-border-strong text-text-muted' },
 }
 
@@ -75,5 +76,5 @@ export function ClubPicker({ clubs, clubId, onChange, loading }) {
 export const champ =
   'min-h-11 w-full border border-border-strong bg-bg-primary px-3 text-sm text-text-primary placeholder:text-text-muted focus-visible:border-engine focus-visible:outline-none'
 export const etiquette = 'mb-1.5 block text-sm font-semibold text-text-secondary'
-export const boutonPrimaire =
-  'inline-flex min-h-11 cursor-pointer items-center justify-center gap-2 bg-engine px-5 text-sm font-bold text-white transition-colors hover:bg-engine-deep disabled:cursor-not-allowed disabled:opacity-50'
+/** Le bouton principal d'un écran : dérivé du composant, pas recopié. */
+export const boutonPrimaire = buttonVariants({ variant: 'default', size: 'default' })

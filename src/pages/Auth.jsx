@@ -250,7 +250,7 @@ export default function Auth({ navigate, redirectTo, onAuthComplete }) {
           </div>
 
           {/* Bento Card des Statistiques */}
-          <div className="glass-panel border border-border-subtle/80 bg-bg-secondary p-5 md:p-6 chamfer-sm shadow-2xl backdrop-blur-md hidden sm:block">
+          <div className="glass-panel border border-border-subtle/80 bg-bg-secondary p-5 md:p-6 chamfer-sm chamfer-shadow backdrop-blur-md hidden sm:block">
             <div className="grid grid-cols-3 gap-4">
               <div>
                 <div className="text-xl lg:text-2xl font-extrabold text-engine">5 000+</div>
@@ -284,7 +284,7 @@ export default function Auth({ navigate, redirectTo, onAuthComplete }) {
               <button
                 onClick={() => handleModeChange('login')}
                 className={`flex-1 text-center py-2 px-4 chamfer-sm text-[11px] font-bold uppercase tracking-wider transition-all z-10 cursor-pointer ${authMode === 'login'
-                  ? 'text-text-primary bg-engine/15 border border-engine/30'
+                  ? 'text-text-primary bg-engine-wash border border-engine/30'
                   : 'text-text-secondary hover:text-text-primary'
                   }`}
               >
@@ -293,7 +293,7 @@ export default function Auth({ navigate, redirectTo, onAuthComplete }) {
               <button
                 onClick={() => handleModeChange('register')}
                 className={`flex-1 text-center py-2 px-4 chamfer-sm text-[11px] font-bold uppercase tracking-wider transition-all z-10 cursor-pointer ${authMode === 'register'
-                  ? 'text-text-primary bg-engine/15 border border-engine/30'
+                  ? 'text-text-primary bg-engine-wash border border-engine/30'
                   : 'text-text-secondary hover:text-text-primary'
                   }`}
               >
@@ -309,12 +309,12 @@ export default function Auth({ navigate, redirectTo, onAuthComplete }) {
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -10 }}
-                className="flex items-center gap-3 p-4 rounded-xl border border-red-500/20 bg-red-950/20 text-red-300 text-xs"
+                className="flex items-center gap-3 p-4 rounded-xl border border-danger bg-danger-wash text-danger text-xs"
                 role="alert"
                 aria-live="assertive"
                 id="auth-error-message"
               >
-                <AlertCircle className="w-4 h-4 text-red-400 shrink-0" />
+                <AlertCircle className="w-4 h-4 text-danger shrink-0" />
                 <span>{errorMsg}</span>
               </motion.div>
             )}
@@ -324,12 +324,12 @@ export default function Auth({ navigate, redirectTo, onAuthComplete }) {
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -10 }}
-                className="flex items-center gap-3 p-4 rounded-xl border border-emerald-500/20 bg-emerald-950/20 text-emerald-300 text-xs"
+                className="flex items-center gap-3 p-4 rounded-xl border border-success bg-success-wash text-success text-xs"
                 role="status"
                 aria-live="polite"
                 id="auth-success-message"
               >
-                <Check className="w-4 h-4 text-emerald-400 shrink-0" />
+                <Check className="w-4 h-4 text-success shrink-0" />
                 <span>{successMsg}</span>
               </motion.div>
             )}
@@ -417,7 +417,7 @@ export default function Auth({ navigate, redirectTo, onAuthComplete }) {
                   <button
                     type="submit"
                     disabled={loading}
-                    className="w-full py-3.5 px-6 chamfer-sm bg-engine hover:bg-engine-deep text-white font-extrabold text-[11px] uppercase tracking-widest flex items-center justify-center gap-2 transition-colors cursor-pointer mt-2"
+                    className="w-full py-3.5 px-6 chamfer-xs bg-engine hover:bg-engine-deep text-on-accent font-extrabold text-[11px] uppercase tracking-widest flex items-center justify-center gap-2 transition-colors cursor-pointer mt-2"
                   >
                     {loading ? (
                       <Loader2 className="w-4 h-4 animate-spin" />
@@ -463,25 +463,25 @@ export default function Auth({ navigate, redirectTo, onAuthComplete }) {
                   {/* Étape 1 */}
                   <div className="flex items-center gap-2">
                     <div className={`w-6 h-6 rounded-full flex items-center justify-center text-[11px] font-extrabold transition-colors ${registerStep === 1
-                      ? 'bg-engine text-white'
-                      : 'bg-emerald-950/40 border border-emerald-500/40 text-emerald-400'
+                      ? 'bg-engine text-on-accent'
+                      : 'bg-success border border-success text-on-accent'
                       }`}>
                       {registerStep > 1 ? <Check className="w-3.5 h-3.5" /> : "1"}
                     </div>
-                    <span className={`text-[11px] font-extrabold uppercase tracking-wider ${registerStep === 1 ? 'text-engine' : 'text-emerald-400'
+                    <span className={`text-[11px] font-extrabold uppercase tracking-wider ${registerStep === 1 ? 'text-engine' : 'text-success'
                       }`}>
                       IDENTITÉ
                     </span>
                   </div>
 
                   {/* Connecteur */}
-                  <div className={`flex-1 h-[1px] transition-colors ${registerStep > 1 ? 'bg-emerald-500/40' : 'bg-border-subtle'
+                  <div className={`flex-1 h-[1px] transition-colors ${registerStep > 1 ? 'bg-success' : 'bg-border-subtle'
                     }`} />
 
                   {/* Étape 2 */}
                   <div className="flex items-center gap-2">
                     <div className={`w-6 h-6 rounded-full flex items-center justify-center text-[11px] font-extrabold border transition-colors ${registerStep === 2
-                      ? 'bg-engine border-transparent text-white'
+                      ? 'bg-engine border-transparent text-on-accent'
                       : 'bg-bg-secondary border-border-subtle text-text-muted'
                       }`}>
                       2
@@ -645,7 +645,7 @@ export default function Auth({ navigate, redirectTo, onAuthComplete }) {
                       {/* Continuer */}
                       <button
                         type="submit"
-                        className="w-full py-3.5 px-6 chamfer-sm bg-engine hover:bg-engine-deep text-white font-extrabold text-[11px] uppercase tracking-widest flex items-center justify-center gap-2 transition-colors cursor-pointer mt-2"
+                        className="w-full py-3.5 px-6 chamfer-xs bg-engine hover:bg-engine-deep text-on-accent font-extrabold text-[11px] uppercase tracking-widest flex items-center justify-center gap-2 transition-colors cursor-pointer mt-2"
                       >
                         <span>Continuer</span>
                         <ArrowRight className="w-4 h-4" />
@@ -778,7 +778,7 @@ export default function Auth({ navigate, redirectTo, onAuthComplete }) {
                       <button
                         type="submit"
                         disabled={loading}
-                        className="w-full py-3.5 px-6 chamfer-sm bg-engine hover:bg-engine-deep text-white font-extrabold text-[11px] uppercase tracking-widest flex items-center justify-center gap-2 transition-colors cursor-pointer mt-2"
+                        className="w-full py-3.5 px-6 chamfer-xs bg-engine hover:bg-engine-deep text-on-accent font-extrabold text-[11px] uppercase tracking-widest flex items-center justify-center gap-2 transition-colors cursor-pointer mt-2"
                       >
                         {loading ? (
                           <Loader2 className="w-4 h-4 animate-spin" />

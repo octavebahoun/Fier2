@@ -7,39 +7,8 @@ import {
 } from 'lucide-react';
 import api from '../services/api.js';
 import { useAuth } from '../context/AuthContext.jsx';
+import { useToast } from '../components/ui/Toast.jsx'
 
-// ───────────────────────────── Toast ─────────────────────────────
-function Toast({ message, type = 'success', onClose }) {
-  useEffect(() => {
-    const t = setTimeout(onClose, 4000);
-    return () => clearTimeout(t);
-  }, [onClose]);
-
-  const styles = {
-    success: 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400',
-    error:   'bg-red-500/10 border-red-500/30 text-red-400',
-    info:    'bg-engine/10 border-engine/30 text-engine',
-    warning: 'bg-amber-500/10 border-amber-500/30 text-amber-400',
-  };
-  const Icon = type === 'success' ? CheckCircle2 : AlertCircle;
-
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 24, scale: 0.95 }}
-      animate={{ opacity: 1, y: 0, scale: 1 }}
-      exit={{ opacity: 0, y: 16, scale: 0.95 }}
-      transition={{ type: 'spring', stiffness: 400, damping: 28 }}
-      className={`fixed bottom-6 right-6 z-[100] flex items-center gap-3 px-5 py-3.5 chamfer-sm shadow-2xl backdrop-blur-md border ${styles[type] || styles.success}`}
-      role="alert"
-    >
-      <Icon className="w-5 h-5 shrink-0" />
-      <span className="text-xs font-bold">{message}</span>
-      <button onClick={onClose} className="ml-2 opacity-60 hover:opacity-100 transition-opacity">
-        <X className="w-3.5 h-3.5" />
-      </button>
-    </motion.div>
-  );
-}
 
 // ───────────────────────────── Spinner ─────────────────────────────
 function Spinner({ label }) {
@@ -54,7 +23,7 @@ function Spinner({ label }) {
 // ───────────────────────────── Status pill ─────────────────────────────
 function StatusPill({ status }) {
   const map = {
-    OPEN:   { label: 'Ouvert', cls: 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400' },
+    OPEN:   { label: 'Ouvert', cls: 'bg-success-wash border-success text-success' },
     CLOSED: { label: 'Clôturé', cls: 'bg-slate-500/10 border-slate-500/30 text-slate-400' },
   };
   const s = map[status] || { label: status || '—', cls: 'bg-bg-tertiary border-border-subtle text-text-secondary' };
@@ -116,7 +85,7 @@ function CreateChallengeModal({ clubId, onClose, onCreated }) {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+      className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-scrim backdrop-blur-sm"
       onClick={onClose}
     >
       <motion.div
@@ -125,10 +94,10 @@ function CreateChallengeModal({ clubId, onClose, onCreated }) {
         exit={{ opacity: 0, scale: 0.92, y: 20 }}
         transition={{ type: 'spring', stiffness: 380, damping: 28 }}
         onClick={(e) => e.stopPropagation()}
-        className="relative w-full max-w-lg chamfer border border-border-subtle p-7 shadow-2xl bg-bg-secondary max-h-[90vh] overflow-y-auto"
+        className="relative w-full max-w-lg chamfer chamfer-shadow border border-border-subtle p-7 bg-bg-secondary max-h-[90vh] overflow-y-auto"
       >
         <div className="flex items-center gap-3 mb-5">
-          <div className="w-11 h-11 rounded-xl flex items-center justify-center bg-engine/15 border border-engine/30">
+          <div className="w-11 h-11 rounded-xl flex items-center justify-center bg-engine-wash border border-engine/30">
             <FlaskConical className="w-5 h-5 text-engine" />
           </div>
           <div>
@@ -141,7 +110,7 @@ function CreateChallengeModal({ clubId, onClose, onCreated }) {
         </div>
 
         {error && (
-          <div className="mb-4 flex items-center gap-2 text-xs font-semibold text-red-400 bg-red-500/10 border border-red-500/30 px-3 py-2 rounded-xl">
+          <div className="mb-4 flex items-center gap-2 text-xs font-semibold text-danger bg-danger-wash border border-danger px-3 py-2 rounded-xl">
             <AlertCircle className="w-4 h-4 shrink-0" /> {error}
           </div>
         )}
@@ -211,7 +180,7 @@ function CreateChallengeModal({ clubId, onClose, onCreated }) {
             <button
               type="submit"
               disabled={submitting}
-              className="flex-1 py-2.5 rounded-xl text-xs font-bold text-white bg-engine hover:bg-engine/85 transition-all disabled:opacity-60 flex items-center justify-center gap-2"
+              className="flex-1 py-2.5 rounded-xl text-xs font-bold text-on-accent bg-engine hover:bg-engine transition-all disabled:opacity-60 flex items-center justify-center gap-2"
             >
               {submitting ? <Loader2 className="w-4 h-4 animate-spin" /> : <FlaskConical className="w-4 h-4" />}
               {submitting ? 'Création…' : 'Créer le challenge'}
@@ -243,7 +212,7 @@ function ChallengeCard({ challenge, onOpen, index }) {
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.05 }}
       whileHover={{ y: -4, transition: { duration: 0.2 } }}
-      className="relative text-left chamfer-sm overflow-hidden border border-border-subtle bg-bg-secondary shadow-lg hover:border-engine/30 transition-colors"
+      className="relative text-left chamfer-sm chamfer-shadow overflow-hidden border border-border-subtle bg-bg-secondary hover:border-engine/30 transition-colors"
     >
       <div className="absolute inset-0 pointer-events-none opacity-0 hover:opacity-100 transition-opacity duration-300"
         style={{ background: 'radial-gradient(ellipse at 50% 0%, rgba(108,76,241,0.12) 0%, transparent 70%)' }} />
@@ -273,7 +242,7 @@ function ChallengeCard({ challenge, onOpen, index }) {
         </div>
 
         {challenge.rewardBadgeType && (
-          <div className="mt-3 inline-flex items-center gap-1.5 text-[11px] font-semibold text-amber-400 bg-amber-500/10 border border-amber-500/20 px-2 py-0.5 rounded-full">
+          <div className="mt-3 inline-flex items-center gap-1.5 text-[11px] font-semibold text-warning bg-warning-wash border border-warning px-2 py-0.5 rounded-full">
             <Award className="w-3 h-3" /> {challenge.rewardBadgeType}
           </div>
         )}
@@ -322,7 +291,7 @@ function SubmissionRow({ submission, isManager, onEvaluate, onToggleWinner, isWi
           )}
         </div>
         {submission.isWinner && (
-          <span className="flex items-center gap-1 text-[11px] font-bold text-amber-400 bg-amber-500/10 border border-amber-500/20 px-2 py-0.5 rounded-full shrink-0">
+          <span className="flex items-center gap-1 text-[11px] font-bold text-warning bg-warning-wash border border-warning px-2 py-0.5 rounded-full shrink-0">
             <Crown className="w-3 h-3" /> Gagnant
           </span>
         )}
@@ -332,7 +301,7 @@ function SubmissionRow({ submission, isManager, onEvaluate, onToggleWinner, isWi
         <div className="flex flex-wrap items-center gap-2 pt-1">
           <button
             onClick={() => setShowEval((s) => !s)}
-            className="text-xs font-bold px-3 py-1.5 rounded-lg bg-engine/15 text-engine border border-engine/30 hover:bg-engine/25 transition-all"
+            className="text-xs font-bold px-3 py-1.5 rounded-lg bg-engine-wash text-engine border border-engine/30 hover:bg-engine-wash transition-all"
           >
             Évaluer
           </button>
@@ -368,7 +337,7 @@ function SubmissionRow({ submission, isManager, onEvaluate, onToggleWinner, isWi
           <button
             onClick={handleEval}
             disabled={busyId === submission.id}
-            className="text-xs font-bold px-4 py-1.5 rounded-lg bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 hover:bg-emerald-500/25 transition-all disabled:opacity-60 flex items-center gap-1.5"
+            className="text-xs font-bold px-4 py-1.5 rounded-lg bg-success-wash text-success border border-success hover:bg-success-wash transition-all disabled:opacity-60 flex items-center gap-1.5"
           >
             {busyId === submission.id ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <CheckCircle2 className="w-3.5 h-3.5" />}
             Enregistrer l'évaluation
@@ -382,7 +351,7 @@ function SubmissionRow({ submission, isManager, onEvaluate, onToggleWinner, isWi
 // ───────────────────────────── Hackathon Card ─────────────────────────────
 function HackathonCard({ hackathon }) {
   return (
-    <div className="p-5 chamfer-sm border border-border-subtle bg-bg-secondary shadow-lg">
+    <div className="p-5 chamfer-sm chamfer-shadow border border-border-subtle bg-bg-secondary ">
       <div className="flex items-start justify-between gap-3 mb-2">
         <div className="flex items-center gap-2 text-ember">
           <CalendarDays className="w-5 h-5" />
@@ -432,7 +401,7 @@ export default function Challenges() {
   const [busyId, setBusyId] = useState(null);
   const [closing, setClosing] = useState(false);
 
-  const [toast, setToast] = useState(null);
+  const { notify } = useToast()
 
   // Gérer un challenge est réservé au RESPONSABLE du club sélectionné (ou ADMIN),
   // aligné sur l'autorisation réelle du backend — plus un simple niveau de rôle.
@@ -498,10 +467,10 @@ export default function Challenges() {
       if (res.success) {
         setSelectedChallenge(res.data);
       } else {
-        setToast({ message: res.message || 'Challenge introuvable.', type: 'error' });
+        notify(res.message || 'Challenge introuvable.', 'error');
       }
     } catch (err) {
-      setToast({ message: err?.serverMessage || err?.message || 'Erreur de chargement du challenge.', type: 'error' });
+      notify(err?.serverMessage || err?.message || 'Erreur de chargement du challenge.', 'error');
     } finally {
       setLoadingDetail(false);
     }
@@ -524,7 +493,7 @@ export default function Challenges() {
     try {
       const res = await api.challenges.submit(selectedChallenge.id, { fileUrl: fileUrl.trim() });
       if (res.success) {
-        setToast({ message: 'Votre solution a été soumise !', type: 'success' });
+        notify('Votre solution a été soumise !', 'success');
         setShowSubmit(false);
         setFileUrl('');
         openChallenge(selectedChallenge.id);
@@ -543,13 +512,13 @@ export default function Challenges() {
     try {
       const res = await api.challenges.evaluate(selectedChallenge.id, submissionId, dto);
       if (res.success) {
-        setToast({ message: 'Évaluation enregistrée.', type: 'success' });
+        notify('Évaluation enregistrée.', 'success');
         openChallenge(selectedChallenge.id);
       } else {
-        setToast({ message: res.message || 'Échec de l\'évaluation.', type: 'error' });
+        notify(res.message || 'Échec de l\'évaluation.', 'error');
       }
     } catch (err) {
-      setToast({ message: err?.serverMessage || err?.message || 'Erreur.', type: 'error' });
+      notify(err?.serverMessage || err?.message || 'Erreur.', 'error');
     }
   };
 
@@ -566,16 +535,13 @@ export default function Challenges() {
       const res = await api.challenges.close(selectedChallenge.id, { winnerMemberIds: winnerIds });
       if (res.success) {
         const n = res.data?.winners?.length ?? winnerIds.length;
-        setToast({
-          message: n > 0 ? `Challenge clôturé — ${n} gagnant(s) désigné(s).` : 'Challenge clôturé.',
-          type: 'success',
-        });
+        notify(n > 0 ? `Challenge clôturé — ${n} gagnant(s) désigné(s).` : 'Challenge clôturé.', 'success',);
         closeDetail();
       } else {
-        setToast({ message: res.message || 'Échec de la clôture.', type: 'error' });
+        notify(res.message || 'Échec de la clôture.', 'error');
       }
     } catch (err) {
-      setToast({ message: err?.serverMessage || err?.message || 'Erreur de clôture.', type: 'error' });
+      notify(err?.serverMessage || err?.message || 'Erreur de clôture.', 'error');
     } finally {
       setClosing(false);
     }
@@ -583,7 +549,7 @@ export default function Challenges() {
 
   const handleChallengeCreated = () => {
     setShowCreate(false);
-    setToast({ message: 'Challenge créé avec succès !', type: 'success' });
+    notify('Challenge créé avec succès !', 'success');
     loadClubData(clubId);
   };
 
@@ -595,7 +561,7 @@ export default function Challenges() {
 
       <div className="relative z-10 max-w-[92rem] mx-auto w-full py-16 px-6 md:px-12 lg:px-12">
         <div className="mb-10 space-y-4">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest bg-engine/10 text-engine border border-engine/25">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest bg-engine-wash text-engine border border-engine/25">
             <Trophy className="w-3.5 h-3.5" />
             Compétitions & Défis
           </div>
@@ -634,7 +600,7 @@ export default function Challenges() {
             <button
               onClick={() => setShowCreate(true)}
               disabled={!clubId}
-              className="sm:ml-auto text-xs font-bold px-4 py-2.5 rounded-xl bg-engine text-white hover:bg-engine/85 transition-all disabled:opacity-60 flex items-center gap-2"
+              className="sm:ml-auto text-xs font-bold px-4 py-2.5 rounded-xl bg-engine text-on-accent hover:bg-engine transition-all disabled:opacity-60 flex items-center gap-2"
             >
               <FlaskConical className="w-4 h-4" /> Créer un challenge
             </button>
@@ -642,7 +608,7 @@ export default function Challenges() {
         </div>
 
         {error && (
-          <div className="mb-6 flex items-center gap-2 text-sm font-semibold text-red-400 bg-red-500/10 border border-red-500/30 px-4 py-3 rounded-xl">
+          <div className="mb-6 flex items-center gap-2 text-sm font-semibold text-danger bg-danger-wash border border-danger px-4 py-3 rounded-xl">
             <AlertCircle className="w-4 h-4 shrink-0" /> {error}
           </div>
         )}
@@ -655,7 +621,7 @@ export default function Challenges() {
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -16 }}
-              className="chamfer border border-border-subtle bg-bg-secondary p-7 shadow-xl"
+              className="chamfer chamfer-shadow border border-border-subtle bg-bg-secondary p-7 "
             >
               <button
                 onClick={closeDetail}
@@ -687,7 +653,7 @@ export default function Challenges() {
                 <div className="p-3 rounded-xl bg-bg-tertiary border border-border-subtle">
                   <p className="text-[11px] font-bold uppercase tracking-wider text-text-secondary mb-1">Badge de récompense</p>
                   <p className="text-text-primary flex items-center gap-1.5">
-                    <Award className="w-4 h-4 text-amber-400" /> {selectedChallenge.rewardBadgeType || 'Aucun'}
+                    <Award className="w-4 h-4 text-warning" /> {selectedChallenge.rewardBadgeType || 'Aucun'}
                   </p>
                 </div>
               </div>
@@ -705,7 +671,7 @@ export default function Challenges() {
                   {!showSubmit ? (
                     <button
                       onClick={() => { setShowSubmit(true); setSubmitError(null); }}
-                      className="text-xs font-bold px-4 py-2.5 rounded-xl bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 hover:bg-emerald-500/25 transition-all flex items-center gap-2"
+                      className="text-xs font-bold px-4 py-2.5 rounded-xl bg-success-wash text-success border border-success hover:bg-success-wash transition-all flex items-center gap-2"
                     >
                       <Upload className="w-4 h-4" /> Soumettre une solution
                     </button>
@@ -714,7 +680,7 @@ export default function Challenges() {
                       onClick={(e) => e.stopPropagation()}>
                       <p className="text-sm font-bold text-text-primary">Votre lien de rendu</p>
                       {submitError && (
-                        <div className="flex items-center gap-2 text-xs font-semibold text-red-400 bg-red-500/10 border border-red-500/30 px-3 py-2 rounded-lg">
+                        <div className="flex items-center gap-2 text-xs font-semibold text-danger bg-danger-wash border border-danger px-3 py-2 rounded-lg">
                           <AlertCircle className="w-3.5 h-3.5 shrink-0" /> {submitError}
                         </div>
                       )}
@@ -736,7 +702,7 @@ export default function Challenges() {
                         <button
                           type="submit"
                           disabled={submitting}
-                          className="flex-1 py-2 rounded-xl text-xs font-bold text-white bg-emerald-500 hover:bg-emerald-500/85 transition-all disabled:opacity-60 flex items-center justify-center gap-2"
+                          className="flex-1 py-2 rounded-xl text-xs font-bold text-on-accent bg-success hover:bg-success transition-all disabled:opacity-60 flex items-center justify-center gap-2"
                         >
                           {submitting ? <Loader2 className="w-4 h-4 animate-spin" /> : <CheckCircle2 className="w-4 h-4" />}
                           {submitting ? 'Envoi…' : 'Envoyer ma solution'}
@@ -781,7 +747,7 @@ export default function Challenges() {
                   <button
                     onClick={handleClose}
                     disabled={closing}
-                    className="text-xs font-bold px-4 py-2.5 rounded-xl bg-amber-500/15 text-amber-400 border border-amber-500/30 hover:bg-amber-500/25 transition-all disabled:opacity-60 flex items-center gap-2"
+                    className="text-xs font-bold px-4 py-2.5 rounded-xl bg-warning-wash text-warning border border-warning hover:bg-warning-wash transition-all disabled:opacity-60 flex items-center gap-2"
                   >
                     {closing ? <Loader2 className="w-4 h-4 animate-spin" /> : <CheckCircle2 className="w-4 h-4" />}
                     {closing ? 'Clôture…' : 'Clôturer le challenge'}
@@ -815,7 +781,7 @@ export default function Challenges() {
                     {isManager && (
                       <button
                         onClick={() => setShowCreate(true)}
-                        className="mt-4 text-xs font-bold px-4 py-2 rounded-xl bg-engine text-white hover:bg-engine/85 transition-all"
+                        className="mt-4 text-xs font-bold px-4 py-2 rounded-xl bg-engine text-on-accent hover:bg-engine transition-all"
                       >
                         Créer le premier challenge
                       </button>
@@ -862,9 +828,7 @@ export default function Challenges() {
         </AnimatePresence>
       </div>
 
-      <AnimatePresence>
-        {toast && <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />}
-      </AnimatePresence>
+
 
       <AnimatePresence>
         {showCreate && clubId && (

@@ -24,7 +24,7 @@ export default function UniversitySelector({ scope, titre }) {
       <SectionCard icon={Building2} title="Périmètre" subtitle="Pays, puis université">
         <div className="flex flex-col gap-4">
           {error && (
-            <p className="border border-red-500 bg-red-500/12 px-3 py-2 text-sm text-red-300" role="alert">
+            <p className="border border-danger bg-danger-wash px-3 py-2 text-sm text-danger" role="alert">
               {error}
             </p>
           )}

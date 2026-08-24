@@ -29,8 +29,6 @@ export default function HeroSection({ hero, navigate }) {
     >
       {/* Texture de fond discrète */}
       <div className="absolute inset-0 blueprint-grid opacity-60 pointer-events-none" />
-      <div className="absolute -top-40 -right-40 w-[600px] h-[600px] rounded-full bg-engine/6 blur-[100px] pointer-events-none" />
-
       <div className="max-w-[92rem] mx-auto w-full relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-10 items-center">
         {/* ── Colonne éditoriale ── */}
         <div className="flex flex-col items-start text-left max-w-xl">
@@ -59,7 +57,7 @@ export default function HeroSection({ hero, navigate }) {
           <motion.div {...fadeUp(0.28)} className="mt-10 flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5">
             <button
               onClick={() => navigate('auth')}
-              className="inline-flex items-center justify-center gap-2.5 h-12 px-7 chamfer-sm bg-engine text-white text-sm font-bold transition-colors hover:bg-engine-deep cursor-pointer"
+              className="inline-flex items-center justify-center gap-2.5 h-12 px-7 chamfer-sm bg-engine text-on-accent text-sm font-bold transition-colors hover:bg-engine-deep cursor-pointer"
             >
               {hero.ctaPrimary}
               <ArrowRight className="w-4 h-4" aria-hidden="true" />

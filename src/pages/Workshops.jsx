@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from 'react'
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import {
   Calendar, User, Clock, CheckCircle, Info, Lock, BookOpen,
   GraduationCap, Zap, Filter, Search, Award, AlertCircle, Users
@@ -9,36 +9,8 @@ import { useAuth } from '../context/AuthContext.jsx';
 import { useTheme } from '../context/useTheme.js';
 import FadeInWhenVisible from '../components/home/FadeInWhenVisible.jsx';
 import PageHeader from '../components/ui/PageHeader.jsx';
+import { useToast } from '../components/ui/Toast.jsx'
 
-// ─────────────────────────── Toast Component ───────────────────────────
-function Toast({ message, type = 'success', onClose }) {
-  useEffect(() => {
-    const timer = setTimeout(onClose, 5000);
-    return () => clearTimeout(timer);
-  }, [onClose]);
-
-  const bgClass =
-    type === 'success'
-      ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'
-      : type === 'warning'
-      ? 'bg-amber-500/10 border-amber-500/30 text-amber-400'
-      : 'bg-red-500/10 border-red-500/30 text-red-400';
-
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 24, scale: 0.95 }}
-      animate={{ opacity: 1, y: 0, scale: 1 }}
-      exit={{ opacity: 0, y: 16, scale: 0.95 }}
-      transition={{ type: 'spring', stiffness: 400, damping: 28 }}
-      className={`fixed bottom-6 right-6 z-[100] flex items-center gap-3 px-5 py-3.5 chamfer-sm shadow-2xl backdrop-blur-md border ${bgClass}`}
-      role="alert"
-      aria-live="polite"
-    >
-      <CheckCircle className="w-5 h-5 shrink-0" />
-      <span className="text-xs font-bold">{message}</span>
-    </motion.div>
-  );
-}
 
 // ─────────────────────────── Card Component ───────────────────────────
 function WorkshopCard({ workshop, club, user, onToggleRegister, isToggling, navigate }) {
@@ -130,19 +102,19 @@ function WorkshopCard({ workshop, club, user, onToggleRegister, isToggling, navi
 
           <div className="flex items-center justify-between pt-1">
             {isFull ? (
-              <span className="inline-flex items-center gap-1 text-[11px] font-bold text-red-400 bg-red-500/10 border border-red-500/20 px-2 py-0.5 rounded-full">
+              <span className="inline-flex items-center gap-1 text-[11px] font-bold text-danger bg-danger-wash border border-danger px-2 py-0.5 rounded-full">
                 <AlertCircle className="w-3 h-3 shrink-0" />
                 Complet (Waitlist Active)
               </span>
             ) : (
-              <span className="text-[11px] text-ember font-medium bg-ember/10 border border-ember/20 px-2 py-0.5 rounded-full">
+              <span className="text-[11px] text-ember font-medium bg-ember-wash border border-ember/20 px-2 py-0.5 rounded-full">
                 {workshop.placesLeft} places restantes
               </span>
             )}
 
             {/* List count display */}
             {workshop.waitlistUsers && workshop.waitlistUsers.length > 0 && (
-              <span className="text-[11px] text-amber-400 font-semibold flex items-center gap-1 bg-amber-500/10 border border-amber-500/20 px-2.5 py-0.5 rounded-full">
+              <span className="text-[11px] text-warning font-semibold flex items-center gap-1 bg-warning-wash border border-warning px-2.5 py-0.5 rounded-full">
                 <Users className="w-3.5 h-3.5 shrink-0" />
                 {workshop.waitlistUsers.length} en attente
               </span>
@@ -179,7 +151,7 @@ function WorkshopCard({ workshop, club, user, onToggleRegister, isToggling, navi
               {workshop.waitlistUsers.slice(0, 3).map((name, i) => (
                 <div key={i} className="flex items-center justify-between text-[11px] text-text-secondary pl-1 font-mono">
                   <span>{i + 1}. {name}</span>
-                  {i === 0 && <span className="text-[11px] text-amber-500 uppercase font-extrabold tracking-wider animate-pulse">Premier en attente</span>}
+                  {i === 0 && <span className="text-[11px] text-warning uppercase font-extrabold tracking-wider animate-pulse">Premier en attente</span>}
                 </div>
               ))}
               {workshop.waitlistUsers.length > 3 && (
@@ -200,7 +172,7 @@ function WorkshopCard({ workshop, club, user, onToggleRegister, isToggling, navi
               onClick={() => onToggleRegister(workshop.id)}
               disabled={isToggling}
               whileTap={{ scale: 0.97 }}
-              className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl text-sm font-bold text-white transition-all duration-200 cursor-pointer focus:outline-none"
+              className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl text-sm font-bold text-on-accent transition-colors cursor-pointer focus:outline-none"
               style={{
                 background: 'var(--color-engine)',
                 boxShadow: 'none'
@@ -304,7 +276,7 @@ export default function Workshops({ navigate }) {
   const [workshops, setWorkshops] = useState([]);
   const [clubs, setClubs] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [toast, setToast] = useState(null);
+  const { notify } = useToast()
   const [togglingId, setTogglingId] = useState(null);
 
   // Filters State
@@ -385,13 +357,13 @@ export default function Workshops({ navigate }) {
           feedbackType = 'warning';
         }
 
-        setToast({ message: feedbackText, type: feedbackType });
+        notify(feedbackText, feedbackType);
       } else {
-        setToast({ message: res.message || "Impossible de modifier votre inscription.", type: 'danger' });
+        notify(res.message || "Impossible de modifier votre inscription.", 'error');
       }
     } catch (err) {
       console.error("Failed to register for workshop", err);
-      setToast({ message: "Une erreur s'est produite lors de l'enregistrement.", type: 'danger' });
+      notify("Une erreur s'est produite lors de l'enregistrement.", 'error');
     } finally {
       setTogglingId(null);
     }
@@ -448,14 +420,14 @@ export default function Workshops({ navigate }) {
         {/* ── Connect Banner for Guest Visitors ── */}
         {!user && (
           <FadeInWhenVisible direction="up" delay={0.05}>
-            <div className="mb-10 flex items-center gap-4 p-4.5 chamfer-sm bg-engine/5 border border-engine/20 text-sm">
+            <div className="mb-10 flex items-center gap-4 p-4.5 chamfer-sm bg-engine-wash border border-engine/20 text-sm">
               <Lock className="w-5 h-5 text-engine shrink-0" />
               <p className="text-text-secondary flex-1">
                 <span className="text-text-primary font-semibold">Une session active est requise</span> pour vous inscrire aux ateliers, réserver vos places et participer aux bootcamps.
               </p>
               <button
                 onClick={() => navigate('auth')}
-                className="shrink-0 px-4.5 py-1.5 rounded-xl bg-engine text-white text-xs font-bold hover:bg-engine-deep transition-colors cursor-pointer"
+                className="shrink-0 px-4.5 py-1.5 rounded-xl bg-engine text-on-accent text-xs font-bold hover:bg-engine-deep transition-colors cursor-pointer"
               >
                 Se connecter
               </button>
@@ -494,7 +466,7 @@ export default function Workshops({ navigate }) {
                       onClick={() => setSelectedLevel(level)}
                       className={`px-3.5 py-1.5 rounded-lg font-semibold transition-all cursor-pointer ${
                         selectedLevel === level
-                          ? 'bg-engine text-white font-bold'
+                          ? 'bg-engine text-on-accent font-bold'
                           : 'text-text-secondary hover:text-text-primary'
                       }`}
                     >
@@ -624,7 +596,7 @@ export default function Workshops({ navigate }) {
             </h4>
             <p className="text-xs sm:text-sm text-text-secondary leading-relaxed font-light">
               Notre système attribue de façon automatique et équitable les places libérées. Si un participant inscrit décide de <strong className="text-ember">se désinscrire</strong> d'un atelier complet, sa place est instantanément retirée de façon immuable. 
-              Le premier membre enregistré sur la <strong className="text-amber-400 font-semibold">liste d'attente</strong> (First-In, First-Out) est immédiatement promu au rang d'inscrit sans que le nombre de places restantes ne change. 
+              Le premier membre enregistré sur la <strong className="text-warning font-semibold">liste d'attente</strong> (First-In, First-Out) est immédiatement promu au rang d'inscrit sans que le nombre de places restantes ne change. 
               Le nouveau membre promu reçoit instantanément une notification système dans son centre de contrôle.
             </p>
           </div>
@@ -633,16 +605,7 @@ export default function Workshops({ navigate }) {
       </div>
 
       {/* ── Toast notifications ── */}
-      <AnimatePresence>
-        {toast && (
-          <Toast
-            key={toast.message}
-            message={toast.message}
-            type={toast.type}
-            onClose={() => setToast(null)}
-          />
-        )}
-      </AnimatePresence>
+
     </main>
   );
 }

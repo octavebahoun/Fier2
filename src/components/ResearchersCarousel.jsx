@@ -111,20 +111,20 @@ export default function ResearchersCarousel({ navigate }) {
         {[1, 2, 3].map((n) => (
           <div 
             key={n} 
-            className="w-80 md:w-96 shrink-0 glass-panel rounded-3xl p-6 flex flex-col gap-6 border border-white/5"
+            className="w-80 md:w-96 shrink-0 glass-panel rounded-3xl p-6 flex flex-col gap-6 border border-border-subtle"
           >
             <div className="flex gap-4 items-center">
-              <div className="w-16 h-16 rounded-2xl bg-white/10 shrink-0" />
+              <div className="w-16 h-16 rounded-2xl bg-bg-tertiary shrink-0" />
               <div className="flex flex-col gap-2 flex-grow">
-                <div className="h-5 bg-white/10 rounded-md w-2/3" />
-                <div className="h-3 bg-white/5 rounded-md w-1/2" />
+                <div className="h-5 bg-bg-tertiary rounded-md w-2/3" />
+                <div className="h-3 bg-bg-tertiary rounded-md w-1/2" />
               </div>
             </div>
             <div className="space-y-2">
-              <div className="h-3 bg-white/5 rounded-md w-full" />
-              <div className="h-3 bg-white/5 rounded-md w-5/6" />
+              <div className="h-3 bg-bg-tertiary rounded-md w-full" />
+              <div className="h-3 bg-bg-tertiary rounded-md w-5/6" />
             </div>
-            <div className="h-10 bg-white/10 rounded-2xl w-full" />
+            <div className="h-10 bg-bg-tertiary rounded-2xl w-full" />
           </div>
         ))}
       </div>
@@ -150,9 +150,9 @@ export default function ResearchersCarousel({ navigate }) {
           <button
             onClick={() => scroll('left')}
             disabled={!showLeftArrow}
-            className={`p-2 rounded-xl border border-white/5 backdrop-blur-md transition-all flex items-center justify-center cursor-pointer ${
+            className={`p-2 rounded-xl border border-border-subtle backdrop-blur-md transition-all flex items-center justify-center cursor-pointer ${
               showLeftArrow
-                ? 'bg-white/5 text-text-primary hover:bg-white/10 hover:border-white/10'
+                ? 'bg-bg-tertiary text-text-primary hover:bg-bg-tertiary hover:border-border-subtle'
                 : 'text-text-muted opacity-30 cursor-not-allowed'
             }`}
             aria-label="Faire défiler vers la gauche"
@@ -163,9 +163,9 @@ export default function ResearchersCarousel({ navigate }) {
           <button
             onClick={() => scroll('right')}
             disabled={!showRightArrow}
-            className={`p-2 rounded-xl border border-white/5 backdrop-blur-md transition-all flex items-center justify-center cursor-pointer ${
+            className={`p-2 rounded-xl border border-border-subtle backdrop-blur-md transition-all flex items-center justify-center cursor-pointer ${
               showRightArrow
-                ? 'bg-white/5 text-text-primary hover:bg-white/10 hover:border-white/10'
+                ? 'bg-bg-tertiary text-text-primary hover:bg-bg-tertiary hover:border-border-subtle'
                 : 'text-text-muted opacity-30 cursor-not-allowed'
             }`}
             aria-label="Faire défiler vers la droite"
@@ -191,7 +191,7 @@ export default function ResearchersCarousel({ navigate }) {
           return (
             <motion.div
               key={researcher.id}
-              className="snap-start shrink-0 w-80 md:w-96 glass-panel rounded-3xl p-6 border border-white/5 shadow-lg relative overflow-hidden flex flex-col justify-between gap-5 group cursor-pointer focus-within:border-engine/40"
+              className="snap-start shrink-0 w-80 md:w-96 glass-panel rounded-3xl p-6 border border-border-subtle shadow-lg relative overflow-hidden flex flex-col justify-between gap-5 group cursor-pointer focus-within:border-engine/40"
               whileHover={{ y: -5, scale: 1.01 }}
               transition={{ type: 'spring', stiffness: 400, damping: 30 }}
               onClick={() => navigate('profile', { researcherId: researcher.id })}
@@ -205,10 +205,10 @@ export default function ResearchersCarousel({ navigate }) {
                   <img
                     src={researcher.avatar}
                     alt={researcher.name}
-                    className="w-16 h-16 rounded-2xl object-cover border border-white/10 group-hover:border-engine/40 transition-colors"
+                    className="w-16 h-16 rounded-2xl object-cover border border-border-subtle group-hover:border-engine/40 transition-colors"
                   />
                   {followersCount > 150 && (
-                    <span className="absolute -bottom-1 -right-1 w-5 h-5 rounded-lg bg-amber-400 border border-bg-secondary flex items-center justify-center shadow-md">
+                    <span className="absolute -bottom-1 -right-1 w-5 h-5 rounded-lg bg-warning border border-bg-secondary flex items-center justify-center shadow-md">
                       <Star className="w-3 h-3 text-bg-primary fill-current" />
                     </span>
                   )}
@@ -233,7 +233,7 @@ export default function ResearchersCarousel({ navigate }) {
               </p>
 
               {/* Card Divider */}
-              <div className="h-px bg-white/5 w-full relative z-10" />
+              <div className="h-px bg-bg-tertiary w-full relative z-10" />
 
               {/* Card Bottom: Stats & Button */}
               <div className="flex items-center justify-between relative z-10 gap-3">
@@ -245,7 +245,7 @@ export default function ResearchersCarousel({ navigate }) {
                   </div>
                   
                   <div className="flex items-center gap-1.5">
-                    <Users className="w-3.5 h-3.5 text-emerald-400/80" />
+                    <Users className="w-3.5 h-3.5 text-success" />
                     <span>{followersCount} Abonnés</span>
                   </div>
                 </div>
@@ -256,7 +256,7 @@ export default function ResearchersCarousel({ navigate }) {
                     e.stopPropagation()
                     navigate('profile', { researcherId: researcher.id })
                   }}
-                  className="flex items-center gap-1 text-xs font-bold text-engine hover:text-engine/80 transition-colors group/btn cursor-pointer py-1.5 px-3 bg-white/5 rounded-xl border border-white/5 group-hover:border-engine/20"
+                  className="flex items-center gap-1 text-xs font-bold text-engine hover:text-engine/80 transition-colors group/btn cursor-pointer py-1.5 px-3 bg-bg-tertiary rounded-xl border border-border-subtle group-hover:border-engine/20"
                   aria-label={`Consulter le profil de ${researcher.name}`}
                 >
                   <span>Voir</span>

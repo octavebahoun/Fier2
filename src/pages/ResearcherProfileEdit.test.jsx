@@ -7,6 +7,7 @@ import '@testing-library/jest-dom/vitest'
 
 import ResearcherProfileEdit from './ResearcherProfileEdit.jsx'
 
+import { ToastProvider } from '../components/ui/Toast.jsx'
 const mockNavigate = vi.fn()
 
 const mockUser = {
@@ -71,7 +72,7 @@ describe('ResearcherProfileEdit', () => {
       }
     })
 
-    render(<ResearcherProfileEdit navigate={mockNavigate} />)
+    render(<ToastProvider><ResearcherProfileEdit navigate={mockNavigate} /></ToastProvider>)
 
     await waitFor(() => {
       expect(mockGetMe).toHaveBeenCalledTimes(1)
@@ -88,7 +89,7 @@ describe('ResearcherProfileEdit', () => {
     mockGetMe.mockResolvedValue({ success: true, data: { email: 'chercheur@fieri.dev', name: 'Chercheur FIERI' } })
     mockUpdateMe.mockResolvedValue({ success: true, data: {} })
 
-    render(<ResearcherProfileEdit navigate={mockNavigate} />)
+    render(<ToastProvider><ResearcherProfileEdit navigate={mockNavigate} /></ToastProvider>)
 
     await waitFor(() => expect(mockGetMe).toHaveBeenCalledTimes(1))
 
@@ -124,7 +125,7 @@ describe('ResearcherProfileEdit', () => {
       }
     })
 
-    render(<ResearcherProfileEdit navigate={mockNavigate} />)
+    render(<ToastProvider><ResearcherProfileEdit navigate={mockNavigate} /></ToastProvider>)
 
     await waitFor(() => expect(mockGetMe).toHaveBeenCalledTimes(1))
 

@@ -16,10 +16,10 @@ import { CheckCircle, AlertCircle, AlertTriangle, Info, X } from 'lucide-react'
 const ToastContext = createContext(null)
 
 const VARIANTS = {
-  success: { icon: CheckCircle,   className: 'border-emerald-500 bg-emerald-500/12 text-emerald-300' },
-  error:   { icon: AlertCircle,   className: 'border-red-500 bg-red-500/12 text-red-300' },
-  warning: { icon: AlertTriangle, className: 'border-amber-500 bg-amber-500/12 text-amber-300' },
-  info:    { icon: Info,          className: 'border-engine bg-engine/12 text-engine' },
+  success: { icon: CheckCircle,   className: 'border-success bg-success-wash text-success' },
+  error:   { icon: AlertCircle,   className: 'border-danger bg-danger-wash text-danger' },
+  warning: { icon: AlertTriangle, className: 'border-warning bg-warning-wash text-warning' },
+  info:    { icon: Info,          className: 'border-engine bg-engine-wash text-engine' },
 }
 
 // 5 s : au-dessus de la fourchette de 3–5 s recommandée, on lit encore ; en

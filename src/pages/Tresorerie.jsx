@@ -110,7 +110,7 @@ export default function Tresorerie() {
           <div className="grid grid-cols-1 gap-px border border-border-strong bg-border-strong sm:grid-cols-3">
             {[
               { label: 'Solde', value: data?.balance, accent: 'text-text-primary' },
-              { label: 'Entrées', value: data?.totalIn, accent: 'text-emerald-400' },
+              { label: 'Entrées', value: data?.totalIn, accent: 'text-success' },
               { label: 'Dépenses', value: data?.totalOut, accent: 'text-ember' },
             ].map((tuile) => (
               <div key={tuile.label} className="bg-bg-secondary px-5 py-4">
@@ -204,14 +204,14 @@ export default function Tresorerie() {
                             <td className="px-3 py-2.5">
                               <span className="flex items-center gap-2 font-medium text-text-primary">
                                 <Fleche
-                                  className={`h-4 w-4 shrink-0 ${depense ? 'text-ember' : 'text-emerald-400'}`}
+                                  className={`h-4 w-4 shrink-0 ${depense ? 'text-ember' : 'text-success'}`}
                                   aria-hidden="true"
                                 />
                                 {t.label}
                               </span>
                             </td>
                             <td className="px-3 py-2.5 text-text-secondary">{formatDateFr(t.createdAt)}</td>
-                            <td className={`px-3 py-2.5 text-right font-mono font-semibold tabular-nums ${depense ? 'text-ember' : 'text-emerald-400'}`}>
+                            <td className={`px-3 py-2.5 text-right font-mono font-semibold tabular-nums ${depense ? 'text-ember' : 'text-success'}`}>
                               {/* Le signe porte l'information autant que la couleur. */}
                               {depense ? '−' : '+'}{fcfa(Math.abs(t.amount))}
                             </td>

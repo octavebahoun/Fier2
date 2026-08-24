@@ -66,7 +66,7 @@ export default function NewsDetail({ navigate, newsId }) {
       <div className="max-w-3xl mx-auto px-6 py-24 text-center flex flex-col items-center gap-4">
         <h1 className="text-xl font-extrabold text-text-primary">Article inaccessible</h1>
         <p className="text-sm text-text-secondary">{error}</p>
-        <button onClick={() => navigate?.('news')} className="px-4 py-2 rounded-xl bg-engine text-white text-xs font-bold">
+        <button onClick={() => navigate?.('news')} className="px-4 py-2 rounded-xl bg-engine text-on-accent text-xs font-bold">
           Retour aux actualités
         </button>
       </div>
@@ -86,12 +86,12 @@ export default function NewsDetail({ navigate, newsId }) {
       <header className="flex flex-col gap-4">
         <div className="flex items-center gap-2 flex-wrap text-[11px] font-extrabold uppercase tracking-wider">
           {article.categorie && (
-            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-engine/12 border border-engine/25 text-engine">
+            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-engine-wash border border-engine/25 text-engine">
               <Tag className="w-3 h-3" /> {article.categorie}
             </span>
           )}
           {article.status && article.status !== 'APPROVED' && (
-            <span className="px-2.5 py-1 rounded-full bg-amber-500/12 border border-amber-500/25 text-amber-500">{article.status}</span>
+            <span className="px-2.5 py-1 rounded-full bg-warning-wash border border-warning text-warning">{article.status}</span>
           )}
         </div>
         <h1 className="text-2xl md:text-4xl font-extrabold text-text-primary tracking-tight leading-tight">{article.title}</h1>

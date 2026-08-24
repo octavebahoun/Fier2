@@ -128,7 +128,7 @@ function FinancialForm({ universityId, setUniversityId, universities, user, noti
       className="glass-panel chamfer p-7 space-y-5"
     >
       <div className="flex items-center gap-3 mb-1">
-        <div className="w-11 h-11 rounded-xl flex items-center justify-center bg-engine/15 border border-engine/30">
+        <div className="w-11 h-11 rounded-xl flex items-center justify-center bg-engine-wash border border-engine/30">
           <Wallet className="w-5 h-5 text-engine" />
         </div>
         <div>
@@ -191,7 +191,7 @@ function FinancialForm({ universityId, setUniversityId, universities, user, noti
         whileTap={{ scale: 0.98 }}
         type="submit"
         disabled={loading}
-        className="flex items-center justify-center gap-2 w-full py-3 rounded-xl text-sm font-bold text-white bg-engine hover:bg-engine/85 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-engine disabled:opacity-60"
+        className="flex items-center justify-center gap-2 w-full py-3 rounded-xl text-sm font-bold text-on-accent bg-engine hover:bg-engine transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-engine disabled:opacity-60"
       >
         {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
         {loading ? 'Initialisation…' : 'Faire un don'}
@@ -298,7 +298,7 @@ function PhysicalForm({ universityId, setUniversityId, universities, user, notif
       className="glass-panel chamfer p-7 space-y-5"
     >
       <div className="flex items-center gap-3 mb-1">
-        <div className="w-11 h-11 rounded-xl flex items-center justify-center bg-ember/15 border border-ember/30">
+        <div className="w-11 h-11 rounded-xl flex items-center justify-center bg-ember-wash border border-ember/30">
           <HeartHandshake className="w-5 h-5 text-ember" />
         </div>
         <div>
@@ -361,7 +361,7 @@ function PhysicalForm({ universityId, setUniversityId, universities, user, notif
             whileTap={{ scale: 0.98 }}
             type="submit"
             disabled={loading}
-            className="flex items-center justify-center gap-2 w-full py-3 rounded-xl text-sm font-bold text-white bg-ember hover:bg-ember/85 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-ember disabled:opacity-60"
+            className="flex items-center justify-center gap-2 w-full py-3 rounded-xl text-sm font-bold text-on-accent bg-ember hover:bg-ember transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-ember disabled:opacity-60"
           >
             {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <PlusCircle className="w-4 h-4" />}
             {loading ? 'Enregistrement…' : 'Déclarer'}
@@ -372,7 +372,7 @@ function PhysicalForm({ universityId, setUniversityId, universities, user, notif
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="p-5 chamfer-sm bg-engine/5 border border-engine/20 text-center space-y-4"
+            className="p-5 chamfer-sm bg-engine-wash border border-engine/20 text-center space-y-4"
           >
             <p className="text-xs text-text-secondary">
               Offre <span className="font-mono text-text-primary">#{offerId}</span> enregistrée — dernière étape : signature par empreinte digitale.
@@ -383,15 +383,15 @@ function PhysicalForm({ universityId, setUniversityId, universities, user, notif
                 animate={signing && !signed ? { scale: [1, 1.08, 1], opacity: [1, 0.6, 1] } : {}}
                 transition={signing && !signed ? { repeat: Infinity, duration: 1.1 } : {}}
                 className={`w-20 h-20 chamfer-sm flex items-center justify-center border ${
-                  signed ? 'bg-emerald-500/15 border-emerald-500/40' : 'bg-engine/10 border-engine/30'
+                  signed ? 'bg-success-wash border-success' : 'bg-engine-wash border-engine/30'
                 }`}
               >
-                <Fingerprint className={`w-10 h-10 ${signed ? 'text-emerald-400' : 'text-engine'}`} />
+                <Fingerprint className={`w-10 h-10 ${signed ? 'text-success' : 'text-engine'}`} />
               </motion.div>
 
               {signed ? (
                 <div className="space-y-2">
-                  <p className="flex items-center justify-center gap-2 text-emerald-400 text-sm font-bold">
+                  <p className="flex items-center justify-center gap-2 text-success text-sm font-bold">
                     <CheckCircle className="w-4 h-4" /> Soutien validé
                   </p>
                   <p className="text-xs text-text-secondary max-w-xs mx-auto">
@@ -410,7 +410,7 @@ function PhysicalForm({ universityId, setUniversityId, universities, user, notif
                   type="button"
                   onClick={handleSign}
                   disabled={signing}
-                  className="flex items-center justify-center gap-2 px-6 py-2.5 rounded-xl text-sm font-bold text-white bg-engine hover:bg-engine/85 transition-all disabled:opacity-60"
+                  className="flex items-center justify-center gap-2 px-6 py-2.5 rounded-xl text-sm font-bold text-on-accent bg-engine hover:bg-engine transition-all disabled:opacity-60"
                 >
                   {signing ? <Loader2 className="w-4 h-4 animate-spin" /> : <Fingerprint className="w-4 h-4" />}
                   {signing ? 'Scan en cours…' : 'Scanner l\'empreinte'}
@@ -476,7 +476,7 @@ export default function Soutiens() {
       <div className="relative z-10 max-w-5xl mx-auto w-full py-16 px-6 md:px-12">
         {/* Hero */}
         <div className="text-center mb-12 space-y-4">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest bg-engine/10 text-engine border border-engine/25">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest bg-engine-wash text-engine border border-engine/25">
             <HeartHandshake className="w-3.5 h-3.5" />
             Engagement & Mécénat
           </div>
@@ -498,7 +498,7 @@ export default function Soutiens() {
                   key={t.id}
                   onClick={() => setTab(t.id)}
                   className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold transition-all ${
-                    active ? 'bg-engine text-white shadow-lg' : 'text-text-secondary hover:text-text-primary'
+                    active ? 'bg-engine text-on-accent shadow-lg' : 'text-text-secondary hover:text-text-primary'
                   }`}
                 >
                   <Icon className="w-4 h-4" />

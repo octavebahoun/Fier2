@@ -33,7 +33,7 @@ function ScrollToTop() {
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.8 }}
           onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-          className="fixed bottom-6 right-6 z-40 w-11 h-11 rounded-sm chamfer-sm bg-engine text-white flex items-center justify-center shadow-lg hover:bg-engine-deep transition-colors cursor-pointer"
+          className="fixed bottom-6 right-6 z-40 w-11 h-11 rounded-sm chamfer-sm chamfer-shadow bg-engine text-on-accent flex items-center justify-center hover:bg-engine-deep transition-colors cursor-pointer"
           aria-label="Retour en haut"
         >
           <ArrowUp className="w-4 h-4" />
@@ -59,7 +59,7 @@ export default function Home({ navigate }) {
   } = landingData;
 
   return (
-    <div className="relative w-full bg-bg-primary text-text-primary selection:bg-engine/25">
+    <div className="relative w-full bg-bg-primary text-text-primary selection:bg-engine-wash">
       {/* 1. HERO — la thèse */}
       <HeroSection hero={hero} navigate={navigate} />
 

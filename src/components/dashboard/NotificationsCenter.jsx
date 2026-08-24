@@ -70,7 +70,7 @@ export default function NotificationsCenter({ navigate }) {
         <h3 className="font-semibold">Notifications</h3>
         <div className="flex items-center gap-2">
           <button className="text-sm text-gray-400" onClick={handleMarkAll}>Tout marquer lu</button>
-          <button className="text-sm text-red-400" onClick={() => setConfirmClear(true)}>Tout effacer</button>
+          <button className="text-sm text-danger" onClick={() => setConfirmClear(true)}>Tout effacer</button>
         </div>
       </div>
 
@@ -87,12 +87,12 @@ export default function NotificationsCenter({ navigate }) {
       )}
 
       {confirmClear && (
-        <div role="dialog" aria-modal="true" className="fixed inset-0 flex items-center justify-center bg-black/50">
+        <div role="dialog" aria-modal="true" className="fixed inset-0 flex items-center justify-center bg-scrim">
           <div ref={confirmRef} className="bg-bg-tertiary p-6 rounded max-w-md w-full">
             <p className="mb-4">Confirmer la suppression de toutes les notifications ?</p>
             <div className="flex justify-end gap-3">
               <button onClick={() => setConfirmClear(false)}>Annuler</button>
-              <button className="text-red-500" onClick={handleClear}>Confirmer</button>
+              <button className="text-danger" onClick={handleClear}>Confirmer</button>
             </div>
           </div>
         </div>

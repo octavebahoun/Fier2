@@ -32,28 +32,59 @@
   --color-bg-secondary: #111A2E;     /* PANEL — surfaces */
   --color-bg-tertiary: #16203A;      /* ELEVATED — hover, overlays */
 
-  --color-engine: #2E7CF6;           /* accent bleu ingénierie */
-  --color-engine-deep: #1E5BB8;      /* CTA, texte sur fond clair */
+  /* Chaque valeur ci-dessous est vérifiée par src/design/palette.test.js.
+     Ne pas la changer sans relancer ce test : il connaît le rôle de chaque
+     token (texte ≥ 4.5:1, contour de composant ≥ 3:1, séparateur ≥ 1.5:1). */
+  --color-engine: #3C85F7;           /* accent bleu ingénierie */
+  --color-engine-deep: #1E5BB8;      /* variante sombre, aplats sur fond clair */
   --color-ember: #E8640C;            /* accent chaleur Lab→Market */
-  --color-ember-deep: #C2500C;       /* hover des CTA ember (pendant d'engine-deep) */
-  --color-ember-soft: #F59E0B;       /* texte ambre sur fond sombre */
+  --color-ember-deep: #C2500C;
+  --color-ember-soft: #F59E0B;
+
+  /* États. Ils deviennent des tokens parce que 134 classes emerald/red/amber
+     codées en dur obligeaient à une couche de !important pour survivre au
+     changement de thème. */
+  --color-success: #22C55E;
+  --color-warning: #F59E0B;
+  --color-danger: #F04D4D;
+
+  /* Libellé posé sur un aplat d'accent : l'encre en sombre, le papier en clair.
+     Une seule classe, `text-on-accent`, sert alors dans les deux thèmes. */
+  --color-on-accent: #0B1220;
+
+  /* Panneaux teintés OPAQUES, en remplacement des `bg-engine/10` : ces teintes
+     translucides plafonnaient à 1,11:1 sur INK — invisibles. C'est la cause
+     mécanique de « j'abuse du transparent, rien n'est opaque ». */
+  /* Voile de modale. C'est la SEULE translucidité assumée du système : elle
+     sert à voir que la page est toujours là, derrière. Partout ailleurs une
+     surface est opaque. */
+  --color-scrim: rgba(4, 8, 16, 0.72);
+
+  --color-engine-wash: #173567;
+  --color-ember-wash: #532D1A;
+  --color-success-wash: #123A2A;
+  --color-warning-wash: #3A2C10;
+  --color-danger-wash: #3E1D22;
 
   --color-text-primary: #E8ECF4;
   --color-text-secondary: #A9B6CC;   /* STEEL */
   --color-text-muted: #8490A5;
 
-  --color-border-subtle: #1D2942;
-  --color-border-strong: #2A3A5E;
+  /* Deux bordures, deux métiers : `strong` cerne un composant et doit donc
+     atteindre 3:1 (WCAG 1.4.11) ; `subtle` sépare et doit seulement se voir.
+     Les anciennes valeurs plafonnaient à 1,20:1 et 1,54:1 — invisibles. */
+  --color-border-subtle: #333E54;
+  --color-border-strong: #5F6B86;
   --color-grid-line: rgba(168, 185, 214, 0.07);
 
   /* ── Aliases legacy (conservés pour compat, remplacés au fil des phases) ── */
-  --color-accent-primary: #2E7CF6;
+  --color-accent-primary: #3C85F7;
   --color-accent-secondary: #E8640C;
   --color-accent-tertiary: #F59E0B;
-  --color-accent-bleue: #2E7CF6;
+  --color-accent-bleue: #3C85F7;
   --color-accent-amber: #E8640C;
   --color-accent-blue-marine: #1E5BB8;
-  --color-fieri-blue: #2E7CF6;
+  --color-fieri-blue: #3C85F7;
   --color-fieri-bleue: #E8640C;
   --color-fieri-orange: #E8640C;
 
@@ -101,27 +132,41 @@ body.light-theme {
 
   --color-engine: #1E5BB8;
   --color-engine-deep: #1A4B93;
-  --color-ember: #C2500C;
+  --color-ember: #B1490B;
   --color-ember-deep: #9A3F09;
-  --color-ember-soft: #B45309;
+  --color-ember-soft: #AA4F09;
+
+  --color-success: #14793A;
+  --color-warning: #AA4F09;
+  --color-danger: #B91C1C;
+
+  --color-on-accent: #FFFFFF;
+
+  --color-scrim: rgba(26, 33, 48, 0.46);
+
+  --color-engine-wash: #D3DBE6;
+  --color-ember-wash: #ECD7C8;
+  --color-success-wash: #CFDFD0;
+  --color-warning-wash: #EAD8C7;
+  --color-danger-wash: #EDD6D1;
 
   --color-text-primary: #1A2130;
   --color-text-secondary: #3A4356;
-  --color-text-muted: #67718A;
+  --color-text-muted: #606981;
 
-  --color-border-subtle: #DCD7CC;
-  --color-border-strong: #C4BCAC;
+  --color-border-subtle: #C4BFB6;
+  --color-border-strong: #8B857A;
   --color-grid-line: rgba(26, 33, 48, 0.06);
 
   --color-accent-primary: #1E5BB8;
-  --color-accent-secondary: #C2500C;
-  --color-accent-tertiary: #B45309;
+  --color-accent-secondary: #B1490B;
+  --color-accent-tertiary: #AA4F09;
   --color-accent-bleue: #1E5BB8;
-  --color-accent-amber: #C2500C;
+  --color-accent-amber: #B1490B;
   --color-accent-blue-marine: #1A4B93;
   --color-fieri-blue: #1E5BB8;
-  --color-fieri-bleue: #C2500C;
-  --color-fieri-orange: #C2500C;
+  --color-fieri-bleue: #B1490B;
+  --color-fieri-orange: #B1490B;
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -176,38 +221,50 @@ body.light-theme {
 }
 
 :root {
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-  --radius: 0.625rem;
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  /* Le pont annoncé plus haut n'existait pas : ce bloc portait la palette
+     grise d'usine de shadcn, et le bloc `.dark` qui la corrigeait n'était
+     jamais atteint — ThemeContext posait la classe `light-theme`, pas `dark`.
+     Résultat : `--sidebar` valait oklch(0.985 0 0), et tout le shell connecté
+     s'affichait en blanc, dans les DEUX thèmes (constat F17).
+
+     Chaque variable pointe désormais sur un token FIERI. Elles suivent donc le
+     thème d'elles-mêmes : il n'y a plus de seconde palette à tenir à jour. */
+  --background: var(--color-bg-primary);
+  --foreground: var(--color-text-primary);
+  --card: var(--color-bg-secondary);
+  --card-foreground: var(--color-text-primary);
+  --popover: var(--color-bg-secondary);
+  --popover-foreground: var(--color-text-primary);
+  --primary: var(--color-engine);
+  --primary-foreground: var(--color-on-accent);
+  --secondary: var(--color-bg-tertiary);
+  --secondary-foreground: var(--color-text-primary);
+  --muted: var(--color-bg-tertiary);
+  --muted-foreground: var(--color-text-secondary);
+  --accent: var(--color-bg-tertiary);
+  --accent-foreground: var(--color-text-primary);
+  --destructive: var(--color-danger);
+  --border: var(--color-border-subtle);
+  --input: var(--color-border-strong);
+  --ring: var(--color-engine);
+  --chart-1: var(--color-engine);
+  --chart-2: var(--color-ember);
+  --chart-3: var(--color-success);
+  --chart-4: var(--color-text-secondary);
+  --chart-5: var(--color-warning);
+
+  /* 0 : la signature du DS est le chanfrein, pas l'arrondi. La valeur d'usine
+     (0.625rem) faisait cohabiter les deux langages de coin sur un même bouton. */
+  --radius: 0rem;
+
+  --sidebar: var(--color-bg-secondary);
+  --sidebar-foreground: var(--color-text-secondary);
+  --sidebar-primary: var(--color-engine);
+  --sidebar-primary-foreground: var(--color-on-accent);
+  --sidebar-accent: var(--color-bg-tertiary);
+  --sidebar-accent-foreground: var(--color-text-primary);
+  --sidebar-border: var(--color-border-subtle);
+  --sidebar-ring: var(--color-engine);
 }
 
 @layer base {
@@ -219,6 +276,28 @@ body.light-theme {
   }
   html {
     @apply font-sans;
+  }
+
+  /* Champs de formulaire : une surface, une bordure et un texte qui viennent
+     du système, dans les DEUX thèmes. La version précédente n'en donnait qu'au
+     thème clair, et par une couche de !important qui écrasait les composants.
+     Ici la règle vit dans `base` : n'importe quelle utilitaire Tailwind posée
+     sur le champ la remplace, ce qui est le comportement attendu. */
+  :where(input, select, textarea):not([class*="bg-"]) {
+    background-color: var(--color-bg-secondary);
+    color: var(--color-text-primary);
+    border: 1px solid var(--color-border-strong);
+  }
+
+  :where(input, textarea)::placeholder {
+    color: var(--color-text-muted);
+  }
+
+  /* La liste déroulante native est peinte par le système d'exploitation :
+     elle n'hérite pas des couleurs de la page, il faut les lui donner. */
+  :where(select) option {
+    background-color: var(--color-bg-secondary);
+    color: var(--color-text-primary);
   }
 }
 
@@ -301,15 +380,56 @@ body.light-theme .glass-panel {
   box-shadow: 0 1px 2px rgba(26, 33, 48, 0.05), 0 10px 26px rgba(26, 33, 48, 0.06);
 }
 
-/* Signature « La Preuve » : coins chanfreinés comme une plaque de prototypage.
-   Attention : clip-path rogne les ombres portées — utiliser des ombres
-   internes (inset) ou un wrapper pour les surfaces chamfreinées. */
-.chamfer {
-  clip-path: polygon(16px 0, 100% 0, 100% calc(100% - 16px), calc(100% - 16px) 100%, 0 100%, 0 16px);
+/* Signature « La Preuve » : deux coins coupés, comme une plaque de
+   prototypage percée pour le montage. Trois corrections ici.
+
+   1. TROIS tailles, et une coupe plus courte. Un chanfrein de 16 px sur une
+      pastille de 24 px de haut en mangeait les deux tiers : la signature
+      devenait du bruit. C'est ce que décrit « il y a trop de chanfrein ».
+   2. L'ombre passe par `filter: drop-shadow`, appliqué APRÈS le découpage.
+      Une `box-shadow` est peinte dans la boîte, donc rognée par le clip-path :
+      les surfaces censées être posées au-dessus du fond restaient à plat.
+   3. Le focus devient un liseré INTÉRIEUR. Un `outline` est tracé à l'extérieur
+      de la boîte : il était intégralement rogné, et une surface chanfreinée
+      n'avait donc aucun indicateur de focus au clavier. */
+.chamfer,
+.chamfer-sm,
+.chamfer-xs {
+  --cut: 14px;
+  clip-path: polygon(
+    var(--cut) 0,
+    100% 0,
+    100% calc(100% - var(--cut)),
+    calc(100% - var(--cut)) 100%,
+    0 100%,
+    0 var(--cut)
+  );
 }
 
-.chamfer-sm {
-  clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+.chamfer-sm { --cut: 8px; }   /* cartes, boutons, champs */
+.chamfer-xs { --cut: 4px; }   /* pastilles, étiquettes, jetons */
+
+/* Ombre d'une surface chanfreinée : elle épouse la découpe au lieu d'être
+   coupée par elle. Posée d'office sur .glass-panel, qui portait une box-shadow
+   invisible dès qu'on la chanfreinait. */
+.chamfer-shadow,
+:is(.chamfer, .chamfer-sm, .chamfer-xs).glass-panel {
+  box-shadow: none;
+  filter:
+    drop-shadow(0 1px 1px rgba(0, 0, 0, 0.16))
+    drop-shadow(0 8px 18px rgba(0, 0, 0, 0.13));
+}
+
+.light-theme :is(.chamfer, .chamfer-sm, .chamfer-xs).glass-panel,
+.light-theme .chamfer-shadow {
+  filter:
+    drop-shadow(0 1px 1px rgba(26, 33, 48, 0.07))
+    drop-shadow(0 8px 16px rgba(26, 33, 48, 0.08));
+}
+
+:where(.chamfer, .chamfer-sm, .chamfer-xs):focus-visible {
+  outline: none;
+  box-shadow: inset 0 0 0 2px var(--color-engine);
 }
 
 /* Annotation technique (eyebrows, cotes, références) */
@@ -376,77 +496,6 @@ body.light-theme .glass-panel {
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   COMPAT LIGHT — INTERIM (TODO : supprimer au fil des refontes, Phases 3-4)
-   Convertit les couleurs codées en dur « dark » restantes dans les composants.
-   ═══════════════════════════════════════════════════════════════════════════ */
-body.light-theme [class*="border-white/"] {
-  border-color: var(--color-border-subtle) !important;
-}
-
-body.light-theme [class*="bg-white/"] {
-  background-color: #FFFFFF !important;
-}
-
-body.light-theme [class*="hover:bg-white/"]:hover {
-  background-color: #EFEDE6 !important;
-}
-
-body.light-theme [class*="bg-black/"] {
-  background-color: #E9E6DE !important;
-}
-
-body.light-theme [class*="shadow-2xl"],
-body.light-theme [class*="shadow-xl"],
-body.light-theme [class*="shadow-lg"] {
-  box-shadow: 0 10px 28px rgba(26, 33, 48, 0.10) !important;
-}
-
-body.light-theme [class*="blur-[40px]"],
-body.light-theme [class*="blur-[60px]"],
-body.light-theme [class*="blur-[80px]"],
-body.light-theme [class*="blur-[90px]"],
-body.light-theme [class*="blur-[120px]"],
-body.light-theme [class*="blur-[150px]"] {
-  opacity: 0.16 !important;
-}
-
-body.light-theme [class*="text-red-400"] { color: #B91C1C !important; }
-body.light-theme [class*="text-rose-400"] { color: #BE123C !important; }
-body.light-theme [class*="bg-rose-500/"] { background-color: #FFF1F2 !important; border-color: #FDA4AF !important; color: #9F1239 !important; }
-body.light-theme [class*="text-emerald-300"],
-body.light-theme [class*="text-emerald-400"] { color: #047857 !important; }
-body.light-theme [class*="bg-emerald-500/"] { background-color: #ECFDF5 !important; border-color: #A7F3D0 !important; color: #065F46 !important; }
-body.light-theme [class*="text-amber-400"] { color: #B45309 !important; }
-body.light-theme [class*="text-cyan-400"] { color: #0369A1 !important; }
-body.light-theme [class*="bg-cyan-500/"] { background-color: #ECFEFF !important; border-color: #A5F3FC !important; color: #075985 !important; }
-body.light-theme [class*="text-indigo-400"],
-body.light-theme [class*="text-violet-400"],
-body.light-theme [class*="text-purple-400"] { color: #4338CA !important; }
-body.light-theme [class*="bg-indigo-500/"] { background-color: #EEF2FF !important; border-color: #C7D2FE !important; color: #3730A3 !important; }
-
-/* Filet de sécurité pour les champs qui ne déclarent PAS leur propre surface.
-   Le `:not([class*="bg-"])` laisse gagner tout composant qui choisit la sienne :
-   sans ça, un `!important` forçait chaque input en blanc et un champ posé sur
-   une carte blanche devenait invisible (plus aucun effet de creux). */
-body.light-theme input:not([class*="bg-"]),
-body.light-theme select:not([class*="bg-"]),
-body.light-theme textarea:not([class*="bg-"]) {
-  background-color: var(--color-bg-secondary);
-  color: var(--color-text-primary);
-  border-color: var(--color-border-subtle);
-}
-
-body.light-theme input::placeholder,
-body.light-theme textarea::placeholder {
-  color: var(--color-text-muted);
-}
-
-body.light-theme option {
-  background-color: #FFFFFF;
-  color: var(--color-text-primary);
-}
-
-/* ═══════════════════════════════════════════════════════════════════════════
    ACCESSIBILITÉ — prefers-reduced-motion
    ═══════════════════════════════════════════════════════════════════════════ */
 @media (prefers-reduced-motion: reduce) {
@@ -462,38 +511,4 @@ body.light-theme option {
     scroll-behavior: auto !important;
     transition-duration: 0.01ms !important;
   }
-}
-
-.dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
 }

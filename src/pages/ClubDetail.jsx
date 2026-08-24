@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
-import { ArrowLeft, Users, GraduationCap, Check, LogIn } from 'lucide-react'
+import { ArrowLeft, Users, GraduationCap, LogIn } from 'lucide-react'
 import { api } from '../services/api.js'
 import { useAuth } from '../context/AuthContext.jsx'
 import { useAuthGate } from '../context/AuthGateContext.jsx'
+import { useToast } from '../components/ui/Toast.jsx'
 
 export default function ClubDetail({ navigate, clubId }) {
   const { user } = useAuth()
@@ -12,7 +13,7 @@ export default function ClubDetail({ navigate, clubId }) {
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState(null)
   const [busy, setBusy] = useState(false)
-  const [toast, setToast] = useState(null)
+  const { notify } = useToast()
 
   const load = async () => {
     if (!clubId) { setError('Club introuvable.'); setIsLoading(false); return }
@@ -36,13 +37,12 @@ export default function ClubDetail({ navigate, clubId }) {
     setBusy(true)
     try {
       const res = club.joined ? await api.clubs.leave(club.id) : await api.clubs.join(club.id)
-      setToast(res?.message || (club.joined ? 'Vous avez quitté le club.' : 'Adhésion enregistrée.'))
+      notify(res?.message || (club.joined ? 'Vous avez quitté le club.' : 'Adhésion enregistrée.'))
       await load()
     } catch {
-      setToast('Action impossible pour le moment.')
+      notify('Action impossible pour le moment.', 'error')
     } finally {
       setBusy(false)
-      setTimeout(() => setToast(null), 3000)
     }
   }
 
@@ -62,7 +62,7 @@ export default function ClubDetail({ navigate, clubId }) {
       <div className="max-w-4xl mx-auto px-6 py-24 text-center flex flex-col items-center gap-4">
         <h1 className="text-xl font-extrabold text-text-primary">Club inaccessible</h1>
         <p className="text-sm text-text-secondary">{error}</p>
-        <button onClick={() => navigate?.('clubs')} className="px-4 py-2 rounded-xl bg-engine text-white text-xs font-bold">
+        <button onClick={() => navigate?.('clubs')} className="px-4 py-2 rounded-xl bg-engine text-on-accent text-xs font-bold">
           Retour aux clubs
         </button>
       </div>
@@ -100,7 +100,7 @@ export default function ClubDetail({ navigate, clubId }) {
             onClick={handleJoinToggle}
             disabled={busy}
             className={`px-4 py-2 rounded-xl text-xs font-extrabold uppercase tracking-wider transition-all disabled:opacity-50 ${
-              club.joined ? 'bg-bg-tertiary text-text-secondary border border-border-subtle' : 'bg-engine text-white'
+              club.joined ? 'bg-bg-tertiary text-text-secondary border border-border-subtle' : 'bg-engine text-on-accent'
             }`}
           >
             {!user ? <span className="inline-flex items-center gap-1.5"><LogIn className="w-3.5 h-3.5" /> Se connecter</span>
@@ -134,7 +134,7 @@ export default function ClubDetail({ navigate, clubId }) {
                   onClick={() => navigate?.('profile', { researcherId: m.id })}
                   className="flex items-center gap-3 p-3 chamfer-sm bg-bg-tertiary border border-border-subtle hover:border-engine/40 transition-all text-left"
                 >
-                  <div className="w-9 h-9 rounded-full bg-engine/15 border border-engine/25 flex items-center justify-center shrink-0 text-xs font-bold text-text-primary uppercase">
+                  <div className="w-9 h-9 rounded-full bg-engine-wash border border-engine/25 flex items-center justify-center shrink-0 text-xs font-bold text-text-primary uppercase">
                     {name[0]}
                   </div>
                   <span className="text-xs font-bold text-text-primary truncate">{name}</span>
@@ -144,12 +144,6 @@ export default function ClubDetail({ navigate, clubId }) {
           </div>
         )}
       </section>
-
-      {toast && (
-        <div className="fixed bottom-6 right-6 z-[100] flex items-center gap-2 px-4 py-3 rounded-xl bg-bg-secondary border border-border-subtle shadow-xl text-xs font-bold text-text-primary">
-          <Check className="w-4 h-4 text-emerald-500" /> {toast}
-        </div>
-      )}
     </motion.div>
   )
 }

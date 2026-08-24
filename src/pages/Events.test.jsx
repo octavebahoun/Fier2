@@ -14,6 +14,7 @@ import '@testing-library/jest-dom/vitest'
 
 import Events from './Events.jsx'
 
+import { ToastProvider } from '../components/ui/Toast.jsx'
 const mockUser = { id: 7, firstname: 'Test', lastname: 'Membre', role: 'ETUDIANT' }
 
 vi.mock('@/context/AuthContext.jsx', async (importOriginal) => {
@@ -80,7 +81,7 @@ describe('Événements — l’inscription se fait dans les deux sens', () => {
   it('propose « Se désinscrire » à un participant déjà inscrit', async () => {
     mockGetAll.mockResolvedValue({ success: true, data: [evenement({ registered: true })] })
 
-    render(<Events navigate={vi.fn()} />)
+    render(<ToastProvider><Events navigate={vi.fn()} /></ToastProvider>)
 
     expect(await screen.findByRole('button', { name: /se désinscrire/i })).toBeInTheDocument()
     expect(screen.queryByRole('button', { name: /s'inscrire/i })).not.toBeInTheDocument()
@@ -90,7 +91,7 @@ describe('Événements — l’inscription se fait dans les deux sens', () => {
     mockGetAll.mockResolvedValue({ success: true, data: [evenement({ registered: true })] })
     mockToggleRegister.mockResolvedValue({ success: true, message: 'Inscription annulée.' })
 
-    render(<Events navigate={vi.fn()} />)
+    render(<ToastProvider><Events navigate={vi.fn()} /></ToastProvider>)
     await userEvent.click(await screen.findByRole('button', { name: /se désinscrire/i }))
 
     // Le second argument dit à l'API quel sens prendre : true = déjà inscrit.
@@ -103,7 +104,7 @@ describe('Événements — l’inscription se fait dans les deux sens', () => {
     mockGetAll.mockResolvedValue({ success: true, data: [evenement({ registered: false })] })
     mockToggleRegister.mockResolvedValue({ success: true, message: 'Inscription confirmée !' })
 
-    render(<Events navigate={vi.fn()} />)
+    render(<ToastProvider><Events navigate={vi.fn()} /></ToastProvider>)
     await userEvent.click(await screen.findByRole('button', { name: /s'inscrire/i }))
 
     await waitFor(() => expect(mockToggleRegister).toHaveBeenCalledWith(3, false))
@@ -117,7 +118,7 @@ describe('Événements — l’inscription se fait dans les deux sens', () => {
       serverMessage: 'Vous n’êtes pas inscrit à cet événement.',
     }))
 
-    render(<Events navigate={vi.fn()} />)
+    render(<ToastProvider><Events navigate={vi.fn()} /></ToastProvider>)
     await userEvent.click(await screen.findByRole('button', { name: /se désinscrire/i }))
 
     expect(await screen.findByText(/n’êtes pas inscrit à cet événement/i)).toBeInTheDocument()

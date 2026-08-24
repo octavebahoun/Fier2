@@ -1,31 +1,42 @@
 import { useState, useCallback, useEffect, useMemo } from 'react'
 import { ThemeContext } from './useTheme.js'
+import { THEME_STORAGE_KEY, applyTheme, readStoredTheme, hasExplicitTheme } from './theme.js'
 
 /**
  * ThemeProvider — état de thème global (dark/light).
- * Le thème est une préoccupation transverse (Navbar, CommandPalette, body class) :
- * il vit ici plutôt que d'être remonté dans App puis propagé en props.
+ * Le thème est une préoccupation transverse (Navbar, CommandPalette, shell
+ * connecté) : il vit ici plutôt que d'être remonté dans App puis propagé.
+ *
+ * Toute la résolution est dans `theme.js`, partagée avec le script anti-flash
+ * de `index.html`.
  */
 export function ThemeProvider({ children }) {
-  // Dark = thème de marque par défaut (identité « La Preuve »).
-  const [theme, setTheme] = useState('dark')
+  const [theme, setTheme] = useState(readStoredTheme)
 
-  // Applique/retire la classe sur <html> et <body> à chaque changement de thème.
+  // Appliquer, sans mémoriser : n'est mémorisé que ce que l'utilisateur choisit.
+  // Écrire ici marquerait chaque visite comme un choix explicite et gèlerait à
+  // jamais le suivi de la préférence système.
+  useEffect(() => { applyTheme(theme) }, [theme])
+
+  // Tant que l'utilisateur n'a pas tranché, le site suit son système.
   useEffect(() => {
-    const root = document.documentElement
-    if (theme === 'light') {
-      root.classList.add('light-theme')
-      document.body.classList.add('light-theme')
-      root.style.colorScheme = 'light'
-    } else {
-      root.classList.remove('light-theme')
-      document.body.classList.remove('light-theme')
-      root.style.colorScheme = 'dark'
-    }
-  }, [theme])
+    if (typeof matchMedia !== 'function' || hasExplicitTheme()) return
+    const requete = matchMedia('(prefers-color-scheme: light)')
+    const suivre = (e) => setTheme(e.matches ? 'light' : 'dark')
+    requete.addEventListener('change', suivre)
+    return () => requete.removeEventListener('change', suivre)
+  }, [])
 
   const toggleTheme = useCallback(() => {
-    setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'))
+    setTheme((prev) => {
+      const suivant = prev === 'dark' ? 'light' : 'dark'
+      try {
+        localStorage.setItem(THEME_STORAGE_KEY, suivant)
+      } catch {
+        // Le thème reste correct pour la session, simplement non mémorisé.
+      }
+      return suivant
+    })
   }, [])
 
   const value = useMemo(() => ({ theme, toggleTheme }), [theme, toggleTheme])

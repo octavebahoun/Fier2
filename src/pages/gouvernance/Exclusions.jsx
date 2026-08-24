@@ -135,7 +135,7 @@ export default function Exclusions() {
                     type="button"
                     onClick={() => trancher(m, true)}
                     disabled={busyId === m.id}
-                    className="inline-flex min-h-11 cursor-pointer items-center justify-center gap-2 border border-red-500 bg-red-500/12 px-4 text-sm font-bold text-red-300 transition-colors hover:bg-red-500/20 disabled:opacity-50"
+                    className="inline-flex min-h-11 cursor-pointer items-center justify-center gap-2 border border-danger bg-danger-wash px-4 text-sm font-bold text-danger transition-colors hover:bg-danger-wash disabled:opacity-50"
                   >
                     {busyId === m.id ? <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" /> : <UserX className="h-4 w-4" aria-hidden="true" />}
                     Valider l’exclusion

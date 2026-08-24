@@ -27,7 +27,7 @@ export function AuthGateProvider({ children }) {
           <div className="fixed inset-0 z-[200] flex items-center justify-center p-4">
             <motion.div
               initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-              className="absolute inset-0 bg-black/60" onClick={close}
+              className="absolute inset-0 bg-scrim" onClick={close}
             />
             <motion.div
               initial={{ opacity: 0, scale: 0.96, y: 8 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.96 }}
@@ -37,7 +37,7 @@ export function AuthGateProvider({ children }) {
               <button onClick={close} className="absolute top-4 right-4 text-text-muted hover:text-text-primary transition-colors" aria-label="Fermer">
                 <X className="w-4 h-4" />
               </button>
-              <div className="w-12 h-12 rounded-2xl bg-engine/12 border border-engine/25 flex items-center justify-center">
+              <div className="w-12 h-12 rounded-2xl bg-engine-wash border border-engine/25 flex items-center justify-center">
                 <Lock className="w-5 h-5 text-engine" />
               </div>
               <div>
@@ -47,7 +47,7 @@ export function AuthGateProvider({ children }) {
                 </p>
               </div>
               <div className="flex flex-col gap-2 mt-1">
-                <button onClick={goToLogin} className="flex items-center justify-center gap-2 py-2.5 rounded-xl bg-engine text-white text-xs font-extrabold uppercase tracking-wider hover:bg-engine/90 transition-all">
+                <button onClick={goToLogin} className="flex items-center justify-center gap-2 py-2.5 rounded-xl bg-engine text-on-accent text-xs font-extrabold uppercase tracking-wider hover:bg-engine transition-all">
                   <LogIn className="w-4 h-4" /> Se connecter
                 </button>
                 <button onClick={goToLogin} className="flex items-center justify-center gap-2 py-2.5 rounded-xl border border-border-subtle text-text-primary text-xs font-bold hover:bg-bg-tertiary transition-all">

@@ -132,13 +132,13 @@ export default function ResearchClubsSection({ clubs, navigate }) {
           </div>
         ) : error ? (
           <div className="text-center py-16">
-            <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-engine/10 border border-engine/20 mb-4">
+            <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-engine-wash border border-engine/20 mb-4">
               <Layers className="w-6 h-6 text-engine" />
             </div>
             <p className="text-text-secondary text-sm font-light mb-4">{error}</p>
             <button
               onClick={() => window.location.reload()}
-              className="inline-flex items-center gap-2 text-[11px] uppercase tracking-widest font-bold bg-engine/10 border border-engine/30 text-engine px-5 py-2.5 chamfer-sm hover:bg-engine/20 transition-all cursor-pointer"
+              className="inline-flex items-center gap-2 text-[11px] uppercase tracking-widest font-bold bg-engine-wash border border-engine/30 text-engine px-5 py-2.5 chamfer-xs hover:bg-engine-wash transition-all cursor-pointer"
             >
               Réessayer
             </button>
@@ -168,12 +168,6 @@ export default function ResearchClubsSection({ clubs, navigate }) {
                   className="glass-panel group relative shrink-0 snap-center rounded-2xl border border-border-subtle bg-bg-secondary p-7 flex flex-col justify-between overflow-hidden transition-colors hover:border-border-strong cursor-pointer select-none"
                   style={{ width: cardWidth }}
                 >
-                  {/* Halo d'accent */}
-                  <div
-                    className="absolute -top-12 -right-12 w-40 h-40 rounded-full blur-[40px] opacity-30 group-hover:opacity-60 transition-opacity pointer-events-none"
-                    style={{ background: `radial-gradient(circle, ${accent}55, transparent 70%)` }}
-                  />
-
                   <div>
                     <div className="flex items-center gap-3 mb-5">
                       <div

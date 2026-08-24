@@ -24,6 +24,29 @@
   <meta name="twitter:description"
     content="Rejoignez la communauté FIERI : projets de recherche appliquée, clubs scientifiques, opportunités R&D et formations pour chercheurs et étudiants.">
   <meta name="twitter:image" content="/og-image.png">
+
+  <!-- Thème appliqué avant le premier pixel. Sans ce script, la page s'affiche
+       dans le thème par défaut du CSS puis bascule quand React monte : c'est
+       le flash blanc au chargement. Il rejoue volontairement, à l'identique,
+       la logique de src/context/theme.js — un module ES ne peut pas s'exécuter
+       de façon bloquante ici. -->
+  <script>
+    (function () {
+      var theme = 'dark'
+      try {
+        var stored = localStorage.getItem('fieri-theme')
+        if (stored === 'dark' || stored === 'light') theme = stored
+        else if (matchMedia('(prefers-color-scheme: light)').matches) theme = 'light'
+      } catch (e) {
+        if (window.matchMedia && matchMedia('(prefers-color-scheme: light)').matches) theme = 'light'
+      }
+      var dark = theme === 'dark'
+      var root = document.documentElement
+      root.classList.toggle('dark', dark)
+      root.classList.toggle('light-theme', !dark)
+      root.style.colorScheme = dark ? 'dark' : 'light'
+    })()
+  </script>
 </head>
 
 <body>

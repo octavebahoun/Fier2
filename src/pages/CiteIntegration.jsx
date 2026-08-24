@@ -497,9 +497,6 @@ export default function CiteIntegration({ navigate }) {
   return (
     <div className="relative overflow-hidden bg-bg-primary text-text-primary min-h-screen">
       <div className="absolute inset-0 blueprint-grid opacity-70 pointer-events-none" />
-      <div className="absolute top-10 left-1/2 -translate-x-1/2 w-[80vw] h-[80vw] max-w-[900px] max-h-[900px] rounded-full bg-radial from-engine/18 to-transparent blur-[100px] pointer-events-none" />
-      <div className="absolute bottom-0 right-0 w-[42vw] h-[42vw] rounded-full bg-radial from-ember-soft/12 to-transparent blur-[90px] pointer-events-none" />
-
       <section className="relative z-10 max-w-[92rem] mx-auto w-full px-6 md:px-12 lg:px-12 py-10 md:py-14">
         <div className="flex flex-col gap-8">
           <header className="flex flex-col gap-8 lg:flex-row lg:items-start lg:justify-between">
@@ -511,7 +508,7 @@ export default function CiteIntegration({ navigate }) {
                 <ArrowLeft className="w-3.5 h-3.5" />
                 Retour à l’accueil
               </button>
-              <div className="inline-flex items-center gap-2 bg-engine/10 border border-engine/30 px-4 py-1.5 rounded-full mb-5">
+              <div className="inline-flex items-center gap-2 bg-engine-wash border border-engine/30 px-4 py-1.5 rounded-full mb-5">
                 <Sparkles className="w-3.5 h-3.5 text-ember" />
                 <span className="text-[11px] font-extrabold uppercase tracking-widest">Parcours d’intégration FIERI</span>
               </div>
@@ -524,7 +521,7 @@ export default function CiteIntegration({ navigate }) {
             </div>
 
             <div className="lg:max-w-[48%] relative">
-              <div className="chamfer-sm overflow-hidden border border-border-subtle shadow-2xl shadow-black/30">
+              <div className="chamfer-sm chamfer-shadow overflow-hidden border border-border-subtle shadow-black/30">
                 <img
                   src={citeImage}
                   alt="Étudiants FIERI"
@@ -532,7 +529,6 @@ export default function CiteIntegration({ navigate }) {
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-bg-primary/60 via-transparent to-transparent pointer-events-none" />
               </div>
-              <div className="absolute -bottom-3 -right-3 w-32 h-32 rounded-full bg-radial from-engine/20 to-transparent blur-[40px] pointer-events-none" />
             </div>
           </header>
 
@@ -667,7 +663,7 @@ function Crumb({ label, active, onClick }) {
       onClick={onClick}
       className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-[11px] uppercase tracking-wider font-extrabold cursor-pointer transition-all ${
         active
-          ? 'bg-engine/20 border-engine/35 text-text-primary'
+          ? 'bg-engine-wash border-engine/35 text-text-primary'
           : 'border-border-subtle text-text-secondary hover:text-text-primary hover:bg-bg-tertiary'
       }`}
     >
@@ -732,7 +728,7 @@ function CountriesView({ countries, query, setQuery, onCountrySelect, onGlobalGo
             className="glass-panel chamfer-sm p-5 text-left cursor-pointer group"
           >
             <div className="flex items-start justify-between gap-4">
-              <div className="w-12 h-12 chamfer-sm bg-engine/15 border border-engine/25 flex items-center justify-center font-extrabold">
+              <div className="w-12 h-12 chamfer-sm bg-engine-wash border border-engine/25 flex items-center justify-center font-extrabold">
                 {country.flag}
               </div>
               <ArrowRight className="w-4 h-4 text-text-muted group-hover:text-ember transition-colors" />
@@ -752,7 +748,7 @@ function CountriesView({ countries, query, setQuery, onCountrySelect, onGlobalGo
       <div className="flex justify-center pt-2">
         <button
           onClick={onGlobalGovernance}
-          className="inline-flex items-center justify-center gap-2 rounded-full border border-ember/30 bg-ember/10 px-6 py-3 text-xs uppercase tracking-widest font-extrabold text-text-primary hover:bg-ember/15 transition-all cursor-pointer"
+          className="inline-flex items-center justify-center gap-2 rounded-full border border-ember/30 bg-ember-wash px-6 py-3 text-xs uppercase tracking-widest font-extrabold text-text-primary hover:bg-ember-wash transition-all cursor-pointer"
         >
           <Crown className="w-4 h-4" />
           Voir la Gouvernance Globale
@@ -780,7 +776,7 @@ function GovernanceView({ title, subtitle, people, board, onBack }) {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           {people.map((person) => (
             <article key={`${person.name}-${person.role}`} className="glass-panel chamfer-sm p-5">
-              <div className="w-12 h-12 chamfer-sm bg-engine/15 border border-engine/25 flex items-center justify-center mb-5">
+              <div className="w-12 h-12 chamfer-sm bg-engine-wash border border-engine/25 flex items-center justify-center mb-5">
                 <Users className="w-5 h-5 text-ember" />
               </div>
               <h3 className="text-lg font-extrabold">{person.name}</h3>
@@ -864,10 +860,10 @@ function UniversityView({ university, clubs, query, setQuery, onClubSelect, onUn
             <h3 className="text-xl font-extrabold mt-4">{club.name}</h3>
             <p className="text-sm text-text-secondary mt-2">{club.domain}</p>
             <div className="flex flex-wrap gap-2 mt-5">
-              <span className="rounded-full bg-engine/15 border border-engine/25 px-3 py-1 text-[11px] uppercase tracking-widest font-extrabold">
+              <span className="rounded-full bg-engine-wash border border-engine/25 px-3 py-1 text-[11px] uppercase tracking-widest font-extrabold">
                 {club.members} membres
               </span>
-              <span className="rounded-full bg-ember/10 border border-ember/20 px-3 py-1 text-[11px] uppercase tracking-widest font-extrabold">
+              <span className="rounded-full bg-ember-wash border border-ember/20 px-3 py-1 text-[11px] uppercase tracking-widest font-extrabold">
                 Recrutement ouvert
               </span>
             </div>
@@ -904,11 +900,11 @@ function ClubView({ club, onChief, onJoin }) {
         </button>
         <button
           onClick={onJoin}
-          className="chamfer-sm bg-engine border border-transparent p-5 text-left text-white hover:bg-engine/90 transition-all cursor-pointer shadow-[0_12px_35px_rgba(27,111,216,0.28)]"
+          className="chamfer-sm chamfer-shadow bg-engine border border-transparent p-5 text-left text-on-accent hover:bg-engine-deep transition-colors cursor-pointer"
         >
           <ArrowRight className="w-5 h-5 mb-3" />
           <span className="text-sm font-extrabold">Rejoindre / Intégrer le Club</span>
-          <p className="text-xs text-white/80 mt-2">Envoyer une demande d’adhésion au bureau du club.</p>
+          <p className="text-xs text-on-accent/80 mt-2">Envoyer une demande d’adhésion au bureau du club.</p>
         </button>
       </div>
     </div>
@@ -926,7 +922,7 @@ function ChiefView({ club, onBack }) {
         Retour au club
       </button>
       <article className="glass-panel chamfer-sm p-6">
-        <div className="w-14 h-14 chamfer-sm bg-engine/15 border border-engine/25 flex items-center justify-center mb-5">
+        <div className="w-14 h-14 chamfer-sm bg-engine-wash border border-engine/25 flex items-center justify-center mb-5">
           <Users className="w-6 h-6 text-ember" />
         </div>
         <h2 className="text-3xl font-extrabold">{club.chief.name}</h2>
@@ -962,7 +958,7 @@ function JoinView({ club, form, submitted, onBack, onChange, onSubmit }) {
             Ce formulaire est une simulation locale pour l’essai. Aucune donnée n’est envoyée à un serveur.
           </p>
           {submitted && (
-            <div className="mt-5 chamfer-sm border border-ember/25 bg-ember/10 p-4 text-sm text-text-primary">
+            <div className="mt-5 chamfer-sm border border-ember/25 bg-ember-wash p-4 text-sm text-text-primary">
               Demande enregistrée dans le prototype. Le bureau du club pourra vous contacter.
             </div>
           )}
@@ -982,7 +978,7 @@ function JoinView({ club, form, submitted, onBack, onChange, onSubmit }) {
               className="chamfer-sm bg-bg-primary border border-border-subtle px-4 py-3 text-sm text-text-primary outline-none focus:border-engine/60 transition-colors resize-none"
             />
           </label>
-          <button className="mt-2 rounded-full bg-engine text-white px-6 py-3 text-xs uppercase tracking-widest font-extrabold hover:bg-engine/90 transition-all cursor-pointer">
+          <button className="mt-2 rounded-full bg-engine text-on-accent px-6 py-3 text-xs uppercase tracking-widest font-extrabold hover:bg-engine transition-all cursor-pointer">
             Envoyer la demande
           </button>
         </form>
@@ -997,7 +993,7 @@ function LevelHeader({ icon: Icon, title, subtitle, metrics }) {
       <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6">
         <div className="max-w-3xl">
           <div className="flex items-center gap-3 mb-3">
-            <div className="w-9 h-9 chamfer-sm bg-ember/10 border border-ember/25 flex items-center justify-center shrink-0">
+            <div className="w-9 h-9 chamfer-sm bg-ember-wash border border-ember/25 flex items-center justify-center shrink-0">
               <Icon className="w-4 h-4 text-ember" />
             </div>
             <h2 className="text-3xl md:text-5xl font-extrabold leading-tight font-display">{title}</h2>
@@ -1006,7 +1002,7 @@ function LevelHeader({ icon: Icon, title, subtitle, metrics }) {
         </div>
         <div className="flex flex-wrap gap-2">
           {metrics.map((metric) => (
-            <span key={metric} className="chamfer-sm border border-border-subtle bg-bg-tertiary px-4 py-2 text-[11px] uppercase tracking-widest font-extrabold text-text-secondary">
+            <span key={metric} className="chamfer-xs border border-border-subtle bg-bg-tertiary px-4 py-2 text-[11px] uppercase tracking-widest font-extrabold text-text-secondary">
               {metric}
             </span>
           ))}
@@ -1056,7 +1052,7 @@ function PrimaryFooterButton({ icon: Icon, label, onClick }) {
     <div className="flex justify-center pt-2">
       <button
         onClick={onClick}
-        className="inline-flex items-center justify-center gap-2 rounded-full bg-engine text-white px-6 py-3 text-xs uppercase tracking-widest font-extrabold hover:bg-engine/90 transition-all cursor-pointer shadow-[0_10px_30px_rgba(27,111,216,0.24)]"
+        className="inline-flex items-center justify-center gap-2 rounded-full bg-engine text-on-accent px-6 py-3 text-xs uppercase tracking-widest font-extrabold hover:bg-engine transition-all cursor-pointer shadow-xl"
       >
         <Icon className="w-4 h-4" />
         {label}

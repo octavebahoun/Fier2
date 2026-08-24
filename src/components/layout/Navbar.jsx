@@ -135,7 +135,7 @@ export default function Navbar({
           {user && (
             <button
               onClick={handleLogout}
-              className="w-9 h-9 flex items-center justify-center rounded-lg text-red-400 hover:text-red-300 hover:bg-red-500/10 transition-all cursor-pointer"
+              className="w-9 h-9 flex items-center justify-center rounded-lg text-danger hover:text-danger hover:bg-danger-wash transition-all cursor-pointer"
               title="Se déconnecter"
               aria-label="Se déconnecter"
             >
@@ -146,12 +146,12 @@ export default function Navbar({
           {/* CTA principal */}
           <button
             onClick={() => navigate(user ? 'dashboard' : 'auth')}
-            className="hidden sm:flex items-center gap-2 h-10 px-5 chamfer-sm bg-engine text-white text-sm font-bold transition-colors hover:bg-engine-deep cursor-pointer"
+            className="hidden sm:flex items-center gap-2 h-10 px-5 chamfer-sm bg-engine text-on-accent text-sm font-bold transition-colors hover:bg-engine-deep cursor-pointer"
           >
             {user ? 'Mon dashboard' : 'Connexion'}
             {!user && <ArrowUpRight className="w-4 h-4" aria-hidden="true" />}
             {user && unreadCount > 0 && (
-              <span className="inline-flex items-center justify-center min-w-[18px] h-[18px] px-1 rounded-full bg-ember text-white text-[11px] font-extrabold">
+              <span className="inline-flex items-center justify-center min-w-[18px] h-[18px] px-1 rounded-full bg-ember text-on-accent text-[11px] font-extrabold">
                 {unreadCount > 99 ? '99+' : unreadCount}
               </span>
             )}
@@ -211,7 +211,7 @@ export default function Navbar({
                     aria-current={isActive(link.id) ? 'page' : undefined}
                     className={`w-full text-left px-3 py-2.5 rounded-lg text-sm font-semibold transition-colors cursor-pointer ${
                       isActive(link.id)
-                        ? 'bg-engine/12 border border-engine/25 text-engine'
+                        ? 'bg-engine-wash border border-engine/25 text-engine'
                         : 'text-text-secondary hover:text-text-primary hover:bg-bg-tertiary border border-transparent'
                     }`}
                   >
@@ -223,14 +223,14 @@ export default function Navbar({
 
                 <button
                   onClick={() => { navigate(user ? 'dashboard' : 'auth'); setMobileMenuOpen(false) }}
-                  className="w-full h-11 px-3 chamfer-sm bg-engine text-white text-sm font-bold flex items-center justify-center gap-2 cursor-pointer"
+                  className="w-full h-11 px-3 chamfer-sm bg-engine text-on-accent text-sm font-bold flex items-center justify-center gap-2 cursor-pointer"
                 >
                   {user ? 'Mon dashboard' : 'Connexion'}
                   {user && (
                     <RoleBadge
                       role={user.role}
                       variant="pill"
-                      className="text-[11px] uppercase tracking-wide font-bold px-2.5 py-0.5 rounded-full border shrink-0 bg-white/20 border-white/40"
+                      className="text-[11px] uppercase tracking-wide font-bold px-2.5 py-0.5 rounded-full border shrink-0 bg-bg-tertiary border-border-strong"
                     />
                   )}
                 </button>

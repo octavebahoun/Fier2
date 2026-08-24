@@ -7,34 +7,8 @@ import {
 import { useAuth } from '../context/AuthContext.jsx';
 import { api } from '../services/api';
 import MembersManager from '../components/admin/MembersManager.jsx';
+import { useToast } from '../components/ui/Toast.jsx'
 
-// ─────────────────────────── Toast Component ───────────────────────────
-function Toast({ message, type = 'success', onClose }) {
-  useEffect(() => {
-    const timer = setTimeout(onClose, 4000);
-    return () => clearTimeout(timer);
-  }, [onClose]);
-
-  const bgClass =
-    type === 'success'
-      ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'
-      : 'bg-red-500/10 border-red-500/30 text-red-400';
-
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 24, scale: 0.95 }}
-      animate={{ opacity: 1, y: 0, scale: 1 }}
-      exit={{ opacity: 0, y: 16, scale: 0.95 }}
-      transition={{ type: 'spring', stiffness: 400, damping: 28 }}
-      className={`fixed bottom-6 right-6 z-[100] flex items-center gap-3 px-5 py-3.5 chamfer-sm shadow-2xl backdrop-blur-md border ${bgClass}`}
-      role="alert"
-      aria-live="polite"
-    >
-      <CheckCircle className="w-5 h-5 shrink-0" />
-      <span className="text-xs font-bold">{message}</span>
-    </motion.div>
-  );
-}
 
 export default function Admin() {
   const { user } = useAuth();
@@ -43,7 +17,7 @@ export default function Admin() {
   const [loading, setLoading] = useState(true);
   const [actionInProgress, setActionInProgress] = useState(null); // ID of article being approved/rejected
   const [expandedArticleId, setExpandedArticleId] = useState(null); // ID of expanded article for reading
-  const [toast, setToast] = useState(null);
+  const { notify } = useToast()
   const [tab, setTab] = useState('moderation'); // 'moderation' | 'members'
 
   // Load pending articles and statistics
@@ -75,17 +49,17 @@ export default function Admin() {
     try {
       const res = await api.news.approve(id);
       if (res.success) {
-        setToast({ message: "Article approuvé avec succès ! Il est désormais publié.", type: "success" });
+        notify("Article approuvé avec succès ! Il est désormais publié.", "success");
         // Filter out of pending list
         setPendingArticles(prev => prev.filter(a => a.id !== id));
         setApprovedCount(prev => prev + 1);
         if (expandedArticleId === id) setExpandedArticleId(null);
       } else {
-        setToast({ message: "Erreur lors de l'approbation de l'article.", type: "error" });
+        notify("Erreur lors de l'approbation de l'article.", "error");
       }
     } catch (err) {
       console.error(err);
-      setToast({ message: "Erreur lors de l'appel API.", type: "error" });
+      notify("Erreur lors de l'appel API.", "error");
     } finally {
       setActionInProgress(null);
     }
@@ -99,15 +73,15 @@ export default function Admin() {
     try {
       const res = await api.news.reject(id);
       if (res.success) {
-        setToast({ message: "Article rejeté et supprimé.", type: "success" });
+        notify("Article rejeté et supprimé.", "success");
         setPendingArticles(prev => prev.filter(a => a.id !== id));
         if (expandedArticleId === id) setExpandedArticleId(null);
       } else {
-        setToast({ message: "Erreur lors du rejet de l'article.", type: "error" });
+        notify("Erreur lors du rejet de l'article.", "error");
       }
     } catch (err) {
       console.error(err);
-      setToast({ message: "Erreur lors de l'appel API.", type: "error" });
+      notify("Erreur lors de l'appel API.", "error");
     } finally {
       setActionInProgress(null);
     }
@@ -122,10 +96,10 @@ export default function Admin() {
       {/* En-tête */}
       <div className="flex flex-col gap-2 mb-10">
         <div className="flex items-center gap-3">
-          <div className="p-2.5 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400">
+          <div className="p-2.5 rounded-xl bg-danger-wash border border-danger text-danger">
             <Shield className="w-6 h-6" />
           </div>
-          <span className="text-[11px] font-extrabold tracking-[0.25em] uppercase text-red-400">
+          <span className="text-[11px] font-extrabold tracking-[0.25em] uppercase text-danger">
             ESPACE DE CONTRÔLE
           </span>
         </div>
@@ -151,7 +125,7 @@ export default function Admin() {
               onClick={() => setTab(t.id)}
               className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
                 active
-                  ? 'bg-engine/20 border border-engine/30 text-text-primary'
+                  ? 'bg-engine-wash border border-engine/30 text-text-primary'
                   : 'text-text-secondary hover:text-text-primary border border-transparent'
               }`}
             >
@@ -163,14 +137,14 @@ export default function Admin() {
       </div>
 
       {tab === 'members' ? (
-        <MembersManager notify={(message, type) => setToast({ message, type })} />
+        <MembersManager />
       ) : (
       <>
       {/* Grid d'administration */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
         <div className="glass-panel border border-border-subtle bg-bg-secondary p-6 chamfer-sm">
           <div className="flex justify-between items-start mb-4">
-            <div className="p-2 rounded-lg bg-indigo-500/10 border border-indigo-500/30 text-indigo-400">
+            <div className="p-2 rounded-lg bg-engine-wash border border-engine text-engine">
               <Users className="w-5 h-5" />
             </div>
             <span className="text-[11px] font-extrabold uppercase tracking-wider text-text-secondary">Membres</span>
@@ -181,7 +155,7 @@ export default function Admin() {
 
         <div className="glass-panel border border-border-subtle bg-bg-secondary p-6 chamfer-sm">
           <div className="flex justify-between items-start mb-4">
-            <div className="p-2 rounded-lg bg-emerald-500/10 border border-emerald-500/30 text-emerald-400">
+            <div className="p-2 rounded-lg bg-success-wash border border-success text-success">
               <CheckCircle className="w-5 h-5" />
             </div>
             <span className="text-[11px] font-extrabold uppercase tracking-wider text-text-secondary">Publications</span>
@@ -194,7 +168,7 @@ export default function Admin() {
 
         <div className="glass-panel border border-border-subtle bg-bg-secondary p-6 chamfer-sm">
           <div className="flex justify-between items-start mb-4">
-            <div className="p-2 rounded-lg bg-amber-500/10 border border-amber-500/30 text-amber-400">
+            <div className="p-2 rounded-lg bg-warning-wash border border-warning text-warning">
               <AlertTriangle className="w-5 h-5" />
             </div>
             <span className="text-[11px] font-extrabold uppercase tracking-wider text-text-secondary">Système</span>
@@ -209,14 +183,14 @@ export default function Admin() {
         <div className="flex items-center justify-between border-b border-border-subtle pb-6 mb-6">
           <div>
             <h2 className="text-xl font-bold text-text-primary flex items-center gap-2">
-              <BookOpen className="w-5 h-5 text-indigo-400" />
+              <BookOpen className="w-5 h-5 text-engine" />
               Comité de lecture et validation
             </h2>
             <p className="text-xs text-text-secondary mt-1">
               Examinez les articles de recherche soumis par les membres du pôle de recherche avant publication.
             </p>
           </div>
-          <span className="px-3 py-1.5 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-xs font-extrabold text-indigo-400">
+          <span className="px-3 py-1.5 rounded-full bg-engine-wash border border-engine text-xs font-extrabold text-engine">
             {pendingArticles.length} En attente
           </span>
         </div>
@@ -227,7 +201,7 @@ export default function Admin() {
           </div>
         ) : pendingArticles.length === 0 ? (
           <div className="py-16 text-center max-w-md mx-auto">
-            <CheckCircle className="w-12 h-12 text-emerald-500/30 mx-auto mb-4" />
+            <CheckCircle className="w-12 h-12 text-success mx-auto mb-4" />
             <h3 className="text-sm font-bold text-text-primary mb-1">Tout est en ordre</h3>
             <p className="text-xs text-text-secondary">
               Aucun article de recherche n'est en attente d'approbation pour le moment.
@@ -245,17 +219,17 @@ export default function Admin() {
                   layout
                   initial={{ opacity: 0, y: 15 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="border border-border-subtle/80 bg-bg-secondary chamfer-sm overflow-hidden transition-colors hover:border-indigo-500/20"
+                  className="border border-border-subtle/80 bg-bg-secondary chamfer-sm overflow-hidden transition-colors hover:border-engine"
                 >
                   {/* Article Summary Row */}
                   <div className="p-5 flex flex-col md:flex-row md:items-center justify-between gap-4">
                     <div className="flex-1">
                       <div className="flex flex-wrap items-center gap-2 mb-2">
-                        <span className="inline-flex items-center px-2 py-0.5 rounded-md text-[11px] font-bold border border-indigo-500/20 bg-indigo-500/10 text-indigo-400">
+                        <span className="inline-flex items-center px-2 py-0.5 rounded-md text-[11px] font-bold border border-engine bg-engine-wash text-engine">
                           {article.categorie}
                         </span>
                         <span className="inline-flex items-center text-[11px] text-text-secondary gap-1">
-                          <User className="w-3 h-3 text-indigo-400/70" />
+                          <User className="w-3 h-3 text-engine" />
                           {article.author}
                         </span>
                         <span className="inline-flex items-center text-[11px] text-text-secondary gap-1 ml-2">
@@ -293,7 +267,7 @@ export default function Admin() {
                       <button
                         onClick={() => handleApprove(article.id)}
                         disabled={isProcessing}
-                        className="p-2.5 rounded-xl border border-emerald-500/30 hover:border-emerald-500/60 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 hover:scale-105 transition-all cursor-pointer disabled:opacity-50 disabled:pointer-events-none"
+                        className="p-2.5 rounded-xl border border-success hover:border-success bg-success-wash hover:bg-success-wash text-success hover:scale-105 transition-all cursor-pointer disabled:opacity-50 disabled:pointer-events-none"
                         title="Approuver la publication"
                       >
                         <Check className="w-4.5 h-4.5" />
@@ -302,7 +276,7 @@ export default function Admin() {
                       <button
                         onClick={() => handleReject(article.id)}
                         disabled={isProcessing}
-                        className="p-2.5 rounded-xl border-red-500/30 hover:border-red-500/60 bg-red-500/10 hover:bg-red-500/20 text-red-400 hover:scale-105 transition-all cursor-pointer disabled:opacity-50 disabled:pointer-events-none"
+                        className="p-2.5 rounded-xl border-danger hover:border-danger bg-danger-wash hover:bg-danger-wash text-danger hover:scale-105 transition-all cursor-pointer disabled:opacity-50 disabled:pointer-events-none"
                         title="Rejeter et supprimer"
                       >
                         <Trash2 className="w-4.5 h-4.5" />
@@ -359,15 +333,7 @@ export default function Admin() {
       )}
 
       {/* Toast Popups */}
-      <AnimatePresence>
-        {toast && (
-          <Toast
-            message={toast.message}
-            type={toast.type}
-            onClose={() => setToast(null)}
-          />
-        )}
-      </AnimatePresence>
+
     </div>
   );
 }

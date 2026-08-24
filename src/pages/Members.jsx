@@ -147,7 +147,7 @@ export default function Members({ navigate }) {
       {/* Page Header */}
       <div className="flex flex-col gap-4 mb-16 max-w-2xl relative z-10">
         <div className="flex items-center gap-3">
-          <div className="p-2.5 rounded-xl bg-engine/10 border border-engine/20 text-engine">
+          <div className="p-2.5 rounded-xl bg-engine-wash border border-engine/20 text-engine">
             <Users className="w-5 h-5" />
           </div>
           <span className="text-[11px] font-extrabold tracking-[0.25em] uppercase text-engine">
@@ -169,7 +169,7 @@ export default function Members({ navigate }) {
       </div>
 
       {/* Filter Interactive Dashboard */}
-      <div className="glass-panel chamfer p-5 md:p-6 mb-12 flex flex-col gap-4 relative z-10 shadow-xl border border-border-subtle">
+      <div className="glass-panel chamfer chamfer-shadow p-5 md:p-6 mb-12 flex flex-col gap-4 relative z-10 border border-border-subtle">
         <div className="flex flex-col lg:flex-row gap-4 items-stretch lg:items-center">
           
           {/* Text input search */}
@@ -225,7 +225,7 @@ export default function Members({ navigate }) {
           {(searchQuery !== '' || poleFilter !== 'Toutes' || universityFilter !== 'Toutes') && (
             <button
               onClick={handleResetFilters}
-              className="px-5 py-3 chamfer-sm text-xs font-bold text-engine bg-engine/10 hover:bg-engine/20 transition-all flex items-center justify-center gap-2 cursor-pointer grow lg:grow-0"
+              className="px-5 py-3 chamfer-sm text-xs font-bold text-engine bg-engine-wash hover:bg-engine-wash transition-all flex items-center justify-center gap-2 cursor-pointer grow lg:grow-0"
             >
               <RefreshCw className="w-3.5 h-3.5" />
               Réinitialiser
@@ -254,8 +254,8 @@ export default function Members({ navigate }) {
 
       {/* Error State Banner */}
       {error && (
-        <div className="glass-panel border-red-500/20 bg-red-500/5 text-red-400 chamfer p-6 mb-12 flex items-center gap-4 relative z-10">
-          <div className="p-3 chamfer-sm bg-red-500/10 border border-red-500/20 shrink-0">
+        <div className="glass-panel border-danger bg-danger-wash text-danger chamfer p-6 mb-12 flex items-center gap-4 relative z-10">
+          <div className="p-3 chamfer-sm bg-danger-wash border border-danger shrink-0">
             <Award className="w-6 h-6 rotate-180" />
           </div>
           <div>
@@ -331,7 +331,7 @@ export default function Members({ navigate }) {
                           className="w-16 h-16 chamfer-sm object-cover border border-border-subtle group-hover:border-engine/40 transition-colors"
                           loading="lazy"
                         />
-                        <span className="absolute -bottom-1 -right-1 w-5 h-5 rounded-lg bg-engine border border-bg-secondary flex items-center justify-center text-[11px] text-white font-extrabold shadow-md">
+                        <span className="absolute -bottom-1 -right-1 w-5 h-5 rounded-lg bg-engine border border-bg-secondary flex items-center justify-center text-[11px] text-on-accent font-extrabold shadow-md">
                           {r.stars > 200 ? '★' : '👤'}
                         </span>
                       </div>
@@ -355,7 +355,7 @@ export default function Members({ navigate }) {
 
                     {/* Tags & Specialties (Badges) */}
                     <div className="flex flex-wrap gap-1.5 relative z-10">
-                      <span className="inline-flex items-center gap-1 text-[11px] font-extrabold uppercase text-engine bg-engine/10 px-2.5 py-1 rounded-full border border-engine/20">
+                      <span className="inline-flex items-center gap-1 text-[11px] font-extrabold uppercase text-engine bg-engine-wash px-2.5 py-1 rounded-full border border-engine/20">
                         <Layers className="w-3 h-3 shrink-0" />
                         {r.pole}
                       </span>
@@ -381,12 +381,12 @@ export default function Members({ navigate }) {
                         </div>
                         {/* Projets widget */}
                         <div className="flex items-center gap-1.5 text-text-muted" title={`${r.projectsCount} projets`}>
-                          <Award className="w-3.5 h-3.5 text-amber-500/70" />
+                          <Award className="w-3.5 h-3.5 text-warning" />
                           <span className="text-xs font-bold text-text-secondary">{r.projectsCount}</span>
                         </div>
                         {/* Stars widget */}
                         <div className="flex items-center gap-1.5 text-text-muted" title={`${r.stars} votes de confiance`}>
-                          <Star className="w-3.5 h-3.5 text-yellow-500/70 fill-yellow-500/10" />
+                          <Star className="w-3.5 h-3.5 text-warning fill-warning" />
                           <span className="text-xs font-bold text-text-secondary">{r.stars}</span>
                         </div>
                       </div>
@@ -419,17 +419,17 @@ export default function Members({ navigate }) {
               exit={{ opacity: 0 }}
               className="glass-panel chamfer p-12 text-center max-w-lg mx-auto flex flex-col items-center gap-6 border border-border-subtle relative overflow-hidden"
             >
-              <div className="absolute inset-0 bg-red-500/5 blur-3xl pointer-events-none -z-10" />
+              <div className="absolute inset-0 bg-danger-wash blur-3xl pointer-events-none -z-10" />
               
               {/* Scientific Broken Circuit SVG Line Artwork (UX-DR7) */}
-              <div className="w-24 h-24 text-red-500/30 flex items-center justify-center relative bg-red-500/5 rounded-full border border-red-500/10 mb-2">
+              <div className="w-24 h-24 text-danger flex items-center justify-center relative bg-danger-wash rounded-full border border-danger mb-2">
                 <svg className="w-16 h-16 stroke-current stroke-[1.5] fill-none" viewBox="0 0 100 100">
                   <path d="M10,50 L35,50 L45,30 L55,70 L65,50 L90,50" strokeDasharray="4 3" />
-                  <circle cx="50" cy="50" r="12" className="stroke-[2] text-red-500/70" />
+                  <circle cx="50" cy="50" r="12" className="stroke-[2] text-danger" />
                   <path d="M43,43 L57,57 M57,43 L43,57" className="stroke-[2.5]" />
                   {/* Floating floating electron nodes */}
-                  <circle cx="20" cy="50" r="3" className="fill-current text-red-500/40" />
-                  <circle cx="80" cy="50" r="3" className="fill-current text-red-500/40" />
+                  <circle cx="20" cy="50" r="3" className="fill-current text-danger" />
+                  <circle cx="80" cy="50" r="3" className="fill-current text-danger" />
                 </svg>
               </div>
 
@@ -444,7 +444,7 @@ export default function Members({ navigate }) {
 
               <button
                 onClick={handleResetFilters}
-                className="px-6 py-3 chamfer-sm text-xs font-bold text-white bg-engine hover:bg-engine/90 shadow-lg shadow-engine/20 hover:shadow-xl hover:shadow-engine/30 transition-all flex items-center gap-2 cursor-pointer"
+                className="px-6 py-3 chamfer-sm chamfer-shadow text-xs font-bold text-on-accent bg-engine hover:bg-engine hover: hover: transition-all flex items-center gap-2 cursor-pointer"
               >
                 <RefreshCw className="w-3.5 h-3.5" />
                 Réinitialiser la recherche

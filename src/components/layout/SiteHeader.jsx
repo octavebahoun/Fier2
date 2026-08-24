@@ -153,7 +153,7 @@ export default function SiteHeader({ currentPage, navigate, user }) {
         >
           <Bell className="w-4 h-4" aria-hidden="true" />
           {unreadCount > 0 && (
-            <span className="absolute -top-0.5 -right-0.5 inline-flex items-center justify-center min-w-[16px] h-4 px-1 rounded-full bg-ember text-white text-[11px] font-extrabold">
+            <span className="absolute -top-0.5 -right-0.5 inline-flex items-center justify-center min-w-[16px] h-4 px-1 rounded-full bg-ember text-on-accent text-[11px] font-extrabold">
               {unreadCount > 99 ? '99+' : unreadCount}
             </span>
           )}

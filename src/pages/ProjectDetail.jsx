@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
-  ArrowLeft, CheckCircle2, ChevronRight, 
+  ArrowLeft, ChevronRight, 
   Coins, Heart,  Info, Landmark, 
   Star, Trophy, Users, X, 
   ShieldAlert, Check 
@@ -9,33 +9,8 @@ import {
 import { api } from '../services/api';
 import { useAuth } from '../context/AuthContext.jsx';
 import { useAuthGate } from '../context/AuthGateContext.jsx';
+import { useToast } from '../components/ui/Toast.jsx'
 
-// ─────────────────────────── Toast Notification Component ───────────────────────────
-function Toast({ message, type = 'success', onClose }) {
-  useEffect(() => {
-    const timer = setTimeout(onClose, 4000);
-    return () => clearTimeout(timer);
-  }, [onClose]);
-
-  const bgClass = type === 'success' 
-    ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400' 
-    : 'bg-red-500/10 border-red-500/30 text-red-400';
-
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 24, scale: 0.95 }}
-      animate={{ opacity: 1, y: 0, scale: 1 }}
-      exit={{ opacity: 0, y: 16, scale: 0.95 }}
-      transition={{ type: 'spring', stiffness: 400, damping: 28 }}
-      className={`fixed bottom-6 right-6 z-[100] flex items-center gap-3 px-5 py-3.5 chamfer-sm shadow-2xl backdrop-blur-md border ${bgClass}`}
-      role="alert"
-      aria-live="polite"
-    >
-      <CheckCircle2 className="w-5 h-5 shrink-0 animate-pulse" />
-      <span className="text-xs font-bold">{message}</span>
-    </motion.div>
-  );
-}
 
 // ─────────────────────────── Project Detail Skeleton ───────────────────────────
 function ProjectDetailSkeleton() {
@@ -72,7 +47,7 @@ export default function ProjectDetail({ navigate, projectId }) {
   const [isFollowed, setIsFollowed] = useState(false);
   const [isPledgeModalOpen, setIsPledgeModalOpen] = useState(false);
   const [pledgeAmount, setPledgeAmount] = useState('');
-  const [toast, setToast] = useState(null);
+  const { notify } = useToast()
   const [pledgeError, setPledgeError] = useState('');
 
   // Refs for modal keyboard accessibility / focus trapping
@@ -122,12 +97,12 @@ export default function ProjectDetail({ navigate, projectId }) {
       const res = await api.projects.toggleFollow(project.id);
       if (res.success) {
         setIsFollowed(res.data);
-        setToast(res.message);
+        notify(res.message);
       } else {
-        setToast(res.message || "Impossible de modifier le statut de suivi.");
+        notify(res.message || "Impossible de modifier le statut de suivi.", 'error');
       }
     } catch {
-      setToast("Erreur lors de la modification de votre abonnement au projet.");
+      notify("Erreur lors de la modification de votre abonnement au projet.", 'error');
     }
   };
 
@@ -186,7 +161,7 @@ export default function ProjectDetail({ navigate, projectId }) {
       const res = await api.projects.support(project.id, amount);
       if (res.success) {
         setProject(p => ({ ...p, budgetRaised: res.data.newBudget }));
-        setToast(res.message || `Merci ! Votre promesse de soutien de ${amount} $ a été enregistrée.`);
+        notify(res.message || `Merci ! Votre promesse de soutien de ${amount} $ a été enregistrée.`);
         closePledgeModal();
       } else {
         setPledgeError(res.message || "Erreur lors de la transaction fictive.");
@@ -203,7 +178,7 @@ export default function ProjectDetail({ navigate, projectId }) {
   if (error || !project) {
     return (
       <div className="max-w-2xl mx-auto w-full py-32 px-6 flex flex-col items-center justify-center text-center gap-8 min-h-screen">
-        <div className="w-20 h-20 rounded-full bg-red-500/10 border border-red-500/25 flex items-center justify-center text-red-400 animate-pulse">
+        <div className="w-20 h-20 rounded-full bg-danger-wash border border-danger flex items-center justify-center text-danger animate-pulse">
           <ShieldAlert className="w-8 h-8" />
         </div>
         <div className="space-y-3">
@@ -214,7 +189,7 @@ export default function ProjectDetail({ navigate, projectId }) {
         </div>
         <button
           onClick={() => navigate('projects')}
-          className="px-6 py-3 chamfer-sm text-xs font-bold text-white bg-engine hover:bg-engine/90 shadow-lg shadow-engine/20 transition-all cursor-pointer flex items-center gap-2"
+          className="px-6 py-3 chamfer-sm chamfer-shadow text-xs font-bold text-on-accent bg-engine hover:bg-engine transition-all cursor-pointer flex items-center gap-2"
         >
           <ArrowLeft className="w-4 h-4" />
           Retourner au Hub R&D
@@ -230,12 +205,7 @@ export default function ProjectDetail({ navigate, projectId }) {
     <div className="max-w-[88rem] mx-auto w-full py-24 px-6 md:px-12 lg:px-12 relative min-h-screen">
       
       {/* Dynamic notification toasts */}
-      <AnimatePresence>
-        {toast && <Toast message={toast} onClose={() => setToast(null)} />}
-      </AnimatePresence>
 
-      {/* Decorative gradients */}
-      <div className="absolute top-10 left-1/3 w-[400px] h-[400px] bg-engine/5 rounded-full blur-[120px] pointer-events-none" />
 
       {/* Breadcrumbs and navigation back */}
       <div className="flex flex-col gap-6 relative z-10 mb-8">
@@ -270,7 +240,7 @@ export default function ProjectDetail({ navigate, projectId }) {
             
             {/* Project Cover Image */}
             {project.image && (
-              <div className="relative h-64 md:h-80 chamfer overflow-hidden bg-bg-secondary shadow-2xl">
+              <div className="relative h-64 md:h-80 chamfer chamfer-shadow overflow-hidden bg-bg-secondary ">
                 <img 
                   src={project.image} 
                   alt={project.title} 
@@ -283,7 +253,7 @@ export default function ProjectDetail({ navigate, projectId }) {
             {/* Header info */}
             <div className="glass-panel chamfer p-8 flex flex-col gap-6">
               <div className="flex justify-between items-start gap-4">
-                <span className="text-[11px] font-extrabold uppercase tracking-wider text-emerald-400 bg-emerald-500/10 border border-emerald-500/10 px-3 py-1 rounded-md">
+                <span className="text-[11px] font-extrabold uppercase tracking-wider text-success bg-success-wash border border-success px-3 py-1 rounded-md">
                   {project.status}
                 </span>
                 <span className="text-xs font-bold text-text-muted bg-bg-tertiary border border-border-subtle px-3 py-1 rounded-md">
@@ -339,10 +309,10 @@ export default function ProjectDetail({ navigate, projectId }) {
                       {/* Interactive glowing node dot representation */}
                       <span className={`absolute -left-[31px] md:-left-[39px] top-1 w-[18px] h-[18px] rounded-full border flex items-center justify-center transition-all ${
                         step.completed
-                          ? 'bg-emerald-500 border-emerald-400 text-white'
+                          ? 'bg-success border-success text-on-accent'
                           : isCurrent
-                            ? 'bg-engine border-engine text-white shadow-[0_0_15px_rgba(59,130,246,0.6)] animate-pulse'
-                            : 'bg-slate-900 border-white/20 text-text-muted'
+                            ? 'bg-engine border-engine text-on-accent animate-pulse'
+                            : 'bg-slate-900 border-border-subtle text-text-muted'
                       }`}>
                         {step.completed ? (
                           <Check className="w-2.5 h-2.5" />
@@ -402,7 +372,7 @@ export default function ProjectDetail({ navigate, projectId }) {
                       onClick={() => navigate('profile', { researcherId })}
                       className="bg-bg-secondary hover:bg-bg-tertiary border border-border-subtle hover:border-engine/20 p-4 chamfer-sm flex items-center gap-3 transition-all cursor-pointer group/member"
                     >
-                      <div className="w-9 h-9 rounded-full bg-engine/10 border border-engine/10 flex items-center justify-center font-extrabold text-xs text-engine group-hover/member:bg-engine group-hover/member:text-white transition-all">
+                      <div className="w-9 h-9 rounded-full bg-engine-wash border border-engine/10 flex items-center justify-center font-extrabold text-xs text-on-accent group-hover/member:bg-engine group-hover/member:text-on-accent transition-all">
                         {member.name.split(' ').map(n => n[0]).join('')}
                       </div>
                       <div>
@@ -424,8 +394,6 @@ export default function ProjectDetail({ navigate, projectId }) {
             
             {/* Financial Pledge Progress Bento */}
             <div className="glass-panel border border-border-subtle chamfer p-6 bg-bg-secondary flex flex-col gap-6 justify-between relative overflow-hidden">
-              <div className="absolute top-0 right-0 w-32 h-32 bg-engine/5 rounded-full blur-[40px] pointer-events-none" />
-              
               <div className="space-y-4 relative z-10">
                 <div className="flex items-center gap-2 text-[11px] font-extrabold text-engine uppercase tracking-wider">
                   <Landmark className="w-4 h-4" />
@@ -461,7 +429,7 @@ export default function ProjectDetail({ navigate, projectId }) {
               <div className="space-y-3 relative z-10 pt-4 border-t border-border-subtle">
                 <button
                   onClick={openPledgeModal}
-                  className="w-full py-3.5 chamfer-sm text-xs font-extrabold uppercase tracking-wider text-white bg-engine hover:bg-engine/90 shadow-lg shadow-engine/20 transition-all cursor-pointer text-center flex items-center justify-center gap-2"
+                  className="w-full py-3.5 chamfer-sm chamfer-shadow text-xs font-extrabold uppercase tracking-wider text-on-accent bg-engine hover:bg-engine transition-all cursor-pointer text-center flex items-center justify-center gap-2"
                 >
                   <Coins className="w-4 h-4" />
                   Soutenir ce projet
@@ -492,11 +460,11 @@ export default function ProjectDetail({ navigate, projectId }) {
                   onClick={handleFollowToggle}
                   className={`w-full py-3 chamfer-sm text-xs font-extrabold uppercase tracking-wider border transition-all cursor-pointer text-center flex items-center justify-center gap-2 ${
                     isFollowed
-                      ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400'
+                      ? 'bg-success-wash border-success text-success'
                       : 'bg-bg-secondary border-border-subtle hover:bg-bg-tertiary text-text-primary'
                   }`}
                 >
-                  <Heart className={`w-4 h-4 ${isFollowed ? 'fill-emerald-400' : ''}`} />
+                  <Heart className={`w-4 h-4 ${isFollowed ? 'fill-success' : ''}`} />
                   {isFollowed ? 'Projet Suivi' : 'Suivre ce projet'}
                 </button>
               </div>
@@ -550,7 +518,7 @@ export default function ProjectDetail({ navigate, projectId }) {
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 15 }}
               transition={{ type: 'spring', duration: 0.4 }}
-              className="glass-panel border border-border-subtle chamfer p-8 max-w-md w-full relative bg-bg-secondary shadow-2xl z-10 flex flex-col gap-6"
+              className="glass-panel border border-border-subtle chamfer chamfer-shadow p-8 max-w-md w-full relative bg-bg-secondary z-10 flex flex-col gap-6"
               role="dialog"
               aria-modal="true"
               aria-labelledby="modal-title"
@@ -567,7 +535,7 @@ export default function ProjectDetail({ navigate, projectId }) {
 
               {/* Title Header */}
               <div className="space-y-2 text-center">
-                <div className="mx-auto w-12 h-12 bg-engine/10 border border-engine/20 rounded-full flex items-center justify-center text-engine animate-bounce">
+                <div className="mx-auto w-12 h-12 bg-engine-wash border border-engine/20 rounded-full flex items-center justify-center text-engine animate-bounce">
                   <Landmark className="w-6 h-6" />
                 </div>
                 <h3 id="modal-title" className="text-xl font-extrabold text-text-primary tracking-tight">
@@ -602,7 +570,7 @@ export default function ProjectDetail({ navigate, projectId }) {
                     />
                   </div>
                   {pledgeError && (
-                    <span className="text-[11px] text-red-400 font-bold mt-1 flex items-center gap-1.5">
+                    <span className="text-[11px] text-danger font-bold mt-1 flex items-center gap-1.5">
                       <ShieldAlert className="w-3.5 h-3.5" />
                       {pledgeError}
                     </span>
@@ -642,7 +610,7 @@ export default function ProjectDetail({ navigate, projectId }) {
                   </button>
                   <button
                     type="submit"
-                    className="flex-1 py-3 rounded-xl bg-engine hover:bg-engine/90 text-white text-xs font-extrabold uppercase tracking-wider shadow-lg shadow-engine/20 transition-all cursor-pointer"
+                    className="flex-1 py-3 rounded-xl bg-engine hover:bg-engine text-on-accent text-xs font-extrabold uppercase tracking-wider shadow-lg transition-all cursor-pointer"
                   >
                     Valider
                   </button>

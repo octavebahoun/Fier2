@@ -118,7 +118,7 @@ export default function Adhesions() {
                     type="button"
                     onClick={() => decider(req, true)}
                     disabled={busyId === req.id}
-                    className="inline-flex min-h-11 flex-1 cursor-pointer items-center justify-center gap-1.5 border border-emerald-500 bg-emerald-500/12 px-4 text-sm font-bold text-emerald-300 transition-colors hover:bg-emerald-500/20 disabled:opacity-50 sm:flex-none"
+                    className="inline-flex min-h-11 flex-1 cursor-pointer items-center justify-center gap-1.5 border border-success bg-success-wash px-4 text-sm font-bold text-success transition-colors hover:bg-success-wash disabled:opacity-50 sm:flex-none"
                   >
                     <Check className="h-4 w-4" aria-hidden="true" /> Accepter
                   </button>

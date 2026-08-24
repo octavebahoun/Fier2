@@ -6,9 +6,9 @@ export default function MissionsSection({ mission }) {
   const getPillarConfig = (index) => {
     switch (index) {
       case 0:
-        return { icon: <Activity className="w-5.5 h-5.5 text-ember" />, chip: 'bg-ember/12 border-ember/25' };
+        return { icon: <Activity className="w-5.5 h-5.5 text-ember" />, chip: 'bg-ember-wash border-ember/25' };
       case 1:
-        return { icon: <Cpu className="w-5.5 h-5.5 text-engine" />, chip: 'bg-engine/12 border-engine/25' };
+        return { icon: <Cpu className="w-5.5 h-5.5 text-engine" />, chip: 'bg-engine-wash border-engine/25' };
       case 2:
         return { icon: <Globe2 className="w-5.5 h-5.5 text-engine-deep" />, chip: 'bg-engine-deep/12 border-engine-deep/25' };
       case 3:

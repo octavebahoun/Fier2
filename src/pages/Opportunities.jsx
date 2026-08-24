@@ -8,33 +8,8 @@ import {
 import { api } from '../services/api';
 import { useAuth } from '../context/AuthContext.jsx';
 import Offers from './Offers.jsx';
+import { useToast } from '../components/ui/Toast.jsx'
 
-// ─────────────────────────── Toast Notification Component ───────────────────────────
-function Toast({ message, type = 'success', onClose }) {
-  useEffect(() => {
-    const timer = setTimeout(onClose, 4000);
-    return () => clearTimeout(timer);
-  }, [onClose]);
-
-  const bgClass = type === 'success'
-    ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'
-    : 'bg-red-500/10 border-red-500/30 text-red-400';
-
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 24, scale: 0.95 }}
-      animate={{ opacity: 1, y: 0, scale: 1 }}
-      exit={{ opacity: 0, y: 16, scale: 0.95 }}
-      transition={{ type: 'spring', stiffness: 400, damping: 28 }}
-      className={`fixed bottom-6 right-6 z-[100] flex items-center gap-3 px-5 py-3.5 chamfer-sm shadow-2xl backdrop-blur-md border ${bgClass}`}
-      role="alert"
-      aria-live="polite"
-    >
-      <CheckCircle2 className="w-5 h-5 shrink-0" />
-      <span className="text-xs font-bold">{message}</span>
-    </motion.div>
-  );
-}
 
 // ─────────────────────────── Opportunities Page Component ───────────────────────────
 export default function Opportunities({ navigate }) {
@@ -43,7 +18,7 @@ export default function Opportunities({ navigate }) {
   const [searchQuery, setSearchQuery] = useState('');
   const [activeTab, setActiveTab] = useState('partners'); // 'partners' (Offers) by default, or 'research' (R&D)
   const [activeType, setActiveType] = useState('all');
-  const [toast, setToast] = useState(null);
+  const { notify } = useToast()
   const [appliedOpportunityIds, setAppliedOpportunityIds] = useState(new Set());
 
   // Application Modal state
@@ -190,7 +165,7 @@ export default function Opportunities({ navigate }) {
       });
 
       if (res.success) {
-        setToast(res.message || "Votre candidature scientifique a été transmise au laboratoire avec succès !");
+        notify(res.message || "Votre candidature scientifique a été transmise au laboratoire avec succès !");
         setAppliedOpportunityIds(prev => new Set([...prev, selectedOpportunity.id]));
         closeApplyModal();
       } else {
@@ -208,7 +183,7 @@ export default function Opportunities({ navigate }) {
       return;
     }
     if (!can('opportunity:create')) {
-      setToast("Accès refusé. Cette fonctionnalité est réservée aux chercheurs certifiés.");
+      notify("Accès refusé. Cette fonctionnalité est réservée aux chercheurs certifiés.", 'error');
       return;
     }
     publishTriggerRef.current = document.activeElement;
@@ -248,7 +223,7 @@ export default function Opportunities({ navigate }) {
       });
 
       if (res.success) {
-        setToast("Nouvelle opportunité publiée avec succès !");
+        notify("Nouvelle opportunité publiée avec succès !");
         fetchOpportunities();
         closePublishModal();
       } else {
@@ -272,12 +247,7 @@ export default function Opportunities({ navigate }) {
 
   return (
     <div className="max-w-[88rem] mx-auto w-full py-24 px-6 md:px-12 lg:px-12 flex flex-col gap-12 relative min-h-screen">
-      <AnimatePresence>
-        {toast && <Toast message={toast} onClose={() => setToast(null)} />}
-      </AnimatePresence>
 
-      {/* Decorative Blur Spheres */}
-      <div className="absolute top-1/4 left-1/4 w-[450px] h-[450px] bg-engine/5 rounded-full blur-[120px] pointer-events-none" />
 
       {/* Tab Filter: Research / Social Partners Switcher */}
       <div className="inline-flex items-center gap-1 p-1 chamfer-sm bg-bg-secondary border border-border-subtle w-fit relative z-10">
@@ -288,7 +258,7 @@ export default function Opportunities({ navigate }) {
           }}
           className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
             activeTab === 'partners'
-              ? 'bg-red-500/20 border border-red-500/30 text-red-400 shadow-sm shadow-red-500/10'
+              ? 'bg-danger-wash border border-danger text-danger shadow-sm'
               : 'text-text-secondary hover:text-text-primary border border-transparent'
           }`}
         >
@@ -302,7 +272,7 @@ export default function Opportunities({ navigate }) {
           }}
           className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
             activeTab === 'research'
-              ? 'bg-engine/20 border border-engine/30 text-engine shadow-sm shadow-engine/10'
+              ? 'bg-engine-wash border border-engine/30 text-engine shadow-sm'
               : 'text-text-secondary hover:text-text-primary border border-transparent'
           }`}
         >
@@ -336,7 +306,7 @@ export default function Opportunities({ navigate }) {
             {can('opportunity:create') && (
               <button
                 onClick={openPublishModal}
-                className="px-5 py-3 chamfer-sm text-xs font-extrabold uppercase tracking-wider text-white transition-all cursor-pointer flex items-center gap-2 shadow-lg bg-engine hover:bg-engine/90 shadow-engine/20"
+                className="px-5 py-3 chamfer-sm chamfer-shadow text-xs font-extrabold uppercase tracking-wider text-on-accent transition-all cursor-pointer flex items-center gap-2 bg-engine hover:bg-engine"
               >
                 <Plus className="w-4 h-4" />
                 Publier une offre
@@ -365,7 +335,7 @@ export default function Opportunities({ navigate }) {
                   key={type}
                   onClick={() => setActiveType(type)}
                   className={`px-4 py-2 rounded-xl text-xs font-bold border transition-all shrink-0 cursor-pointer ${activeType === type
-                      ? 'bg-engine border-engine text-white shadow-lg shadow-engine/10'
+                      ? 'bg-engine border-engine text-on-accent shadow-lg'
                       : 'bg-bg-secondary border-border-subtle text-text-secondary hover:text-text-primary'
                     }`}
                 >
@@ -400,10 +370,10 @@ export default function Opportunities({ navigate }) {
                       <div className="flex justify-between items-center gap-4">
                         <span className={`text-[11px] font-extrabold uppercase tracking-wider px-2.5 py-0.5 rounded-md border ${
                           opt.type === 'CDD R&D'
-                            ? 'text-engine bg-engine/10 border-engine/10'
+                            ? 'text-engine bg-engine-wash border-engine/10'
                             : opt.type === 'Doctorat'
-                              ? 'text-engine bg-engine/10 border-engine/10'
-                              : 'text-amber-400 bg-amber-500/10 border-amber-500/10'
+                              ? 'text-engine bg-engine-wash border-engine/10'
+                              : 'text-warning bg-warning-wash border-warning'
                         }`}>
                           {opt.type}
                         </span>
@@ -447,20 +417,20 @@ export default function Opportunities({ navigate }) {
 
                     {/* Footer Info & Application CTA */}
                     <div className="flex justify-between items-center pt-4 border-t border-border-subtle">
-                      <div className="flex items-center gap-1.5 text-xs text-emerald-400 font-extrabold">
-                        <Coins className="w-4 h-4 text-emerald-400" />
+                      <div className="flex items-center gap-1.5 text-xs text-success font-extrabold">
+                        <Coins className="w-4 h-4 text-success" />
                         <span>{opt.salary} $ / mois</span>
                       </div>
 
                       {appliedOpportunityIds.has(opt.id) ? (
-                        <span className="px-4 py-2 text-[11px] font-extrabold uppercase tracking-wider text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 rounded-xl flex items-center gap-1.5">
+                        <span className="px-4 py-2 text-[11px] font-extrabold uppercase tracking-wider text-success bg-success-wash border border-success rounded-xl flex items-center gap-1.5">
                           Candidature transmise
                           <CheckCircle2 className="w-3.5 h-3.5" />
                         </span>
                       ) : (
                         <button
                           onClick={() => openApplyModal(opt)}
-                          className="px-4 py-2 text-[11px] font-extrabold uppercase tracking-wider text-white transition-all rounded-xl shadow-lg flex items-center gap-1.5 cursor-pointer bg-engine hover:bg-engine/95 shadow-engine/10"
+                          className="px-4 py-2 text-[11px] font-extrabold uppercase tracking-wider text-on-accent transition-all rounded-xl shadow-lg flex items-center gap-1.5 cursor-pointer bg-engine hover:bg-engine"
                         >
                           Postuler
                           <ArrowRight className="w-3.5 h-3.5" />
@@ -493,7 +463,7 @@ export default function Opportunities({ navigate }) {
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
                   onClick={closeApplyModal}
-                  className="absolute inset-0 bg-black/60 backdrop-blur-md"
+                  className="absolute inset-0 bg-scrim backdrop-blur-md"
                 />
 
                 <motion.div
@@ -501,7 +471,7 @@ export default function Opportunities({ navigate }) {
                   initial={{ opacity: 0, scale: 0.95, y: 15 }}
                   animate={{ opacity: 1, scale: 1, y: 0 }}
                   exit={{ opacity: 0, scale: 0.95, y: 15 }}
-                  className="glass-panel border border-border-subtle chamfer p-8 max-w-lg w-full relative bg-bg-secondary shadow-2xl z-10 flex flex-col gap-6"
+                  className="glass-panel border border-border-subtle chamfer chamfer-shadow p-8 max-w-lg w-full relative bg-bg-secondary z-10 flex flex-col gap-6"
                   role="dialog"
                   aria-modal="true"
                 >
@@ -524,7 +494,7 @@ export default function Opportunities({ navigate }) {
 
                   <form onSubmit={handleApplySubmit} className="flex flex-col gap-4">
                     {applyError && (
-                      <div className="p-3 bg-red-500/10 border border-red-500/20 text-red-400 rounded-xl text-[11px] font-bold flex items-center gap-1.5">
+                      <div className="p-3 bg-danger-wash border border-danger text-danger rounded-xl text-[11px] font-bold flex items-center gap-1.5">
                         <ShieldAlert className="w-4 h-4 shrink-0" />
                         {applyError}
                       </div>
@@ -598,7 +568,7 @@ export default function Opportunities({ navigate }) {
                         />
                       </div>
                       {applyForm.cvFile && (
-                        <span className="text-[11px] text-emerald-400 font-bold mt-1 flex items-center gap-1.5 bg-emerald-500/5 px-3 py-1.5 rounded-xl border border-emerald-500/10 w-fit">
+                        <span className="text-[11px] text-success font-bold mt-1 flex items-center gap-1.5 bg-success-wash px-3 py-1.5 rounded-xl border border-success w-fit">
                           <CheckCircle2 className="w-3.5 h-3.5" />
                           Fichier lié : {applyForm.cvFile}
                         </span>
@@ -615,7 +585,7 @@ export default function Opportunities({ navigate }) {
                       </button>
                       <button
                         type="submit"
-                        className="flex-1 py-3 rounded-xl text-white text-xs font-extrabold uppercase tracking-wider shadow-lg bg-engine hover:bg-engine/90 shadow-engine/20 cursor-pointer"
+                        className="flex-1 py-3 rounded-xl text-on-accent text-xs font-extrabold uppercase tracking-wider shadow-lg bg-engine hover:bg-engine cursor-pointer"
                       >
                         Transmettre
                       </button>
@@ -635,7 +605,7 @@ export default function Opportunities({ navigate }) {
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
                   onClick={closePublishModal}
-                  className="absolute inset-0 bg-black/60 backdrop-blur-md"
+                  className="absolute inset-0 bg-scrim backdrop-blur-md"
                 />
 
                 <motion.div
@@ -643,7 +613,7 @@ export default function Opportunities({ navigate }) {
                   initial={{ opacity: 0, scale: 0.95, y: 15 }}
                   animate={{ opacity: 1, scale: 1, y: 0 }}
                   exit={{ opacity: 0, scale: 0.95, y: 15 }}
-                  className="glass-panel border border-border-subtle chamfer p-8 max-w-xl w-full relative bg-bg-secondary shadow-2xl z-10 flex flex-col gap-6"
+                  className="glass-panel border border-border-subtle chamfer chamfer-shadow p-8 max-w-xl w-full relative bg-bg-secondary z-10 flex flex-col gap-6"
                   role="dialog"
                   aria-modal="true"
                 >
@@ -666,7 +636,7 @@ export default function Opportunities({ navigate }) {
 
                   <form onSubmit={handlePublishSubmit} className="flex flex-col gap-4">
                     {publishError && (
-                      <div className="p-3 bg-red-500/10 border border-red-500/20 text-red-400 rounded-xl text-[11px] font-bold flex items-center gap-1.5">
+                      <div className="p-3 bg-danger-wash border border-danger text-danger rounded-xl text-[11px] font-bold flex items-center gap-1.5">
                         <ShieldAlert className="w-4 h-4 shrink-0" />
                         {publishError}
                       </div>
@@ -770,7 +740,7 @@ export default function Opportunities({ navigate }) {
                       </button>
                       <button
                         type="submit"
-                        className="flex-1 py-3 rounded-xl bg-engine hover:bg-engine/90 text-white text-xs font-extrabold uppercase tracking-wider shadow-lg shadow-engine/20 cursor-pointer"
+                        className="flex-1 py-3 rounded-xl bg-engine hover:bg-engine text-on-accent text-xs font-extrabold uppercase tracking-wider shadow-lg cursor-pointer"
                       >
                         Créer l'opportunité
                       </button>

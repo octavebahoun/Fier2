@@ -7,40 +7,15 @@ import {
 } from 'lucide-react';
 import { api } from '../services/api';
 import { useAuth } from '../context/AuthContext.jsx';
+import { useToast } from '../components/ui/Toast.jsx'
 
-// ─────────────────────────── Toast Notification Component ───────────────────────────
-function Toast({ message, type = 'success', onClose }) {
-  useEffect(() => {
-    const timer = setTimeout(onClose, 4000);
-    return () => clearTimeout(timer);
-  }, [onClose]);
-
-  const bgClass = type === 'success'
-    ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'
-    : 'bg-ember/10 border-ember/30 text-ember';
-
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 24, scale: 0.95 }}
-      animate={{ opacity: 1, y: 0, scale: 1 }}
-      exit={{ opacity: 0, y: 16, scale: 0.95 }}
-      transition={{ type: 'spring', stiffness: 400, damping: 28 }}
-      className={`fixed bottom-6 right-6 z-[100] flex items-center gap-3 px-5 py-3.5 chamfer-sm shadow-2xl backdrop-blur-md border ${bgClass}`}
-      role="alert"
-      aria-live="polite"
-    >
-      <CheckCircle2 className="w-5 h-5 shrink-0" />
-      <span className="text-xs font-bold">{message}</span>
-    </motion.div>
-  );
-}
 
 // ─────────────────────────── Offers Page Component ───────────────────────────
 export default function Offers({ navigate }) {
   const { user, can } = useAuth();
   const [opportunities, setOpportunities] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
-  const [toast, setToast] = useState(null);
+  const { notify } = useToast()
   const [appliedOpportunityIds, setAppliedOpportunityIds] = useState(new Set());
 
   // Application Modal state
@@ -183,7 +158,7 @@ export default function Offers({ navigate }) {
       });
 
       if (res.success) {
-        setToast("Votre demande d'activation a été transmise au partenaire social avec succès ! Vous recevrez les instructions de l'offre par email.");
+        notify("Votre demande d'activation a été transmise au partenaire social avec succès ! Vous recevrez les instructions de l'offre par email.");
         setAppliedOpportunityIds(prev => new Set([...prev, selectedOpportunity.id]));
         closeApplyModal();
       } else {
@@ -202,7 +177,7 @@ export default function Offers({ navigate }) {
     }
     const isResearcher = can('opportunity:create');
     if (!isResearcher) {
-      setToast("Accès refusé. Cette fonctionnalité est réservée aux chercheurs certifiés.");
+      notify("Accès refusé. Cette fonctionnalité est réservée aux chercheurs certifiés.", 'error');
       return;
     }
     publishTriggerRef.current = document.activeElement;
@@ -237,7 +212,7 @@ export default function Offers({ navigate }) {
       });
 
       if (res.success) {
-        setToast("Nouvelle exclusivité de partenariat publiée avec succès !");
+        notify("Nouvelle exclusivité de partenariat publiée avec succès !");
         fetchOpportunities();
         closePublishModal();
       } else {
@@ -261,9 +236,7 @@ export default function Offers({ navigate }) {
 
   return (
     <div className="flex flex-col gap-12 relative w-full">
-      <AnimatePresence>
-        {toast && <Toast message={toast} onClose={() => setToast(null)} />}
-      </AnimatePresence>
+
 
       {/* Hero Header */}
       <div className="flex flex-col md:flex-row gap-6 items-start md:items-center justify-between relative z-10">
@@ -285,7 +258,7 @@ export default function Offers({ navigate }) {
 
         <button
           onClick={openPublishModal}
-          className="px-5 py-3 chamfer-sm text-xs font-extrabold uppercase tracking-wider text-white transition-all cursor-pointer flex items-center gap-2 shadow-lg bg-ember hover:bg-ember-deep shadow-ember/20"
+          className="px-5 py-3 chamfer-sm chamfer-shadow text-xs font-extrabold uppercase tracking-wider text-on-accent transition-all cursor-pointer flex items-center gap-2 bg-ember hover:bg-ember-deep"
         >
           <Plus className="w-4 h-4" />
           Proposer une exclusivité
@@ -299,8 +272,8 @@ export default function Offers({ navigate }) {
         </h3>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {[
-            { name: "MUA", role: "Mutuelle & Santé", desc: "Mutuelle Universitaire d'Afrique", color: "from-emerald-500/10 to-teal-500/5 hover:border-emerald-500/30", textColor: "text-emerald-400" },
-            { name: "COUS", role: "Logement & Social", desc: "Centre des Œuvres Universitaires", color: "from-amber-500/10 to-orange-500/5 hover:border-amber-500/30", textColor: "text-amber-400" },
+            { name: "MUA", role: "Mutuelle & Santé", desc: "Mutuelle Universitaire d'Afrique", color: "from-success to-success/5 hover:border-success", textColor: "text-success" },
+            { name: "COUS", role: "Logement & Social", desc: "Centre des Œuvres Universitaires", color: "from-warning to-ember hover:border-warning", textColor: "text-warning" },
             { name: "Trans-Metro", role: "Mobilité Urbaine", desc: "Navettes & mobilités durables", color: "from-engine/10 to-engine-deep/5 hover:border-engine/30", textColor: "text-engine" },
             { name: "Valkyrie R&D Labs", role: "Équipement & Logiciels", desc: "Dotation technologique", color: "from-ember/10 to-engine/5 hover:border-ember/30", textColor: "text-ember" }
           ].map(partner => (
@@ -331,7 +304,7 @@ export default function Offers({ navigate }) {
           />
         </div>
 
-        <div className="text-[11px] font-extrabold uppercase tracking-wider text-ember bg-ember/10 border border-ember/25 px-3.5 py-2 rounded-xl flex items-center gap-1.5 shrink-0">
+        <div className="text-[11px] font-extrabold uppercase tracking-wider text-ember bg-ember-wash border border-ember/25 px-3.5 py-2 rounded-xl flex items-center gap-1.5 shrink-0">
           <Sparkles className="w-3.5 h-3.5" />
           <span>Offres Partenaires Socialement Engagés</span>
         </div>
@@ -360,7 +333,7 @@ export default function Offers({ navigate }) {
                 <div className="space-y-4">
                   {/* Top info row */}
                   <div className="flex justify-between items-center gap-4">
-                    <span className="text-[11px] font-extrabold uppercase tracking-wider px-2.5 py-0.5 rounded-md border text-ember bg-ember/10 border-ember/15">
+                    <span className="text-[11px] font-extrabold uppercase tracking-wider px-2.5 py-0.5 rounded-md border text-ember bg-ember-wash border-ember/15">
                       Partenaire Social
                     </span>
                     <span className="text-[11px] font-extrabold uppercase tracking-wider bg-bg-tertiary px-2 py-0.5 rounded text-ember-soft">
@@ -408,14 +381,14 @@ export default function Offers({ navigate }) {
                   </div>
 
                   {appliedOpportunityIds.has(opt.id) ? (
-                    <span className="px-4 py-2 text-[11px] font-extrabold uppercase tracking-wider text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 rounded-xl flex items-center gap-1.5">
+                    <span className="px-4 py-2 text-[11px] font-extrabold uppercase tracking-wider text-success bg-success-wash border border-success rounded-xl flex items-center gap-1.5">
                       Offre activée
                       <CheckCircle2 className="w-3.5 h-3.5" />
                     </span>
                   ) : (
                     <button
                       onClick={() => openApplyModal(opt)}
-                      className="px-4 py-2 text-[11px] font-extrabold uppercase tracking-wider text-white transition-all rounded-xl shadow-lg flex items-center gap-1.5 cursor-pointer bg-ember hover:bg-ember-deep shadow-ember/15"
+                      className="px-4 py-2 text-[11px] font-extrabold uppercase tracking-wider text-on-accent transition-all rounded-xl shadow-lg flex items-center gap-1.5 cursor-pointer bg-ember hover:bg-ember-deep"
                     >
                       En profiter
                       <ArrowRight className="w-3.5 h-3.5" />
@@ -448,7 +421,7 @@ export default function Offers({ navigate }) {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={closeApplyModal}
-              className="absolute inset-0 bg-black/60 backdrop-blur-md"
+              className="absolute inset-0 bg-scrim backdrop-blur-md"
             />
 
             <motion.div
@@ -456,7 +429,7 @@ export default function Offers({ navigate }) {
               initial={{ opacity: 0, scale: 0.95, y: 15 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 15 }}
-              className="glass-panel border border-border-subtle chamfer p-8 max-w-lg w-full relative bg-bg-secondary shadow-2xl z-10 flex flex-col gap-6"
+              className="glass-panel border border-border-subtle chamfer chamfer-shadow p-8 max-w-lg w-full relative bg-bg-secondary z-10 flex flex-col gap-6"
               role="dialog"
               aria-modal="true"
             >
@@ -479,7 +452,7 @@ export default function Offers({ navigate }) {
 
               <form onSubmit={handleApplySubmit} className="flex flex-col gap-4">
                 {applyError && (
-                  <div className="p-3 bg-ember/10 border border-ember/25 text-ember rounded-xl text-[11px] font-bold flex items-center gap-1.5">
+                  <div className="p-3 bg-ember-wash border border-ember/25 text-ember rounded-xl text-[11px] font-bold flex items-center gap-1.5">
                     <ShieldAlert className="w-4 h-4 shrink-0" />
                     {applyError}
                   </div>
@@ -553,7 +526,7 @@ export default function Offers({ navigate }) {
                     />
                   </div>
                   {applyForm.cvFile && (
-                    <span className="text-[11px] text-emerald-400 font-bold mt-1 flex items-center gap-1.5 bg-emerald-500/5 px-3 py-1.5 rounded-xl border border-emerald-500/10 w-fit">
+                    <span className="text-[11px] text-success font-bold mt-1 flex items-center gap-1.5 bg-success-wash px-3 py-1.5 rounded-xl border border-success w-fit">
                       <CheckCircle2 className="w-3.5 h-3.5" />
                       Fichier lié : {applyForm.cvFile}
                     </span>
@@ -570,7 +543,7 @@ export default function Offers({ navigate }) {
                   </button>
                   <button
                     type="submit"
-                    className="flex-1 py-3 rounded-xl text-white text-xs font-extrabold uppercase tracking-wider shadow-lg cursor-pointer bg-ember hover:bg-ember-deep shadow-ember/20"
+                    className="flex-1 py-3 rounded-xl text-on-accent text-xs font-extrabold uppercase tracking-wider shadow-lg cursor-pointer bg-ember hover:bg-ember-deep"
                   >
                     Activer l'offre
                   </button>
@@ -590,7 +563,7 @@ export default function Offers({ navigate }) {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={closePublishModal}
-              className="absolute inset-0 bg-black/60 backdrop-blur-md"
+              className="absolute inset-0 bg-scrim backdrop-blur-md"
             />
 
             <motion.div
@@ -598,7 +571,7 @@ export default function Offers({ navigate }) {
               initial={{ opacity: 0, scale: 0.95, y: 15 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 15 }}
-              className="glass-panel border border-border-subtle chamfer p-8 max-w-xl w-full relative bg-bg-secondary shadow-2xl z-10 flex flex-col gap-6"
+              className="glass-panel border border-border-subtle chamfer chamfer-shadow p-8 max-w-xl w-full relative bg-bg-secondary z-10 flex flex-col gap-6"
               role="dialog"
               aria-modal="true"
             >
@@ -621,7 +594,7 @@ export default function Offers({ navigate }) {
 
               <form onSubmit={handlePublishSubmit} className="flex flex-col gap-4">
                 {publishError && (
-                  <div className="p-3 bg-ember/10 border border-ember/25 text-ember rounded-xl text-[11px] font-bold flex items-center gap-1.5">
+                  <div className="p-3 bg-ember-wash border border-ember/25 text-ember rounded-xl text-[11px] font-bold flex items-center gap-1.5">
                     <ShieldAlert className="w-4 h-4 shrink-0" />
                     {publishError}
                   </div>
@@ -705,7 +678,7 @@ export default function Offers({ navigate }) {
                   </button>
                   <button
                     type="submit"
-                    className="flex-1 py-3 rounded-xl bg-ember hover:bg-ember-deep text-white text-xs font-extrabold uppercase tracking-wider shadow-lg shadow-ember/20 cursor-pointer"
+                    className="flex-1 py-3 rounded-xl bg-ember hover:bg-ember-deep text-on-accent text-xs font-extrabold uppercase tracking-wider shadow-lg cursor-pointer"
                   >
                     Créer l'exclusivité
                   </button>

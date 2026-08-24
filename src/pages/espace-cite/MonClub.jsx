@@ -78,7 +78,7 @@ export default function MonClub({ navigate }) {
         <button
           type="button"
           onClick={() => navigate('clubs')}
-          className="inline-flex min-h-11 cursor-pointer items-center gap-2 bg-engine px-5 text-sm font-bold text-white transition-colors hover:bg-engine-deep"
+          className="inline-flex min-h-11 cursor-pointer items-center gap-2 bg-engine px-5 text-sm font-bold text-on-accent transition-colors hover:bg-engine-deep"
         >
           Découvrir les clubs <ArrowRight className="h-4 w-4" aria-hidden="true" />
         </button>

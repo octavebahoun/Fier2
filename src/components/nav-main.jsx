@@ -75,7 +75,7 @@ export function NavMain({ groups, currentPage, navigate }) {
                   <SidebarMenuButton
                     tooltip={group.label}
                     isActive={hasActiveChild}
-                    className="chamfer-sm cursor-pointer rounded-none border border-transparent data-active:border-engine/25 data-active:bg-engine/10 data-active:text-engine hover:bg-bg-tertiary"
+                    className="chamfer-sm cursor-pointer rounded-none border border-transparent data-active:border-engine/25 data-active:bg-engine-wash data-active:text-engine hover:bg-bg-tertiary"
                   >
                     <group.icon className={hasActiveChild ? "text-engine" : "text-text-muted"} />
                     <span className="truncate text-sm font-semibold">{group.label}</span>
@@ -93,7 +93,7 @@ export function NavMain({ groups, currentPage, navigate }) {
                           <SidebarMenuSubButton
                             isActive={active}
                             onClick={() => navigate(item.id, item.params || {})}
-                            className="chamfer-sm relative cursor-pointer rounded-none border border-transparent pl-3 data-active:border-engine/25 data-active:bg-engine/10 data-active:font-semibold hover:bg-bg-tertiary"
+                            className="chamfer-sm relative cursor-pointer rounded-none border border-transparent pl-3 data-active:border-engine/25 data-active:bg-engine-wash data-active:font-semibold hover:bg-bg-tertiary"
                           >
                             {active && (
                               <span

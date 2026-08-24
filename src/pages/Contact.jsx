@@ -7,36 +7,14 @@ import {
   ChevronDown,
   ChevronUp,
   Send,
-  CheckCircle,
   HelpCircle,
   MapPin
 } from 'lucide-react'
 import { useAuth } from '../context/AuthContext.jsx'
 import { api } from '../services/api.js'
+import { useToast } from '../components/ui/Toast.jsx'
 
 
-// ─────────────────────────── Toast Component ───────────────────────────
-function Toast({ message, onClose }) {
-  useEffect(() => {
-    const timer = setTimeout(onClose, 4000)
-    return () => clearTimeout(timer)
-  }, [onClose])
-
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 24, scale: 0.95 }}
-      animate={{ opacity: 1, y: 0, scale: 1 }}
-      exit={{ opacity: 0, y: 16, scale: 0.95 }}
-      transition={{ type: 'spring', stiffness: 400, damping: 28 }}
-      className="fixed bottom-6 right-6 z-[100] flex items-center gap-3 bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 px-5 py-3.5 chamfer-sm shadow-2xl backdrop-blur-md"
-      role="alert"
-      aria-live="polite"
-    >
-      <CheckCircle className="w-5 h-5 shrink-0" />
-      <span className="text-sm font-bold">{message}</span>
-    </motion.div>
-  )
-}
 
 // ─────────────────────────── FAQ Data ───────────────────────────
 const FAQ_ITEMS = [
@@ -117,7 +95,7 @@ export default function Contact({ navigate }) {
     message: ''
   })
   const [sending, setSending] = useState(false)
-  const [toast, setToast] = useState(null)
+  const { notify } = useToast()
   const [errors, setErrors] = useState({})
 
   const messageRef = useRef(null)
@@ -166,10 +144,10 @@ export default function Contact({ navigate }) {
     }
     try {
       await api.contact.sendMessage(payload)
-      setToast('Message envoyé ! Notre équipe vous répond sous 48h.')
+      notify('Message envoyé ! Notre équipe vous répond sous 48h.')
       setForm(prev => ({ ...prev, subject: '', message: '' }))
     } catch {
-      setToast('Une erreur est survenue. Veuillez réessayer.')
+      notify('Une erreur est survenue. Veuillez réessayer.', 'error')
     } finally {
       setSending(false)
     }
@@ -179,14 +157,12 @@ export default function Contact({ navigate }) {
   return (
     <div className="max-w-[88rem] mx-auto w-full py-24 px-6 md:px-12 lg:px-12 relative">
       {/* Toast de confirmation */}
-      <AnimatePresence>
-        {toast && <Toast message={toast} onClose={() => setToast(null)} />}
-      </AnimatePresence>
+
 
       {/* En-tête */}
       <div className="flex flex-col gap-3 mb-16 max-w-2xl">
         <div className="flex items-center gap-3 mb-1">
-          <div className="p-2 rounded-xl bg-engine/10 border border-engine/20 text-engine">
+          <div className="p-2 rounded-xl bg-engine-wash border border-engine/20 text-engine">
             <MessageCircle className="w-5 h-5" />
           </div>
           <span className="text-[11px] font-extrabold tracking-[0.25em] uppercase text-engine">
@@ -223,7 +199,7 @@ export default function Contact({ navigate }) {
           {/* Infos de contact directes */}
           <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="glass-panel border border-border-subtle p-5 chamfer-sm flex items-start gap-3">
-              <div className="p-2 rounded-lg bg-engine/10 border border-engine/20 text-engine shrink-0">
+              <div className="p-2 rounded-lg bg-engine-wash border border-engine/20 text-engine shrink-0">
                 <Mail className="w-4 h-4" />
               </div>
               <div>
@@ -232,7 +208,7 @@ export default function Contact({ navigate }) {
               </div>
             </div>
             <div className="glass-panel border border-border-subtle p-5 chamfer-sm flex items-start gap-3">
-              <div className="p-2 rounded-lg bg-ember/10 border border-ember/20 text-engine shrink-0">
+              <div className="p-2 rounded-lg bg-ember-wash border border-ember/20 text-engine shrink-0">
                 <MapPin className="w-4 h-4" />
               </div>
               <div>
@@ -275,12 +251,12 @@ export default function Contact({ navigate }) {
                   user
                     ? 'border-border-subtle text-text-secondary cursor-not-allowed opacity-70'
                     : errors.name
-                    ? 'border-red-500/50 focus:border-red-500'
+                    ? 'border-danger focus:border-danger'
                     : 'border-border-subtle hover:border-engine/30 focus:border-engine'
                 }`}
               />
               {errors.name && (
-                <span id="error-name" role="alert" className="text-[11px] text-red-400">{errors.name}</span>
+                <span id="error-name" role="alert" className="text-[11px] text-danger">{errors.name}</span>
               )}
             </div>
 
@@ -303,12 +279,12 @@ export default function Contact({ navigate }) {
                   user
                     ? 'border-border-subtle text-text-secondary cursor-not-allowed opacity-70'
                     : errors.email
-                    ? 'border-red-500/50 focus:border-red-500'
+                    ? 'border-danger focus:border-danger'
                     : 'border-border-subtle hover:border-engine/30 focus:border-engine'
                 }`}
               />
               {errors.email && (
-                <span id="error-email" role="alert" className="text-[11px] text-red-400">{errors.email}</span>
+                <span id="error-email" role="alert" className="text-[11px] text-danger">{errors.email}</span>
               )}
             </div>
 
@@ -328,12 +304,12 @@ export default function Contact({ navigate }) {
                 placeholder="Demande d'information — Rejoindre un club"
                 className={`bg-bg-primary border rounded-xl px-4 py-2.5 text-xs text-text-primary placeholder:text-text-muted transition-all focus:outline-none ${
                   errors.subject
-                    ? 'border-red-500/50 focus:border-red-500'
+                    ? 'border-danger focus:border-danger'
                     : 'border-border-subtle hover:border-engine/30 focus:border-engine'
                 }`}
               />
               {errors.subject && (
-                <span id="error-subject" role="alert" className="text-[11px] text-red-400">{errors.subject}</span>
+                <span id="error-subject" role="alert" className="text-[11px] text-danger">{errors.subject}</span>
               )}
             </div>
 
@@ -354,12 +330,12 @@ export default function Contact({ navigate }) {
                 placeholder="Décrivez votre demande en détail..."
                 className={`bg-bg-primary border rounded-xl px-4 py-2.5 text-xs text-text-primary placeholder:text-text-muted transition-all focus:outline-none resize-none leading-relaxed ${
                   errors.message
-                    ? 'border-red-500/50 focus:border-red-500'
+                    ? 'border-danger focus:border-danger'
                     : 'border-border-subtle hover:border-engine/30 focus:border-engine'
                 }`}
               />
               {errors.message && (
-                <span id="error-message" role="alert" className="text-[11px] text-red-400">{errors.message}</span>
+                <span id="error-message" role="alert" className="text-[11px] text-danger">{errors.message}</span>
               )}
             </div>
 
@@ -367,7 +343,7 @@ export default function Contact({ navigate }) {
             <button
               type="submit"
               disabled={sending}
-              className="mt-1 w-full py-3 rounded-xl bg-engine hover:bg-engine/90 text-white text-xs font-extrabold uppercase tracking-widest transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 shadow-lg hover:shadow-engine/20"
+              className="mt-1 w-full py-3 rounded-xl bg-engine hover:bg-engine text-on-accent text-xs font-extrabold uppercase tracking-widest transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 shadow-lg hover:"
             >
               {sending ? (
                 <>

@@ -108,7 +108,7 @@ export default function NotificationsModal({ open, onClose, navigate }) {
         {/* En-tête */}
         <div className="flex items-center justify-between px-5 py-4 border-b border-border-subtle/60 shrink-0">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-engine/15 border border-engine/30 flex items-center justify-center">
+            <div className="w-9 h-9 rounded-xl bg-engine-wash border border-engine/30 flex items-center justify-center">
               <Bell className="w-4.5 h-4.5 text-engine" />
             </div>
             <div>
@@ -141,7 +141,7 @@ export default function NotificationsModal({ open, onClose, navigate }) {
             </button>
             <button
               onClick={clearAll}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-semibold text-red-400 hover:text-red-300 hover:bg-red-500/10 transition-all cursor-pointer"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-semibold text-danger hover:text-danger hover:bg-danger-wash transition-all cursor-pointer"
             >
               <Trash2 className="w-3.5 h-3.5" />
               Tout effacer
@@ -173,7 +173,7 @@ export default function NotificationsModal({ open, onClose, navigate }) {
                   className={`relative p-3.5 rounded-xl border transition-all cursor-pointer group
                     ${notif.read
                       ? 'border-transparent bg-transparent opacity-60 hover:opacity-80 hover:bg-bg-tertiary'
-                      : 'border-engine/15 bg-engine/5 hover:bg-engine/8 hover:border-engine/25'
+                      : 'border-engine/15 bg-engine-wash hover:bg-engine-wash hover:border-engine/25'
                     }`}
                   onClick={() => handleNotifClick(notif)}
                   onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleNotifClick(notif) } }}
@@ -204,7 +204,7 @@ export default function NotificationsModal({ open, onClose, navigate }) {
                     {!notif.read && (
                       <button
                         onClick={(e) => { e.stopPropagation(); markRead(notif.id) }}
-                        className="opacity-0 group-hover:opacity-100 p-1.5 rounded-lg text-text-muted hover:text-engine hover:bg-engine/10 transition-all cursor-pointer shrink-0"
+                        className="opacity-0 group-hover:opacity-100 p-1.5 rounded-lg text-text-muted hover:text-engine hover:bg-engine-wash transition-all cursor-pointer shrink-0"
                         title="Marquer comme lu"
                         aria-label="Marquer comme lu"
                       >

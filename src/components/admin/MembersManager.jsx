@@ -6,6 +6,7 @@ import {
   useAuth, getRolePresentation, getPostPresentation, ROLE_SORT_PRIORITY,
   ASSIGNABLE_ROLES, UNIVERSITY_POSTS,
 } from '../../context/AuthContext.jsx';
+import { useToast } from '../ui/Toast.jsx';
 
 const ASSIGNABLE_POSTS = Object.values(UNIVERSITY_POSTS);
 
@@ -15,9 +16,9 @@ const ASSIGNABLE_POSTS = Object.values(UNIVERSITY_POSTS);
  * Câblé sur GET /members et PATCH /members/:id/role. Dégrade proprement si
  * l'endpoint n'est pas (encore) déployé (404 → message explicite).
  *
- * @param {(message:string, type:'success'|'error') => void} notify  Toast du parent.
  */
-export default function MembersManager({ notify }) {
+export default function MembersManager() {
+  const { notify } = useToast()
   const { user, can } = useAuth();
   // Deux droits distincts : changer le rôle, et confier un poste. Ils sont
   // nommés au niveau du contrôle qu'ils gouvernent, pas de la page.
@@ -77,7 +78,7 @@ export default function MembersManager({ notify }) {
     try {
       const res = await api.members.setRole(member.id, newRole);
       if (res?.success) {
-        notify?.(`${member.firstName} ${member.lastName} est désormais ${getRolePresentation(newRole).label}.`, 'success');
+        notify(`${member.firstName} ${member.lastName} est désormais ${getRolePresentation(newRole).label}.`, 'success');
       } else {
         throw new Error(res?.message || 'Échec de la mise à jour.');
       }
@@ -87,7 +88,7 @@ export default function MembersManager({ notify }) {
       const msg = e?.status === 404
         ? "Endpoint « PATCH /members/:id/role » indisponible (backend non déployé)."
         : (e?.serverMessage || e?.message || "Impossible de changer le rôle.");
-      notify?.(msg, 'error');
+      notify(msg, 'error');
     } finally {
       setUpdatingId(null);
     }
@@ -105,7 +106,7 @@ export default function MembersManager({ notify }) {
     if ((current || '') === (value || '')) return;
     const universityId = member.universityId ?? member.universityPost?.universityId ?? null;
     if (value && !universityId) {
-      notify?.(
+      notify(
         `${member.firstName} ${member.lastName} n'est rattaché·e à aucune université : impossible de lui confier un poste.`,
         'error',
       );
@@ -119,7 +120,7 @@ export default function MembersManager({ notify }) {
     try {
       const res = await api.members.setUniversityPost(member.id, value, universityId);
       if (!res?.success) throw new Error(res?.message || 'Échec de la mise à jour.');
-      notify?.(
+      notify(
         value
           ? `${member.firstName} ${member.lastName} est ${getPostPresentation(value).label}.`
           : `Poste retiré à ${member.firstName} ${member.lastName}.`,
@@ -127,7 +128,7 @@ export default function MembersManager({ notify }) {
       );
     } catch (e) {
       setMembers((ms) => ms.map((m) => (m.id === member.id ? { ...m, universityPost: previous } : m)));
-      notify?.(
+      notify(
         e?.status === 404
           ? "Endpoint « PUT /members/:id/university-post » indisponible (backend non déployé)."
           : (e?.serverMessage || e?.message || "Impossible d'attribuer le poste."),
@@ -150,7 +151,7 @@ export default function MembersManager({ notify }) {
           <p className="text-xs text-text-secondary mt-1">
             Deux axes indépendants : le <strong className="text-text-primary">rôle</strong> dit ce que la
             personne est, le <strong className="text-text-primary">poste</strong> ce qu’elle administre dans son
-            université. Toute inscription démarre en <strong className="text-emerald-400">Étudiant</strong>, sans poste.
+            université. Toute inscription démarre en <strong className="text-success">Étudiant</strong>, sans poste.
           </p>
         </div>
         <form onSubmit={handleSearchSubmit} className="flex items-center gap-2">
@@ -182,8 +183,8 @@ export default function MembersManager({ notify }) {
         </div>
       ) : error ? (
         <div className="py-12 max-w-lg mx-auto text-center flex flex-col items-center gap-3">
-          <div className="w-12 h-12 chamfer-sm bg-amber-500/10 border border-amber-500/20 flex items-center justify-center">
-            <ShieldAlert className="w-5 h-5 text-amber-400" />
+          <div className="w-12 h-12 chamfer-sm bg-warning-wash border border-warning flex items-center justify-center">
+            <ShieldAlert className="w-5 h-5 text-warning" />
           </div>
           <p className="text-xs text-text-secondary leading-relaxed">{error}</p>
           <button
@@ -216,7 +217,7 @@ export default function MembersManager({ notify }) {
               >
                 {/* Identité */}
                 <div className="flex items-center gap-3 min-w-0">
-                  <div className="w-9 h-9 shrink-0 rounded-full bg-engine/15 border border-engine/30 flex items-center justify-center">
+                  <div className="w-9 h-9 shrink-0 rounded-full bg-engine-wash border border-engine/30 flex items-center justify-center">
                     <span className="text-text-primary font-bold text-[11px]">{initials}</span>
                   </div>
                   <div className="min-w-0">

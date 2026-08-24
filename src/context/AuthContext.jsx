@@ -49,26 +49,26 @@ export const BADGE_TYPES = ['CHERCHEUR', 'MENTOR', 'FORMATEUR', 'AMBASSADEUR', '
 // Un rôle de compte, et rien d'autre. Les postes de gouvernance ont leur
 // propre table ci-dessous : les mélanger était la cause du constat F01.
 export const ROLE_PRESENTATION = {
-  ADMIN:          { label: 'Admin Global Fieri', short: 'Admin Global', description: 'Supervision globale de la plateforme Fieri.',                    textClassName: 'text-red-400',     badgeClassName: 'bg-red-500/10 border-red-500/30 text-red-400' },
-  RESPONSABLE:    { label: 'Responsable de club', short: 'Responsable',  description: 'Animation d’un club CITE, validation des adhésions et projets.', textClassName: 'text-amber-400',   badgeClassName: 'bg-amber-500/10 border-amber-500/30 text-amber-400' },
-  CHEF_DE_PROJET: { label: 'Chef de projet',      short: 'Chef projet',  description: 'Pilotage des équipes R&D, tâches et candidatures reçues.',       textClassName: 'text-cyan-400',    badgeClassName: 'bg-cyan-500/10 border-cyan-500/30 text-cyan-400' },
-  CHERCHEUR:      { label: 'Chercheur FIERI',     short: 'Chercheur',    description: 'Publication scientifique, opportunités et projets R&D.',         textClassName: 'text-engine',      badgeClassName: 'bg-engine/15 border-engine/30 text-engine' },
-  MENTOR:         { label: 'Mentor',              short: 'Mentor',       description: 'Encadrement des étudiants et attribution des badges.',           textClassName: 'text-violet-400',  badgeClassName: 'bg-violet-500/10 border-violet-500/30 text-violet-400' },
-  ETUDIANT:       { label: 'Étudiant',            short: 'Étudiant',     description: 'Participation aux événements, formations, ateliers et clubs.',   textClassName: 'text-emerald-400', badgeClassName: 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400' },
+  ADMIN:          { label: 'Admin Global Fieri', short: 'Admin Global', description: 'Supervision globale de la plateforme Fieri.',                    textClassName: 'text-danger',     badgeClassName: 'bg-danger-wash border-danger text-danger' },
+  RESPONSABLE:    { label: 'Responsable de club', short: 'Responsable',  description: 'Animation d’un club CITE, validation des adhésions et projets.', textClassName: 'text-warning',   badgeClassName: 'bg-warning-wash border-warning text-warning' },
+  CHEF_DE_PROJET: { label: 'Chef de projet',      short: 'Chef projet',  description: 'Pilotage des équipes R&D, tâches et candidatures reçues.',       textClassName: 'text-engine',    badgeClassName: 'bg-engine-wash border-engine text-engine' },
+  CHERCHEUR:      { label: 'Chercheur FIERI',     short: 'Chercheur',    description: 'Publication scientifique, opportunités et projets R&D.',         textClassName: 'text-engine',      badgeClassName: 'bg-engine-wash border-engine/30 text-engine' },
+  MENTOR:         { label: 'Mentor',              short: 'Mentor',       description: 'Encadrement des étudiants et attribution des badges.',           textClassName: 'text-engine',  badgeClassName: 'bg-engine-wash border-engine text-engine' },
+  ETUDIANT:       { label: 'Étudiant',            short: 'Étudiant',     description: 'Participation aux événements, formations, ateliers et clubs.',   textClassName: 'text-success', badgeClassName: 'bg-success-wash border-success text-success' },
 }
 
 const ROLE_PRESENTATION_FALLBACK = {
   label: 'Membre', short: 'Membre', description: 'Accès membre général à la plateforme.',
-  textClassName: 'text-emerald-400', badgeClassName: 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400',
+  textClassName: 'text-success', badgeClassName: 'bg-success-wash border-success text-success',
 }
 
 // ─── Présentation : ce que la personne ADMINISTRE ──────────────────────────
 export const POST_PRESENTATION = {
-  CHEF_UNIVERSITAIRE: { label: 'Chef Universitaire',        short: 'Chef Univ.',  description: 'Gouvernance de l’université : attestations, exclusions, supervision.', textClassName: 'text-cyan-400',    badgeClassName: 'bg-cyan-500/10 border-cyan-500/30 text-cyan-400' },
-  SECRETAIRE:         { label: 'Secrétaire Générale',       short: 'Secrétaire',  description: 'Rapports d’activité et recensements de l’université.',                 textClassName: 'text-emerald-400', badgeClassName: 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400' },
-  TRESORIER:          { label: 'Trésorier',                 short: 'Trésorier',   description: 'Grand livre et opérations de trésorerie de l’université.',             textClassName: 'text-amber-400',   badgeClassName: 'bg-amber-500/10 border-amber-500/30 text-amber-400' },
-  RESP_COMMUNICATION: { label: 'Responsable communication', short: 'Resp. comm.', description: 'Diffusion des événements de l’université sur les réseaux.',            textClassName: 'text-violet-400',  badgeClassName: 'bg-violet-500/10 border-violet-500/30 text-violet-400' },
-  GOUVERNANT_PAYS:    { label: 'Gouvernant du pays',        short: 'Gouv. pays',  description: 'Supervision des universités du pays.',                                 textClassName: 'text-red-400',     badgeClassName: 'bg-red-500/10 border-red-500/30 text-red-400' },
+  CHEF_UNIVERSITAIRE: { label: 'Chef Universitaire',        short: 'Chef Univ.',  description: 'Gouvernance de l’université : attestations, exclusions, supervision.', textClassName: 'text-engine',    badgeClassName: 'bg-engine-wash border-engine text-engine' },
+  SECRETAIRE:         { label: 'Secrétaire Générale',       short: 'Secrétaire',  description: 'Rapports d’activité et recensements de l’université.',                 textClassName: 'text-success', badgeClassName: 'bg-success-wash border-success text-success' },
+  TRESORIER:          { label: 'Trésorier',                 short: 'Trésorier',   description: 'Grand livre et opérations de trésorerie de l’université.',             textClassName: 'text-warning',   badgeClassName: 'bg-warning-wash border-warning text-warning' },
+  RESP_COMMUNICATION: { label: 'Responsable communication', short: 'Resp. comm.', description: 'Diffusion des événements de l’université sur les réseaux.',            textClassName: 'text-engine',  badgeClassName: 'bg-engine-wash border-engine text-engine' },
+  GOUVERNANT_PAYS:    { label: 'Gouvernant du pays',        short: 'Gouv. pays',  description: 'Supervision des universités du pays.',                                 textClassName: 'text-danger',     badgeClassName: 'bg-danger-wash border-danger text-danger' },
 }
 
 export function getRolePresentation(role) {

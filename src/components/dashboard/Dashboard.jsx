@@ -165,7 +165,7 @@ export default function Dashboard({ navigate }) {
             </div>
 
             {notifCount > 0 && (
-              <div className="flex items-center gap-3 p-3 rounded-lg bg-engine/8 border border-engine/20 text-xs">
+              <div className="flex items-center gap-3 p-3 rounded-lg bg-engine-wash border border-engine/20 text-xs">
                 <Bell className="w-4 h-4 text-engine shrink-0" />
                 <span className="text-text-secondary">
                   Vous avez{' '}
@@ -260,7 +260,7 @@ export default function Dashboard({ navigate }) {
               </p>
               <button
                 onClick={() => navigate?.('clubs')}
-                className="px-4 py-2 chamfer-sm bg-engine text-white text-xs font-bold hover:bg-engine-deep transition-all cursor-pointer"
+                className="px-4 py-2 chamfer-sm bg-engine text-on-accent text-xs font-bold hover:bg-engine-deep transition-all cursor-pointer"
               >
                 {clubsCount > 0 ? 'Voir mes clubs' : 'Explorer les clubs'}
               </button>
