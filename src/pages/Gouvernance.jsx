@@ -85,11 +85,16 @@ function SectionCard({ icon: Icon, title, subtitle, accent, children }) {
 
 // ─────────────────────────── Gouvernance Page ───────────────────────────
 export default function Gouvernance() {
-  const { user, isAdmin } = useAuth();
+  const { user, can } = useAuth();
   const [toast, setToast] = useState(null);
 
-  // Garde : réservé CHEF_UNIVERSITAIRE / ADMIN
-  const hasGovAccess = isAdmin() || user?.universityPost?.post === 'CHEF_UNIVERSITAIRE';
+  // La garde d'accès vit dans le registre des destinations et s'applique dans
+  // ProtectedRoute : elle n'est plus réécrite ici. `can()` ne sert qu'à
+  // moduler le CONTENU (émettre une attestation vs traiter une exclusion).
+  const canIssueCertificate = can('certificate:issue');
+  const canReviewExclusions = can('exclusion:review');
+  const canUploadSignature  = can('signature:upload');
+  const canMarkEmblematic   = can('member:toggleEmblematic');
 
   // ── Sélection d'université (si user.universityId absent) ──
   const [countries, setCountries] = useState([]);
@@ -110,6 +115,7 @@ export default function Gouvernance() {
   // ── Section 2 : émission d'attestation ──
   const [members, setMembers] = useState([]);
   const [loadingMembers, setLoadingMembers] = useState(false);
+  const [errorMembers, setErrorMembers] = useState(null);
   const [issuing, setIssuing] = useState(false);
   const [form, setForm] = useState({ recipientId: '', title: '', category: 'FORMATION' });
   const [issueSuccess, setIssueSuccess] = useState(null);
@@ -203,50 +209,24 @@ export default function Gouvernance() {
   const loadMembers = useCallback(async () => {
     if (!universityId) return;
     setLoadingMembers(true);
+    setErrorMembers(null);
     try {
       const res = await api.members.list();
-      let list = res?.success ? (res.data || []) : [];
-      const filtered = list.filter(
-        (m) =>
-          m.universityId === universityId ||
-          m.branch?.universityId === universityId
+      const list = res?.success ? (res.data || []) : [];
+      // Membres de CETTE université. Si l'API n'en renvoie aucun, on l'affiche —
+      // un écran qui émet des attestations officielles ne doit jamais proposer
+      // des destinataires fabriqués. Douze membres factices étaient injectés ici
+      // dès que la liste réelle comptait moins de cinq personnes (constat F11).
+      setMembers(list.filter(
+        (m) => m.universityId === universityId || m.branch?.universityId === universityId,
+      ));
+    } catch (err) {
+      setErrorMembers(
+        err?.status === 403
+          ? "Vous n'avez pas accès à la liste des membres de cette université."
+          : "La liste des membres n'a pas pu être chargée. Réessayez dans un instant.",
       );
-      const initialList = filtered.length ? filtered : (list.length ? list : []);
-      if (initialList.length < 5) {
-        const defaultMembers = [
-          { id: 101, firstname: 'Responsable', lastname: 'Dev Web', clubName: 'Club Dev Web', email: 'resp.devweb@uac.bj', role: 'RESPONSABLE_CLUB' },
-          { id: 102, firstname: 'Chercheur', lastname: 'Dev Web', clubName: 'Club Dev Web', email: 'chercheur.devweb@uac.bj', role: 'ETUDIANT_CHERCHEUR' },
-          { id: 201, firstname: 'Responsable', lastname: 'IA', clubName: 'Club Intelligence Artificielle', email: 'resp.ia@uac.bj', role: 'RESPONSABLE_CLUB' },
-          { id: 202, firstname: 'Chercheur', lastname: 'IA', clubName: 'Club Intelligence Artificielle', email: 'chercheur.ia@uac.bj', role: 'ETUDIANT_CHERCHEUR' },
-          { id: 301, firstname: 'Responsable', lastname: 'ROS', clubName: 'Club Robotique (ROS)', email: 'resp.ros@uac.bj', role: 'RESPONSABLE_CLUB' },
-          { id: 302, firstname: 'Chercheur', lastname: 'ROS', clubName: 'Club Robotique (ROS)', email: 'chercheur.ros@uac.bj', role: 'ETUDIANT_CHERCHEUR' },
-          { id: 401, firstname: 'Responsable', lastname: 'Électronique', clubName: 'Club Électronique', email: 'resp.elec@uac.bj', role: 'RESPONSABLE_CLUB' },
-          { id: 402, firstname: 'Chercheur', lastname: 'Électronique', clubName: 'Club Électronique', email: 'chercheur.elec@uac.bj', role: 'ETUDIANT_CHERCHEUR' },
-          { id: 501, firstname: 'Responsable', lastname: 'BTP', clubName: 'Club BTP & Génie Civil', email: 'resp.btp@uac.bj', role: 'RESPONSABLE_CLUB' },
-          { id: 502, firstname: 'Chercheur', lastname: 'BTP', clubName: 'Club BTP & Génie Civil', email: 'chercheur.btp@uac.bj', role: 'ETUDIANT_CHERCHEUR' },
-          { id: 601, firstname: 'Responsable', lastname: 'Froid & Clima', clubName: 'Club Froid & Climatisation', email: 'resp.froid@uac.bj', role: 'RESPONSABLE_CLUB' },
-          { id: 602, firstname: 'Chercheur', lastname: 'Froid & Clima', clubName: 'Club Froid & Climatisation', email: 'chercheur.froid@uac.bj', role: 'ETUDIANT_CHERCHEUR' },
-        ];
-        setMembers([...initialList, ...defaultMembers]);
-      } else {
-        setMembers(initialList);
-      }
-    } catch {
-      const defaultMembers = [
-        { id: 101, firstname: 'Responsable', lastname: 'Dev Web', clubName: 'Club Dev Web', email: 'resp.devweb@uac.bj', role: 'RESPONSABLE_CLUB' },
-        { id: 102, firstname: 'Chercheur', lastname: 'Dev Web', clubName: 'Club Dev Web', email: 'chercheur.devweb@uac.bj', role: 'ETUDIANT_CHERCHEUR' },
-        { id: 201, firstname: 'Responsable', lastname: 'IA', clubName: 'Club Intelligence Artificielle', email: 'resp.ia@uac.bj', role: 'RESPONSABLE_CLUB' },
-        { id: 202, firstname: 'Chercheur', lastname: 'IA', clubName: 'Club Intelligence Artificielle', email: 'chercheur.ia@uac.bj', role: 'ETUDIANT_CHERCHEUR' },
-        { id: 301, firstname: 'Responsable', lastname: 'ROS', clubName: 'Club Robotique (ROS)', email: 'resp.ros@uac.bj', role: 'RESPONSABLE_CLUB' },
-        { id: 302, firstname: 'Chercheur', lastname: 'ROS', clubName: 'Club Robotique (ROS)', email: 'chercheur.ros@uac.bj', role: 'ETUDIANT_CHERCHEUR' },
-        { id: 401, firstname: 'Responsable', lastname: 'Électronique', clubName: 'Club Électronique', email: 'resp.elec@uac.bj', role: 'RESPONSABLE_CLUB' },
-        { id: 402, firstname: 'Chercheur', lastname: 'Électronique', clubName: 'Club Électronique', email: 'chercheur.elec@uac.bj', role: 'ETUDIANT_CHERCHEUR' },
-        { id: 501, firstname: 'Responsable', lastname: 'BTP', clubName: 'Club BTP & Génie Civil', email: 'resp.btp@uac.bj', role: 'RESPONSABLE_CLUB' },
-        { id: 502, firstname: 'Chercheur', lastname: 'BTP', clubName: 'Club BTP & Génie Civil', email: 'chercheur.btp@uac.bj', role: 'ETUDIANT_CHERCHEUR' },
-        { id: 601, firstname: 'Responsable', lastname: 'Froid & Clima', clubName: 'Club Froid & Climatisation', email: 'resp.froid@uac.bj', role: 'RESPONSABLE_CLUB' },
-        { id: 602, firstname: 'Chercheur', lastname: 'Froid & Clima', clubName: 'Club Froid & Climatisation', email: 'chercheur.froid@uac.bj', role: 'ETUDIANT_CHERCHEUR' },
-      ];
-      setMembers(defaultMembers);
+      setMembers([]);
     } finally {
       setLoadingMembers(false);
     }
@@ -302,13 +282,13 @@ export default function Gouvernance() {
   }, []);
 
   useEffect(() => {
-    if (!hasGovAccess || !universityId) return;
+    if (!universityId) return;
     loadRequests();
     loadMembers();
     loadMyCerts();
     loadEmblematicFigures();
     loadRapports(universityId);
-  }, [hasGovAccess, universityId, loadRequests, loadMembers, loadMyCerts, loadEmblematicFigures, loadRapports]);
+  }, [universityId, loadRequests, loadMembers, loadMyCerts, loadEmblematicFigures, loadRapports]);
 
   const handleToggleEmblematic = async (memberId, currentStatus) => {
     if (togglingId) return;
@@ -397,25 +377,6 @@ export default function Gouvernance() {
     }
   };
 
-  // ── Garde d'accès ──
-  if (!hasGovAccess) {
-    return (
-      <main className="min-h-screen">
-        <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden" aria-hidden="true">
-        </div>
-        <div className="relative z-10 max-w-3xl mx-auto w-full py-24 px-6 text-center">
-          <div className="glass-panel chamfer p-10">
-            <ShieldCheck className="w-12 h-12 text-red-400 mx-auto mb-4" />
-            <h1 className="text-text-primary font-extrabold text-2xl mb-2">Accès réservé</h1>
-            <p className="text-text-secondary text-sm leading-relaxed">
-              Cette page est réservée aux <span className="text-text-primary font-semibold">Chefs Universitaires</span> et aux <span className="text-text-primary font-semibold">Administrateurs</span>.
-            </p>
-          </div>
-        </div>
-      </main>
-    );
-  }
-
   // ── Sélecteur Pays → Université ──
   if (!universityId) {
     return (
@@ -489,7 +450,7 @@ export default function Gouvernance() {
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* ── Section 1 : Demandes d'exclusion ── */}
-          <SectionCard
+          {canReviewExclusions && <SectionCard
             icon={UserX}
             title="Demandes d’exclusion"
             subtitle="Validation ou refus des exclusions demandées par les responsables de club"
@@ -567,10 +528,10 @@ export default function Gouvernance() {
                 ))}
               </div>
             )}
-          </SectionCard>
+          </SectionCard>}
 
           {/* ── Section 2 : Émettre une attestation ── */}
-          <SectionCard
+          {canIssueCertificate && <SectionCard
             icon={FileBadge}
             title="Émettre une attestation"
             subtitle="Génère un PDF signé et l’envoie par e-mail au destinataire"
@@ -602,12 +563,14 @@ export default function Gouvernance() {
                         <span className="text-[11px] text-text-muted">Appliquée sur les PDF d'attestations émis</span>
                       </div>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <label className="px-3 py-1.5 rounded-lg bg-bg-secondary hover:bg-bg-tertiary border border-border-subtle text-xs font-bold text-text-secondary hover:text-text-primary cursor-pointer transition-colors">
-                        Modifier
-                        <input type="file" accept="image/*" onChange={handleUploadSignature} className="hidden" />
-                      </label>
-                    </div>
+                    {canUploadSignature && (
+                      <div className="flex items-center gap-2">
+                        <label className="px-3 py-1.5 rounded-lg bg-bg-secondary hover:bg-bg-tertiary border border-border-subtle text-xs font-bold text-text-secondary hover:text-text-primary cursor-pointer transition-colors">
+                          Modifier
+                          <input type="file" accept="image/*" onChange={handleUploadSignature} className="hidden" />
+                        </label>
+                      </div>
+                    )}
                   </div>
                 ) : (
                   <label className="flex flex-col items-center justify-center gap-2 p-4 rounded-xl border-2 border-dashed border-white/15 bg-bg-secondary hover:bg-bg-tertiary cursor-pointer transition-colors group">
@@ -645,6 +608,17 @@ export default function Gouvernance() {
                 {loadingMembers && (
                   <p className="text-text-muted text-[11px] mt-1 flex items-center gap-1">
                     <Loader2 className="w-3 h-3 animate-spin" /> Chargement des membres…
+                  </p>
+                )}
+                {!loadingMembers && errorMembers && (
+                  <p className="mt-1 flex items-center gap-1 text-[11px] text-red-400" role="alert">
+                    <AlertCircle className="w-3 h-3 shrink-0" /> {errorMembers}
+                  </p>
+                )}
+                {!loadingMembers && !errorMembers && members.length === 0 && (
+                  <p className="text-text-muted text-[11px] mt-1">
+                    Aucun membre rattaché à cette université. Une attestation ne peut être
+                    émise que pour un membre enregistré.
                   </p>
                 )}
               </div>
@@ -693,7 +667,7 @@ export default function Gouvernance() {
                 {issuing ? 'Émission…' : 'Émettre l’attestation'}
               </motion.button>
             </form>
-          </SectionCard>
+          </SectionCard>}
         </div>
 
         {/* ── Section 3 : Attestations reçues (indicatif) ── */}
@@ -860,6 +834,7 @@ export default function Gouvernance() {
                       </div>
 
                       <button
+                        disabled={!canMarkEmblematic || isToggling}
                         onClick={() => handleToggleEmblematic(m.id, isEmblematic)}
                         disabled={isToggling}
                         className={`shrink-0 p-2.5 rounded-xl border text-xs font-bold transition-all cursor-pointer ${

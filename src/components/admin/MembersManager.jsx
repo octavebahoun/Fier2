@@ -2,11 +2,12 @@ import { useState, useEffect, useCallback } from 'react'
 import { motion } from 'framer-motion';
 import { Users, Search, Loader2, ShieldAlert, RefreshCw, ChevronDown } from 'lucide-react';
 import { api } from '../../services/api';
-import { useAuth, getRolePresentation, ROLE_SORT_PRIORITY } from '../../context/AuthContext.jsx';
+import {
+  useAuth, getRolePresentation, getPostPresentation, ROLE_SORT_PRIORITY,
+  ASSIGNABLE_ROLES, UNIVERSITY_POSTS,
+} from '../../context/AuthContext.jsx';
 
-// Rôles attribuables par un ADMIN (VISITEUR n'est pas un rôle de compte).
-// Alignés sur les rôles du backend (RolesGuard).
-const ASSIGNABLE_ROLES = ['ETUDIANT', 'CHERCHEUR', 'MENTOR', 'CHEF_DE_PROJET', 'RESPONSABLE', 'ADMIN'];
+const ASSIGNABLE_POSTS = Object.values(UNIVERSITY_POSTS);
 
 /**
  * MembersManager — onglet Admin ▸ Membres.
@@ -17,7 +18,11 @@ const ASSIGNABLE_ROLES = ['ETUDIANT', 'CHERCHEUR', 'MENTOR', 'CHEF_DE_PROJET', '
  * @param {(message:string, type:'success'|'error') => void} notify  Toast du parent.
  */
 export default function MembersManager({ notify }) {
-  const { user } = useAuth();
+  const { user, can } = useAuth();
+  // Deux droits distincts : changer le rôle, et confier un poste. Ils sont
+  // nommés au niveau du contrôle qu'ils gouvernent, pas de la page.
+  const canSetRole = can('member:setRole');
+  const canSetPost = can('member:setPost');
   const [members, setMembers]   = useState([]);
   const [loading, setLoading]   = useState(true);
   const [error, setError]       = useState(null);
@@ -88,6 +93,51 @@ export default function MembersManager({ notify }) {
     }
   };
 
+  /**
+   * Attribue le poste d'université. C'est le second axe du modèle d'accès —
+   * celui qui commande la trésorerie, les attestations et les rapports — et
+   * aucun écran ne permettait de l'attribuer : la console ne savait promouvoir
+   * que sur l'axe linéaire, celui qui a le moins d'effet.
+   */
+  const changePost = async (member, newPost) => {
+    const current = member.universityPost?.post || '';
+    const value = newPost || null;
+    if ((current || '') === (value || '')) return;
+    const universityId = member.universityId ?? member.universityPost?.universityId ?? null;
+    if (value && !universityId) {
+      notify?.(
+        `${member.firstName} ${member.lastName} n'est rattaché·e à aucune université : impossible de lui confier un poste.`,
+        'error',
+      );
+      return;
+    }
+    const previous = member.universityPost ?? null;
+    setUpdatingId(member.id);
+    setMembers((ms) => ms.map((m) => (m.id === member.id
+      ? { ...m, universityPost: value ? { post: value, universityId } : null }
+      : m)));
+    try {
+      const res = await api.members.setUniversityPost(member.id, value, universityId);
+      if (!res?.success) throw new Error(res?.message || 'Échec de la mise à jour.');
+      notify?.(
+        value
+          ? `${member.firstName} ${member.lastName} est ${getPostPresentation(value).label}.`
+          : `Poste retiré à ${member.firstName} ${member.lastName}.`,
+        'success',
+      );
+    } catch (e) {
+      setMembers((ms) => ms.map((m) => (m.id === member.id ? { ...m, universityPost: previous } : m)));
+      notify?.(
+        e?.status === 404
+          ? "Endpoint « PUT /members/:id/university-post » indisponible (backend non déployé)."
+          : (e?.serverMessage || e?.message || "Impossible d'attribuer le poste."),
+        'error',
+      );
+    } finally {
+      setUpdatingId(null);
+    }
+  };
+
   return (
     <div className="glass-panel border border-border-subtle bg-bg-secondary chamfer p-6 md:p-8">
       {/* En-tête + recherche */}
@@ -98,7 +148,9 @@ export default function MembersManager({ notify }) {
             Gestion des membres
           </h2>
           <p className="text-xs text-text-secondary mt-1">
-            Promouvoir ou rétrograder un membre. Toute inscription démarre en <strong className="text-emerald-400">Étudiant</strong> ; les privilèges sont attribués ici.
+            Deux axes indépendants : le <strong className="text-text-primary">rôle</strong> dit ce que la
+            personne est, le <strong className="text-text-primary">poste</strong> ce qu’elle administre dans son
+            université. Toute inscription démarre en <strong className="text-emerald-400">Étudiant</strong>, sans poste.
           </p>
         </div>
         <form onSubmit={handleSearchSubmit} className="flex items-center gap-2">
@@ -176,15 +228,15 @@ export default function MembersManager({ notify }) {
                   </div>
                 </div>
 
-                {/* Rôle : badge courant + sélecteur */}
-                <div className="flex items-center gap-2.5 justify-end">
-                  <span className={`hidden sm:inline text-[11px] uppercase tracking-wider font-extrabold px-2.5 py-0.5 rounded-full border ${pres.badgeClassName}`}>
+                {/* Deux axes : le rôle, puis le poste de gouvernance */}
+                <div className="flex flex-wrap items-center gap-2.5 justify-end">
+                  <span className={`hidden sm:inline text-[11px] uppercase tracking-wider font-extrabold px-2.5 py-0.5 border ${pres.badgeClassName}`}>
                     {pres.short}
                   </span>
                   <div className="relative">
                     <select
                       value={ASSIGNABLE_ROLES.includes(member.role?.toUpperCase()) ? member.role.toUpperCase() : ''}
-                      disabled={isBusy}
+                      disabled={isBusy || !canSetRole}
                       onChange={(e) => changeRole(member, e.target.value)}
                       className="appearance-none bg-bg-secondary border border-border-subtle focus:border-engine/40 rounded-lg py-1.5 pl-3 pr-8 text-[11px] font-bold text-text-primary outline-none cursor-pointer transition-all disabled:opacity-50 disabled:cursor-wait"
                       title={isSelf ? "Attention : modifier votre propre rôle" : "Changer le rôle"}
@@ -198,6 +250,24 @@ export default function MembersManager({ notify }) {
                     </select>
                     <span className="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 text-text-muted">
                       {isBusy ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <ChevronDown className="w-3.5 h-3.5" />}
+                    </span>
+                  </div>
+
+                  <div className="relative">
+                    <select
+                      value={member.universityPost?.post || ''}
+                      disabled={isBusy || !canSetPost}
+                      onChange={(e) => changePost(member, e.target.value)}
+                      className="appearance-none bg-bg-secondary border border-border-subtle focus:border-engine/40 rounded-lg py-1.5 pl-3 pr-8 text-[11px] font-bold text-text-primary outline-none cursor-pointer transition-all disabled:opacity-50 disabled:cursor-wait"
+                      title="Poste de gouvernance dans l’université"
+                    >
+                      <option value="">Aucun poste</option>
+                      {ASSIGNABLE_POSTS.map((post) => (
+                        <option key={post} value={post}>{getPostPresentation(post).label}</option>
+                      ))}
+                    </select>
+                    <span className="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 text-text-muted">
+                      <ChevronDown className="w-3.5 h-3.5" />
                     </span>
                   </div>
                 </div>

@@ -3,10 +3,11 @@ import { motion } from 'framer-motion'
 import {
   Users, BookOpen, Calendar, ArrowRight, Award,
   ChevronRight, Cpu, Zap, Leaf, Building2, Brain, Rocket, Bell,
-  Shield, Briefcase, PenSquare, UserCog, Lock, FolderGit2, GraduationCap
+  Shield, ShieldCheck, Briefcase, PenSquare, UserCog, Lock, FolderGit2,
+  GraduationCap, LayoutList, Wallet
 } from 'lucide-react'
 import { api } from '../../services/api.js'
-import { useAuth, getRolePresentation } from '../../context/AuthContext.jsx'
+import { useAuth, getRolePresentation, getPostPresentation } from '../../context/AuthContext.jsx'
 
 const mix = (color, pct) => `color-mix(in srgb, ${color} ${pct}, transparent)`;
 
@@ -53,23 +54,31 @@ function StatCard({ label, value, icon: Icon, color, onClick }) {
  * • L'accès rapide s'adapte au rôle (pas de liens inutiles pour un étudiant simple).
  */
 export default function Dashboard({ navigate }) {
-  const { user, isResearcher, isAdmin, isMentor, isAnyClubResponsible } = useAuth()
+  const { user, identity, can } = useAuth()
 
-  const isChercheur = isResearcher?.()
-  const isAdminUser = isAdmin?.()
-  const isResponsable = isAnyClubResponsible?.()
-
-  // Actions réservées selon le rôle — chaque entrée n'apparaît que si `show` est vrai.
+  // Les actions listées ici sont exactement celles que l'API acceptera : même
+  // table de capacités que la barre latérale et que les gardes de route.
+  // MENTOR et CHEF_DE_PROJET n'avaient jusqu'ici AUCUNE action propre — leurs
+  // droits réels (badges, tâches, candidatures) n'existaient nulle part dans
+  // l'interface (constat F03).
   const privilegedActions = [
-    { show: isAdminUser, label: 'Administration', desc: 'Gérer la plateforme et les membres', icon: Shield, color: 'var(--color-ember)', page: 'admin' },
-    { show: isAdminUser, label: 'Modérer les actualités', desc: 'Approuver ou rejeter les articles', icon: PenSquare, color: 'var(--color-engine)', page: 'news' },
-    { show: isChercheur, label: 'Publier une opportunité', desc: 'Diffuser une offre R&D', icon: Briefcase, color: 'var(--color-engine)', page: 'opportunities' },
-    { show: isChercheur, label: 'Rédiger un article', desc: 'Soumettre au journal scientifique', icon: PenSquare, color: 'var(--color-engine)', page: 'news' },
-    { show: isChercheur, label: 'Éditer ma fiche chercheur', desc: 'Bio, spécialités, portfolio', icon: UserCog, color: 'var(--color-engine)', page: 'researcher-profile-edit' },
-    { show: isMentor?.() || isResponsable, label: 'Gérer les adhésions', desc: 'Valider les demandes de club', icon: Users, color: 'var(--color-ember)', page: 'clubs' },
-  ].filter(a => a.show)
+    { cap: 'admin:access',      label: 'Console d’administration', desc: 'Membres, rôles et postes de gouvernance', icon: Shield,     color: 'var(--color-ember)',  page: 'admin' },
+    { cap: 'news:moderate',     label: 'Modérer les actualités',   desc: 'Approuver ou rejeter les articles',       icon: PenSquare,  color: 'var(--color-engine)', page: 'news' },
+    { cap: 'certificate:issue', label: 'Émettre une attestation',  desc: 'Document officiel signé de l’université', icon: ShieldCheck,color: 'var(--color-engine)', page: 'gouvernance' },
+    { cap: 'treasury:read',     label: 'Trésorerie',               desc: 'Grand livre et opérations',               icon: Wallet,     color: 'var(--color-ember)',  page: 'soutiens' },
+    { cap: 'report:read',       label: 'Rapports des clubs',       desc: 'Suivi d’activité de l’université',        icon: LayoutList, color: 'var(--color-engine)', page: 'espace-cite' },
+    { cap: 'report:submit',     label: 'Rapport de mon club',      desc: 'Recensement et activité mensuelle',       icon: LayoutList, color: 'var(--color-engine)', page: 'espace-cite' },
+    { cap: 'membership:review', label: 'Valider les adhésions',    desc: 'Candidatures en attente de votre club',   icon: Users,      color: 'var(--color-ember)',  page: 'clubs' },
+    { cap: 'badge:award',       label: 'Attribuer un badge',       desc: 'Distinguer un membre encadré',            icon: Award,      color: 'var(--color-engine)', page: 'challenges' },
+    { cap: 'opportunity:create',label: 'Publier une opportunité',  desc: 'Diffuser une offre R&D',                  icon: Briefcase,  color: 'var(--color-engine)', page: 'opportunities' },
+    { cap: 'news:submit',       label: 'Rédiger un article',       desc: 'Soumettre au journal scientifique',       icon: PenSquare,  color: 'var(--color-engine)', page: 'news' },
+    { cap: 'profile:editOwn',   label: 'Modifier mon profil',      desc: 'Bio, spécialités, portfolio',             icon: UserCog,    color: 'var(--color-engine)', page: 'researcher-profile-edit' },
+  ].filter((a) => can(a.cap))
 
-  const rolePres = getRolePresentation(user?.role)
+  const isChercheur = can('opportunity:create')
+
+  const rolePres = getRolePresentation(identity?.role)
+  const postPres = getPostPresentation(identity?.universityPost || identity?.countryPost)
 
   // Le backend /dashboard/me ne renvoie que des COMPTEURS (pas la liste des clubs
   // rejoints) : on affiche donc les compteurs, et la section « Mes Clubs » se
@@ -136,9 +145,14 @@ export default function Dashboard({ navigate }) {
                 </p>
               </div>
               <div className="flex items-center gap-2 shrink-0">
-                <span className={`text-[11px] uppercase tracking-wider font-extrabold px-2.5 py-1 rounded-full border ${rolePres.badgeClassName}`}>
+                <span className={`text-[11px] uppercase tracking-wider font-extrabold px-2.5 py-1 border ${rolePres.badgeClassName}`}>
                   {rolePres.label}
                 </span>
+                {postPres && (
+                  <span className={`text-[11px] uppercase tracking-wider font-extrabold px-2.5 py-1 border ${postPres.badgeClassName}`}>
+                    {postPres.label}
+                  </span>
+                )}
                 {isChercheur && (
                   <button
                     onClick={() => navigate?.('researcher-profile-edit')}

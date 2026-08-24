@@ -122,6 +122,14 @@ export const api = {
     getById: (id) => get(`/members/${id}`),
     // PATCH /members/:id/role — promotion / rétrogradation. Body { role }.
     setRole: (id, role) => patch(`/members/${id}/role`, { role }),
+    // PUT /members/:id/university-post — second axe du modèle d'accès : le
+    // poste de gouvernance (CHEF_UNIVERSITAIRE, SECRETAIRE, TRESORIER,
+    // RESP_COMMUNICATION). `post: null` retire le poste.
+    setUniversityPost: (id, post, universityId) =>
+      put(`/members/${id}/university-post`, { post, universityId }),
+    // PUT /members/:id/country-post — poste national (GOUVERNANT_PAYS).
+    setCountryPost: (id, post, countryId) =>
+      put(`/members/${id}/country-post`, { post, countryId }),
   },
 
   // ── 2. STRUCTURE INSTITUTIONNELLE & MÉTADONNÉES ────────────────────────────

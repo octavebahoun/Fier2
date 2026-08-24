@@ -1,101 +1,44 @@
 import { useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
-
-// ─── Source unique du mapping page ↔ URL ────────────────────────────────────
-// Aligné sur les wireframes : /students, /formations, /researchers(/:id), /help,
-// et /members = espace login/conversion (l'annuaire est désormais /researchers).
-export const PAGE_TO_PATH = {
-  home:                      () => '/',
-  cite:                      () => '/cite',
-  'cite-integration':        () => '/cite',
-  'student-portal':          () => '/students',
-  students:                  () => '/students',
-  news:                      () => '/news',
-  'news-detail':             (p) => `/news/${p.newsId ?? p.id ?? ''}`,
-  clubs:                     () => '/clubs',
-  'club-detail':             (p) => `/clubs/${p.clubId ?? ''}`,
-  projects:                  () => '/projects',
-  'project-detail':          (p) => `/projects/${p.projectId ?? ''}`,
-  workshops:                 () => '/formations',
-  formations:                () => '/formations',
-  events:                    () => '/events',
-  researchers:               () => '/researchers',          // annuaire (déplacé)
-  members:                   () => '/members',              // login / conversion
-  dashboard:                 () => '/dashboard',
-  profile:                   (p) => `/researchers/${p.researcherId ?? 'me'}`,
-  'researcher-profile-edit': () => '/researchers/edit',
-  admin:                     () => '/admin',
-  contact:                   () => '/help',
-  help:                      () => '/help',
-  auth:                      () => '/members',              // login désormais sous /members
-  opportunities:             () => '/opportunities',
-  paf:                       () => '/paf',
-  gouvernance:               () => '/gouvernance',
-  'espace-cite':             () => '/espace-cite',
-  challenges:                () => '/challenges',
-  soutiens:                  () => '/soutiens',
-}
+import { DESTINATIONS, getDestination, pathOf, idOfPath } from './navigation/destinations.js'
 
 /**
- * buildPath(pageName, params) — construit l'URL d'une page.
- * Un chemin déjà formé (commençant par '/') est renvoyé tel quel (redirection post-login).
+ * Construction d'URL et navigation. Le mapping page ↔ URL n'est plus tenu ici :
+ * il vit dans `navigation/destinations.js`, avec le nom et le droit de chaque
+ * destination. Ce fichier n'en est que l'adaptateur react-router.
+ */
+
+/** Compatibilité : `PAGE_TO_PATH.dashboard()` continue de fonctionner. */
+export const PAGE_TO_PATH = Object.fromEntries(
+  DESTINATIONS.map((d) => [d.id, (params = {}) => pathOf(d.id, params)]),
+)
+
+/**
+ * buildPath(pageName, params) — l'URL d'une destination.
+ * Un chemin déjà formé (commençant par '/') passe tel quel : c'est ce que
+ * `ProtectedRoute` mémorise pour revenir après connexion.
  */
 export function buildPath(pageName, params = {}) {
   if (typeof pageName === 'string' && pageName.startsWith('/')) return pageName
-  const build = PAGE_TO_PATH[pageName]
-  return build ? build(params) : '/'
+  return getDestination(pageName) ? pathOf(pageName, params) : '/'
 }
 
-/**
- * pathToPageName(pathname) — reverse mapping, pour l'état actif de navigation et
- * le « chrome » du layout (footer, paddings, transitions).
- */
+/** pathToPageName(pathname) — l'identifiant de destination d'une URL. */
 export function pathToPageName(pathname) {
-  if (pathname === '/') return 'home'
-  if (pathname === '/projects') return 'projects'
-  if (pathname.startsWith('/projects/')) return 'project-detail'
-  if (pathname === '/news') return 'news'
-  if (pathname.startsWith('/news/')) return 'news-detail'
-  if (pathname === '/researchers/edit') return 'researcher-profile-edit'
-  if (pathname === '/researchers') return 'researchers'
-  if (pathname.startsWith('/researchers/')) return 'profile'
-  if (pathname === '/profile/edit') return 'researcher-profile-edit'
-  if (pathname.startsWith('/profile/')) return 'profile'
-  if (pathname === '/clubs') return 'clubs'
-  if (pathname.startsWith('/clubs/')) return 'club-detail'
-  // Le login/conversion (/members et /auth) partage le « chrome » de la page auth.
-  if (pathname === '/members' || pathname === '/auth') return 'auth'
-  const STATIC = {
-    '/cite': 'cite-integration',
-    '/students': 'student-portal',
-    '/student-portal': 'student-portal',
-    '/formations': 'workshops',
-    '/workshops': 'workshops',
-    '/events': 'events',
-    '/dashboard': 'dashboard',
-    '/admin': 'admin',
-    '/help': 'contact',
-    '/contact': 'contact',
-    '/opportunities': 'opportunities',
-    '/paf': 'paf',
-    '/gouvernance': 'gouvernance',
-    '/espace-cite': 'espace-cite',
-    '/challenges': 'challenges',
-    '/soutiens': 'soutiens',
-  }
-  return STATIC[pathname] || 'home'
+  return idOfPath(pathname)
 }
 
 /**
- * useAppNavigate() — adaptateur « strangler » : conserve navigate(pageName, params)
- * tout en déléguant à react-router.
+ * useAppNavigate() — conserve `navigate(pageName, params)` en déléguant à
+ * react-router. Remonte en haut de page, sauf préférence de mouvement réduit.
  */
 export function useAppNavigate() {
   const navigate = useNavigate()
   return useCallback((pageName, params = {}) => {
     navigate(buildPath(pageName, params))
     if (typeof window !== 'undefined') {
-      window.scrollTo({ top: 0, behavior: 'smooth' })
+      const reduced = window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches
+      window.scrollTo({ top: 0, behavior: reduced ? 'auto' : 'smooth' })
     }
   }, [navigate])
 }

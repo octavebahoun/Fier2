@@ -392,7 +392,7 @@ function ClubCard({ club, user, navigate, onJoin, onLeave, isPending, joiningId,
 
 // ─────────────────────────── ResearchClubs Page ───────────────────────────────
 export default function ResearchClubs({ navigate }) {
-  const { user, isAdmin } = useAuth();
+  const { user, can } = useAuth();
   const userId = user?.id ?? null;
   const [clubs, setClubs] = useState([]);
   const [myRequests, setMyRequests] = useState([]);
@@ -401,13 +401,16 @@ export default function ResearchClubs({ navigate }) {
   const [joiningId, setJoiningId] = useState(null);
   const [confirmClub, setConfirmClub] = useState(null); // Club en attente de confirmation
 
-  const isSecretaryOrAdmin =
-    user?.universityPost === 'SECRETAIRE' ||
-    user?.universityPost === 'CHEF_UNIVERSITAIRE' ||
-    user?.role === 'ADMIN_UNIVERSITAIRE' ||
-    user?.role === 'ADMIN' ||
-    user?.role === 'CHEF_UNIVERSITAIRE' ||
-    isAdmin?.();
+  // Vue transversale sur tous les clubs de l'université : c'est le droit de
+  // lire les rapports qui la définit. L'ancien test comparait l'objet
+  // `universityPost` à une chaîne — toujours faux — et inventait deux rôles
+  // inexistants (constat F05) : ce bloc n'a jamais rien accordé à personne.
+  const canSeeAllClubs = can('report:read');
+
+  // Gère-t-on CE club ? La capacité fait foi ; `responsibleId` reste un repli
+  // tant que `/members/me` ne renseigne pas toujours `responsibleClubIds`.
+  const managesClub = (club) =>
+    can('membership:review', { clubId: club.id }) || club.responsibleId === userId;
 
   const userAssignedClubId =
     user?.clubId ||
@@ -417,7 +420,7 @@ export default function ResearchClubs({ navigate }) {
 
   // Si l'utilisateur appartient déjà à un club et n'est pas admin/secrétariat :
   // IL N'A AUCUNE VUE SUR LES AUTRES CLUBS. Seul son propre club est affiché.
-  const displayClubs = (user && userAssignedClubId && !isSecretaryOrAdmin)
+  const displayClubs = (user && userAssignedClubId && !canSeeAllClubs)
     ? clubs.filter((c) => String(c.id) === String(userAssignedClubId) || c.joined || c.responsibleId === userId)
     : clubs;
 
@@ -443,9 +446,7 @@ export default function ResearchClubs({ navigate }) {
     // (ADMIN → tous ; RESPONSABLE → uniquement le(s) club(s) dont il est responsable).
     // On filtre en amont pour éviter les appels qui renverraient 403.
     if (user) {
-      const managed = allClubs.filter(
-        (club) => isAdmin() || club.responsibleId === userId,
-      );
+      const managed = allClubs.filter(managesClub);
       const pendingMap = {};
       for (const club of managed) {
         const res = await api.memberships.getPendingRequests(club.id);
@@ -595,7 +596,7 @@ export default function ResearchClubs({ navigate }) {
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
           {displayClubs.map((club, index) => {
             const isPending = myRequests.some(r => r.clubId === club.id && r.status === 'PENDING');
-            const isManager = user && (isAdmin() || club.responsibleId === userId);
+            const isManager = user && managesClub(club);
             const pendingMembers = pendingRequests[club.id] || [];
 
             return (

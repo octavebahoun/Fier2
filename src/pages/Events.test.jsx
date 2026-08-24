@@ -16,14 +16,21 @@ import Events from './Events.jsx'
 
 const mockUser = { id: 7, firstname: 'Test', lastname: 'Membre', role: 'ETUDIANT' }
 
-vi.mock('@/context/AuthContext.jsx', () => ({
-  useAuth: () => ({
-    user: mockUser,
-    isAdmin: () => false,
-    isRespComm: () => false,
-    isChefUniversitaire: () => false,
-  }),
-}))
+vi.mock('@/context/AuthContext.jsx', async (importOriginal) => {
+  const actual = await importOriginal()
+  const { readIdentity, resolve } = await import('@/auth/access.js')
+  return {
+    ...actual,
+    useAuth: () => {
+      const identity = readIdentity(mockUser)
+      return {
+        user: mockUser,
+        identity,
+        can: (capability, ctx) => resolve(identity, capability, ctx),
+      }
+    },
+  }
+})
 
 vi.mock('@/context/AuthGateContext.jsx', () => ({
   useAuthGate: () => ({ promptLogin: vi.fn() }),

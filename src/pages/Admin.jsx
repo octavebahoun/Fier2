@@ -37,7 +37,7 @@ function Toast({ message, type = 'success', onClose }) {
 }
 
 export default function Admin() {
-  const { user, hasMinRole } = useAuth();
+  const { user } = useAuth();
   const [pendingArticles, setPendingArticles] = useState([]);
   const [approvedCount, setApprovedCount] = useState(42); // Default fallback stats
   const [loading, setLoading] = useState(true);
@@ -66,9 +66,8 @@ export default function Admin() {
   };
 
   useEffect(() => {
-    if (hasMinRole('ADMIN')) {
-      loadData();
-    }
+    // L'accès à la page est garanti par ProtectedRoute : plus de re-test ici.
+    loadData();
   }, [user]);
 
   const handleApprove = async (id) => {
@@ -117,19 +116,6 @@ export default function Admin() {
   const toggleExpand = (id) => {
     setExpandedArticleId(prev => (prev === id ? null : id));
   };
-
-  // component protection
-  if (!hasMinRole('ADMIN')) {
-    return (
-      <div className="min-h-[60vh] flex flex-col items-center justify-center text-center p-6">
-        <AlertTriangle className="w-16 h-16 text-red-500 mb-4 animate-bounce" />
-        <h1 className="text-2xl font-bold text-text-primary mb-2">Accès Interdit</h1>
-        <p className="text-text-secondary max-w-md">
-          Vous devez disposer d'un compte Administrateur pour accéder à cet espace.
-        </p>
-      </div>
-    );
-  }
 
   return (
     <div className="max-w-[92rem] mx-auto w-full py-24 px-6 md:px-12 lg:px-12">

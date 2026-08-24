@@ -14,50 +14,25 @@ import NotificationsModal from './NotificationsModal.jsx'
 import { useTheme } from '../../context/useTheme.js'
 import { api } from '../../services/api.js'
 
-const BREADCRUMB_MAP = {
-  dashboard: 'Mon Espace',
-  profile: 'Mon Espace',
-  'researcher-profile-edit': 'Mon Espace',
-  admin: 'Gouvernance',
-  gouvernance: 'Gouvernance',
-  'espace-cite': 'Gouvernance',
-  soutiens: 'Gouvernance',
-  projects: 'Recherche & R&D',
-  'project-detail': 'Recherche & R&D',
-  clubs: 'Recherche & R&D',
-  'club-detail': 'Recherche & R&D',
-  workshops: 'Recherche & R&D',
-  opportunities: 'Recherche & R&D',
-  news: 'Communauté',
-  'news-detail': 'Communauté',
-  events: 'Communauté',
-  challenges: 'Communauté',
-  researchers: 'Communauté',
-  contact: 'Support',
-  'student-portal': 'Portail',
-}
+import { getDestination, SECTIONS } from '@/navigation/destinations.js'
 
-const PAGE_TITLES = {
-  dashboard: 'Tableau de bord',
-  profile: 'Mon profil',
-  'researcher-profile-edit': 'Édition du profil',
-  admin: 'Administration',
-  projects: 'Projets', 'project-detail': 'Projet',
-  clubs: 'CITE', 'club-detail': 'Club',
-  workshops: 'Formations',
-  opportunities: 'Opportunités',
-  news: 'Actualités', 'news-detail': 'Article',
-  events: 'Événements',
-  researchers: 'Annuaire des chercheurs',
-  cite: 'Gouvernance', 'cite-integration': 'Gouvernance',
-  contact: 'Aide & Contact',
-  'student-portal': 'Portail étudiant',
-  home: 'Accueil',
-  challenges: 'Challenges & Hackathons',
-  soutiens: 'Soutiens & Trésorerie',
-  'espace-cite': 'Mon espace CITE',
-  gouvernance: 'Exclusions & Attestations',
-  paf: 'PAF',
+const SECTION_BY_ID = Object.fromEntries(Object.values(SECTIONS).map((x) => [x.id, x]))
+
+/**
+ * Le titre et la section viennent du registre des destinations : le fil
+ * d'Ariane dit exactement le même nom que la barre latérale et la palette.
+ * Deux tables écrites à la main donnaient jusqu'ici quatre noms à la même
+ * page (constat F09).
+ */
+function crumbsFor(pageName) {
+  const dest = getDestination(pageName)
+  if (!dest) return { section: null, title: 'FIERI Research' }
+  const parent = dest.parent ? getDestination(dest.parent) : null
+  return {
+    section: SECTION_BY_ID[dest.section]?.label || null,
+    parent: parent ? { id: parent.id, label: parent.label } : null,
+    title: dest.label,
+  }
 }
 
 /**
@@ -96,8 +71,7 @@ export default function SiteHeader({ currentPage, navigate, user }) {
     }
   }, [loadUnread])
 
-  const title = PAGE_TITLES[currentPage] || 'FIERI Research'
-  const section = BREADCRUMB_MAP[currentPage]
+  const { section, parent, title } = crumbsFor(currentPage)
 
   return (
     <>
@@ -123,6 +97,22 @@ export default function SiteHeader({ currentPage, navigate, user }) {
                 <BreadcrumbSeparator />
                 <BreadcrumbItem className="hidden md:inline-flex">
                   <span className="text-text-muted">{section}</span>
+                </BreadcrumbItem>
+              </>
+            )}
+            {parent && (
+              <>
+                <BreadcrumbSeparator />
+                <BreadcrumbItem className="hidden sm:inline-flex">
+                  <BreadcrumbLink asChild>
+                    <button
+                      type="button"
+                      onClick={() => navigate(parent.id)}
+                      className="cursor-pointer text-text-secondary hover:text-engine"
+                    >
+                      {parent.label}
+                    </button>
+                  </BreadcrumbLink>
                 </BreadcrumbItem>
               </>
             )}

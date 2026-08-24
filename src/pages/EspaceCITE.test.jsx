@@ -13,29 +13,38 @@ import '@testing-library/jest-dom/vitest'
 
 import EspaceCITE from './EspaceCITE.jsx'
 
-// ── Identité simulée : Secrétaire Générale de l'université 7 ────────────────
-let estSecretaire = true
-let estChef = false
-
-vi.mock('../context/AuthContext.jsx', () => ({
-  useAuth: () => ({
-    user: {
-      id: 42,
-      firstname: 'Sec',
-      lastname: 'Générale',
-      email: 'sec@uac.bj',
-      role: 'ETUDIANT',
-      universityPost: { post: 'SECRETAIRE', universityId: 7 },
-      universityId: 7,
-    },
-    isClubResponsible: () => false,
-    isSecretary: () => estSecretaire,
-    isChefUniversitaire: () => estChef,
-    // Le contexte expose le poste sous forme de chaîne, pas d'objet.
-    universityPost: 'SECRETAIRE',
+// ── Identité simulée ───────────────────────────────────────────────────────
+// Le mock ne réimplémente PAS les droits : il fournit une identité et laisse le
+// vrai résolveur répondre. Un test ne peut donc plus diverger du modèle réel.
+const H = vi.hoisted(() => ({
+  user: {
+    id: 42,
+    firstname: 'Sec',
+    lastname: 'Générale',
+    email: 'sec@uac.bj',
+    role: 'ETUDIANT',
+    universityPost: { post: 'SECRETAIRE', universityId: 7 },
     universityId: 7,
-  }),
+  },
 }))
+
+vi.mock('../context/AuthContext.jsx', async (importOriginal) => {
+  const actual = await importOriginal()
+  const { readIdentity, resolve } = await import('../auth/access.js')
+  return {
+    ...actual,
+    useAuth: () => {
+      const identity = readIdentity(H.user)
+      return {
+        user: H.user,
+        identity,
+        can: (capability, ctx) => resolve(identity, capability, ctx),
+        universityPost: identity.universityPost,
+        universityId: identity.universityId,
+      }
+    },
+  }
+})
 
 const mockUniversityReports = vi.fn()
 const mockSubmitReport = vi.fn()
@@ -62,8 +71,8 @@ vi.mock('../services/api.js', () => {
 
 beforeEach(() => {
   cleanup()
-  estSecretaire = true
-  estChef = false
+  H.user.universityPost = { post: 'SECRETAIRE', universityId: 7 }
+  H.user.universityPost = { post: 'SECRETAIRE', universityId: 7 }
   mockUniversityReports.mockReset()
   mockSubmitReport.mockReset()
   mockMembersAll.mockReset()
@@ -195,8 +204,8 @@ describe('Espace CITE — la soumission de rapport dit la vérité', () => {
 // GET /universities/:id/activity-reports lui est ouverte au même titre.
 describe('Espace CITE — le Chef Universitaire lit les rapports', () => {
   it('charge et affiche la liste pour un Chef qui n’est pas Secrétaire', async () => {
-    estSecretaire = false
-    estChef = true
+    H.user.universityPost = null
+    H.user.universityPost = { post: 'CHEF_UNIVERSITAIRE', universityId: 7 }
     mockUniversityReports.mockResolvedValue({
       success: true,
       data: [

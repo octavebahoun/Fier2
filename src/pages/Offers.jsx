@@ -37,7 +37,7 @@ function Toast({ message, type = 'success', onClose }) {
 
 // ─────────────────────────── Offers Page Component ───────────────────────────
 export default function Offers({ navigate }) {
-  const { user, hasMinRole } = useAuth();
+  const { user, can } = useAuth();
   const [opportunities, setOpportunities] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [toast, setToast] = useState(null);
@@ -200,7 +200,7 @@ export default function Offers({ navigate }) {
       navigate?.('auth');
       return;
     }
-    const isResearcher = hasMinRole('CHERCHEUR');
+    const isResearcher = can('opportunity:create');
     if (!isResearcher) {
       setToast("Accès refusé. Cette fonctionnalité est réservée aux chercheurs certifiés.");
       return;

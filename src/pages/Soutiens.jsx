@@ -456,6 +456,11 @@ function PhysicalForm({ universityId, setUniversityId, universities, user, setTo
 
 // ───────────────────────── Section Trésorerie ─────────────────────────
 function TreasurySection({ universityId, setToast }) {
+  const { can } = useAuth();
+  // Lire le grand livre et l'alimenter sont deux droits distincts : le Chef
+  // Universitaire consulte, seul le Trésorier enregistre
+  // (@UniversityPosts('TRESORIER') sur POST /universities/:id/treasury/transactions).
+  const canRecord = can('treasury:write', { universityId });
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -561,8 +566,8 @@ function TreasurySection({ universityId, setToast }) {
             <ShieldCheck className="w-8 h-8 text-emerald-400/70" />
           </div>
 
-          {/* Formulaire d'enregistrement */}
-          <form onSubmit={handleRecord} className="grid grid-cols-1 sm:grid-cols-12 gap-3 items-end">
+          {/* Formulaire d'enregistrement — Trésorier uniquement */}
+          {canRecord && <form onSubmit={handleRecord} className="grid grid-cols-1 sm:grid-cols-12 gap-3 items-end">
             <div className="sm:col-span-3">
               <label className="block text-[11px] uppercase tracking-widest text-text-secondary mb-1.5">Type</label>
               <div className="relative">
@@ -598,7 +603,7 @@ function TreasurySection({ universityId, setToast }) {
                 {txLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <PlusCircle className="w-4 h-4" />}
               </motion.button>
             </div>
-          </form>
+          </form>}
 
           {/* Grand livre */}
           <div>
@@ -646,7 +651,7 @@ function TreasurySection({ universityId, setToast }) {
 
 // ─────────────────────────── Page Soutiens ───────────────────────────
 export default function Soutiens() {
-  const { user, isTreasurer } = useAuth();
+  const { user, can } = useAuth();
   const [tab, setTab] = useState('financial');
   const [toast, setToast] = useState(null);
 
@@ -688,8 +693,9 @@ export default function Soutiens() {
     }
   }, []);
 
-  // La trésorerie n'est visible que pour le Trésorier / Chef Universitaire / ADMIN.
-  const showTreasury = isTreasurer();
+  // Miroir de @UniversityPosts('TRESORIER','CHEF_UNIVERSITAIRE') sur
+  // GET /universities/:id/treasury — et du périmètre de l'université visée.
+  const showTreasury = can('treasury:read', { universityId });
 
   const tabs = [
     { id: 'financial', label: 'Soutien financier', icon: Wallet },

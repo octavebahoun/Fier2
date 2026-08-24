@@ -15,19 +15,22 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
 } from "@/components/ui/sidebar"
+import { getDestination } from "@/navigation/destinations.js"
 
-// Mappe les pages « détail » vers l'item de menu parent pour l'état actif.
-const ACTIVE_ALIAS = {
-  "project-detail": "projects",
-  "club-detail": "clubs",
-  "news-detail": "news",
-  "cite-integration": "cite",
-  "student-portal": "dashboard",
-  "researcher-profile-edit": "profile",
-}
-
+// L'état actif suit la chaîne `parent` du registre : une page de détail
+// éclaire son entrée de menu parente, et rien d'autre. Auparavant une table
+// écrite à la main faisait briller « Tableau de bord » sur le portail
+// étudiant — la navigation mentait sur la position (constat F13).
 function isPageActive(id, currentPage) {
-  return currentPage === id || ACTIVE_ALIAS[currentPage] === id
+  if (currentPage === id) return true
+  let cursor = getDestination(currentPage)
+  const seen = new Set()
+  while (cursor?.parent && !seen.has(cursor.id)) {
+    seen.add(cursor.id)
+    if (cursor.parent === id) return true
+    cursor = getDestination(cursor.parent)
+  }
+  return false
 }
 
 export function NavMain({ groups, currentPage, navigate }) {

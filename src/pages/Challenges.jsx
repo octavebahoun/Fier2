@@ -409,7 +409,7 @@ function HackathonCard({ hackathon }) {
 
 // ───────────────────────────── Main Page ─────────────────────────────
 export default function Challenges() {
-  const { user, isAdmin, isClubResponsible } = useAuth();
+  const { user, can } = useAuth();
   const [clubs, setClubs] = useState([]);
   const [clubId, setClubId] = useState(null);
   const [challenges, setChallenges] = useState([]);
@@ -436,7 +436,7 @@ export default function Challenges() {
 
   // Gérer un challenge est réservé au RESPONSABLE du club sélectionné (ou ADMIN),
   // aligné sur l'autorisation réelle du backend — plus un simple niveau de rôle.
-  const isManager = isClubResponsible(clubId);
+  const isManager = can('challenge:create', { clubId });
   const isMember = !!user;
 
   // ── Charger les clubs + sélection par défaut ──
@@ -836,7 +836,7 @@ export default function Challenges() {
                   <h2 className="text-text-primary font-bold text-xl flex items-center gap-2">
                     <CalendarDays className="w-5 h-5 text-ember" /> Hackathons
                   </h2>
-                  {isAdmin() && (
+                  {can('hackathon:create') && (
                     <span className="text-[11px] text-text-secondary italic">
                       Création réservée Chef Universitaire
                     </span>

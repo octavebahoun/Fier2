@@ -110,29 +110,26 @@ function App() {
         <Route path="/opportunities" element={<Opportunities navigate={navigate} />} />
         <Route path="/paf" element={<PAF navigate={navigate} />} />
 
-        {/* Gouvernance (exclusion + attestations) — Chef Universitaire / ADMIN */}
+        {/* Gouvernance de l'université — attestations et exclusions */}
         <Route
           path="/gouvernance"
           element={
-            <ProtectedRoute minRole="ETUDIANT">
+            <ProtectedRoute destination="gouvernance">
               <Gouvernance navigate={navigate} />
             </ProtectedRoute>
           }
         />
-        {/* Espace CITE (membre) — tableau de bord club */}
+        {/* Espace CITE — dépôt et lecture des rapports de club */}
         <Route
           path="/espace-cite"
           element={
-            <ProtectedRoute minRole="ETUDIANT">
+            <ProtectedRoute destination="espace-cite">
               <EspaceCITE navigate={navigate} />
             </ProtectedRoute>
           }
         />
-        {/* Challenges & Hackathons */}
         <Route path="/challenges" element={<Challenges navigate={navigate} />} />
-        {/* Soutiens & Trésorerie (don + soutien matériel + grand livre) */}
         <Route path="/soutiens" element={<Soutiens navigate={navigate} />} />
-        {/* Aide / Contact */}
         <Route path="/help" element={<Contact navigate={navigate} />} />
         <Route path="/contact" element={<Contact navigate={navigate} />} />
 
@@ -140,13 +137,13 @@ function App() {
         <Route path="/members" element={<AuthRoute />} />
         <Route path="/auth" element={<AuthRoute />} />
 
-        {/* Annuaire des chercheurs (déplacé de /members vers /researchers) */}
+        {/* Annuaire des chercheurs */}
         <Route path="/researchers" element={<Members navigate={navigate} />} />
         {/* /researchers/edit AVANT /researchers/:researcherId */}
         <Route
           path="/researchers/edit"
           element={
-            <ProtectedRoute minRole="CHERCHEUR">
+            <ProtectedRoute destination="researcher-profile-edit">
               <ResearcherProfileEdit navigate={navigate} />
             </ProtectedRoute>
           }
@@ -156,18 +153,18 @@ function App() {
         <Route
           path="/profile/edit"
           element={
-            <ProtectedRoute minRole="CHERCHEUR">
+            <ProtectedRoute destination="researcher-profile-edit">
               <ResearcherProfileEdit navigate={navigate} />
             </ProtectedRoute>
           }
         />
         <Route path="/profile/:researcherId" element={<ProfileRoute />} />
 
-        {/* Pages protégées */}
+        {/* Espace membre */}
         <Route
           path="/dashboard"
           element={
-            <ProtectedRoute minRole="ETUDIANT">
+            <ProtectedRoute destination="dashboard">
               <Dashboard navigate={navigate} />
             </ProtectedRoute>
           }
@@ -175,7 +172,7 @@ function App() {
         <Route
           path="/admin"
           element={
-            <ProtectedRoute minRole="ADMIN">
+            <ProtectedRoute destination="admin">
               <Admin navigate={navigate} />
             </ProtectedRoute>
           }

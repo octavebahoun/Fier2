@@ -763,8 +763,8 @@ function CountriesView({ countries, query, setQuery, onCountrySelect, onGlobalGo
 }
 
 function GovernanceView({ title, subtitle, people, board, onBack }) {
-  const { hasMinRole } = useAuth();
-  const canSeeContacts = hasMinRole('ETUDIANT');
+  const { can } = useAuth();
+  const canSeeContacts = can('directory:viewContacts');
 
   return (
     <div className="flex flex-col gap-6">
@@ -916,8 +916,8 @@ function ClubView({ club, onChief, onJoin }) {
 }
 
 function ChiefView({ club, onBack }) {
-  const { hasMinRole } = useAuth();
-  const canSeeContacts = hasMinRole('ETUDIANT');
+  const { can } = useAuth();
+  const canSeeContacts = can('directory:viewContacts');
 
   return (
     <div className="max-w-3xl">

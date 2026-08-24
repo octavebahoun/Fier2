@@ -428,7 +428,7 @@ function EventCard({ event, user, onRegister, onLiveAccess, isRegistering, canMa
 
 // ─── Main Events Page ─────────────────────────────────────────────────────────
 export default function Events({ navigate }) {
-  const { user, isAdmin, isRespComm, isChefUniversitaire } = useAuth();
+  const { user, can } = useAuth();
   const { promptLogin } = useAuthGate();
   const [tab, setTab] = React.useState('upcoming'); // 'upcoming' | 'history'
   const [events, setEvents] = React.useState([]);
@@ -451,8 +451,8 @@ export default function Events({ navigate }) {
   // ADMIN, ou Responsable Communication / Chef Universitaire de son université.
   // Le backend vérifie en plus que l'université de l'événement correspond.
   const canManageEvent = React.useMemo(
-    () => !!user && (isAdmin() || isRespComm() || isChefUniversitaire()),
-    [user, isAdmin, isRespComm, isChefUniversitaire],
+    () => can('event:publishSocial'),
+    [can],
   );
 
   // Load events on mount / tab change

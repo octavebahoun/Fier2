@@ -220,7 +220,7 @@ function ProfileSkeleton() {
 
 // ─────────────────────────── Main Researcher Profile Page ───────────────────────────
 export default function ResearcherProfile({ navigate, researcherId }) {
-  const { user } = useAuth()
+  const { user, can } = useAuth()
   const { promptLogin } = useAuthGate()
   const [researcher, setResearcher] = useState(null)
   const [isLoading, setIsLoading] = useState(true)
@@ -337,7 +337,8 @@ export default function ResearcherProfile({ navigate, researcherId }) {
     researcherId === 'me' || 
     String(user.email || '').toLowerCase() === String(researcher.email || '').toLowerCase()
   )
-  const canEdit = isOwnProfile || (user && (user.role === 'ADMIN' || user.role === 'ADMINISTRATEUR'))
+  // « ADMINISTRATEUR » n'a jamais existé côté backend (constat F05).
+  const canEdit = (isOwnProfile && can('profile:editOwn')) || can('admin:access')
 
   // Save profile changes via inline modal
   const handleSaveProfile = async (e) => {

@@ -1,443 +1,303 @@
 import { createContext, useContext, useState, useEffect, useCallback, useMemo } from 'react'
-import api from '../services/api.js';
+import api from '../services/api.js'
+import {
+  ROLES,
+  ROLE_LIST,
+  UNIVERSITY_POSTS,
+  UNIVERSITY_POST_LIST,
+  COUNTRY_POSTS,
+  COUNTRY_POST_LIST,
+  CAPABILITIES,
+} from '../auth/capabilities.js'
+import { readIdentity, resolve, explain, denyMessage } from '../auth/access.js'
 
-const AuthContext = createContext(null);
-
-// ─── Structure d'héritage des rôles (RBAC Graphe) ───────────────────────────
-// Résout la collision linéaire : un Chercheur et un Responsable de club sont
-// tous deux au-dessus de l'Étudiant simple, mais n'ont pas les mêmes privilèges.
-// Le graphe garantit que :
-//   - L'admin hérite de tous les rôles.
-//   - Le chercheur / responsable / mentor / chef de projet héritent tous d'étudiant.
-//   - Un chercheur n'est PAS un responsable de club, et vice-versa.
-export const ROLE_INHERITANCE = {
-  VISITEUR:       [],
-  ETUDIANT:       ['VISITEUR'],
-  CHERCHEUR:      ['ETUDIANT'],
-  MENTOR:         ['ETUDIANT'],
-  CHEF_DE_PROJET: ['ETUDIANT'],
-  RESPONSABLE:    ['ETUDIANT'],
-  ADMIN:          ['CHERCHEUR', 'MENTOR', 'CHEF_DE_PROJET', 'RESPONSABLE'],
-};
-
-// Fonction récursive de résolution d'héritage
-export function isRoleOrInherits(userRole, requiredRole) {
-  if (!userRole || !requiredRole) return false;
-  const user = userRole.toUpperCase();
-  const req = requiredRole.toUpperCase();
-  if (user === req) return true;
-
-  const parents = ROLE_INHERITANCE[user];
-  if (!parents) return false;
-
-  return parents.some(parent => isRoleOrInherits(parent, req));
-}
-
-export const ROLES = {
-  VISITEUR:       'VISITEUR',
-  ETUDIANT:       'ETUDIANT',
-  CHERCHEUR:      'CHERCHEUR',
-  MENTOR:         'MENTOR',
-  CHEF_DE_PROJET: 'CHEF_DE_PROJET',
-  RESPONSABLE:    'RESPONSABLE',
-  ADMIN:          'ADMIN',
-};
-
-// Priorité de tri des rôles pour l'affichage (ex: gestion des membres)
-export const ROLE_SORT_PRIORITY = {
-  ADMIN:          6,
-  RESPONSABLE:    5,
-  CHEF_DE_PROJET: 4,
-  MENTOR:         3,
-  CHERCHEUR:      2,
-  ETUDIANT:       1,
-  VISITEUR:       0,
-};
-
-// Types de badges disponibles (attribués par Admin ou Responsable de club)
-export const BADGE_TYPES = ['CHERCHEUR', 'MENTOR', 'FORMATEUR', 'AMBASSADEUR', 'INNOVATEUR'];
-
-// ─── Présentation des rôles (source unique) ─────────────────────────────────
-// Toute couleur / libellé de rôle affiché dans l'UI DOIT venir d'ici.
-// Ajouter un rôle = éditer cet objet, pas chasser des ternaires dans les vues.
-//   • label : libellé complet (sidebar, profil)
-//   • short : libellé compact (pastille de navbar)
-//   • textClassName  : couleur seule (variante texte)
-//   • badgeClassName : fond + bordure + texte (variante pastille)
-export const ROLE_PRESENTATION = {
-  ADMIN:              { label: 'Admin Global Fieri',  short: 'Admin Global', description: 'Supervision globale de la plateforme Fieri.', level: 6, textClassName: 'text-red-400',     badgeClassName: 'bg-red-500/10 border-red-500/30 text-red-400' },
-  CHEF_UNIVERSITAIRE: { label: 'Admin Universitaire', short: 'Admin Univ.', description: 'Supervision institutionnelle et gouvernance de l\'Université.', level: 5.5, textClassName: 'text-cyan-400',   badgeClassName: 'bg-cyan-500/10 border-cyan-500/30 text-cyan-400' },
-  SECRETAIRE:         { label: 'Secrétaire Générale', short: 'Secrétaire', description: 'Gestion de la trésorerie locale et transmission des rapports mensuels.', level: 5.2, textClassName: 'text-emerald-400', badgeClassName: 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400' },
-  RESPONSABLE:        { label: 'Responsable de club', short: 'Responsable', description: 'Animation d\'un club CITE, validation des adhésions et projets.', level: 5, textClassName: 'text-amber-400',   badgeClassName: 'bg-amber-500/10 border-amber-500/30 text-amber-400' },
-  CHEF_DE_PROJET:     { label: 'Chef de projet',      short: 'Chef projet', description: 'Pilotage opérationnel d\'équipes R&D et suivi des livrables.', level: 4, textClassName: 'text-cyan-400',    badgeClassName: 'bg-cyan-500/10 border-cyan-500/30 text-cyan-400' },
-  CHERCHEUR:          { label: 'Chercheur FIERI',     short: 'Chercheur',   description: 'Publication scientifique, soumission d\'articles et création de projets.', level: 3, textClassName: 'text-engine',  badgeClassName: 'bg-engine/15 border-engine/30 text-engine' },
-  MENTOR:             { label: 'Mentor',              short: 'Mentor',      description: 'Accompagnement scientifique et encadrement des étudiants.', level: 2, textClassName: 'text-violet-400',  badgeClassName: 'bg-violet-500/10 border-violet-500/30 text-violet-400' },
-  ETUDIANT:           { label: 'Étudiant',            short: 'Étudiant',    description: 'Participation aux événements, formations, ateliers et clubs.', level: 1, textClassName: 'text-emerald-400', badgeClassName: 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400' },
-  VISITEUR:           { label: 'Invité',              short: 'Invité',      description: 'Consultation publique de la plateforme en lecture seule.', level: 0, textClassName: 'text-slate-400',   badgeClassName: 'bg-slate-500/10 border-slate-500/30 text-slate-400' },
-};
-
-// Repli neutre pour un rôle inconnu / absent (jamais null → l'UI reste cohérente).
-const ROLE_PRESENTATION_FALLBACK = {
-  label: 'Membre', short: 'Membre', description: 'Accès membre général à la plateforme.', level: 1, textClassName: 'text-emerald-400', badgeClassName: 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400',
-};
+const AuthContext = createContext(null)
 
 /**
- * getRolePresentation(role) — normalise la casse et renvoie toujours un objet
- * de présentation exploitable (jamais null).
+ * ═══════════════════════════════════════════════════════════════════════════
+ * AuthContext — façade React au-dessus de src/auth/.
+ * ═══════════════════════════════════════════════════════════════════════════
+ *
+ * Ce fichier ne DÉCIDE plus rien : il expose la session et délègue chaque
+ * question de droit à `resolve()`. Le graphe d'héritage de rôles a disparu —
+ * le `RolesGuard` du backend teste une correspondance exacte, une hiérarchie
+ * côté client accordait donc des écrans que l'API refusait ensuite.
+ *
+ * Toute question d'accès passe par `can(capability, ctx)`.
  */
-export function getRolePresentation(role) {
-  return ROLE_PRESENTATION[String(role || '').toUpperCase()] || ROLE_PRESENTATION_FALLBACK;
+
+export { ROLES, UNIVERSITY_POSTS, COUNTRY_POSTS }
+
+/** Rôles attribuables par un ADMIN, du plus élevé au plus courant. */
+export const ASSIGNABLE_ROLES = [
+  ROLES.ADMIN,
+  ROLES.RESPONSABLE,
+  ROLES.CHEF_DE_PROJET,
+  ROLES.MENTOR,
+  ROLES.CHERCHEUR,
+  ROLES.ETUDIANT,
+]
+
+/** Priorité de tri pour l'affichage des listes de membres. */
+export const ROLE_SORT_PRIORITY = {
+  ADMIN: 6, RESPONSABLE: 5, CHEF_DE_PROJET: 4, MENTOR: 3, CHERCHEUR: 2, ETUDIANT: 1,
 }
 
-// ─── Matrice de capacités (source unique du contrôle d'accès) ────────────────
-// On ne teste JAMAIS un rôle « en dur » dans les vues. On teste une CAPACITÉ.
-// `can('news:submit')` plutôt que `hasMinRole('CHERCHEUR')` : l'intention est
-// explicite, et faire évoluer les droits = éditer cette table, pas chasser des
-// ternaires dans 15 fichiers. Chaque capacité pointe vers le rôle minimum requis.
-//
-//   VISITEUR  : rien (contenu public en lecture seule, géré hors capacités)
-//   ETUDIANT  : participer (rejoindre, s'inscrire, candidater, suivre)
-//   CHERCHEUR : produire (publier, créer opportunités/projets, éditer sa fiche)
-//   MENTOR    : encadrer (valider les adhésions de club)
-//   ADMIN     : gouverner (modérer, administrer, gérer les membres)
-export const PERMISSIONS = {
-  // — Participation (tout membre connecté) —
-  'dashboard:view':     'ETUDIANT',
-  'profile:viewOwn':    'ETUDIANT',
-  'club:join':          'ETUDIANT',
-  'workshop:register':  'ETUDIANT',
-  'event:register':     'ETUDIANT',
-  'opportunity:apply':  'ETUDIANT',
-  'project:follow':     'ETUDIANT',
-  'researcher:follow':  'ETUDIANT',
-  // — Production (chercheur et au-dessus) —
-  'researcher:editOwn': 'CHERCHEUR',
-  'news:submit':        'CHERCHEUR',
-  'opportunity:create': 'CHERCHEUR',
-  'project:create':     'CHERCHEUR',
-  // — Encadrement (mentor et au-dessus) —
-  'club:manage':        'MENTOR',
-  // — Gouvernance (admin uniquement) —
-  'news:moderate':      'ADMIN',
-  'opportunity:review': 'ADMIN',
-  'member:manage':      'ADMIN',
-  'admin:access':       'ADMIN',
-};
+export const BADGE_TYPES = ['CHERCHEUR', 'MENTOR', 'FORMATEUR', 'AMBASSADEUR', 'INNOVATEUR']
+
+// ─── Présentation : ce que la personne EST ─────────────────────────────────
+// Un rôle de compte, et rien d'autre. Les postes de gouvernance ont leur
+// propre table ci-dessous : les mélanger était la cause du constat F01.
+export const ROLE_PRESENTATION = {
+  ADMIN:          { label: 'Admin Global Fieri', short: 'Admin Global', description: 'Supervision globale de la plateforme Fieri.',                    textClassName: 'text-red-400',     badgeClassName: 'bg-red-500/10 border-red-500/30 text-red-400' },
+  RESPONSABLE:    { label: 'Responsable de club', short: 'Responsable',  description: 'Animation d’un club CITE, validation des adhésions et projets.', textClassName: 'text-amber-400',   badgeClassName: 'bg-amber-500/10 border-amber-500/30 text-amber-400' },
+  CHEF_DE_PROJET: { label: 'Chef de projet',      short: 'Chef projet',  description: 'Pilotage des équipes R&D, tâches et candidatures reçues.',       textClassName: 'text-cyan-400',    badgeClassName: 'bg-cyan-500/10 border-cyan-500/30 text-cyan-400' },
+  CHERCHEUR:      { label: 'Chercheur FIERI',     short: 'Chercheur',    description: 'Publication scientifique, opportunités et projets R&D.',         textClassName: 'text-engine',      badgeClassName: 'bg-engine/15 border-engine/30 text-engine' },
+  MENTOR:         { label: 'Mentor',              short: 'Mentor',       description: 'Encadrement des étudiants et attribution des badges.',           textClassName: 'text-violet-400',  badgeClassName: 'bg-violet-500/10 border-violet-500/30 text-violet-400' },
+  ETUDIANT:       { label: 'Étudiant',            short: 'Étudiant',     description: 'Participation aux événements, formations, ateliers et clubs.',   textClassName: 'text-emerald-400', badgeClassName: 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400' },
+}
+
+const ROLE_PRESENTATION_FALLBACK = {
+  label: 'Membre', short: 'Membre', description: 'Accès membre général à la plateforme.',
+  textClassName: 'text-emerald-400', badgeClassName: 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400',
+}
+
+// ─── Présentation : ce que la personne ADMINISTRE ──────────────────────────
+export const POST_PRESENTATION = {
+  CHEF_UNIVERSITAIRE: { label: 'Chef Universitaire',        short: 'Chef Univ.',  description: 'Gouvernance de l’université : attestations, exclusions, supervision.', textClassName: 'text-cyan-400',    badgeClassName: 'bg-cyan-500/10 border-cyan-500/30 text-cyan-400' },
+  SECRETAIRE:         { label: 'Secrétaire Générale',       short: 'Secrétaire',  description: 'Rapports d’activité et recensements de l’université.',                 textClassName: 'text-emerald-400', badgeClassName: 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400' },
+  TRESORIER:          { label: 'Trésorier',                 short: 'Trésorier',   description: 'Grand livre et opérations de trésorerie de l’université.',             textClassName: 'text-amber-400',   badgeClassName: 'bg-amber-500/10 border-amber-500/30 text-amber-400' },
+  RESP_COMMUNICATION: { label: 'Responsable communication', short: 'Resp. comm.', description: 'Diffusion des événements de l’université sur les réseaux.',            textClassName: 'text-violet-400',  badgeClassName: 'bg-violet-500/10 border-violet-500/30 text-violet-400' },
+  GOUVERNANT_PAYS:    { label: 'Gouvernant du pays',        short: 'Gouv. pays',  description: 'Supervision des universités du pays.',                                 textClassName: 'text-red-400',     badgeClassName: 'bg-red-500/10 border-red-500/30 text-red-400' },
+}
+
+export function getRolePresentation(role) {
+  return ROLE_PRESENTATION[String(role || '').toUpperCase()] || ROLE_PRESENTATION_FALLBACK
+}
+
+export function getPostPresentation(post) {
+  return POST_PRESENTATION[String(post || '').toUpperCase()] || null
+}
 
 export function AuthProvider({ children }) {
-  const [user, setUser]       = useState(null);
-  const [token, setToken]     = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [badges, setBadges]   = useState([]);
+  const [user, setUser]       = useState(null)
+  const [token, setToken]     = useState(null)
+  const [loading, setLoading] = useState(true)
+  const [badges, setBadges]   = useState([])
 
-  // Charger les badges de l'utilisateur via l'API (plus de lecture directe de
-  // localStorage : le contexte ne connaît qu'UNE seule façon de savoir qui tu es).
   useEffect(() => {
-    if (!user) {
-      setBadges([]);
-      return;
-    }
-    let active = true;
-    (async () => {
+    if (!user) { setBadges([]); return }
+    let active = true
+    ;(async () => {
       try {
-        const res = await api.badges.getByUser(user.id);
-        if (active && res?.success) setBadges(res.data || []);
+        const res = await api.badges.getByUser(user.id)
+        if (active && res?.success) setBadges(res.data || [])
       } catch (err) {
-        console.error('[FIERI AuthContext] Erreur lors du chargement des badges:', err);
-        if (active) setBadges([]);
+        console.error('[FIERI AuthContext] Erreur lors du chargement des badges:', err)
+        if (active) setBadges([])
       }
-    })();
-    return () => { active = false; };
-  }, [user]);
+    })()
+    return () => { active = false }
+  }, [user])
 
   const handleLogout = useCallback(() => {
-    api.auth.logout();
-    setToken(null);
-    setUser(null);
-    localStorage.removeItem('fieri_auth_token');
-    localStorage.removeItem('fieri_user');
-  }, []);
+    api.auth.logout()
+    setToken(null)
+    setUser(null)
+    localStorage.removeItem('fieri_auth_token')
+    localStorage.removeItem('fieri_user')
+  }, [])
 
-  // Restaurer la session utilisateur au démarrage
   useEffect(() => {
     async function restoreSession() {
       try {
-        const storedToken = localStorage.getItem('fieri_auth_token');
-        const storedUser  = localStorage.getItem('fieri_user');
-
+        const storedToken = localStorage.getItem('fieri_auth_token')
+        const storedUser  = localStorage.getItem('fieri_user')
         if (storedToken && storedUser) {
-          setToken(storedToken);
-          setUser(JSON.parse(storedUser));
-
-          // Valider ou rafraîchir le profil en arrière-plan avec l'API
-          const res = await api.auth.getProfile();
+          setToken(storedToken)
+          setUser(JSON.parse(storedUser))
+          const res = await api.auth.getProfile()
           if (res.success && res.data) {
-            setUser(res.data);
-            localStorage.setItem('fieri_user', JSON.stringify(res.data));
+            setUser(res.data)
+            localStorage.setItem('fieri_user', JSON.stringify(res.data))
           } else {
-            handleLogout();
+            handleLogout()
           }
         }
       } catch (err) {
-        console.error('[FIERI AuthContext] Erreur lors de la restauration de la session:', err);
-        // Token expiré / invalide → on nettoie la session pour ne pas laisser
-        // une UI "connectée" mais cassée (chaque appel /me renverrait 401).
-        // On ne déconnecte QUE sur une vraie erreur d'auth : un 500 ou une
-        // coupure réseau ne doit pas détruire la session de l'utilisateur.
-        if (err?.status === 401 || err?.status === 403) {
-          handleLogout();
-        }
+        console.error('[FIERI AuthContext] Erreur lors de la restauration de la session:', err)
+        // Un 500 ou une coupure réseau ne doit pas détruire la session.
+        if (err?.status === 401 || err?.status === 403) handleLogout()
       } finally {
-        setLoading(false);
+        setLoading(false)
       }
     }
-    restoreSession();
-  }, [handleLogout]);
+    restoreSession()
+  }, [handleLogout])
 
-  // Enrichit un membre minimal (issu de login/register) avec le profil complet
-  // de /members/me (scope de gouvernance). Retombe sur le membre minimal si
-  // l'appel échoue — on ne bloque jamais la connexion pour autant.
   const enrichProfile = useCallback(async (minimalMember) => {
     try {
-      const me = await api.auth.getProfile();
-      if (me?.success && me.data) return me.data;
+      const me = await api.auth.getProfile()
+      if (me?.success && me.data) return me.data
     } catch (err) {
-      console.warn('[FIERI AuthContext] Profil complet indisponible, membre minimal conservé:', err?.message);
+      console.warn('[FIERI AuthContext] Profil complet indisponible, membre minimal conservé:', err?.message)
     }
-    return minimalMember;
-  }, []);
+    return minimalMember
+  }, [])
 
   const handleLogin = useCallback(async (email, password) => {
     try {
-      const res = await api.auth.login(email, password);
+      const res = await api.auth.login(email, password)
       if (res.success && res.data) {
-        const { access_token, member } = res.data;
-        setToken(access_token);
-        localStorage.setItem('fieri_auth_token', access_token);
-        // Le login ne renvoie qu'un membre minimal : on enrichit immédiatement
-        // avec le profil complet (scope de gouvernance) pour un RBAC correct.
-        const fullUser = await enrichProfile(member);
-        setUser(fullUser);
-        localStorage.setItem('fieri_user', JSON.stringify(fullUser));
-        return { success: true, message: res.message };
+        const { access_token, member } = res.data
+        setToken(access_token)
+        localStorage.setItem('fieri_auth_token', access_token)
+        const fullUser = await enrichProfile(member)
+        setUser(fullUser)
+        localStorage.setItem('fieri_user', JSON.stringify(fullUser))
+        return { success: true, message: res.message }
       }
-      return { success: false, message: res.message || 'Identifiants invalides.' };
+      return { success: false, message: res.message || 'Identifiants invalides.' }
     } catch (err) {
-      console.error('[FIERI AuthContext] Erreur lors de la connexion:', err);
-      let message = err?.serverMessage || "Une erreur s'est produite lors de la connexion.";
-      if (err?.status === 401 || err?.status === 400) message = "Email ou mot de passe incorrect.";
-      else if (err?.status === 404) message = "Aucun compte trouvé pour cet email.";
-      else if (!err?.status) message = "Serveur injoignable. Vérifiez votre connexion.";
-      return { success: false, message };
+      console.error('[FIERI AuthContext] Erreur lors de la connexion:', err)
+      let message = err?.serverMessage || "Une erreur s'est produite lors de la connexion."
+      if (err?.status === 401 || err?.status === 400) message = 'Email ou mot de passe incorrect.'
+      else if (err?.status === 404) message = 'Aucun compte trouvé pour cet email.'
+      else if (!err?.status) message = 'Serveur injoignable. Vérifiez votre connexion.'
+      return { success: false, message }
     }
-  }, [enrichProfile]);
+  }, [enrichProfile])
 
   const handleRegister = useCallback(async ({ email, password, firstName, lastName, branchId }) => {
     try {
-      const res = await api.auth.register({ email, password, firstName, lastName, branchId });
+      const res = await api.auth.register({ email, password, firstName, lastName, branchId })
       if (res.success && res.data) {
-        const { access_token, member } = res.data;
-        setToken(access_token);
-        localStorage.setItem('fieri_auth_token', access_token);
-        const fullUser = await enrichProfile(member);
-        setUser(fullUser);
-        localStorage.setItem('fieri_user', JSON.stringify(fullUser));
-        return { success: true, message: res.message };
+        const { access_token, member } = res.data
+        setToken(access_token)
+        localStorage.setItem('fieri_auth_token', access_token)
+        const fullUser = await enrichProfile(member)
+        setUser(fullUser)
+        localStorage.setItem('fieri_user', JSON.stringify(fullUser))
+        return { success: true, message: res.message }
       }
-      return { success: false, message: res.message || "Erreur lors de l'inscription." };
+      return { success: false, message: res.message || "Erreur lors de l'inscription." }
     } catch (err) {
-      console.error("[FIERI AuthContext] Erreur lors de l'inscription:", err);
-      let message = err?.serverMessage || "Une erreur s'est produite lors de l'inscription.";
-      let code = null;
+      console.error("[FIERI AuthContext] Erreur lors de l'inscription:", err)
+      let message = err?.serverMessage || "Une erreur s'est produite lors de l'inscription."
+      let code = null
       if (err?.status === 409) {
-        message = "Un compte existe déjà avec cet email. Essayez de vous connecter.";
-        code = 'EMAIL_EXISTS';
+        message = 'Un compte existe déjà avec cet email. Essayez de vous connecter.'
+        code = 'EMAIL_EXISTS'
       } else if (err?.status === 400 || err?.status === 422) {
-        message = err?.serverMessage || "Informations d'inscription invalides.";
+        message = err?.serverMessage || "Informations d'inscription invalides."
       } else if (!err?.status) {
-        message = "Serveur injoignable. Vérifiez votre connexion.";
+        message = 'Serveur injoignable. Vérifiez votre connexion.'
       }
-      return { success: false, message, code };
+      return { success: false, message, code }
     }
-  }, [enrichProfile]);
+  }, [enrichProfile])
 
-  // ─── Helpers de Rôles ────────────────────────────────────────────────────
+  // ─── L'identité, projetée sur les deux axes ──────────────────────────────
+  const identity = useMemo(() => readIdentity(user), [user])
 
-  /**
-   * hasMinRole(minRole) — retourne true si l'utilisateur possède ou hérite de ce rôle.
-   * C'est la méthode principale à utiliser pour les gardes d'accès.
-   */
-  const hasMinRole = useCallback((minRole) => {
-    if (!minRole) return true;
-    const req = minRole.toUpperCase();
-    if (req === 'VISITEUR') return true;
-    if (!user || !user.role) return false;
-    return isRoleOrInherits(user.role, req);
-  }, [user]);
-
-  /**
-   * hasRole(roleName) — compatibilité avec l'ancien code.
-   * Préférer hasMinRole() pour les nouvelles fonctionnalités.
-   */
-  const hasRole = useCallback((roleName) => {
-    if (!user || !user.role) return false;
-    return isRoleOrInherits(user.role, roleName);
-  }, [user]);
-
-  const isAdmin      = useCallback(() => user?.role?.toUpperCase() === 'ADMIN', [user]);
-  const isResearcher = useCallback(() => hasMinRole('CHERCHEUR'), [hasMinRole]);
-  const isStudent    = useCallback(() => hasMinRole('ETUDIANT'), [hasMinRole]);
-  const isEtudiant   = isStudent; // alias francophone
-  /**
-   * hasBadge(badgeType) — vérifie si l'utilisateur possède un badge spécifique.
-   * Lit l'état `badges` chargé via l'API (les badges sont déjà filtrés sur l'user).
-   */
   const hasBadge = useCallback((badgeType) => {
-    if (!user) return false;
-    const target = badgeType?.toUpperCase();
-    return badges.some(b => b.badgeType?.toUpperCase() === target);
-  }, [user, badges]);
-
-  const isMentor     = useCallback(() => {
-    // Un MENTOR est soit un user avec role='MENTOR', soit un membre avec le badge MENTOR
-    if (!user) return false;
-    if (user.role?.toUpperCase() === 'MENTOR') return true;
-    return hasBadge('MENTOR');
-  }, [user, hasBadge]);
+    if (!user) return false
+    const target = String(badgeType || '').toUpperCase()
+    return badges.some((b) => String(b.badgeType || '').toUpperCase() === target)
+  }, [user, badges])
 
   /**
-   * can(capability) — LA fonction de contrôle d'accès à utiliser dans les vues.
-   * Renvoie true si l'utilisateur courant possède la capacité demandée.
-   * Capacité inconnue → false (fail-safe : on refuse par défaut, on ne devine pas).
+   * can(capability, ctx) — LA question d'accès. Une seule implémentation.
    *
-   *   {can('news:submit') && <BoutonPublier />}   // invisible si pas le droit
-   *   <button disabled={!can('club:join')} …/>     // désactivé sinon
+   *   can('treasury:read')                        → « quelque part ? » (menus)
+   *   can('treasury:read', { universityId: 7 })   → « ici, précisément ? » (écrans)
+   *
+   * Le badge MENTOR vaut le rôle MENTOR pour les capacités d'encadrement :
+   * une distinction attribuée porte le même droit que le rôle.
    */
-  const can = useCallback((capability) => {
-    const required = PERMISSIONS[capability];
-    if (!required) {
-      console.warn(`[FIERI AuthContext] Capacité inconnue: "${capability}" → accès refusé.`);
-      return false;
+  const can = useCallback((capability, ctx = {}) => {
+    if (resolve(identity, capability, ctx)) return true
+    const spec = CAPABILITIES[capability]
+    if (spec?.roles?.includes(ROLES.MENTOR) && identity.authenticated && hasBadge('MENTOR')) {
+      return true
     }
-    // Le mentorat peut venir d'un badge (pas seulement du rôle) : on élargit
-    // la capacité d'encadrement aux porteurs du badge MENTOR.
-    if (required === 'MENTOR' && isMentor()) return true;
-    return hasMinRole(required);
-  }, [hasMinRole, isMentor]);
+    return false
+  }, [identity, hasBadge])
 
-  // ─── Postes de gouvernance scopés (Community OS) ─────────────────────────
-  // Ces postes ne suivent PAS la hiérarchie linéaire des rôles : ils sont
-  // attachés à une université / un pays / un club. On les lit sur le profil
-  // enrichi (/members/me). Un ADMIN global satisfait toujours ces contrôles.
-  const universityPost = user?.universityPost?.post ?? null;
-  const countryPost = user?.countryPost?.post ?? null;
-  const universityId = user?.universityId ?? user?.universityPost?.universityId ?? null;
+  /** why(capability, ctx) — le motif du refus, pour l'afficher au lieu de le taire. */
+  const why = useCallback((capability, ctx = {}) => {
+    const verdict = explain(identity, capability, ctx)
+    return verdict.allowed ? null : denyMessage(verdict.reason, capability)
+  }, [identity])
 
-  const isChefUniversitaire = useCallback(
-    () => isAdmin() || universityPost === 'CHEF_UNIVERSITAIRE',
-    [isAdmin, universityPost],
-  );
-  // Le Chef Universitaire supervise la trésorerie ; le Trésorier la gère.
-  const isTreasurer = useCallback(
-    () => isAdmin() || universityPost === 'TRESORIER' || universityPost === 'CHEF_UNIVERSITAIRE',
-    [isAdmin, universityPost],
-  );
-  const isSecretary = useCallback(
-    () => isAdmin() || universityPost === 'SECRETAIRE',
-    [isAdmin, universityPost],
-  );
-  const isRespComm = useCallback(
-    () => isAdmin() || universityPost === 'RESP_COMMUNICATION',
-    [isAdmin, universityPost],
-  );
-  const isCountryGovernor = useCallback(
-    () => isAdmin() || countryPost === 'GOUVERNANT_PAYS',
-    [isAdmin, countryPost],
-  );
-  const isClubResponsible = useCallback(
-    (clubId) => isAdmin() || (user?.responsibleClubIds || []).includes(clubId),
-    [isAdmin, user],
-  );
-  const isAnyClubResponsible = useCallback(
-    () => isAdmin() || (user?.responsibleClubIds || []).length > 0,
-    [isAdmin, user],
-  );
+  // ─── Raccourcis de lecture ───────────────────────────────────────────────
+  // Ce ne sont PAS des règles : juste des questions déjà formulées, toutes
+  // rendues par `can()`. Aucune décision d'accès ne vit en dehors de la table.
+  const isAdmin              = useCallback(() => identity.isAdmin, [identity])
+  const isResearcher         = useCallback(() => identity.role === ROLES.CHERCHEUR || identity.isAdmin, [identity])
+  const isMentor             = useCallback(() => can('badge:award'), [can])
+  const isChefUniversitaire  = useCallback((ctx) => can('certificate:issue', ctx), [can])
+  const isTreasurer          = useCallback((ctx) => can('treasury:read', ctx), [can])
+  const isSecretary          = useCallback((ctx) => can('census:validate', ctx), [can])
+  const isRespComm           = useCallback((ctx) => can('event:publishSocial', ctx), [can])
+  const isClubResponsible    = useCallback((clubId) => can('membership:review', { clubId }), [can])
+  const isAnyClubResponsible = useCallback(() => can('membership:review'), [can])
 
   const value = useMemo(() => ({
     user,
     token,
     loading,
     isAuthenticated: !!user,
-    login:        handleLogin,
-    register:     handleRegister,
-    logout:       handleLogout,
-    hasRole,
-    hasMinRole,
+    identity,
+    login:    handleLogin,
+    register: handleRegister,
+    logout:   handleLogout,
+    // Contrôle d'accès
+    can,
+    why,
+    // Raccourcis
     isAdmin,
     isResearcher,
-    isStudent,
-    isEtudiant,
     isMentor,
-    can,
-    hasBadge,
-    badges,
-    // Scope de gouvernance
-    universityId,
-    universityPost,
-    countryPost,
     isChefUniversitaire,
     isTreasurer,
     isSecretary,
     isRespComm,
-    isCountryGovernor,
     isClubResponsible,
     isAnyClubResponsible,
+    // Identité dérivée, pratique pour l'affichage
+    universityPost: identity.universityPost,
+    universityId:   identity.universityId,
+    countryPost:    identity.countryPost,
+    // Badges
+    badges,
+    hasBadge,
+    // Constantes
     ROLES,
+    ROLE_LIST,
+    ASSIGNABLE_ROLES,
+    UNIVERSITY_POST_LIST,
+    COUNTRY_POST_LIST,
     ROLE_SORT_PRIORITY,
     BADGE_TYPES,
-    PERMISSIONS,
   }), [
-    user,
-    token,
-    loading,
-    handleLogin,
-    handleRegister,
-    handleLogout,
-    hasRole,
-    hasMinRole,
-    isAdmin,
-    isResearcher,
-    isStudent,
-    isEtudiant,
-    isMentor,
-    can,
-    hasBadge,
-    badges,
-    universityId,
-    universityPost,
-    countryPost,
-    isChefUniversitaire,
-    isTreasurer,
-    isSecretary,
-    isRespComm,
-    isCountryGovernor,
-    isClubResponsible,
-    isAnyClubResponsible,
-  ]);
+    user, token, loading, identity,
+    handleLogin, handleRegister, handleLogout,
+    can, why,
+    isAdmin, isResearcher, isMentor, isChefUniversitaire, isTreasurer,
+    isSecretary, isRespComm, isClubResponsible, isAnyClubResponsible,
+    badges, hasBadge,
+  ])
 
-  return (
-    <AuthContext.Provider value={value}>
-      {children}
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
 }
 
 export function useAuth() {
-  const context = useContext(AuthContext);
+  const context = useContext(AuthContext)
   if (!context) {
-    throw new Error("useAuth doit être utilisé au sein d'un AuthProvider.");
+    throw new Error("useAuth doit être utilisé au sein d'un AuthProvider.")
   }
-  return context;
+  return context
 }
 
-export default AuthContext;
+export default AuthContext

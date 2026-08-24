@@ -16,19 +16,19 @@ const mockUser = {
   lastName: 'FIERI',
   role: 'CHERCHEUR'
 }
-const mockIsResearcher = () => true
-const mockHasMinRole = (role) => {
-  if (role === 'CHERCHEUR' || role === 'ETUDIANT' || role === 'VISITEUR') return true
-  return false
-}
-
-vi.mock('../context/AuthContext.jsx', () => {
+vi.mock('../context/AuthContext.jsx', async (importOriginal) => {
+  const actual = await importOriginal()
+  const { readIdentity, resolve } = await import('../auth/access.js')
   return {
-    useAuth: () => ({
-      user: mockUser,
-      isResearcher: mockIsResearcher,
-      hasMinRole: mockHasMinRole
-    })
+    ...actual,
+    useAuth: () => {
+      const identity = readIdentity(mockUser)
+      return {
+        user: mockUser,
+        identity,
+        can: (capability, ctx) => resolve(identity, capability, ctx),
+      }
+    },
   }
 })
 

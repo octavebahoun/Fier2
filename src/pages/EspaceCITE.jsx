@@ -6,7 +6,8 @@ import {
   ChevronDown, ChevronUp, Star, Check
 } from 'lucide-react';
 import api from '../services/api.js';
-import { useAuth } from '../context/AuthContext.jsx';
+import { useAuth, getRolePresentation, getPostPresentation } from '../context/AuthContext.jsx';
+import { readIdentity } from '../auth/access.js';
 
 // ───────────────────────────── Toast Component ───────────────────────────────
 function Toast({ message, type = 'success', onClose }) {
@@ -71,31 +72,25 @@ const formatDateFr = (valeur) => {
     : d.toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', year: 'numeric' });
 };
 
+/**
+ * L'étiquette d'un membre dans une liste : son poste s'il en a un, sinon son
+ * rôle. Les deux libellés viennent des tables de présentation — plus de
+ * cascade maison qui devinait le poste à partir de l'adresse e-mail, ni de
+ * rôles inexistants (ADMIN_UNIVERSITAIRE, RESPONSABLE_CLUB — constat F05).
+ */
 const formatRoleBadge = (m) => {
-  const post = m.universityPost?.post || m.universityPost || '';
-  const role = m.role || '';
-  const email = m.email || '';
+  const identity = readIdentity(m)
+  const post = getPostPresentation(identity.universityPost || identity.countryPost)
+  if (post) return { label: post.label, className: `border ${post.badgeClassName}` }
 
-  if (post === 'SECRETAIRE' || role === 'SECRETAIRE') {
-    return { label: 'Secrétaire Générale', className: 'bg-engine/10 text-engine border border-engine/20' };
-  }
-  if (post === 'CHEF_UNIVERSITAIRE' || role === 'CHEF_UNIVERSITAIRE' || role === 'ADMIN_UNIVERSITAIRE') {
-    return { label: 'Chef Universitaire', className: 'bg-red-500/10 text-red-400 border border-red-500/20' };
-  }
-  if (role === 'ADMIN') {
-    return { label: 'Administrateur', className: 'bg-red-500/10 text-red-400 border border-red-500/20' };
-  }
-  if (
-    role === 'RESPONSABLE_CLUB' ||
-    role === 'RESPONSABLE' ||
-    (m.responsibleClubIds && m.responsibleClubIds.length > 0) ||
-    email.toLowerCase().includes('resp.') ||
-    m.isClubResponsible
-  ) {
-    return { label: 'Responsable de Club', className: 'bg-amber-500/10 text-amber-400 border border-amber-500/20' };
+  // Responsable d'un club sans poste d'université : c'est son périmètre qui le dit.
+  if (identity.role !== 'RESPONSABLE' && identity.responsibleClubIds.length > 0) {
+    const resp = getRolePresentation('RESPONSABLE')
+    return { label: resp.label, className: `border ${resp.badgeClassName}` }
   }
 
-  return { label: 'Étudiant Chercheur', className: 'bg-bg-tertiary text-text-muted border border-border-subtle' };
+  const role = getRolePresentation(identity.role)
+  return { label: role.label, className: `border ${role.badgeClassName}` }
 };
 
 // ───────────────────────────── Section Card ────────────────────────────────
@@ -133,7 +128,7 @@ function SectionCard({ icon: Icon, title, subtitle, children, accent = 'var(--co
 
 // ───────────────────────────── EspaceCITE Page ──────────────────────────────
 export default function EspaceCITE({ navigate }) {
-  const { user, isClubResponsible, isSecretary, isChefUniversitaire, universityPost, universityId } = useAuth();
+  const { user, can, universityPost, universityId } = useAuth();
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -141,19 +136,16 @@ export default function EspaceCITE({ navigate }) {
   const [projects, setProjects] = useState([]);
   const [, setAssignedActivities] = useState([]);
 
-  // Rôle d'administration centrale (Secrétariat & Chef Universitaire).
-  // On passe par les helpers du contexte : `user.universityPost` est un objet
-  // { post, universityId }, le comparer à une chaîne ne matchait jamais.
-  const isSecretaryOrAdmin = isSecretary() || isChefUniversitaire();
+  // Vue centrale (Secrétariat, Chef Universitaire, ADMIN) : c'est le droit de
+  // lire les rapports de l'université qui la définit, avec son périmètre.
+  const isSecretaryOrAdmin = can('report:read', { universityId });
 
   // Poste exact du membre : décide à qui les documents sont transmis.
   const estSecretaire = universityPost === 'SECRETAIRE';
 
-  // Lecture des rapports de toute l'université : Secrétariat, Chef
-  // Universitaire et ADMIN, conformément à
-  // @UniversityPosts('SECRETAIRE', 'CHEF_UNIVERSITAIRE') sur
+  // Miroir exact de @UniversityPosts('SECRETAIRE','CHEF_UNIVERSITAIRE') sur
   // GET /universities/:id/activity-reports.
-  const canReadUniversityReports = isSecretary() || isChefUniversitaire();
+  const canReadUniversityReports = can('report:read', { universityId });
 
   // Détermination du club de l'utilisateur
   const userAssignedClubId = user?.clubId || (user?.responsibleClubIds && user.responsibleClubIds[0]) || (user?.memberships && user.memberships[0]?.clubId) || '';
@@ -184,7 +176,16 @@ export default function EspaceCITE({ navigate }) {
   const [toast, setToast] = useState(null);
 
   // Est responsable du club sélectionné
-  const isClubManager = isClubResponsible(clubId) || isSecretaryOrAdmin;
+  // Miroir de @Roles('RESPONSABLE','ADMIN') sur les routes de club, avec le
+  // périmètre du club effectivement sélectionné.
+  const isClubManager = can('report:submit', { clubId }) || isSecretaryOrAdmin;
+
+  // Un outil = un droit. Le bloc entier était auparavant gouverné par un seul
+  // booléen : un secrétaire voyait donc le formulaire d'assignation d'activité
+  // de club, que l'API lui refuse.
+  const canSubmitCensus   = can('census:submit', { clubId }) || can('census:validate', { universityId });
+  const canAssignActivity = can('activity:assign', { clubId });
+  const canSubmitReport   = can('report:submit', { clubId }) || canReadUniversityReports;
 
   // ── Chargement du tableau de bord ──
   const loadDashboard = async () => {
@@ -720,7 +721,7 @@ export default function EspaceCITE({ navigate }) {
             {isClubManager && (
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 pt-4 border-t border-border-subtle">
                 {/* Recensement mensuel */}
-                <SectionCard 
+                {canSubmitCensus && <SectionCard 
                   icon={Users} 
                   title={estSecretaire ? "Recensement Global CITE" : "Recensement Mensuel"} 
                   subtitle={estSecretaire ? "Consolidation et transmission à l'Admin" : "Transmission à la Secrétaire Générale"} 
@@ -743,10 +744,10 @@ export default function EspaceCITE({ navigate }) {
                     )}
                     {censusBusy ? 'Soumission…' : estSecretaire ? 'Transmettre le recensement global' : 'Transmettre à la Secrétaire'}
                   </button>
-                </SectionCard>
+                </SectionCard>}
 
                 {/* Assignation d'activité */}
-                <SectionCard icon={ClipboardList} title="Assigner une Activité" subtitle="Attribuer une tâche à un membre" accent="var(--color-engine)">
+                {canAssignActivity && <SectionCard icon={ClipboardList} title="Assigner une Activité" subtitle="Attribuer une tâche à un membre" accent="var(--color-engine)">
                   <form onSubmit={handleCreateActivity} className="space-y-3">
                     <div>
                       <label className={labelClass}>Titre *</label>
@@ -792,10 +793,10 @@ export default function EspaceCITE({ navigate }) {
                       {activityBusy ? 'Création…' : 'Assigner l\'activité'}
                     </button>
                   </form>
-                </SectionCard>
+                </SectionCard>}
 
                 {/* Rapport mensuel d'activité */}
-                <SectionCard 
+                {canSubmitReport && <SectionCard 
                   icon={FileText} 
                   title={estSecretaire ? "Rapport Mensuel Global" : "Rapport d'Activité du Club"} 
                   subtitle={estSecretaire ? "Synthèse transmise au Chef Universitaire" : "Soumission à la Secrétaire Générale"} 
@@ -843,7 +844,7 @@ export default function EspaceCITE({ navigate }) {
                       {reportBusy ? 'Transmission…' : estSecretaire ? 'Transmettre au Chef Univ.' : 'Transmettre à la Secrétaire'}
                     </button>
                   </form>
-                </SectionCard>
+                </SectionCard>}
               </div>
             )}
 

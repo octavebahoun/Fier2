@@ -1,23 +1,26 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useMemo } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
-  Search,
-  Sun,
-  Moon,
-  Home,
-  Briefcase,
-  FolderGit2,
-  Rss,
-  Users,
-  Compass,
-  Calendar,
-  HelpCircle,
-  LayoutDashboard
+  Search, Sun, Moon, Compass,
+  LayoutDashboard, UserRound, FolderGit2, Users, GraduationCap, Briefcase,
+  Newspaper, CalendarDays, Contact, Shield, Trophy, HeartHandshake, ShieldCheck,
+  LayoutList, LifeBuoy, Layers,
 } from 'lucide-react'
 import { useTheme } from '../context/useTheme.js'
+import { useAuth } from '../context/AuthContext.jsx'
+import { DESTINATIONS, SECTIONS, navAccessOf } from '../navigation/destinations.js'
+
+const ICONS = {
+  LayoutDashboard, UserRound, FolderGit2, Users, GraduationCap, Briefcase,
+  Newspaper, CalendarDays, Contact, Shield, Trophy, HeartHandshake, ShieldCheck,
+  LayoutList, LifeBuoy, Layers,
+}
+
+const SECTION_BY_ID = Object.fromEntries(Object.values(SECTIONS).map((x) => [x.id, x]))
 
 export default function CommandPalette({ navigate }) {
   const { theme, toggleTheme } = useTheme()
+  const { can } = useAuth()
   const [isOpen, setIsOpen] = useState(false)
   const [search, setSearch] = useState('')
   const [selectedIndex, setSelectedIndex] = useState(0)
@@ -49,109 +52,37 @@ export default function CommandPalette({ navigate }) {
     return () => window.removeEventListener('keydown', handleKeyDown)
   }, [isOpen])
 
-  // Define commands list
-  const commands = [
-    {
-      id: 'theme',
-      label: `Basculer vers le mode ${theme === 'dark' ? 'clair' : 'sombre'}`,
-      category: 'Préférences',
-      icon: theme === 'dark' ? Sun : Moon,
-      action: () => {
-        toggleTheme()
-        setIsOpen(false)
-      }
-    },
-    {
-      id: 'nav-home',
-      label: "Naviguer vers l'Accueil",
-      category: 'Navigation',
-      icon: Home,
-      action: () => {
-        navigate('home')
-        setIsOpen(false)
-      }
-    },
-    {
-      id: 'nav-projects',
-      label: 'Naviguer vers les Projets & Brevets',
-      category: 'Navigation',
-      icon: FolderGit2,
-      action: () => {
-        navigate('projects')
-        setIsOpen(false)
-      }
-    },
-    {
-      id: 'nav-news',
-      label: 'Naviguer vers les Actualités & Publications',
-      category: 'Navigation',
-      icon: Rss,
-      action: () => {
-        navigate('news')
-        setIsOpen(false)
-      }
-    },
-    {
-      id: 'nav-clubs',
-      label: 'Naviguer vers les CITE Scientifiques',
-      category: 'Navigation',
-      icon: Compass,
-      action: () => {
-        navigate('clubs')
-        setIsOpen(false)
-      }
-    },
-    {
-      id: 'nav-opportunities',
-      label: 'Naviguer vers les Opportunités de Recherche',
-      category: 'Navigation',
-      icon: Briefcase,
-      action: () => {
-        navigate('opportunities')
-        setIsOpen(false)
-      }
-    },
-    {
-      id: 'nav-members',
-      label: "Naviguer vers l'Annuaire de la Communauté",
-      category: 'Navigation',
-      icon: Users,
-      action: () => {
-        navigate('researchers')
-        setIsOpen(false)
-      }
-    },
-    {
-      id: 'nav-workshops',
-      label: 'Naviguer vers les Ateliers & Formations',
-      category: 'Navigation',
-      icon: Calendar,
-      action: () => {
-        navigate('workshops')
-        setIsOpen(false)
-      }
-    },
-    {
-      id: 'nav-dashboard',
-      label: 'Naviguer vers mon Dashboard',
-      category: 'Espace Privé',
-      icon: LayoutDashboard,
-      action: () => {
-        navigate('dashboard')
-        setIsOpen(false)
-      }
-    },
-    {
-      id: 'nav-contact',
-      label: 'Naviguer vers Aide & Contact',
-      category: 'Support',
-      icon: HelpCircle,
-      action: () => {
-        navigate('contact')
-        setIsOpen(false)
-      }
-    }
-  ]
+  // Les destinations viennent du registre et sont filtrées par les mêmes
+  // droits que la barre latérale. La palette exposait auparavant huit pages en
+  // dur, sans aucun filtrage : un étudiant pouvait s'y téléporter partout.
+  const commands = useMemo(() => {
+    const reachable = DESTINATIONS.filter((dest) => {
+      if (!dest.inPalette) return false
+      const access = navAccessOf(dest.id)
+      if (access === 'public') return true
+      const required = access?.anyOf ?? (access?.capability ? [access.capability] : [])
+      return required.length === 0 || required.some((cap) => can(cap))
+    })
+
+    return [
+      {
+        id: 'theme',
+        label: `Basculer vers le mode ${theme === 'dark' ? 'clair' : 'sombre'}`,
+        category: 'Préférences',
+        icon: theme === 'dark' ? Sun : Moon,
+        action: () => { toggleTheme(); setIsOpen(false) },
+      },
+      ...reachable.map((dest) => ({
+        id: `nav-${dest.id}`,
+        // Le nom canonique de la destination, le même que dans la barre
+        // latérale et le fil d'Ariane (constat F09).
+        label: dest.label,
+        category: SECTION_BY_ID[dest.section]?.label || 'Navigation',
+        icon: ICONS[dest.icon] || Compass,
+        action: () => { navigate(dest.id, dest.navParams || {}); setIsOpen(false) },
+      })),
+    ]
+  }, [can, theme, toggleTheme, navigate])
 
   // Filter commands based on user input
   const filteredCommands = commands.filter((cmd) =>
