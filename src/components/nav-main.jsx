@@ -36,10 +36,11 @@ function isPageActive(id, currentPage) {
 export function NavMain({ groups, currentPage, navigate }) {
   // Un groupe s'ouvre automatiquement quand il contient la page active ;
   // l'utilisateur peut ensuite ouvrir/fermer librement chaque groupe.
+  // Ouverts par défaut. La navigation primaire d'un back-office se lit, elle
+  // ne se déplie pas : un étudiant avait six destinations réparties dans trois
+  // accordéons fermés, soit deux clics pour atteindre n'importe quoi (F12).
   const [openGroups, setOpenGroups] = useState(() =>
-    Object.fromEntries(
-      groups.map((g) => [g.id, g.items.some((i) => isPageActive(i.id, currentPage))])
-    )
+    Object.fromEntries(groups.map((g) => [g.id, true]))
   )
 
   useEffect(() => {
@@ -77,7 +78,7 @@ export function NavMain({ groups, currentPage, navigate }) {
                     className="chamfer-sm cursor-pointer rounded-none border border-transparent data-active:border-engine/25 data-active:bg-engine/10 data-active:text-engine hover:bg-bg-tertiary"
                   >
                     <group.icon className={hasActiveChild ? "text-engine" : "text-text-muted"} />
-                    <span className="eyebrow truncate">{group.label}</span>
+                    <span className="truncate text-sm font-semibold">{group.label}</span>
                     <ChevronRightIcon
                       className={`ml-auto shrink-0 transition-transform ${isOpen ? "rotate-90" : ""}`}
                     />

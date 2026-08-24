@@ -85,6 +85,22 @@ describe('le registre des destinations et la table se répondent', () => {
     }
   })
 
+  it('deux destinations ne portent jamais le même nom', () => {
+    // Un chemin, un nom — mais aussi : un nom, un chemin. Deux « Annuaire »
+    // dans la même barre latérale laissent le lecteur deviner lequel est lequel.
+    const parLabel = new Map()
+    for (const dest of DESTINATIONS) {
+      const liste = parLabel.get(dest.label) || []
+      liste.push(dest.id)
+      parLabel.set(dest.label, liste)
+    }
+    const doublons = [...parLabel.entries()].filter(([, ids]) => ids.length > 1)
+    expect(
+      doublons.map(([label, ids]) => `« ${label} » → ${ids.join(', ')}`),
+      'des destinations différentes portent le même nom',
+    ).toEqual([])
+  })
+
   it('chaque destination sait construire son URL', () => {
     for (const dest of DESTINATIONS) {
       const ok = typeof dest.build === 'function' || typeof dest.path === 'string'

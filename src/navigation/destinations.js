@@ -30,6 +30,7 @@
 
 export const SECTIONS = {
   ESPACE:      { id: 'espace',      label: 'Mon espace' },
+  CITE:        { id: 'cite',        label: 'Mon club CITE' },
   GOUVERNANCE: { id: 'gouvernance', label: 'Gouvernance' },
   RECHERCHE:   { id: 'recherche',   label: 'Recherche & R&D' },
   COMMUNAUTE:  { id: 'communaute',  label: 'Communauté' },
@@ -40,6 +41,7 @@ export const SECTIONS = {
 /** Ordre d'affichage des groupes dans la barre latérale. */
 export const SECTION_ORDER = [
   SECTIONS.ESPACE.id,
+  SECTIONS.CITE.id,
   SECTIONS.GOUVERNANCE.id,
   SECTIONS.RECHERCHE.id,
   SECTIONS.COMMUNAUTE.id,
@@ -91,36 +93,74 @@ export const DESTINATIONS = [
     inNav: false, inPalette: true, icon: 'GraduationCap',
   },
 
-  // ── Gouvernance ─────────────────────────────────────────────────────────
-  // Chaque entrée est gardée par la capacité que l'écran exige réellement.
+  // ── Espace CITE ─────────────────────────────────────────────────────────
+  // L'ancien écran unique portait neuf métiers : membres, adhésions, projets,
+  // recensement, activités, rapports, découverte de clubs, rapports reçus et
+  // annuaire. Une intention par écran, un droit par écran.
   {
-    id: 'gouvernance', path: '/gouvernance', label: 'Attestations & exclusions',
-    section: SECTIONS.GOUVERNANCE.id,
-    access: { anyOf: ['certificate:issue', 'exclusion:review'] },
-    inNav: true, inPalette: true, icon: 'ShieldCheck',
+    id: 'espace-cite', path: '/espace-cite', label: 'Mon club',
+    section: SECTIONS.CITE.id, access: { capability: 'space:access' },
+    inNav: true, inPalette: true, icon: 'Users',
   },
   {
-    id: 'espace-cite', path: '/espace-cite', label: 'Espace CITE',
-    section: SECTIONS.GOUVERNANCE.id,
-    // Un responsable y dépose ses rapports ; le secrétariat et le chef
-    // universitaire les lisent. Le chef manquait à l'appel — constat F04.
+    id: 'cite-adhesions', path: '/espace-cite/adhesions', label: 'Adhésions',
+    section: SECTIONS.CITE.id, access: { capability: 'membership:review' },
+    inNav: true, inPalette: true, icon: 'UserPlus', parent: 'espace-cite',
+  },
+  {
+    id: 'cite-activites', path: '/espace-cite/activites', label: 'Activités',
+    section: SECTIONS.CITE.id, access: { capability: 'activity:assign' },
+    inNav: true, inPalette: true, icon: 'ClipboardList', parent: 'espace-cite',
+  },
+  {
+    id: 'cite-rapports', path: '/espace-cite/rapports', label: 'Rapports',
+    section: SECTIONS.CITE.id,
+    // Un responsable dépose, le secrétariat et le chef lisent : deux portes,
+    // un seul écran.
     access: { anyOf: ['report:submit', 'report:read'] },
-    inNav: true, inPalette: true, icon: 'LayoutList',
+    inNav: true, inPalette: true, icon: 'FileText', parent: 'espace-cite',
   },
   {
-    id: 'soutiens', path: '/soutiens', label: 'Soutiens & trésorerie',
-    section: SECTIONS.GOUVERNANCE.id,
-    // La page de don reste publique ; l'entrée de MENU ne s'affiche que pour
-    // qui peut lire le grand livre — sinon le lien mène à un formulaire de don
-    // sans trésorerie (constat F08).
-    access: PUBLIC,
-    navAccess: { capability: 'treasury:read' },
-    inNav: true, inPalette: true, icon: 'HeartHandshake',
+    id: 'cite-annuaire', path: '/espace-cite/annuaire', label: 'Annuaire de l’université',
+    section: SECTIONS.CITE.id, access: { capability: 'report:read' },
+    inNav: true, inPalette: true, icon: 'Contact', parent: 'espace-cite',
+  },
+
+  // ── Gouvernance ─────────────────────────────────────────────────────────
+  {
+    id: 'gouvernance', path: '/gouvernance', label: 'Attestations',
+    aliases: ['/gouvernance/attestations'], section: SECTIONS.GOUVERNANCE.id,
+    access: { capability: 'certificate:issue' },
+    inNav: true, inPalette: true, icon: 'Award',
+  },
+  {
+    id: 'gouvernance-exclusions', path: '/gouvernance/exclusions', label: 'Exclusions',
+    section: SECTIONS.GOUVERNANCE.id, access: { capability: 'exclusion:review' },
+    inNav: true, inPalette: true, icon: 'UserX', parent: 'gouvernance',
+  },
+  {
+    id: 'gouvernance-figures', path: '/gouvernance/figures', label: 'Figures emblématiques',
+    section: SECTIONS.GOUVERNANCE.id, access: { capability: 'member:toggleEmblematic' },
+    inNav: true, inPalette: true, icon: 'Star', parent: 'gouvernance',
+  },
+  {
+    id: 'tresorerie', path: '/tresorerie', label: 'Trésorerie',
+    section: SECTIONS.GOUVERNANCE.id, access: { capability: 'treasury:read' },
+    inNav: true, inPalette: true, icon: 'Wallet',
   },
   {
     id: 'admin', path: '/admin', label: 'Console d’administration',
     section: SECTIONS.GOUVERNANCE.id, access: { capability: 'admin:access' },
     inNav: true, inPalette: true, icon: 'Shield',
+  },
+
+  // ── Soutenir FIERI — page publique de mécénat ───────────────────────────
+  // Elle n'est plus dans la navigation de l'espace connecté : c'est une page
+  // tournée vers l'extérieur, pas un outil interne (constat F08).
+  {
+    id: 'soutiens', path: '/soutiens', label: 'Soutenir FIERI',
+    section: SECTIONS.PUBLIC.id, access: PUBLIC,
+    inNav: false, inPalette: true, icon: 'HeartHandshake',
   },
 
   // ── Recherche & R&D ─────────────────────────────────────────────────────
@@ -183,7 +223,7 @@ export const DESTINATIONS = [
     inNav: true, inPalette: true, icon: 'Trophy',
   },
   {
-    id: 'researchers', path: '/researchers', label: 'Annuaire',
+    id: 'researchers', path: '/researchers', label: 'Annuaire des chercheurs',
     section: SECTIONS.COMMUNAUTE.id, access: PUBLIC,
     inNav: true, inPalette: true, icon: 'Contact',
   },

@@ -2,44 +2,14 @@ import { useState, useEffect, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   HeartHandshake, Wallet, Fingerprint, Send, PlusCircle,
-  AlertCircle, CheckCircle, Loader2, ArrowDownLeft, ArrowUpRight,
-  ChevronDown, ShieldCheck, Building2, Lock
+  CheckCircle, Loader2,
+  ChevronDown, Building2
 } from 'lucide-react';
 import api from '../services/api.js';
 import { useAuth } from '../context/AuthContext.jsx';
+import { useToast } from '../components/ui/Toast.jsx';
 
 // ─────────────────────────────── Toast ────────────────────────────────
-function Toast({ message, type = 'success', onClose }) {
-  useEffect(() => {
-    const t = setTimeout(onClose, 4500);
-    return () => clearTimeout(t);
-  }, [onClose]);
-
-  const styles = {
-    success: 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400',
-    error:   'bg-red-500/10 border-red-500/30 text-red-400',
-    info:    'bg-engine/10 border-engine/30 text-engine',
-    warning: 'bg-amber-500/10 border-amber-500/30 text-amber-400',
-  };
-  const Icon = type === 'error' ? AlertCircle : CheckCircle;
-
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 24, scale: 0.95 }}
-      animate={{ opacity: 1, y: 0, scale: 1 }}
-      exit={{ opacity: 0, y: 16, scale: 0.95 }}
-      transition={{ type: 'spring', stiffness: 400, damping: 28 }}
-      className={`fixed bottom-6 right-6 z-[100] flex items-center gap-3 px-5 py-3.5 chamfer-sm shadow-2xl backdrop-blur-md border ${styles[type] || styles.success}`}
-      role="alert"
-      aria-live="polite"
-    >
-      <Icon className="w-5 h-5 shrink-0" />
-      <span className="text-xs font-bold">{message}</span>
-    </motion.div>
-  );
-}
-
-// ───────────────────────── Sélecteur d'université ─────────────────────────
 function UniversityField({ universityId, setUniversityId, universities, loading }) {
   if (universityId && !loading) {
     const current = universities.find((u) => u.id === Number(universityId));
@@ -84,7 +54,7 @@ function UniversityField({ universityId, setUniversityId, universities, loading 
 }
 
 // ───────────────────────── Onglet Soutien financier ─────────────────────────
-function FinancialForm({ universityId, setUniversityId, universities, user, setToast }) {
+function FinancialForm({ universityId, setUniversityId, universities, user, notify }) {
   const [amount, setAmount] = useState('');
   const [donorName, setDonorName] = useState(user?.firstName ? `${user.firstName} ${user.lastName || ''}`.trim() : '');
   const [donorEmail, setDonorEmail] = useState(user?.email || '');
@@ -110,7 +80,7 @@ function FinancialForm({ universityId, setUniversityId, universities, user, setT
       const flat = lists.flat().filter(Boolean);
       if (flat.length) setUniversitiesSafe(flat);
     } catch {
-      setToast({ message: "Impossible de charger la liste des universités.", type: 'error' });
+      notify("Impossible de charger la liste des universités.", 'error');
     } finally {
       setUnivLoading(false);
     }
@@ -124,9 +94,9 @@ function FinancialForm({ universityId, setUniversityId, universities, user, setT
     if (loading) return;
 
     const amt = Number(amount);
-    if (!universityId) { setToast({ message: 'Veuillez indiquer une université bénéficiaire.', type: 'error' }); return; }
-    if (!amt || amt <= 0) { setToast({ message: 'Le montant du don doit être supérieur à 0.', type: 'error' }); return; }
-    if (!donorName.trim() || !donorEmail.trim()) { setToast({ message: 'Le nom et l\'email du donateur sont requis.', type: 'error' }); return; }
+    if (!universityId) { notify('Veuillez indiquer une université bénéficiaire.', 'error'); return; }
+    if (!amt || amt <= 0) { notify('Le montant du don doit être supérieur à 0.', 'error'); return; }
+    if (!donorName.trim() || !donorEmail.trim()) { notify('Le nom et l\'email du donateur sont requis.', 'error'); return; }
 
     setLoading(true);
     try {
@@ -138,13 +108,13 @@ function FinancialForm({ universityId, setUniversityId, universities, user, setT
         message: message.trim() || undefined,
       });
       if (res?.success && res.data?.checkoutUrl) {
-        setToast({ message: 'Redirection vers le paiement sécurisé…', type: 'info' });
+        notify('Redirection vers le paiement sécurisé…', 'info');
         window.location.href = res.data.checkoutUrl;
       } else {
-        setToast({ message: res?.message || 'Échec de l\'initialisation du don.', type: 'error' });
+        notify(res?.message || 'Échec de l\'initialisation du don.', 'error');
       }
     } catch (err) {
-      setToast({ message: err?.serverMessage || err?.message || 'Une erreur est survenue lors du don.', type: 'error' });
+      notify(err?.serverMessage || err?.message || 'Une erreur est survenue lors du don.', 'error');
     } finally {
       setLoading(false);
     }
@@ -231,7 +201,7 @@ function FinancialForm({ universityId, setUniversityId, universities, user, setT
 }
 
 // ─────────────────── Onglet Soutien physique / matériel ───────────────────
-function PhysicalForm({ universityId, setUniversityId, universities, user, setToast }) {
+function PhysicalForm({ universityId, setUniversityId, universities, user, notify }) {
   const [donorName, setDonorName] = useState(user?.firstName ? `${user.firstName} ${user.lastName || ''}`.trim() : '');
   const [donorEmail, setDonorEmail] = useState(user?.email || '');
   const [physicalType, setPhysicalType] = useState('MATERIEL');
@@ -261,7 +231,7 @@ function PhysicalForm({ universityId, setUniversityId, universities, user, setTo
       const flat = lists.flat().filter(Boolean);
       if (flat.length) setUniversitiesSafe(flat);
     } catch {
-      setToast({ message: "Impossible de charger la liste des universités.", type: 'error' });
+      notify("Impossible de charger la liste des universités.", 'error');
     } finally {
       setUnivLoading(false);
     }
@@ -273,8 +243,8 @@ function PhysicalForm({ universityId, setUniversityId, universities, user, setTo
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (loading) return;
-    if (!donorName.trim() || !donorEmail.trim()) { setToast({ message: 'Le nom et l\'email sont requis.', type: 'error' }); return; }
-    if (!description.trim()) { setToast({ message: 'Veuillez décrire le bien offert.', type: 'error' }); return; }
+    if (!donorName.trim() || !donorEmail.trim()) { notify('Le nom et l\'email sont requis.', 'error'); return; }
+    if (!description.trim()) { notify('Veuillez décrire le bien offert.', 'error'); return; }
 
     setLoading(true);
     try {
@@ -287,12 +257,12 @@ function PhysicalForm({ universityId, setUniversityId, universities, user, setTo
       });
       if (res?.success && res.data?.supportOfferId) {
         setOfferId(res.data.supportOfferId);
-        setToast({ message: 'Offre enregistrée. Signez par empreinte pour finaliser.', type: 'success' });
+        notify('Offre enregistrée. Signez par empreinte pour finaliser.', 'success');
       } else {
-        setToast({ message: res?.message || 'Échec de la déclaration.', type: 'error' });
+        notify(res?.message || 'Échec de la déclaration.', 'error');
       }
     } catch (err) {
-      setToast({ message: err?.serverMessage || err?.message || 'Une erreur est survenue.', type: 'error' });
+      notify(err?.serverMessage || err?.message || 'Une erreur est survenue.', 'error');
     } finally {
       setLoading(false);
     }
@@ -305,12 +275,12 @@ function PhysicalForm({ universityId, setUniversityId, universities, user, setTo
       const res = await api.support.signBiometric(offerId, {});
       if (res?.success) {
         setSigned(true);
-        setToast({ message: 'Soutien validé, reçu signé envoyé par email.', type: 'success' });
+        notify('Soutien validé, reçu signé envoyé par email.', 'success');
       } else {
-        setToast({ message: res?.message || 'Échec de la signature.', type: 'error' });
+        notify(res?.message || 'Échec de la signature.', 'error');
       }
     } catch (err) {
-      setToast({ message: err?.serverMessage || err?.message || 'Erreur lors du scan d\'empreinte.', type: 'error' });
+      notify(err?.serverMessage || err?.message || 'Erreur lors du scan d\'empreinte.', 'error');
     } finally {
       setSigning(false);
     }
@@ -455,205 +425,10 @@ function PhysicalForm({ universityId, setUniversityId, universities, user, setTo
 }
 
 // ───────────────────────── Section Trésorerie ─────────────────────────
-function TreasurySection({ universityId, setToast }) {
-  const { can } = useAuth();
-  // Lire le grand livre et l'alimenter sont deux droits distincts : le Chef
-  // Universitaire consulte, seul le Trésorier enregistre
-  // (@UniversityPosts('TRESORIER') sur POST /universities/:id/treasury/transactions).
-  const canRecord = can('treasury:write', { universityId });
-  const [data, setData] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-
-  const [txType, setTxType] = useState('DON');
-  const [txAmount, setTxAmount] = useState('');
-  const [txLabel, setTxLabel] = useState('');
-  const [txLoading, setTxLoading] = useState(false);
-
-  const loadTreasury = useCallback(async () => {
-    if (!universityId) return;
-    setLoading(true);
-    setError(null);
-    try {
-      const res = await api.treasury.getTreasury(Number(universityId));
-      if (res?.success) {
-        setData(res.data);
-      } else {
-        setError(res?.message || 'Impossible de charger la trésorerie.');
-      }
-    } catch (err) {
-      setError(err?.serverMessage || err?.message || 'Erreur lors du chargement de la trésorerie.');
-    } finally {
-      setLoading(false);
-    }
-  }, [universityId]);
-
-  useEffect(() => { loadTreasury(); }, [loadTreasury]);
-
-  const handleRecord = async (e) => {
-    e.preventDefault();
-    if (txLoading || !universityId) return;
-    const amt = Number(txAmount);
-    if (!amt || amt === 0) { setToast({ message: 'Le montant doit être non nul.', type: 'error' }); return; }
-    if (!txLabel.trim()) { setToast({ message: 'Un libellé est requis.', type: 'error' }); return; }
-
-    setTxLoading(true);
-    try {
-      // L'UI parle de « EXPENSE » ; le backend attend « DEPENSE ».
-      const backendType = txType === 'EXPENSE' ? 'DEPENSE' : 'DON';
-      const res = await api.treasury.recordTransaction(Number(universityId), {
-        type: backendType,
-        amount: amt,
-        label: txLabel.trim(),
-      });
-      if (res?.success) {
-        setToast({ message: 'Transaction enregistrée.', type: 'success' });
-        setTxAmount(''); setTxLabel('');
-        loadTreasury();
-      } else {
-        setToast({ message: res?.message || 'Échec de l\'enregistrement.', type: 'error' });
-      }
-    } catch (err) {
-      setToast({ message: err?.serverMessage || err?.message || 'Erreur lors de l\'enregistrement.', type: 'error' });
-    } finally {
-      setTxLoading(false);
-    }
-  };
-
-  const isExpense = (t) => t.type === 'DEPENSE' || t.type === 'EXPENSE';
-
-  return (
-    <motion.section
-      initial={{ opacity: 0, y: 16 }}
-      animate={{ opacity: 1, y: 0 }}
-      className="glass-panel chamfer p-7 space-y-6"
-    >
-      <div className="flex items-center gap-3">
-        <div className="w-11 h-11 rounded-xl flex items-center justify-center bg-emerald-500/15 border border-emerald-500/30">
-          <Wallet className="w-5 h-5 text-emerald-400" />
-        </div>
-        <div>
-          <h3 className="text-text-primary font-bold text-lg">Trésorerie de l'université</h3>
-          {data?.universityName && (
-            <p className="text-text-secondary text-xs">{data.universityName}</p>
-          )}
-        </div>
-      </div>
-
-      {!universityId ? (
-        <div className="flex items-center gap-3 p-4 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-400 text-sm">
-          <Lock className="w-5 h-5 shrink-0" />
-          Aucune université associée à votre compte : la trésorerie est inaccessible.
-        </div>
-      ) : loading ? (
-        <div className="flex items-center justify-center gap-2 py-10 text-text-secondary text-sm">
-          <Loader2 className="w-5 h-5 animate-spin" /> Chargement du grand livre…
-        </div>
-      ) : error ? (
-        <div className="flex items-center gap-3 p-4 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 text-sm">
-          <AlertCircle className="w-5 h-5 shrink-0" /> {error}
-        </div>
-      ) : (
-        <>
-          {/* Solde */}
-          <div className="flex items-center justify-between p-5 chamfer-sm bg-bg-secondary border border-border-subtle">
-            <div>
-              <p className="text-[11px] uppercase tracking-widest text-text-secondary">Solde actuel</p>
-              <p className="text-3xl font-extrabold text-text-primary">
-                {Number(data?.balance || 0).toLocaleString('fr-FR')} <span className="text-base font-bold text-text-secondary">FCFA</span>
-              </p>
-            </div>
-            <ShieldCheck className="w-8 h-8 text-emerald-400/70" />
-          </div>
-
-          {/* Formulaire d'enregistrement — Trésorier uniquement */}
-          {canRecord && <form onSubmit={handleRecord} className="grid grid-cols-1 sm:grid-cols-12 gap-3 items-end">
-            <div className="sm:col-span-3">
-              <label className="block text-[11px] uppercase tracking-widest text-text-secondary mb-1.5">Type</label>
-              <div className="relative">
-                <select
-                  value={txType}
-                  onChange={(e) => setTxType(e.target.value)}
-                  className="w-full px-3 py-2.5 rounded-xl bg-bg-secondary border border-border-subtle text-text-primary text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-engine appearance-none pr-9"
-                >
-                  <option value="DON">Don (entrée)</option>
-                  <option value="EXPENSE">Dépense (sortie)</option>
-                </select>
-                <ChevronDown className="w-4 h-4 text-text-secondary absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
-              </div>
-            </div>
-            <div className="sm:col-span-3">
-              <label className="block text-[11px] uppercase tracking-widest text-text-secondary mb-1.5">Montant (FCFA)</label>
-              <input type="number" min="0.01" step="any" value={txAmount}
-                onChange={(e) => setTxAmount(e.target.value)} placeholder="0"
-                className="w-full px-3 py-2.5 rounded-xl bg-bg-secondary border border-border-subtle text-text-primary text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-engine" />
-            </div>
-            <div className="sm:col-span-4">
-              <label className="block text-[11px] uppercase tracking-widest text-text-secondary mb-1.5">Libellé</label>
-              <input type="text" value={txLabel}
-                onChange={(e) => setTxLabel(e.target.value)} placeholder="Ex : Achat de matériel"
-                className="w-full px-3 py-2.5 rounded-xl bg-bg-secondary border border-border-subtle text-text-primary text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-engine" />
-            </div>
-            <div className="sm:col-span-2">
-              <motion.button
-                whileTap={{ scale: 0.98 }}
-                type="submit" disabled={txLoading}
-                className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl text-sm font-bold text-white bg-engine hover:bg-engine/85 transition-all disabled:opacity-60"
-              >
-                {txLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <PlusCircle className="w-4 h-4" />}
-              </motion.button>
-            </div>
-          </form>}
-
-          {/* Grand livre */}
-          <div>
-            <h4 className="text-xs uppercase tracking-widest text-text-secondary mb-3">Grand livre des transactions</h4>
-            {!data?.transactions || data.transactions.length === 0 ? (
-              <p className="text-center text-text-secondary text-sm py-8 italic">Aucune transaction enregistrée pour le moment.</p>
-            ) : (
-              <div className="space-y-2 max-h-80 overflow-y-auto pr-1">
-                {data.transactions.map((t) => {
-                  const expense = isExpense(t);
-                  const Icon = expense ? ArrowUpRight : ArrowDownLeft;
-                  return (
-                    <motion.div
-                      key={t.id}
-                      initial={{ opacity: 0, x: -8 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      className="flex items-center gap-3 p-3 rounded-xl bg-bg-secondary border border-border-subtle"
-                    >
-                      <div className={`w-9 h-9 rounded-lg flex items-center justify-center shrink-0 ${
-                        expense ? 'bg-red-500/15 text-red-400' : 'bg-emerald-500/15 text-emerald-400'
-                      }`}>
-                        <Icon className="w-4 h-4" />
-                      </div>
-                      <div className="min-w-0 flex-1">
-                        <p className="text-sm text-text-primary font-medium truncate">{t.label}</p>
-                        <p className="text-[11px] text-text-secondary">
-                          {t.recordedBy || 'Système'}
-                          {t.createdAt ? ` · ${new Date(t.createdAt).toLocaleDateString('fr-FR')}` : ''}
-                        </p>
-                      </div>
-                      <span className={`text-sm font-bold shrink-0 ${expense ? 'text-red-400' : 'text-emerald-400'}`}>
-                        {expense ? '−' : '+'}{Number(t.amount).toLocaleString('fr-FR')} F
-                      </span>
-                    </motion.div>
-                  );
-                })}
-              </div>
-            )}
-          </div>
-        </>
-      )}
-    </motion.section>
-  );
-}
-
-// ─────────────────────────── Page Soutiens ───────────────────────────
 export default function Soutiens() {
-  const { user, can } = useAuth();
+  const { user } = useAuth();
+  const { notify } = useToast();
   const [tab, setTab] = useState('financial');
-  const [toast, setToast] = useState(null);
 
   const userUniversityId = user?.universityId ?? user?.universityPost?.universityId ?? null;
   const [universityId, setUniversityId] = useState(userUniversityId);
@@ -675,27 +450,17 @@ export default function Soutiens() {
         .then((res) => {
           if (res?.success) {
             const formatted = res.amount ? `${Number(res.amount).toLocaleString('fr-FR')} FCFA` : '';
-            setToast({
-              message: `Paiement Genius Pay validé ! Don de ${formatted} crédité à la trésorerie.`,
-              type: 'success',
-            });
+            notify(`Paiement validé. Don de ${formatted} crédité à la trésorerie.`, 'success');
           }
         })
         .catch((err) => {
-          setToast({
-            message: err?.serverMessage || err?.message || 'Erreur lors de la validation du paiement simulé.',
-            type: 'error',
-          });
+          notify(err?.serverMessage || err?.message || "Le paiement n'a pas pu être validé.", 'error');
         })
         .finally(() => {
           window.history.replaceState({}, document.title, window.location.pathname);
         });
     }
   }, []);
-
-  // Miroir de @UniversityPosts('TRESORIER','CHEF_UNIVERSITAIRE') sur
-  // GET /universities/:id/treasury — et du périmètre de l'université visée.
-  const showTreasury = can('treasury:read', { universityId });
 
   const tabs = [
     { id: 'financial', label: 'Soutien financier', icon: Wallet },
@@ -754,7 +519,7 @@ export default function Soutiens() {
                 setUniversityId={setUniversityId}
                 universities={[]}
                 user={user}
-                setToast={setToast}
+                notify={notify}
               />
             ) : (
               <PhysicalForm
@@ -763,24 +528,13 @@ export default function Soutiens() {
                 setUniversityId={setUniversityId}
                 universities={[]}
                 user={user}
-                setToast={setToast}
+                notify={notify}
               />
             )}
           </AnimatePresence>
         </div>
 
-        {/* Section Trésorerie */}
-        {showTreasury && (
-          <div className="mt-4">
-            <TreasurySection universityId={universityId} setToast={setToast} />
-          </div>
-        )}
       </div>
-
-      {/* Toast */}
-      <AnimatePresence>
-        {toast && <Toast key={toast.message} message={toast.message} type={toast.type} onClose={() => setToast(null)} />}
-      </AnimatePresence>
     </main>
   );
 }

@@ -27,8 +27,15 @@ import Auth from './pages/Auth.jsx'
 import Opportunities from './pages/Opportunities.jsx'
 import Admin from './pages/Admin.jsx'
 import PAF from './pages/PAF.jsx'
-import Gouvernance from './pages/Gouvernance.jsx'
-import EspaceCITE from './pages/EspaceCITE.jsx'
+import MonClub from './pages/espace-cite/MonClub.jsx'
+import Adhesions from './pages/espace-cite/Adhesions.jsx'
+import Activites from './pages/espace-cite/Activites.jsx'
+import Rapports from './pages/espace-cite/Rapports.jsx'
+import Annuaire from './pages/espace-cite/Annuaire.jsx'
+import Attestations from './pages/gouvernance/Attestations.jsx'
+import Exclusions from './pages/gouvernance/Exclusions.jsx'
+import Figures from './pages/gouvernance/Figures.jsx'
+import Tresorerie from './pages/Tresorerie.jsx'
 import Challenges from './pages/Challenges.jsx'
 import Soutiens from './pages/Soutiens.jsx'
 
@@ -110,24 +117,42 @@ function App() {
         <Route path="/opportunities" element={<Opportunities navigate={navigate} />} />
         <Route path="/paf" element={<PAF navigate={navigate} />} />
 
-        {/* Gouvernance de l'université — attestations et exclusions */}
-        <Route
-          path="/gouvernance"
-          element={
-            <ProtectedRoute destination="gouvernance">
-              <Gouvernance navigate={navigate} />
-            </ProtectedRoute>
-          }
-        />
-        {/* Espace CITE — dépôt et lecture des rapports de club */}
-        <Route
-          path="/espace-cite"
-          element={
-            <ProtectedRoute destination="espace-cite">
-              <EspaceCITE navigate={navigate} />
-            </ProtectedRoute>
-          }
-        />
+        {/* ── Espace CITE : une intention par écran ── */}
+        <Route path="/espace-cite" element={
+          <ProtectedRoute destination="espace-cite"><MonClub navigate={navigate} /></ProtectedRoute>
+        } />
+        <Route path="/espace-cite/adhesions" element={
+          <ProtectedRoute destination="cite-adhesions"><Adhesions /></ProtectedRoute>
+        } />
+        <Route path="/espace-cite/activites" element={
+          <ProtectedRoute destination="cite-activites"><Activites /></ProtectedRoute>
+        } />
+        <Route path="/espace-cite/rapports" element={
+          <ProtectedRoute destination="cite-rapports"><Rapports /></ProtectedRoute>
+        } />
+        <Route path="/espace-cite/annuaire" element={
+          <ProtectedRoute destination="cite-annuaire"><Annuaire /></ProtectedRoute>
+        } />
+
+        {/* ── Gouvernance de l'université ── */}
+        <Route path="/gouvernance" element={
+          <ProtectedRoute destination="gouvernance"><Attestations /></ProtectedRoute>
+        } />
+        <Route path="/gouvernance/attestations" element={
+          <ProtectedRoute destination="gouvernance"><Attestations /></ProtectedRoute>
+        } />
+        <Route path="/gouvernance/exclusions" element={
+          <ProtectedRoute destination="gouvernance-exclusions"><Exclusions /></ProtectedRoute>
+        } />
+        <Route path="/gouvernance/figures" element={
+          <ProtectedRoute destination="gouvernance-figures"><Figures /></ProtectedRoute>
+        } />
+
+        {/* ── Trésorerie : l'outil interne, séparé de la page de dons ── */}
+        <Route path="/tresorerie" element={
+          <ProtectedRoute destination="tresorerie"><Tresorerie /></ProtectedRoute>
+        } />
+
         <Route path="/challenges" element={<Challenges navigate={navigate} />} />
         <Route path="/soutiens" element={<Soutiens navigate={navigate} />} />
         <Route path="/help" element={<Contact navigate={navigate} />} />

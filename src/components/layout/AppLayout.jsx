@@ -7,6 +7,7 @@ import CommandPalette from '../CommandPalette.jsx'
 import { AppSidebar } from '../app-sidebar.jsx'
 import { SidebarInset, SidebarProvider, useSidebar } from '../ui/sidebar.jsx'
 import { TooltipProvider } from '../ui/tooltip.jsx'
+import { ToastProvider } from '../ui/Toast.jsx'
 
 // ─── Pages « vitrine » : elles gardent la navbar marketing + le footer MÊME
 // connecté. Ce sont des pages pleine largeur avec leur propre mise en page
@@ -94,6 +95,7 @@ export default function AppLayout({
   // ─── Espace connecté : sidebar repliable/tiroir (shadcn) + en-tête + contenu. ──
   if (useAppShell) {
     return (
+      <ToastProvider>
       <TooltipProvider delayDuration={0}>
         <SidebarProvider>
           {skipLink}
@@ -113,6 +115,7 @@ export default function AppLayout({
           </SidebarInset>
         </SidebarProvider>
       </TooltipProvider>
+      </ToastProvider>
     )
   }
 
@@ -121,6 +124,7 @@ export default function AppLayout({
   const showFooter = currentPage !== 'auth'
 
   return (
+    <ToastProvider>
     <div className="min-h-screen flex flex-col relative bg-bg-primary text-text-primary selection:bg-engine selection:text-white">
       {skipLink}
       <CommandPalette navigate={navigate} />
@@ -249,5 +253,6 @@ export default function AppLayout({
         )}
       </div>
     </div>
+    </ToastProvider>
   )
 }

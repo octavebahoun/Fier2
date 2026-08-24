@@ -2,7 +2,8 @@ import { useMemo } from "react"
 import {
   LayoutDashboard, UserRound, FolderGit2, Users, GraduationCap, Briefcase,
   Newspaper, CalendarDays, Contact, Shield, Trophy, HeartHandshake, ShieldCheck,
-  LayoutList, LifeBuoy, Sparkles, Layers, Compass,
+  LayoutList, LifeBuoy, Sparkles, Layers, Compass, UserPlus, ClipboardList,
+  FileText, Award, UserX, Star, Wallet,
 } from "lucide-react"
 
 import { NavMain } from "@/components/nav-main"
@@ -24,11 +25,13 @@ import {
 const ICONS = {
   LayoutDashboard, UserRound, FolderGit2, Users, GraduationCap, Briefcase,
   Newspaper, CalendarDays, Contact, Shield, Trophy, HeartHandshake, ShieldCheck,
-  LayoutList, LifeBuoy, Layers, Compass,
+  LayoutList, LifeBuoy, Layers, Compass, UserPlus, ClipboardList, FileText,
+  Award, UserX, Star, Wallet,
 }
 
 const SECTION_ICONS = {
   espace: Sparkles,
+  cite: Users,
   gouvernance: Shield,
   recherche: Layers,
   communaute: Users,

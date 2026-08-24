@@ -4,7 +4,8 @@ import {
   Search, Sun, Moon, Compass,
   LayoutDashboard, UserRound, FolderGit2, Users, GraduationCap, Briefcase,
   Newspaper, CalendarDays, Contact, Shield, Trophy, HeartHandshake, ShieldCheck,
-  LayoutList, LifeBuoy, Layers,
+  LayoutList, LifeBuoy, Layers, UserPlus, ClipboardList, FileText, Award,
+  UserX, Star, Wallet,
 } from 'lucide-react'
 import { useTheme } from '../context/useTheme.js'
 import { useAuth } from '../context/AuthContext.jsx'
@@ -13,7 +14,8 @@ import { DESTINATIONS, SECTIONS, navAccessOf } from '../navigation/destinations.
 const ICONS = {
   LayoutDashboard, UserRound, FolderGit2, Users, GraduationCap, Briefcase,
   Newspaper, CalendarDays, Contact, Shield, Trophy, HeartHandshake, ShieldCheck,
-  LayoutList, LifeBuoy, Layers,
+  LayoutList, LifeBuoy, Layers, UserPlus, ClipboardList, FileText, Award,
+  UserX, Star, Wallet,
 }
 
 const SECTION_BY_ID = Object.fromEntries(Object.values(SECTIONS).map((x) => [x.id, x]))
