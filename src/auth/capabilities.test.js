@@ -153,7 +153,10 @@ describe('navigation — aucune cible écrite en dur ne ment', () => {
     // palette étaient vérifiées ; ces chaînes-là ne l'étaient pas.
     const inconnues = []
     for (const f of sourceFiles()) {
+      // Commentaires retirés : un exemple écrit en prose n'est pas un appel.
       const code = readFileSync(f, 'utf8')
+        .replace(/\/\*[\s\S]*?\*\//g, ' ')
+        .replace(/(^|[^:'"`\\])\/\/[^\n]*/g, '$1')
       for (const m of code.matchAll(/navigate\??\.?\(\s*'([a-z0-9-]+)'/g)) {
         // getDestination résout aussi les alias historiques.
         if (!getDestination(m[1])) {

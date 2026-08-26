@@ -8,7 +8,7 @@ import { useAppNavigate, pathToPageName } from './navigation.js'
 
 // Pages
 import Home from './pages/Home.jsx'
-import CiteIntegration from './pages/CiteIntegration.jsx'
+import OrganisationCite from './pages/cite/OrganisationCite.jsx'
 import StudentPortal from './pages/StudentPortal.jsx'
 import News from './pages/News.jsx'
 import NewsDetail from './pages/NewsDetail.jsx'
@@ -100,7 +100,7 @@ function App() {
     >
       <Routes>
         <Route path="/" element={<Home navigate={navigate} />} />
-        <Route path="/cite" element={<CiteIntegration navigate={navigate} />} />
+        <Route path="/cite" element={<OrganisationCite navigate={navigate} />} />
         {/* Accueil étudiant */}
         <Route path="/students" element={<StudentPortal navigate={navigate} />} />
         <Route path="/student-portal" element={<StudentPortal navigate={navigate} />} />

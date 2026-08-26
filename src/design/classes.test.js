@@ -45,6 +45,18 @@ function segments() {
 const SEGMENTS = segments()
 const TOUT = FICHIERS.map((f) => `${f}\n${readFileSync(f, 'utf8')}`).join('\n')
 
+/**
+ * Le code seul, commentaires retirés.
+ *
+ * Sans cela, une règle se déclenche sur le commentaire qui explique pourquoi
+ * elle existe — et l'explication devient impossible à écrire.
+ */
+function sansCommentaires(code) {
+  return code
+    .replace(/\/\*[\s\S]*?\*\//g, ' ')
+    .replace(/(^|[^:'"`\\])\/\/[^\n]*/g, '$1')
+}
+
 const ACCENTS = ['engine', 'ember', 'success', 'warning', 'danger']
 const A = ACCENTS.join('|')
 
@@ -134,6 +146,34 @@ describe('données — rien d’inventé', () => {
     // serveur et stockée en base, puis affichaient « Fichier lié ».
     const trouves = SEGMENTS.filter((s) => /fieri-storage\.local|\.local\//.test(s.texte))
     expect(trouves.length, `URL fabriquée :\n${lister(trouves)}`).toBe(0)
+  })
+})
+
+describe('erreurs — jamais un alert()', () => {
+  it('n’utilise pas alert() pour dire qu’une action a échoué', () => {
+    // Un alert() bloque la page, ne dit pas d'où il vient et sort du système.
+    // Toute notification passe par useToast().
+    const fautifs = FICHIERS.filter((f) => /(?<![.\w])alert\(/.test(sansCommentaires(readFileSync(f, 'utf8'))))
+    expect(fautifs, `Utiliser notify() :\n${fautifs.join('\n')}`).toEqual([])
+  })
+})
+
+describe('identité — une seule autorité', () => {
+  it('aucun écran ne compare un rôle à la main', () => {
+    // `m.role === 'CHEF_UNIVERSITAIRE'` et `m.role === 'MENTOR'` ne pouvaient
+    // pas être vrais : l'un est un poste, l'autre un badge. Les écrans lisent
+    // readIdentity() ou can(), qui savent la différence.
+    const fautifs = []
+    for (const f of FICHIERS) {
+      if (f.startsWith(join('src', 'auth'))) continue
+      if (f === join('src', 'context', 'AuthContext.jsx')) continue
+      const code = sansCommentaires(readFileSync(f, 'utf8'))
+      for (const m of code.matchAll(/(\w+)\.role\s*[=!]==\s*['"]/g)) {
+        if (m[1] === 'identity') continue
+        fautifs.push(`${f} — ${m[0]}…`)
+      }
+    }
+    expect(fautifs, `Passer par readIdentity() / can() :\n${fautifs.join('\n')}`).toEqual([])
   })
 })
 
