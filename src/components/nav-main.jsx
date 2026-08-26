@@ -1,26 +1,34 @@
 import { useEffect, useState } from "react"
-import { ChevronRightIcon } from "lucide-react"
+import { ChevronRight } from "lucide-react"
 
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible"
-import {
-  SidebarGroup,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  SidebarMenuSub,
-  SidebarMenuSubButton,
-  SidebarMenuSubItem,
-} from "@/components/ui/sidebar"
+import { useSidebar } from "@/components/ui/sidebar"
 import { getDestination } from "@/navigation/destinations.js"
 
+/**
+ * La navigation de l'espace connecté.
+ *
+ * Deux exigences, données par le client, et une contrainte du système.
+ *
+ * • Un seul groupe ouvert à la fois. Neuf destinations réparties dans quatre
+ *   accordéons tous ouverts font une colonne qu'on ne lit plus. Le groupe où
+ *   l'on se trouve s'ouvre seul ; en ouvrir un autre referme le précédent.
+ *   La page courante reste donc toujours visible, et ses voisines à un clic.
+ *
+ * • L'esthétique du projet, pas celle de shadcn. MASTER.md décrit « le
+ *   laboratoire précis » : plaques de prototypage, cotes, étiquettes
+ *   d'échantillon. D'où les coins chanfreinés, les numéros de séquence en
+ *   mono — que le document déclare légitimes quand ils portent une vraie
+ *   structure — et le filet vertical qui tient les entrées d'un groupe comme
+ *   une ligne de cote tient une série.
+ *
+ * • Repliée en icônes, la barre perd ses groupes : à 48 px, un intitulé de
+ *   section ne se lit pas. Les destinations s'affichent alors à plat.
+ */
+
 // L'état actif suit la chaîne `parent` du registre : une page de détail
-// éclaire son entrée de menu parente, et rien d'autre. Auparavant une table
-// écrite à la main faisait briller « Tableau de bord » sur le portail
-// étudiant — la navigation mentait sur la position (constat F13).
+// éclaire son entrée de menu parente, et rien d'autre. Cette mise en avant est
+// visuelle ; `aria-current="page"` reste réservé à l'entrée qui EST la page
+// courante, sans quoi deux éléments se déclarent courants à la fois.
 function isPageActive(id, currentPage) {
   if (currentPage === id) return true
   let cursor = getDestination(currentPage)
@@ -33,87 +41,133 @@ function isPageActive(id, currentPage) {
   return false
 }
 
-export function NavMain({ groups, currentPage, navigate }) {
-  // Un groupe s'ouvre automatiquement quand il contient la page active ;
-  // l'utilisateur peut ensuite ouvrir/fermer librement chaque groupe.
-  // Ouverts par défaut. La navigation primaire d'un back-office se lit, elle
-  // ne se déplie pas : un étudiant avait six destinations réparties dans trois
-  // accordéons fermés, soit deux clics pour atteindre n'importe quoi (F12).
-  const [openGroups, setOpenGroups] = useState(() =>
-    Object.fromEntries(groups.map((g) => [g.id, true]))
-  )
+const numero = (i) => String(i + 1).padStart(2, "0")
 
+export function NavMain({ groups, currentPage, navigate }) {
+  const { state, isMobile } = useSidebar()
+  const enIcones = state === "collapsed" && !isMobile
+
+  const groupeActif = (liste, page) =>
+    liste.find((g) => g.items.some((i) => isPageActive(i.id, page)))?.id
+
+  const [ouvert, setOuvert] = useState(() => groupeActif(groups, currentPage) ?? groups[0]?.id)
+
+  // Naviguer ouvre le groupe d'arrivée. On ne referme rien de plus : si la
+  // destination est déjà dans le groupe ouvert, rien ne bouge.
   useEffect(() => {
-    setOpenGroups((prev) => {
-      const next = { ...prev }
-      let changed = false
-      groups.forEach((g) => {
-        if (g.items.some((i) => isPageActive(i.id, currentPage)) && !next[g.id]) {
-          next[g.id] = true
-          changed = true
-        }
-      })
-      return changed ? next : prev
-    })
+    const cible = groupeActif(groups, currentPage)
+    if (cible) setOuvert(cible)
   }, [currentPage, groups])
 
-  return (
-    <SidebarGroup>
-      <SidebarMenu>
-        {groups.map((group) => {
-          const hasActiveChild = group.items.some((i) => isPageActive(i.id, currentPage))
-          const isOpen = !!openGroups[group.id]
-
+  if (enIcones) {
+    return (
+      <nav aria-label="Navigation principale" className="flex flex-col gap-1 px-2 py-2">
+        {groups.flatMap((g) => g.items).map((item) => {
+          const active = isPageActive(item.id, currentPage)
           return (
-            <Collapsible
-              key={group.id}
-              open={isOpen}
-              onOpenChange={(open) => setOpenGroups((prev) => ({ ...prev, [group.id]: open }))}
+            <button
+              key={item.id}
+              type="button"
+              title={item.label}
+              aria-label={item.label}
+              aria-current={item.id === currentPage ? "page" : undefined}
+              onClick={() => navigate(item.id, item.params || {})}
+              className={`chamfer-xs flex h-9 w-9 shrink-0 cursor-pointer items-center justify-center border transition-colors ${
+                active
+                  ? "border-engine bg-engine text-on-accent"
+                  : "border-transparent text-text-muted hover:border-border-strong hover:bg-bg-tertiary hover:text-text-primary"
+              }`}
             >
-              <SidebarMenuItem>
-                <CollapsibleTrigger asChild>
-                  <SidebarMenuButton
-                    tooltip={group.label}
-                    isActive={hasActiveChild}
-                    className="chamfer-sm cursor-pointer rounded-none border border-transparent data-active:border-engine/25 data-active:bg-engine-wash data-active:text-engine hover:bg-bg-tertiary"
-                  >
-                    <group.icon className={hasActiveChild ? "text-engine" : "text-text-muted"} />
-                    <span className="truncate text-sm font-semibold">{group.label}</span>
-                    <ChevronRightIcon
-                      className={`ml-auto shrink-0 transition-transform ${isOpen ? "rotate-90" : ""}`}
-                    />
-                  </SidebarMenuButton>
-                </CollapsibleTrigger>
-                <CollapsibleContent>
-                  <SidebarMenuSub className="border-l-0 pl-0">
-                    {group.items.map((item) => {
-                      const active = isPageActive(item.id, currentPage)
-                      return (
-                        <SidebarMenuSubItem key={item.id}>
-                          <SidebarMenuSubButton
-                            isActive={active}
-                            onClick={() => navigate(item.id, item.params || {})}
-                            className="chamfer-sm relative cursor-pointer rounded-none border border-transparent pl-3 data-active:border-engine/25 data-active:bg-engine-wash data-active:font-semibold hover:bg-bg-tertiary"
-                          >
-                            {active && (
-                              <span
-                                className="absolute left-0 top-1/2 h-4 w-[3px] -translate-y-1/2 bg-engine"
-                                aria-hidden="true"
-                              />
-                            )}
-                            <item.icon className={active ? "text-engine" : "text-text-muted"} />
-                            <span className="truncate">{item.label}</span>
-                          </SidebarMenuSubButton>
-                        </SidebarMenuSubItem>
-                      )
-                    })}
-                  </SidebarMenuSub>
-                </CollapsibleContent>
-              </SidebarMenuItem>
-            </Collapsible>
-          );
+              <item.icon className="h-4 w-4" aria-hidden="true" />
+            </button>
+          )
         })}
-      </SidebarMenu>
-    </SidebarGroup>
-  );
+      </nav>
+    )
+  }
+
+  return (
+    <nav aria-label="Navigation principale" className="flex flex-col gap-1.5 px-2 py-2">
+      {groups.map((group, index) => {
+        const contientActif = group.items.some((i) => isPageActive(i.id, currentPage))
+        const estOuvert = ouvert === group.id
+        const panneauId = `groupe-${group.id}`
+
+        return (
+          <section key={group.id}>
+            <h2>
+              <button
+                type="button"
+                aria-expanded={estOuvert}
+                aria-controls={panneauId}
+                onClick={() => setOuvert(estOuvert ? null : group.id)}
+                className={`chamfer-sm flex min-h-11 w-full cursor-pointer items-center gap-2.5 border px-2.5 text-left transition-colors ${
+                  contientActif
+                    ? "border-engine bg-engine-wash"
+                    : "border-border-subtle bg-bg-secondary hover:bg-bg-tertiary"
+                }`}
+              >
+                {/* Le numéro de séquence : une plaque porte sa référence. */}
+                <span
+                  className={`font-mono text-xs font-bold tabular-nums ${
+                    contientActif ? "text-engine" : "text-text-muted"
+                  }`}
+                  aria-hidden="true"
+                >
+                  {numero(index)}
+                </span>
+                <group.icon
+                  className={`h-4 w-4 shrink-0 ${contientActif ? "text-engine" : "text-text-muted"}`}
+                  aria-hidden="true"
+                />
+                <span
+                  className={`flex-1 truncate text-sm font-semibold ${
+                    contientActif ? "text-text-primary" : "text-text-secondary"
+                  }`}
+                >
+                  {group.label}
+                </span>
+                <span className="font-mono text-xs tabular-nums text-text-muted" aria-hidden="true">
+                  {group.items.length}
+                </span>
+                <ChevronRight
+                  className={`h-3.5 w-3.5 shrink-0 text-text-muted transition-transform ${estOuvert ? "rotate-90" : ""}`}
+                  aria-hidden="true"
+                />
+              </button>
+            </h2>
+
+            {estOuvert && (
+              /* Le filet de gauche tient la série, comme une ligne de cote. */
+              <ul id={panneauId} className="ml-4 mt-1 flex flex-col gap-0.5 border-l border-border-strong pl-2">
+                {group.items.map((item) => {
+                  const active = isPageActive(item.id, currentPage)
+                  return (
+                    <li key={item.id}>
+                      <button
+                        type="button"
+                        aria-current={item.id === currentPage ? "page" : undefined}
+                        onClick={() => navigate(item.id, item.params || {})}
+                        className={`chamfer-xs flex min-h-11 w-full cursor-pointer items-center gap-2.5 border px-2.5 text-left text-sm transition-colors ${
+                          active
+                            ? "border-engine bg-engine font-semibold text-on-accent"
+                            : "border-transparent text-text-secondary hover:bg-bg-tertiary hover:text-text-primary"
+                        }`}
+                      >
+                        <item.icon
+                          className={`h-4 w-4 shrink-0 ${active ? "text-on-accent" : "text-text-muted"}`}
+                          aria-hidden="true"
+                        />
+                        <span className="truncate">{item.label}</span>
+                      </button>
+                    </li>
+                  )
+                })}
+              </ul>
+            )}
+          </section>
+        )
+      })}
+    </nav>
+  )
 }

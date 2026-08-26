@@ -81,7 +81,9 @@ export function AppSidebar({ currentPage, navigate, user, handleLogout, ...props
 
   return (
     <Sidebar variant="sidebar" collapsible="icon" {...props}>
-      <SidebarHeader>
+      {/* L'en-tete se lit comme l'etiquette d'une plaque : un filet la separe
+          de la navigation, et la reference reste en mono. */}
+      <SidebarHeader className="border-b border-border-subtle">
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton
@@ -101,7 +103,7 @@ export function AppSidebar({ currentPage, navigate, user, handleLogout, ...props
       <SidebarContent>
         <NavMain groups={groups} currentPage={currentPage} navigate={navigate} />
       </SidebarContent>
-      <SidebarFooter>
+      <SidebarFooter className="border-t border-border-subtle">
         <NavUser user={user} navigate={navigate} handleLogout={handleLogout} />
       </SidebarFooter>
       <SidebarRail />

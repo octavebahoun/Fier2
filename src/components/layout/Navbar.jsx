@@ -190,7 +190,13 @@ export default function Navbar({
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.15 }}
-              className="fixed inset-0 top-16 bg-bg-primary/60 backdrop-blur-sm lg:hidden"
+              // Le voile est `fixed`, donc peint dans la couche des elements
+              // positionnes ; le menu, lui, vit dans le flux normal. Pendant
+              // l'animation, le `transform` de Framer hissait le menu au-dessus,
+              // puis disparaissait en fin d'animation — et le flou repassait
+              // par-dessus les sections. Un z-index explicite de part et
+              // d'autre tranche l'ordre une fois pour toutes.
+              className="fixed inset-0 top-16 z-0 bg-scrim backdrop-blur-sm lg:hidden"
               onClick={() => setMobileMenuOpen(false)}
               aria-hidden="true"
             />
@@ -200,7 +206,7 @@ export default function Navbar({
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -8 }}
               transition={{ duration: 0.18, ease: [0.16, 1, 0.3, 1] }}
-              className="lg:hidden border-b border-border-subtle bg-bg-secondary shadow-xl"
+              className="relative z-10 lg:hidden max-h-[calc(100vh-4rem)] overflow-y-auto border-b border-border-strong bg-bg-secondary chamfer-shadow"
               aria-label="Navigation mobile"
             >
               <div className="px-4 py-3 flex flex-col gap-0.5">
