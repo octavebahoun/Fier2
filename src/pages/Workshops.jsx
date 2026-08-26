@@ -6,7 +6,6 @@ import {
 } from 'lucide-react';
 import { api } from '../services/api.js';
 import { useAuth } from '../context/AuthContext.jsx';
-import { useTheme } from '../context/useTheme.js';
 import FadeInWhenVisible from '../components/home/FadeInWhenVisible.jsx';
 import PageHeader from '../components/ui/PageHeader.jsx';
 import { useToast } from '../components/ui/Toast.jsx'
@@ -17,48 +16,21 @@ import StatePanel from '../components/ui/StatePanel.jsx';
 function WorkshopCard({ workshop, club, user, onToggleRegister, isToggling, navigate }) {
   const isFull = workshop.placesLeft === 0;
   
-  // Dynamic styling based on club accent color
-  const clubAccent = club ? club.accent : 'var(--color-engine)';
   const progressPercent = Math.min(100, Math.round(((workshop.totalPlaces - workshop.placesLeft) / workshop.totalPlaces) * 100));
 
   return (
     <motion.div
       whileHover={{ y: -4, transition: { duration: 0.2, ease: [0.16, 1, 0.3, 1] } }}
-      className="relative flex flex-col chamfer-sm overflow-hidden border flex-1"
-      style={{
-        background: 'var(--color-bg-secondary)',
-        borderColor: `${clubAccent}30`,
-        boxShadow: `0 4px 32px ${clubAccent}08`,
-      }}
+      className="relative flex flex-1 flex-col chamfer-sm chamfer-shadow overflow-hidden border border-border-strong bg-bg-secondary"
     >
-      {/* Top Border Glow Ribbon */}
-      <div 
-        className="absolute top-0 left-0 w-full h-[3px] transition-opacity duration-350"
-        style={{
-          background: `linear-gradient(90deg, ${clubAccent}aa, ${clubAccent}30)`
-        }}
-      />
-
-      {/* Radiant Glow on Hover */}
-      <div
-        className="absolute inset-0 opacity-0 hover:opacity-100 transition-opacity duration-300 pointer-events-none"
-        style={{
-          background: `radial-gradient(ellipse at 50% 0%, ${clubAccent}10 0%, transparent 65%)`,
-        }}
-      />
+      {/* Filet d'accent en tete de carte. */}
+      <div className="absolute top-0 left-0 h-[3px] w-full bg-engine" />
 
       {/* Card Header */}
       <div className="p-6 pb-4 flex items-start justify-between gap-4">
         <div className="space-y-1.5 flex-1 min-w-0">
           <div className="flex flex-wrap items-center gap-2">
-            <span 
-              className="text-xs font-extrabold uppercase tracking-widest px-2.5 py-0.5 rounded-full"
-              style={{
-                background: `${clubAccent}12`,
-                color: clubAccent,
-                border: `1px solid ${clubAccent}30`
-              }}
-            >
+            <span className="text-xs font-extrabold uppercase tracking-widest px-2.5 py-0.5 rounded-full border border-engine bg-engine-wash text-engine">
               {workshop.level}
             </span>
             {club && (
@@ -94,9 +66,9 @@ function WorkshopCard({ workshop, club, user, onToggleRegister, isToggling, navi
               className="h-full rounded-full transition-all duration-500 ease-out"
               style={{ 
                 width: `${progressPercent}%`,
-                background: isFull 
-                  ? 'linear-gradient(90deg, var(--color-ember), var(--color-ember-soft))'
-                  : `linear-gradient(90deg, ${clubAccent}, ${clubAccent}80)` 
+                background: isFull
+                  ? 'var(--color-ember)'
+                  : 'var(--color-engine)' 
               }}
             />
           </div>
@@ -223,20 +195,7 @@ function WorkshopCard({ workshop, club, user, onToggleRegister, isToggling, navi
               onClick={() => onToggleRegister(workshop.id)}
               disabled={isToggling}
               whileTap={{ scale: 0.97 }}
-              className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl text-sm font-bold transition-all duration-200 cursor-pointer focus:outline-none"
-              style={{
-                background: `${clubAccent}1a`,
-                color: clubAccent,
-                border: `1.5px solid ${clubAccent}45`
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.background = clubAccent;
-                e.currentTarget.style.color = '#fff';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background = `${clubAccent}1a`;
-                e.currentTarget.style.color = clubAccent;
-              }}
+              className="flex items-center justify-center gap-2 w-full min-h-11 rounded-xl text-sm font-bold border border-engine bg-engine-wash text-engine hover:bg-engine hover:text-on-accent transition-colors cursor-pointer"
               aria-label={`S'inscrire à l'atelier ${workshop.title}`}
             >
               {isToggling ? (
@@ -271,7 +230,6 @@ function WorkshopCard({ workshop, club, user, onToggleRegister, isToggling, navi
 // ─────────────────────────── Workshops Page ───────────────────────────
 export default function Workshops({ navigate }) {
   const { user } = useAuth();
-  const { theme } = useTheme();
   
   // Data lists loaded dynamically
   const [workshops, setWorkshops] = useState([]);
@@ -500,40 +458,21 @@ export default function Workshops({ navigate }) {
                   Tous les thèmes
                 </button>
 
-                {/* Dynamic Club Pills colored by accent */}
+                {/* Filtres par club. La couleur ne distinguait rien : elle
+                    etait tiree d'un hachage de l'identifiant, et trois clubs
+                    partageaient la meme. C'est la selection qui distingue. */}
                 {clubs.map((club) => {
                   const isActive = selectedClubId === club.id;
-                  const accentColor = club.accent;
-                  const isLight = theme === 'light';
-                  
-                  const defaultBg = isLight ? 'rgba(0, 0, 0, 0.04)' : 'rgba(255, 255, 255, 0.03)';
-                  const defaultBorder = isLight ? 'rgba(0, 0, 0, 0.08)' : 'rgba(255, 255, 255, 0.08)';
-                  const defaultColor = isLight ? 'rgba(0, 0, 0, 0.65)' : 'rgba(255, 255, 255, 0.65)';
-                  const hoverColor = isLight ? 'rgba(0, 0, 0, 0.9)' : '#fff';
-                  
                   return (
                     <button
                       key={club.id}
                       onClick={() => setSelectedClubId(club.id)}
-                      className="px-4 py-2 rounded-xl text-xs font-bold border transition-all cursor-pointer focus:outline-none"
-                      style={{
-                        background: isActive ? accentColor : defaultBg,
-                        borderColor: isActive ? accentColor : defaultBorder,
-                        color: isActive ? '#fff' : defaultColor,
-                        boxShadow: isActive ? `0 0 16px ${accentColor}35` : 'none'
-                      }}
-                      onMouseEnter={(e) => {
-                        if (!isActive) {
-                          e.currentTarget.style.borderColor = accentColor;
-                          e.currentTarget.style.color = hoverColor;
-                        }
-                      }}
-                      onMouseLeave={(e) => {
-                        if (!isActive) {
-                          e.currentTarget.style.borderColor = defaultBorder;
-                          e.currentTarget.style.color = defaultColor;
-                        }
-                      }}
+                      aria-pressed={isActive}
+                      className={`min-h-11 rounded-xl border px-4 text-xs font-bold transition-colors cursor-pointer ${
+                        isActive
+                          ? 'border-engine bg-engine text-on-accent'
+                          : 'border-border-strong bg-bg-secondary text-text-secondary hover:bg-bg-tertiary hover:text-text-primary'
+                      }`}
                     >
                       {club.kicker}
                     </button>

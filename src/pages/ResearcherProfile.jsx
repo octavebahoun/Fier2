@@ -428,7 +428,7 @@ export default function ResearcherProfile({ navigate, researcherId }) {
               {canEdit && (
                 <button
                   onClick={() => setIsEditModalOpen(true)}
-                  className="px-5 py-3 chamfer-sm chamfer-shadow bg-engine-wash hover:bg-engine border border-engine/30 hover:border-engine text-on-accent hover:text-on-accent font-extrabold text-xs tracking-wide transition-all hover: flex items-center justify-center gap-2.5 cursor-pointer shrink-0"
+                  className="px-5 min-h-11 chamfer-sm chamfer-shadow bg-engine-wash hover:bg-engine border border-engine text-engine hover:text-on-accent font-extrabold text-xs tracking-wide transition-colors flex items-center justify-center gap-2.5 cursor-pointer shrink-0"
                 >
                   <Edit3 className="w-4 h-4" />
                   <span>Modifier mon profil</span>

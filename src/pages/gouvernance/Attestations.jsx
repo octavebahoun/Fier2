@@ -159,7 +159,7 @@ export default function Attestations() {
             icon={PenTool}
             title="Griffe officielle"
             subtitle="Apposée sur chaque attestation émise"
-            accent={signatureUrl ? 'var(--color-emerald-500)' : 'var(--color-ember)'}
+            accent={signatureUrl ? 'var(--color-success)' : 'var(--color-ember)'}
           >
             {signatureUrl ? (
               <div className="flex flex-wrap items-center justify-between gap-4">

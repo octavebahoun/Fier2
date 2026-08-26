@@ -30,7 +30,7 @@ const HUB_SECTIONS = [
     id: 'workshops',
     title: 'Ateliers Académiques',
     desc: 'Développez vos compétences grâce à nos ateliers interactifs animés par des experts.',
-    color: 'var(--color-emerald-500)',
+    color: 'var(--color-success)',
     features: ['Débutant à Avancé', 'Inscription directe', 'Liste d\'attente'],
     link: 'workshops',
     icon: BookOpen
@@ -119,16 +119,9 @@ export default function StudentPortal({ navigate }) {
                 className="glass-panel chamfer p-7 border border-border-subtle text-left group cursor-pointer relative overflow-hidden"
                 whileHover={{ y: -4 }}
               >
-                <div
-                  className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none chamfer"
-                  style={{ background: `radial-gradient(ellipse at top, ${section.color}15, transparent 70%)` }}
-                />
                 <div className="relative z-10 flex flex-col gap-5">
-                  <div
-                    className="w-12 h-12 chamfer-sm flex items-center justify-center"
-                    style={{ background: `${section.color}20`, border: `1px solid ${section.color}40` }}
-                  >
-                    <Icon className="w-5 h-5" style={{ color: section.color }} />
+                  <div className="w-12 h-12 chamfer-sm flex items-center justify-center border border-engine bg-engine-wash">
+                    <Icon className="w-5 h-5 text-engine" />
                   </div>
                   <div className="flex flex-col gap-2">
                     <h3 className="text-lg font-extrabold text-text-primary">{section.title}</h3>
@@ -192,10 +185,9 @@ export default function StudentPortal({ navigate }) {
                       onClick={() => navigate('clubs')}
                     >
                       <div
-                        className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
-                        style={{ background: `${club.accent}20`, border: `1px solid ${club.accent}40` }}
+                        className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 border border-engine bg-engine-wash"
                       >
-                        <IconComp className="w-4 h-4" style={{ color: club.accent }} />
+                        <IconComp className="w-4 h-4 text-engine" />
                       </div>
                       <div className="flex flex-col min-w-0">
                         <span className="text-xs font-bold text-text-primary truncate">{club.kicker}</span>

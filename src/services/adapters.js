@@ -7,15 +7,6 @@
 // si le backend enrichit ses réponses plus tard), puis une valeur par défaut sûre.
 // ─────────────────────────────────────────────────────────────────────────────
 
-// Palette d'accents (héritée du mock) : le backend ne fournit pas de couleur de
-// pôle, on en dérive une stable à partir de l'id pour préserver l'identité visuelle.
-const CLUB_ACCENTS = ['#e05a2b', '#1b6fd8', '#10b981', '#f5a623', '#1b4f8a']
-function pickAccent(id) {
-  const s = String(id ?? '')
-  let h = 0
-  for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) >>> 0
-  return CLUB_ACCENTS[h % CLUB_ACCENTS.length]
-}
 
 /**
  * Club. Backend liste : { id, name, discipline, memberCount }.
@@ -36,8 +27,7 @@ export function normalizeClub(c) {
     // Responsable du pôle (chef de club) : id du membre + objet { firstName, lastName }.
     // Défaut null tant que le backend déployé n'expose pas encore ces champs.
     responsibleId: c.responsibleId ?? null,
-    responsible: c.responsible ?? null,
-    accent: c.accent ?? pickAccent(c.id)
+    responsible: c.responsible ?? null
   }
 }
 

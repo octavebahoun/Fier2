@@ -69,7 +69,6 @@ export default function ClubDetail({ navigate, clubId }) {
     )
   }
 
-  const accent = club.accent || 'var(--color-engine)'
   const members = Array.isArray(club.members) ? club.members : []
 
   return (
@@ -79,10 +78,10 @@ export default function ClubDetail({ navigate, clubId }) {
       </button>
 
       {/* En-tête */}
-      <div className="glass-panel chamfer p-6 md:p-8 flex flex-col gap-4" style={{ borderColor: `${accent}30` }}>
+      <div className="glass-panel chamfer p-6 md:p-8 flex flex-col gap-4 border border-border-strong">
         <div className="flex items-start gap-4 flex-wrap">
-          <div className="w-14 h-14 chamfer-sm flex items-center justify-center shrink-0" style={{ background: `${accent}1A`, border: `1px solid ${accent}40` }}>
-            <Users className="w-7 h-7" style={{ color: accent }} />
+          <div className="w-14 h-14 chamfer-sm flex items-center justify-center shrink-0 border border-engine bg-engine-wash">
+            <Users className="w-7 h-7 text-engine" />
           </div>
           <div className="flex-1 min-w-0">
             <h1 className="text-2xl font-extrabold text-text-primary tracking-tight">{club.title || club.kicker}</h1>
@@ -90,7 +89,7 @@ export default function ClubDetail({ navigate, clubId }) {
               {club.discipline && <span className="inline-flex items-center gap-1.5"><GraduationCap className="w-3.5 h-3.5" /> {club.discipline}</span>}
               <span>{(club.membersCount ?? 0).toLocaleString('fr-FR')} membres</span>
               {club.responsible && (
-                <span className="inline-flex items-center gap-1.5 font-bold" style={{ color: accent }}>
+                <span className="inline-flex items-center gap-1.5 font-bold text-engine">
                   Responsable&nbsp;: {`${club.responsible.firstName ?? ''} ${club.responsible.lastName ?? ''}`.trim() || '—'}
                 </span>
               )}
@@ -114,7 +113,7 @@ export default function ClubDetail({ navigate, clubId }) {
       {Array.isArray(club.divisions) && club.divisions.length > 0 && (
         <div className="flex flex-wrap gap-2">
           {club.divisions.map((d, i) => (
-            <span key={i} className="text-xs font-bold px-3 py-1 rounded-full" style={{ background: `${accent}12`, color: accent, border: `1px solid ${accent}25` }}>{d}</span>
+            <span key={i} className="text-xs font-bold px-3 py-1 rounded-full border border-engine bg-engine-wash text-engine">{d}</span>
           ))}
         </div>
       )}

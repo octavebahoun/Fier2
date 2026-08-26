@@ -30,29 +30,16 @@ function JoinConfirmModal({ club, onConfirm, onCancel }) {
         exit={{ opacity: 0, scale: 0.92, y: 20 }}
         transition={{ type: 'spring', stiffness: 380, damping: 28 }}
         onClick={(e) => e.stopPropagation()}
-        className="relative w-full max-w-md chamfer chamfer-shadow border p-8 "
-        style={{
-          background: 'var(--color-bg-secondary)',
-          borderColor: `${club.accent}40`,
-          boxShadow: `0 0 60px ${club.accent}20`,
-        }}
+        className="relative w-full max-w-md chamfer chamfer-shadow border border-border-strong bg-bg-secondary p-8"
       >
-        {/* Glow accent */}
-        <div
-          className="absolute inset-0 chamfer pointer-events-none"
-          style={{ background: `radial-gradient(ellipse at 50% 0%, ${club.accent}12 0%, transparent 65%)` }}
-        />
 
         {/* Icone + titre */}
         <div className="flex items-center gap-4 mb-6 relative z-10">
-          <div
-            className="w-14 h-14 chamfer-sm flex items-center justify-center shrink-0"
-            style={{ background: `${club.accent}1A`, border: `1.5px solid ${club.accent}50` }}
-          >
-            <Icon className="w-7 h-7" style={{ color: club.accent }} />
+          <div className="w-14 h-14 chamfer-sm flex items-center justify-center shrink-0 border border-engine bg-engine-wash">
+            <Icon className="w-7 h-7 text-engine" />
           </div>
           <div>
-            <p className="text-xs font-bold uppercase tracking-widest" style={{ color: club.accent }}>
+            <p className="text-xs font-bold uppercase tracking-widest text-engine">
               Rejoindre
             </p>
             <h2 className="text-lg font-extrabold text-text-primary leading-snug">{club.kicker}</h2>
@@ -60,10 +47,7 @@ function JoinConfirmModal({ club, onConfirm, onCancel }) {
         </div>
 
         {/* Charte */}
-        <div
-          className="p-4 rounded-xl text-xs text-text-secondary leading-relaxed mb-6 relative z-10"
-          style={{ background: `${club.accent}0D`, border: `1px solid ${club.accent}20` }}
-        >
+        <div className="p-4 rounded-xl text-xs text-text-secondary leading-relaxed mb-6 relative z-10 border border-border-strong bg-bg-tertiary">
 <p className="font-bold text-text-primary mb-1.5">En demandant votre adhésion, vous vous engagez à&nbsp;:</p>
           <ul className="list-disc pl-4 space-y-1">
             <li>Participer activement aux activités et réunions du club.</li>
@@ -82,8 +66,7 @@ function JoinConfirmModal({ club, onConfirm, onCancel }) {
           </button>
           <button
             onClick={onConfirm}
-            className="flex-1 py-3 rounded-xl text-xs font-bold text-white transition-all hover:opacity-90"
-            style={{ background: club.accent }}
+            className="flex-1 min-h-11 rounded-xl text-xs font-bold bg-engine text-on-accent hover:bg-engine-deep transition-colors cursor-pointer"
           >
             Soumettre la demande
           </button>
@@ -112,41 +95,15 @@ function ClubCard({ club, user, navigate, onJoin, onLeave, isPending, joiningId,
   return (
     <motion.div
       whileHover={{ y: -4, transition: { duration: 0.2, ease: [0.16, 1, 0.3, 1] } }}
-      className="relative flex flex-col chamfer-sm overflow-hidden border"
-      style={{
-        background: 'var(--color-bg-secondary)',
-        borderColor: `${club.accent}38`,
-        boxShadow: `0 4px 32px ${club.accent}12`,
-      }}
+      className="relative flex flex-col chamfer-sm chamfer-shadow overflow-hidden border border-border-strong bg-bg-secondary"
     >
-      {/* Halo lumineux accent en arrière-plan */}
-      <div
-        className="absolute inset-0 opacity-0 hover:opacity-100 transition-opacity duration-300 pointer-events-none"
-        style={{
-          background: `radial-gradient(ellipse at 50% 0%, ${club.accent}14 0%, transparent 70%)`,
-        }}
-      />
-
-      {/* Header : bande accent + icône + kicker */}
-      <div
-        className="flex items-center gap-4 px-6 pt-6 pb-4"
-        style={{ borderBottom: `1px solid ${club.accent}28` }}
-      >
-        <div
-          className="flex items-center justify-center w-12 h-12 rounded-xl shrink-0"
-          style={{ background: `${club.accent}1A`, border: `1px solid ${club.accent}40` }}
-        >
-          <Icon className="w-6 h-6" style={{ color: club.accent }} />
+      {/* Header : icône + kicker */}
+      <div className="flex items-center gap-4 px-6 pt-6 pb-4 border-b border-border-subtle">
+        <div className="flex items-center justify-center w-12 h-12 rounded-xl shrink-0 border border-engine bg-engine-wash">
+          <Icon className="w-6 h-6 text-engine" />
         </div>
         <div className="flex-1 min-w-0">
-          <span
-            className="inline-block text-xs font-bold uppercase tracking-widest rounded-full px-2.5 py-0.5 mb-1"
-            style={{
-              background: `${club.accent}18`,
-              color: club.accent,
-              border: `1px solid ${club.accent}35`,
-            }}
-          >
+          <span className="inline-block text-xs font-bold uppercase tracking-widest rounded-full px-2.5 py-0.5 mb-1 border border-engine bg-engine-wash text-engine">
             {club.kicker}
           </span>
           <div className="flex items-center gap-1.5 text-text-secondary text-xs">
@@ -189,13 +146,10 @@ function ClubCard({ club, user, navigate, onJoin, onLeave, isPending, joiningId,
       <div className="px-6 pb-6 pt-2 space-y-4">
         {/* Projet phare */}
         {club.projetPhare && (
-          <div
-            className="flex items-start gap-2 p-3 rounded-xl text-xs"
-            style={{ background: `${club.accent}10`, border: `1px solid ${club.accent}20` }}
-          >
-            <ChevronRight className="w-3.5 h-3.5 mt-0.5 shrink-0" style={{ color: club.accent }} />
+          <div className="flex items-start gap-2 p-3 rounded-xl text-xs border border-border-strong bg-bg-tertiary">
+            <ChevronRight className="w-3.5 h-3.5 mt-0.5 shrink-0 text-engine" />
             <p className="text-text-secondary leading-relaxed italic">
-              <span className="font-semibold not-italic" style={{ color: club.accent }}>
+              <span className="font-semibold not-italic text-engine">
                 Projet phare :{' '}
               </span>
               {club.projetPhare}
@@ -209,8 +163,7 @@ function ClubCard({ club, user, navigate, onJoin, onLeave, isPending, joiningId,
             whileTap={{ scale: 0.97 }}
             onClick={() => onLeave(club.id)}
             disabled={isJoining}
-            className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl text-sm font-bold text-white transition-all focus:outline-none focus-visible:ring-2 cursor-pointer"
-            style={{ background: club.accent }}
+            className="flex items-center justify-center gap-2 w-full min-h-11 rounded-xl text-sm font-bold bg-engine text-on-accent hover:bg-engine-deep transition-colors cursor-pointer"
             title="Cliquez pour quitter le club"
           >
             <CheckCircle className="w-4 h-4" />
@@ -218,12 +171,7 @@ function ClubCard({ club, user, navigate, onJoin, onLeave, isPending, joiningId,
           </motion.button>
         ) : isPending ? (
           <div
-            className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl text-sm font-bold border cursor-default"
-            style={{
-              background: `${club.accent}0A`,
-              color: 'var(--color-ember)',
-              borderColor: 'color-mix(in srgb, var(--color-ember) 25%, transparent)',
-            }}
+            className="flex items-center justify-center gap-2 w-full min-h-11 rounded-xl text-sm font-bold border border-ember bg-ember-wash text-ember cursor-default"
           >
             <Clock className="w-4 h-4 animate-pulse" />
             Demande en attente
@@ -233,20 +181,7 @@ function ClubCard({ club, user, navigate, onJoin, onLeave, isPending, joiningId,
             onClick={() => onJoin(club.id)}
             disabled={isJoining}
             whileTap={{ scale: 0.97 }}
-            className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl text-sm font-bold transition-all duration-200 focus:outline-none focus-visible:ring-2 cursor-pointer"
-            style={{
-              background: `${club.accent}1C`,
-              color: club.accent,
-              border: `1.5px solid ${club.accent}55`,
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.background = club.accent;
-              e.currentTarget.style.color = '#fff';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.background = `${club.accent}1C`;
-              e.currentTarget.style.color = club.accent;
-            }}
+            className="flex items-center justify-center gap-2 w-full min-h-11 rounded-xl text-sm font-bold border border-engine bg-engine-wash text-engine hover:bg-engine hover:text-on-accent transition-colors cursor-pointer"
             aria-label={`Rejoindre le club ${club.kicker}`}
           >
             {isJoining ? (
@@ -322,14 +257,16 @@ function ClubCard({ club, user, navigate, onJoin, onLeave, isPending, joiningId,
                           <div className="flex gap-1 shrink-0">
                             <button
                               onClick={() => onApproveRequest(req.id)}
-                              className="p-1 rounded bg-success-wash text-on-accent hover:bg-success hover:text-on-accent transition-all"
+                              className="inline-flex h-11 w-11 items-center justify-center rounded border border-success bg-success-wash text-success hover:bg-success hover:text-on-accent transition-colors cursor-pointer"
+                              aria-label={`Approuver l’adhésion de ${req.memberName || 'ce membre'}`}
                               title="Approuver"
                             >
                               <Check className="w-3.5 h-3.5" />
                             </button>
                             <button
                               onClick={() => onRejectRequest(req.id)}
-                              className="p-1 rounded bg-danger-wash text-on-accent hover:bg-danger hover:text-on-accent transition-all"
+                              className="inline-flex h-11 w-11 items-center justify-center rounded border border-danger bg-danger-wash text-danger hover:bg-danger hover:text-on-accent transition-colors cursor-pointer"
+                              aria-label={`Rejeter l’adhésion de ${req.memberName || 'ce membre'}`}
                               title="Rejeter"
                             >
                               <Ban className="w-3.5 h-3.5" />

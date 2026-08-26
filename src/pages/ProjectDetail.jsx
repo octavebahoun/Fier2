@@ -372,7 +372,7 @@ export default function ProjectDetail({ navigate, projectId }) {
                       onClick={() => navigate('profile', { researcherId })}
                       className="bg-bg-secondary hover:bg-bg-tertiary border border-border-subtle hover:border-engine/20 p-4 chamfer-sm flex items-center gap-3 transition-all cursor-pointer group/member"
                     >
-                      <div className="w-9 h-9 rounded-full bg-engine-wash border border-engine/10 flex items-center justify-center font-extrabold text-xs text-on-accent group-hover/member:bg-engine group-hover/member:text-on-accent transition-all">
+                      <div className="w-9 h-9 rounded-full bg-engine-wash border border-engine flex items-center justify-center font-extrabold text-xs text-engine group-hover/member:bg-engine group-hover/member:text-on-accent transition-colors">
                         {member.name.split(' ').map(n => n[0]).join('')}
                       </div>
                       <div>

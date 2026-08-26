@@ -159,7 +159,6 @@ export default function ResearchClubsSection({ clubs, navigate }) {
           >
             {items.map((club, i) => {
               const Icon = getClubIcon(i);
-              const accent = club.accent || 'var(--color-ember)';
               return (
                 <motion.article
                   key={club.id ?? i}
@@ -171,10 +170,9 @@ export default function ResearchClubsSection({ clubs, navigate }) {
                   <div>
                     <div className="flex items-center gap-3 mb-5">
                       <div
-                        className="w-11 h-11 rounded-xl flex items-center justify-center border border-border-subtle/70"
-                        style={{ background: `${accent}1a` }}
+                        className="w-11 h-11 rounded-xl flex items-center justify-center border border-engine bg-engine-wash"
                       >
-                        <Icon className="w-5 h-5" style={{ color: accent }} />
+                        <Icon className="w-5 h-5 text-engine" />
                       </div>
                       <span className="text-xs font-bold tracking-widest uppercase text-text-muted font-mono">
                         CITE_{String(i + 1).padStart(2, '0')}
@@ -197,7 +195,6 @@ export default function ResearchClubsSection({ clubs, navigate }) {
                     </span>
                     <span
                       className="inline-flex items-center gap-1 text-xs font-bold"
-                      style={{ color: accent }}
                     >
                       Découvrir
                       <ArrowRight className="w-3.5 h-3.5" />

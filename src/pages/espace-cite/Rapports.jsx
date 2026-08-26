@@ -126,7 +126,7 @@ export default function Rapports() {
                 icon={Users}
                 title={estSecretaire ? 'Recensement global' : 'Recensement mensuel'}
                 subtitle={`Effectif du club, transmis ${destinataire}`}
-                accent="var(--color-emerald-500)"
+                accent="var(--color-success)"
               >
                 <p className="mb-4 text-sm text-text-secondary">
                   Le recensement compte les membres actuellement inscrits au club. Il n’y a rien à

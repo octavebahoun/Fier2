@@ -21,6 +21,7 @@ function sourceFiles(dir = 'src', acc = []) {
 }
 
 const FICHIERS = sourceFiles()
+const css = readFileSync(join('src', 'index.css'), 'utf8')
 
 /**
  * Chaque littéral entre guillemets, avec son fichier et sa ligne.
@@ -89,6 +90,28 @@ describe('couleurs — une seule palette', () => {
   })
 })
 
+describe('couleurs — les styles inline suivent le systeme', () => {
+  it('ne concatene jamais une opacite hexadecimale a une couleur', () => {
+    // `${club.accent}0D` valait 5 % d'opacite — 1,04:1, invisible. Et quand la
+    // variable contenait deja `var(--color-engine)`, le resultat
+    // `var(--color-engine)0D` n'etait meme pas une couleur : le navigateur
+    // ignorait la declaration, et la surface n'existait pas du tout.
+    const trouves = SEGMENTS.filter((s) => /\$\{[^}]+\}[0-9A-Fa-f]{2}(?![0-9A-Fa-f])/.test(s.texte))
+    expect(trouves.length, `Utiliser un token opaque :\n${lister(trouves)}`).toBe(0)
+  })
+
+  it('ne reference que des tokens de couleur qui existent', () => {
+    const declares = new Set([...css.matchAll(/--color-([\w-]+):/g)].map((m) => m[1]))
+    const inconnus = new Set()
+    for (const f of FICHIERS) {
+      for (const m of sansCommentaires(readFileSync(f, 'utf8')).matchAll(/var\(--color-([\w-]+)\)/g)) {
+        if (!declares.has(m[1])) inconnus.add(`${f} — --color-${m[1]}`)
+      }
+    }
+    expect([...inconnus], `Token inexistant : la declaration est ignoree\n${[...inconnus].join('\n')}`).toEqual([])
+  })
+})
+
 describe('couleurs — un libellé lisible sur son aplat', () => {
   // `:` dans l'antéslash exclut `hover:bg-…` : une variante d'état est
   // appariée à sa propre couleur de texte, et ne se juge pas au repos.
@@ -101,6 +124,20 @@ describe('couleurs — un libellé lisible sur son aplat', () => {
       (s) => aplatSolide.test(s.texte) && /(?<![-\w:])text-white(?![-\w])/.test(s.texte),
     )
     expect(trouves.length, `Remplacer text-white par text-on-accent :\n${lister(trouves)}`).toBe(0)
+  })
+
+  it('ne pose jamais un libelle on-accent sur un panneau teinte', () => {
+    // `on-accent` vaut l'encre en sombre : sur un `-wash`, deja sombre, il
+    // tombe a 1,25:1. Deux boutons d'approbation d'adhesion sont restes
+    // invisibles ainsi. Un panneau teinte se lit avec la couleur d'accent.
+    const wash = new RegExp(`(?<![-\\w:])bg-(${A})-wash(?![-\\w])`)
+    const plein = new RegExp(`(?<![-\\w:])bg-(${A})(?![-\\w/])`)
+    const trouves = SEGMENTS.filter(
+      (s) => wash.test(s.texte)
+        && !plein.test(s.texte)
+        && /(?<![-\w:])text-on-accent(?![-\w])/.test(s.texte),
+    )
+    expect(trouves.length, `Utiliser text-<accent> sur un wash :\n${lister(trouves)}`).toBe(0)
   })
 
   it('ne pose jamais un texte de la couleur de son propre aplat', () => {

@@ -19,14 +19,14 @@ export const JOURNAL_CATEGORIES = [
   { id: 'atelier', label: 'Ateliers', color: 'var(--color-engine)', icon: GraduationCap, badgeLabel: 'ATELIER' },
   { id: 'appel', label: 'Appels', color: 'var(--color-ember)', icon: Megaphone, badgeLabel: 'APPEL À PARTICIPATION' },
   { id: 'bootcamp', label: 'Bootcamps', color: 'var(--color-engine-deep)', icon: Rocket, badgeLabel: 'BOOTCAMP' },
-  { id: 'offre', label: 'Offres', color: 'var(--color-emerald-500)', icon: Tag, badgeLabel: 'OFFRE SPÉCIALE' }
+  { id: 'offre', label: 'Offres', color: 'var(--color-success)', icon: Tag, badgeLabel: 'OFFRE SPÉCIALE' }
 ];
 
 const CATEGORY_MAP = {
   atelier: { color: 'var(--color-engine)', icon: GraduationCap, badgeLabel: 'ATELIER' },
   appel: { color: 'var(--color-ember)', icon: Megaphone, badgeLabel: 'APPEL À PARTICIPATION' },
   bootcamp: { color: 'var(--color-engine-deep)', icon: Rocket, badgeLabel: 'BOOTCAMP' },
-  offre: { color: 'var(--color-emerald-500)', icon: Tag, badgeLabel: 'OFFRE SPÉCIALE' },
+  offre: { color: 'var(--color-success)', icon: Tag, badgeLabel: 'OFFRE SPÉCIALE' },
   actu: { color: 'var(--color-ember)', icon: Newspaper, badgeLabel: 'ACTUALITÉ' }
 };
 
@@ -257,19 +257,12 @@ export default function JournalCarousel({ navigate }) {
                   <div>
                     <div className="flex items-center justify-between mb-5">
                       <span
-                        className="text-xs font-bold uppercase tracking-widest px-2.5 py-0.5 rounded-sm border"
-                        style={{
-                          color: meta.color,
-                          borderColor: `${meta.color}55`,
-                          background: `${meta.color}14`
-                        }}
+                        className="text-xs font-bold uppercase tracking-widest px-2.5 py-0.5 rounded-sm border border-engine bg-engine-wash"
+                        style={{ color: meta.color }}
                       >
                         {meta.badgeLabel}
                       </span>
-                      <div
-                        className="w-9 h-9 rounded-lg flex items-center justify-center border border-border-subtle/70"
-                        style={{ background: `${meta.color}1a` }}
-                      >
+                      <div className="w-9 h-9 rounded-lg flex items-center justify-center border border-engine bg-engine-wash">
                         <Icon className="w-4 h-4" style={{ color: meta.color }} />
                       </div>
                     </div>
