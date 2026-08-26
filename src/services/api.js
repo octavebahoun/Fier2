@@ -143,7 +143,9 @@ export const api = {
   // ── 3. PROJETS DE RECHERCHE R&D ────────────────────────────────────────────
   projects: {
     getAll: async (filters = {}) => {
-      const r = await get(`/projects${qs({ clubId: filters.clubId, status: filters.status, search: filters.search })}`)
+      // `diriges` : seulement les projets sur lesquels le compte a autorité —
+      // les siens et ceux du club qu'il préside. Même règle que le serveur.
+      const r = await get(`/projects${qs({ clubId: filters.clubId, status: filters.status, search: filters.search, diriges: filters.diriges ? 'true' : undefined })}`)
       return { ...r, data: Array.isArray(r.data) ? r.data.map(normalizeProject) : r.data }
     },
 

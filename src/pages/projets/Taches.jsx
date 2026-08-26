@@ -6,7 +6,6 @@ import PageHeader from '../../components/ui/PageHeader.jsx'
 import SectionCard from '../../components/ui/SectionCard.jsx'
 import StatePanel from '../../components/ui/StatePanel.jsx'
 import { useToast } from '../../components/ui/Toast.jsx'
-import { useAuth } from '../../context/AuthContext.jsx'
 import { champ, etiquette, boutonPrimaire, nomComplet } from '../espace-cite/shared.jsx'
 
 /**
@@ -36,7 +35,6 @@ const libelle = (liste, valeur) => liste.find((x) => x.valeur === valeur)?.label
 
 export default function Taches() {
   const { notify } = useToast()
-  const { user } = useAuth()
   const [params, setParams] = useSearchParams()
   const projectId = params.get('projet') || ''
 
@@ -60,7 +58,7 @@ export default function Taches() {
       setProjectsLoading(true)
       setProjectsError(null)
       try {
-        const res = await api.projects.getAll()
+        const res = await api.projects.getAll({ diriges: true })
         if (!actif) return
         if (!res?.success) throw new Error(res?.message)
         setProjects(res.data || [])
@@ -197,7 +195,7 @@ export default function Taches() {
         ) : projectsError ? (
           <StatePanel state="error" message={projectsError} />
         ) : projects.length === 0 ? (
-          <StatePanel state="empty" icon={ListChecks} message="Aucun projet n’est enregistré pour le moment." />
+          <StatePanel state="empty" icon={ListChecks} message="Vous ne dirigez aucun projet. Le tableau des tâches suit le projet : il s’ouvre à son porteur et au responsable du club qui le porte." />
         ) : (
           <div>
             <label className={etiquette} htmlFor="taches-projet">Projet</label>
@@ -210,7 +208,7 @@ export default function Taches() {
               <option value="">Sélectionner un projet…</option>
               {projects.map((p) => (
                 <option key={p.id} value={p.id}>
-                  {p.title}{String(p.ownerId) === String(user?.id) ? ' — le mien' : ''}
+                  {p.title}
                 </option>
               ))}
             </select>
