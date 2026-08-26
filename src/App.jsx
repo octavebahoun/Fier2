@@ -36,6 +36,8 @@ import Attestations from './pages/gouvernance/Attestations.jsx'
 import Exclusions from './pages/gouvernance/Exclusions.jsx'
 import Figures from './pages/gouvernance/Figures.jsx'
 import Tresorerie from './pages/Tresorerie.jsx'
+import Taches from './pages/projets/Taches.jsx'
+import Candidatures from './pages/projets/Candidatures.jsx'
 import Challenges from './pages/Challenges.jsx'
 import Soutiens from './pages/Soutiens.jsx'
 
@@ -151,6 +153,14 @@ function App() {
         {/* ── Trésorerie : l'outil interne, séparé de la page de dons ── */}
         <Route path="/tresorerie" element={
           <ProtectedRoute destination="tresorerie"><Tresorerie /></ProtectedRoute>
+        } />
+
+        {/* Chef de projet : deux droits reels qui n'avaient aucune interface. */}
+        <Route path="/projets/taches" element={
+          <ProtectedRoute destination="projet-taches"><Taches /></ProtectedRoute>
+        } />
+        <Route path="/candidatures" element={
+          <ProtectedRoute destination="candidatures"><Candidatures /></ProtectedRoute>
         } />
 
         <Route path="/challenges" element={<Challenges navigate={navigate} />} />

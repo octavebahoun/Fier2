@@ -187,6 +187,16 @@ export const DESTINATIONS = [
     inNav: true, inPalette: true, icon: 'Briefcase',
   },
   {
+    id: 'projet-taches', path: '/projets/taches', label: 'Tâches de projet',
+    section: SECTIONS.RECHERCHE.id, access: { capability: 'task:manage' },
+    inNav: true, inPalette: true, icon: 'ListChecks',
+  },
+  {
+    id: 'candidatures', path: '/candidatures', label: 'Candidatures reçues',
+    section: SECTIONS.RECHERCHE.id, access: { capability: 'application:review' },
+    inNav: true, inPalette: true, icon: 'Inbox',
+  },
+  {
     id: 'clubs', path: '/clubs', label: 'Clubs CITE',
     section: SECTIONS.RECHERCHE.id, access: PUBLIC,
     inNav: true, inPalette: true, icon: 'Users',

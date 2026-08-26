@@ -3,7 +3,7 @@ import {
   LayoutDashboard, UserRound, FolderGit2, Users, GraduationCap, Briefcase,
   Newspaper, CalendarDays, Contact, Shield, Trophy, HeartHandshake, ShieldCheck,
   LayoutList, LifeBuoy, Sparkles, Layers, Compass, UserPlus, ClipboardList,
-  FileText, Award, UserX, Star, Wallet,
+  FileText, Award, UserX, Star, Wallet, ListChecks, Inbox,
 } from "lucide-react"
 
 import { NavMain } from "@/components/nav-main"
@@ -26,7 +26,7 @@ const ICONS = {
   LayoutDashboard, UserRound, FolderGit2, Users, GraduationCap, Briefcase,
   Newspaper, CalendarDays, Contact, Shield, Trophy, HeartHandshake, ShieldCheck,
   LayoutList, LifeBuoy, Layers, Compass, UserPlus, ClipboardList, FileText,
-  Award, UserX, Star, Wallet,
+  Award, UserX, Star, Wallet, ListChecks, Inbox,
 }
 
 const SECTION_ICONS = {

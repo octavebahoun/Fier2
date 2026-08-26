@@ -2,7 +2,7 @@ import { useEffect, useState, useCallback } from 'react'
 import {
   Users, BookOpen, ArrowRight, Award, Bell,
   Shield, ShieldCheck, Briefcase, PenSquare, UserCog, Lock, FolderGit2,
-  GraduationCap, LayoutList, Wallet, Calendar,
+  GraduationCap, LayoutList, Wallet, Calendar, ListChecks, Inbox,
 } from 'lucide-react'
 import { api } from '../../services/api.js'
 import { useAuth, getRolePresentation, getPostPresentation } from '../../context/AuthContext.jsx'
@@ -91,6 +91,8 @@ export default function Dashboard({ navigate }) {
     { cap: 'report:read',        label: 'Rapports des clubs',       desc: 'Suivi d’activité de l’université',        icon: LayoutList,  page: 'cite-rapports' },
     { cap: 'report:submit',      label: 'Rapport de mon club',      desc: 'Recensement et activité mensuelle',       icon: LayoutList,  page: 'cite-rapports' },
     { cap: 'membership:review',  label: 'Valider les adhésions',    desc: 'Candidatures en attente de votre club',   icon: Users,       page: 'cite-adhesions' },
+    { cap: 'task:manage',        label: 'Tâches de projet',         desc: 'Répartir le travail et suivre l’avancement', icon: ListChecks, page: 'projet-taches' },
+    { cap: 'application:review', label: 'Candidatures reçues',      desc: 'Examiner et décider',                     icon: Inbox,       page: 'candidatures' },
     { cap: 'badge:award',        label: 'Attribuer un badge',       desc: 'Distinguer un membre encadré',            icon: Award,       page: 'challenges' },
     { cap: 'opportunity:create', label: 'Publier une opportunité',  desc: 'Diffuser une offre R&D',                  icon: Briefcase,   page: 'opportunities' },
     { cap: 'news:submit',        label: 'Rédiger un article',       desc: 'Soumettre au journal scientifique',       icon: PenSquare,   page: 'news' },
