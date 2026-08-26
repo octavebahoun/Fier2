@@ -167,7 +167,9 @@ export default function Offers({ navigate }) {
         opportunityId: selectedOpportunity.id,
         coverLetter: applyForm.achievements,
         // Pas de pièce jointe : la plateforme ne sait pas encore en recevoir.
-        cvUrl: null,
+        // La colonne `cvUrl` n'accepte pas null — chaîne vide, que l'écran
+        // d'examen des candidatures affiche « aucun document ».
+        cvUrl: '',
       });
 
       if (res.success) {
