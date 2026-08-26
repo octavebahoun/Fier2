@@ -149,6 +149,34 @@ describe('données — rien d’inventé', () => {
   })
 })
 
+describe('erreurs — un echec se voit', () => {
+  it('aucun ecran ne rattrape une erreur sans le dire', () => {
+    // Un `catch` qui se contente d'un console.error laisse l'ecran vide :
+    // « aucun projet » devient indiscernable de « les projets n'ont pas pu
+    // etre lus ». C'est le meme defaut que « 42 Approuvees » et « 0 CITE ».
+    const ecrans = FICHIERS.filter((f) => f.startsWith(join('src', 'pages')))
+    const muets = []
+    for (const f of ecrans) {
+      const code = sansCommentaires(readFileSync(f, 'utf8'))
+      for (const m of code.matchAll(/catch\s*(?:\([^)]*\))?\s*\{([^{}]*(?:\{[^{}]*\}[^{}]*)*)\}/g)) {
+        const corps = m[1]
+        // `error:` dans un objet d'etat compte aussi : ce qui importe est
+        // qu'un message parvienne a l'ecran, pas la forme du setter.
+        if (/error|notify\(|throw|setStatus/i.test(corps)) continue
+        // Seule exemption, justifiee : la liste d'articles similaires est une
+        // suggestion. Absente, elle n'affirme rien de faux — contrairement a
+        // une liste principale vide.
+        if (f === join('src', 'pages', 'NewsDetail.jsx') && /setRelated/.test(corps)) continue
+        // Un `catch` qui remet simplement l'etat a vide, sans appel reseau
+        // derriere lui, n'a rien a annoncer.
+        if (!/await |\.then\(|api\./.test(code.slice(Math.max(0, m.index - 400), m.index))) continue
+        muets.push(`${f}:${code.slice(0, m.index).split('\n').length}`)
+      }
+    }
+    expect(muets, `Poser un etat d'erreur :\n${muets.join('\n')}`).toEqual([])
+  })
+})
+
 describe('erreurs — jamais un alert()', () => {
   it('n’utilise pas alert() pour dire qu’une action a échoué', () => {
     // Un alert() bloque la page, ne dit pas d'où il vient et sort du système.

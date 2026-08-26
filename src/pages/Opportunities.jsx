@@ -9,12 +9,15 @@ import { api } from '../services/api';
 import { useAuth } from '../context/AuthContext.jsx';
 import Offers from './Offers.jsx';
 import { useToast } from '../components/ui/Toast.jsx'
+import StatePanel from '../components/ui/StatePanel.jsx';
 
 
 // ─────────────────────────── Opportunities Page Component ───────────────────────────
 export default function Opportunities({ navigate }) {
   const { user, can } = useAuth();
   const [opportunities, setOpportunities] = useState([]);
+  const [loadingList, setLoadingList] = useState(true);
+  const [loadError, setLoadError] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [activeTab, setActiveTab] = useState('partners'); // 'partners' (Offers) by default, or 'research' (R&D)
   const [activeType, setActiveType] = useState('all');
@@ -40,13 +43,18 @@ export default function Opportunities({ navigate }) {
   const publishTriggerRef = useRef(null);
 
   const fetchOpportunities = async () => {
+    setLoadingList(true);
+    setLoadError(null);
     try {
       const res = await api.opportunities.getAll();
-      if (res.success) {
-        setOpportunities(res.data);
-      }
+      if (!res?.success) throw new Error(res?.message);
+      setOpportunities(res.data || []);
     } catch (err) {
-      console.error("Erreur lors de la récupération des opportunités:", err);
+      // Une liste vide et une liste illisible ne se ressemblent pas.
+      setOpportunities([]);
+      setLoadError(err?.serverMessage || err?.message || "La liste n'a pas pu être chargée.");
+    } finally {
+      setLoadingList(false);
     }
   };
 
@@ -61,7 +69,12 @@ export default function Opportunities({ navigate }) {
         setAppliedOpportunityIds(new Set(res.data.map(app => app.opportunityId)));
       }
     } catch (err) {
-      console.error("Erreur lors de la récupération de mes candidatures:", err);
+      setAppliedOpportunityIds(new Set());
+      notify(
+        err?.serverMessage
+          || "Vos candidatures déjà déposées n'ont pas pu être vérifiées.",
+        'warning',
+      );
     }
   };
 
@@ -319,7 +332,7 @@ export default function Opportunities({ navigate }) {
             {/* Input */}
             <div className="relative w-full md:max-w-md">
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted" />
-              <input
+              <input aria-label="Rechercher par discipline, mot clé, superviseur"
                 type="text"
                 placeholder="Rechercher par discipline, mot clé, superviseur..."
                 value={searchQuery}
@@ -347,7 +360,11 @@ export default function Opportunities({ navigate }) {
 
           {/* Interactive Opportunities Grid */}
           <div className="relative z-10">
-            {filteredOpportunities.length > 0 ? (
+            {loadingList ? (
+              <StatePanel state="loading" />
+            ) : loadError ? (
+              <StatePanel state="error" message={loadError} onRetry={fetchOpportunities} />
+            ) : filteredOpportunities.length > 0 ? (
               <motion.div
                 variants={gridVariants}
                 initial="hidden"

@@ -64,9 +64,10 @@ export default function OrgSection({ organisation, navigate }) {
             const config = getEntityConfig(index);
             return (
               <FadeInWhenVisible key={entity.id} delay={index * 0.1} direction="up">
-                <div
+                <button
+                  type="button"
                   onClick={() => navigate(routes[index])}
-                  className="glass-panel h-full p-8 rounded-2xl relative overflow-hidden group transition-all duration-300 border border-border-subtle hover:border-border-strong hover:-translate-y-1 cursor-pointer"
+                  className="glass-panel h-full w-full p-8 rounded-2xl relative overflow-hidden group text-left transition-all duration-300 border border-border-subtle hover:border-border-strong hover:-translate-y-1 cursor-pointer"
                 >
                   {/* Référence d'entité (mono) + icône */}
                   <div className="flex items-center justify-between mb-8">
@@ -91,7 +92,7 @@ export default function OrgSection({ organisation, navigate }) {
                     <span>Explorer</span>
                     <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" aria-hidden="true" />
                   </div>
-                </div>
+                </button>
               </FadeInWhenVisible>
             );
           })}

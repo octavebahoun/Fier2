@@ -2,8 +2,10 @@ import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import { ArrowLeft, Share2, Calendar, User, Tag, Check } from 'lucide-react'
 import { api } from '../services/api.js'
+import { useToast } from '../components/ui/Toast.jsx'
 
 export default function NewsDetail({ navigate, newsId }) {
+  const { notify } = useToast()
   const [article, setArticle] = useState(null)
   const [related, setRelated] = useState([])
   const [isLoading, setIsLoading] = useState(true)
@@ -26,7 +28,11 @@ export default function NewsDetail({ navigate, newsId }) {
             if (active && all?.success && Array.isArray(all.data)) {
               setRelated(all.data.filter(a => String(a.id) !== String(newsId) && a.categorie === res.data.categorie).slice(0, 3))
             }
-          } catch { /* pas d'articles similaires */ }
+          } catch {
+            // La suggestion est facultative : absente, elle n'affirme rien de
+            // faux — contrairement à une liste principale vide.
+            setRelated([])
+          }
           setError(null)
         } else {
           setError(res?.message || "Cet article n'est pas disponible.")
@@ -46,7 +52,9 @@ export default function NewsDetail({ navigate, newsId }) {
       await navigator.clipboard?.writeText(window.location.href)
       setCopied(true)
       setTimeout(() => setCopied(false), 2000)
-    } catch { /* clipboard indisponible */ }
+    } catch {
+      notify("Le lien n'a pas pu être copié. Copiez-le depuis la barre d'adresse.", 'warning')
+    }
   }
 
   if (isLoading) {

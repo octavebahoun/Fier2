@@ -36,10 +36,8 @@ function UniversityField({ universityId, setUniversityId, universities, loading 
 
   return (
     <div>
-      <label className="block text-xs uppercase tracking-widest text-text-secondary mb-1.5">
-        Université bénéficiaire *
-      </label>
-      <select
+      <label className="block text-xs uppercase tracking-widest text-text-secondary mb-1.5" htmlFor="soutiens-universite-beneficiaire">Université bénéficiaire *</label>
+      <select id="soutiens-universite-beneficiaire"
         value={universityId || ''}
         onChange={(e) => setUniversityId(e.target.value ? Number(e.target.value) : null)}
         className="w-full px-3 py-2.5 rounded-xl bg-bg-secondary border border-border-subtle text-text-primary text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-engine"
@@ -145,8 +143,8 @@ function FinancialForm({ universityId, setUniversityId, universities, user, noti
       />
 
       <div>
-        <label className="block text-xs uppercase tracking-widest text-text-secondary mb-1.5">Montant (FCFA) *</label>
-        <input
+        <label className="block text-xs uppercase tracking-widest text-text-secondary mb-1.5" htmlFor="soutiens-montant-fcfa">Montant (FCFA) *</label>
+        <input id="soutiens-montant-fcfa"
           type="number" min="1" step="any"
           value={amount}
           onChange={(e) => setAmount(e.target.value)}
@@ -157,8 +155,8 @@ function FinancialForm({ universityId, setUniversityId, universities, user, noti
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
-          <label className="block text-xs uppercase tracking-widest text-text-secondary mb-1.5">Nom du donateur *</label>
-          <input
+          <label className="block text-xs uppercase tracking-widest text-text-secondary mb-1.5" htmlFor="soutiens-nom-du-donateur">Nom du donateur *</label>
+          <input id="soutiens-nom-du-donateur"
             type="text" value={donorName}
             onChange={(e) => setDonorName(e.target.value)}
             placeholder="Jean Dupont"
@@ -166,8 +164,8 @@ function FinancialForm({ universityId, setUniversityId, universities, user, noti
           />
         </div>
         <div>
-          <label className="block text-xs uppercase tracking-widest text-text-secondary mb-1.5">Email *</label>
-          <input
+          <label className="block text-xs uppercase tracking-widest text-text-secondary mb-1.5" htmlFor="soutiens-email">Email *</label>
+          <input id="soutiens-email"
             type="email" value={donorEmail}
             onChange={(e) => setDonorEmail(e.target.value)}
             placeholder="jean@exemple.com"
@@ -177,8 +175,8 @@ function FinancialForm({ universityId, setUniversityId, universities, user, noti
       </div>
 
       <div>
-        <label className="block text-xs uppercase tracking-widest text-text-secondary mb-1.5">Message (optionnel)</label>
-        <textarea
+        <label className="block text-xs uppercase tracking-widest text-text-secondary mb-1.5" htmlFor="soutiens-message-optionnel">Message (optionnel)</label>
+        <textarea id="soutiens-message-optionnel"
           value={message}
           onChange={(e) => setMessage(e.target.value)}
           rows={3}
@@ -316,21 +314,21 @@ function PhysicalForm({ universityId, setUniversityId, universities, user, notif
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
-          <label className="block text-xs uppercase tracking-widest text-text-secondary mb-1.5">Nom du partenaire *</label>
-          <input type="text" value={donorName} onChange={(e) => setDonorName(e.target.value)} placeholder="Nom / Organisation"
+          <label className="block text-xs uppercase tracking-widest text-text-secondary mb-1.5" htmlFor="soutiens-nom-du-partenaire">Nom du partenaire *</label>
+          <input id="soutiens-nom-du-partenaire" type="text" value={donorName} onChange={(e) => setDonorName(e.target.value)} placeholder="Nom / Organisation"
             className="w-full px-3 py-2.5 rounded-xl bg-bg-secondary border border-border-subtle text-text-primary text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-engine" />
         </div>
         <div>
-          <label className="block text-xs uppercase tracking-widest text-text-secondary mb-1.5">Email *</label>
-          <input type="email" value={donorEmail} onChange={(e) => setDonorEmail(e.target.value)} placeholder="contact@exemple.com"
+          <label className="block text-xs uppercase tracking-widest text-text-secondary mb-1.5" htmlFor="soutiens-email-2">Email *</label>
+          <input id="soutiens-email-2" type="email" value={donorEmail} onChange={(e) => setDonorEmail(e.target.value)} placeholder="contact@exemple.com"
             className="w-full px-3 py-2.5 rounded-xl bg-bg-secondary border border-border-subtle text-text-primary text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-engine" />
         </div>
       </div>
 
       <div>
-        <label className="block text-xs uppercase tracking-widest text-text-secondary mb-1.5">Type de bien *</label>
+        <label className="block text-xs uppercase tracking-widest text-text-secondary mb-1.5" htmlFor="soutiens-type-de-bien">Type de bien *</label>
         <div className="relative">
-          <select
+          <select id="soutiens-type-de-bien"
             value={physicalType}
             onChange={(e) => setPhysicalType(e.target.value)}
             className="w-full px-3 py-2.5 rounded-xl bg-bg-secondary border border-border-subtle text-text-primary text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-engine appearance-none pr-9"
@@ -345,8 +343,8 @@ function PhysicalForm({ universityId, setUniversityId, universities, user, notif
       </div>
 
       <div>
-        <label className="block text-xs uppercase tracking-widest text-text-secondary mb-1.5">Description *</label>
-        <textarea
+        <label className="block text-xs uppercase tracking-widest text-text-secondary mb-1.5" htmlFor="soutiens-description">Description *</label>
+        <textarea id="soutiens-description"
           value={description} onChange={(e) => setDescription(e.target.value)} rows={3}
           placeholder="Décrivez le bien, sa quantité, son état…"
           className="w-full px-3 py-2.5 rounded-xl bg-bg-secondary border border-border-subtle text-text-primary text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-engine resize-none"

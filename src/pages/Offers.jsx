@@ -8,12 +8,15 @@ import {
 import { api } from '../services/api';
 import { useAuth } from '../context/AuthContext.jsx';
 import { useToast } from '../components/ui/Toast.jsx'
+import StatePanel from '../components/ui/StatePanel.jsx';
 
 
 // ─────────────────────────── Offers Page Component ───────────────────────────
 export default function Offers({ navigate }) {
   const { user, can } = useAuth();
   const [opportunities, setOpportunities] = useState([]);
+  const [loadingList, setLoadingList] = useState(true);
+  const [loadError, setLoadError] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   const { notify } = useToast()
   const [appliedOpportunityIds, setAppliedOpportunityIds] = useState(new Set());
@@ -37,13 +40,18 @@ export default function Offers({ navigate }) {
   const publishTriggerRef = useRef(null);
 
   const fetchOpportunities = async () => {
+    setLoadingList(true);
+    setLoadError(null);
     try {
       const res = await api.opportunities.getAll();
-      if (res.success) {
-        setOpportunities(res.data);
-      }
+      if (!res?.success) throw new Error(res?.message);
+      setOpportunities(res.data || []);
     } catch (err) {
-      console.error("Erreur lors de la récupération des opportunités:", err);
+      // Une liste vide et une liste illisible ne se ressemblent pas.
+      setOpportunities([]);
+      setLoadError(err?.serverMessage || err?.message || "La liste n'a pas pu être chargée.");
+    } finally {
+      setLoadingList(false);
     }
   };
 
@@ -58,7 +66,12 @@ export default function Offers({ navigate }) {
         setAppliedOpportunityIds(new Set(res.data.map(app => app.opportunityId)));
       }
     } catch (err) {
-      console.error("Erreur lors de la récupération de mes candidatures:", err);
+      setAppliedOpportunityIds(new Set());
+      notify(
+        err?.serverMessage
+          || "Vos candidatures déjà déposées n'ont pas pu être vérifiées.",
+        'warning',
+      );
     }
   };
 
@@ -295,7 +308,7 @@ export default function Offers({ navigate }) {
       <div className="flex flex-col md:flex-row gap-4 items-center justify-between glass-panel border border-border-subtle chamfer-sm p-4 relative z-10 bg-bg-secondary">
         <div className="relative w-full md:max-w-md">
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted" />
-          <input
+          <input aria-label="Rechercher une exclusivité, un partenaire"
             type="text"
             placeholder="Rechercher une exclusivité, un partenaire..."
             value={searchQuery}
@@ -312,7 +325,11 @@ export default function Offers({ navigate }) {
 
       {/* Interactive Opportunities Grid */}
       <div className="relative z-10">
-        {filteredOpportunities.length > 0 ? (
+        {loadingList ? (
+          <StatePanel state="loading" />
+        ) : loadError ? (
+          <StatePanel state="error" message={loadError} onRetry={fetchOpportunities} />
+        ) : filteredOpportunities.length > 0 ? (
           <motion.div
             variants={gridVariants}
             initial="hidden"

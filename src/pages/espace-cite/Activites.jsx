@@ -20,20 +20,26 @@ export default function Activites() {
   const { clubs, clubsLoading, clubId, club, setClubId, canSupervise } = useClubSpace()
 
   const [members, setMembers] = useState([])
+  const [membersError, setMembersError] = useState(null)
   const [activities, setActivities] = useState([])
   const [loading, setLoading] = useState(false)
+  const [error, setError] = useState(null)
   const [busy, setBusy] = useState(false)
   const [form, setForm] = useState({ title: '', description: '', memberId: '', dueDate: '' })
 
   useEffect(() => {
+    setMembersError(null)
     if (!clubId) { setMembers([]); return }
     let actif = true
     ;(async () => {
       try {
         const res = await api.clubSpace.membersList(clubId)
         if (actif) setMembers(res?.success && res.data?.members ? res.data.members : [])
-      } catch {
-        if (actif) setMembers([])
+      } catch (err) {
+        // Une liste vide et une liste illisible ne se ressemblent pas.
+        if (!actif) return
+        setMembers([])
+        setMembersError(err?.serverMessage || err?.message || "Les membres n'ont pas pu être chargés.")
       }
     })()
     return () => { actif = false }
@@ -41,12 +47,14 @@ export default function Activites() {
 
   const loadActivities = async () => {
     setLoading(true)
+    setError(null)
     try {
       const res = await api.clubSpace.myDashboard()
       const data = res?.data ?? res ?? {}
       setActivities(Array.isArray(data.assignedActivities) ? data.assignedActivities : [])
-    } catch {
+    } catch (err) {
       setActivities([])
+      setError(err?.serverMessage || err?.message || "Les activités n'ont pas pu être chargées.")
     } finally {
       setLoading(false)
     }
@@ -124,11 +132,13 @@ export default function Activites() {
                   <option key={m.memberId || m.id} value={m.memberId || m.id}>{nomComplet(m)}</option>
                 ))}
               </select>
-              {members.length === 0 && (
+              {membersError ? (
+                <p className="mt-1 text-sm text-danger">{membersError}</p>
+              ) : members.length === 0 ? (
                 <p className="mt-1 text-sm text-text-muted">
                   Ce club n’a pas encore de membre à qui confier une activité.
                 </p>
-              )}
+              ) : null}
             </div>
 
             <div>
@@ -170,6 +180,8 @@ export default function Activites() {
         >
           {loading ? (
             <StatePanel state="loading" />
+          ) : error ? (
+            <StatePanel state="error" message={error} onRetry={loadActivities} />
           ) : activities.length === 0 ? (
             <StatePanel state="empty" icon={ClipboardList} message="Aucune activité attribuée pour le moment." />
           ) : (

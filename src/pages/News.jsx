@@ -10,6 +10,7 @@ import { api } from '../services/api';
 import { useAuth } from '../context/AuthContext.jsx';
 import FadeInWhenVisible from '../components/home/FadeInWhenVisible.jsx';
 import { useToast } from '../components/ui/Toast.jsx'
+import StatePanel from '../components/ui/StatePanel.jsx';
 
 
 // ─────────────────────────── Category Color Mapping ───────────────────────────
@@ -50,6 +51,7 @@ export default function News({ navigate }) {
   const [activeTab, setActiveTab] = useState('actualites');
   const [news, setNews] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('Tous');
   
@@ -70,13 +72,15 @@ export default function News({ navigate }) {
 
   const fetchNews = async () => {
     setLoading(true);
+    setLoadError(null);
     try {
       const res = await api.news.getAll(false); // Only fetch APPROVED news for public newsfeed
-      if (res.success) {
-        setNews(res.data);
-      }
+      if (!res?.success) throw new Error(res?.message);
+      setNews(res.data || []);
     } catch (err) {
-      console.error(err);
+      // « Aucune publication » et « publications illisibles » diffèrent.
+      setNews([]);
+      setLoadError(err?.serverMessage || err?.message || "Les publications n'ont pas pu être chargées.");
     } finally {
       setLoading(false);
     }
@@ -228,7 +232,7 @@ export default function News({ navigate }) {
         {/* Search Bar */}
         <div className="relative w-full lg:max-w-md">
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-text-secondary" />
-          <input
+          <input aria-label="Rechercher par titre, résumé ou chercheur"
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
@@ -261,6 +265,8 @@ export default function News({ navigate }) {
               </div>
             ))}
           </div>
+        ) : loadError ? (
+          <StatePanel state="error" message={loadError} onRetry={fetchNews} />
         ) : filteredNews.length === 0 ? (
           <div className="glass-panel border border-border-subtle bg-bg-secondary p-12 chamfer text-center max-w-xl mx-auto">
             <BookOpen className="w-12 h-12 text-engine/40 mx-auto mb-4" />
@@ -485,8 +491,8 @@ export default function News({ navigate }) {
 
                 {/* Form Inputs */}
                 <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-text-secondary uppercase tracking-wider">Titre de la publication *</label>
-                  <input
+                  <label className="text-xs font-bold text-text-secondary uppercase tracking-wider" htmlFor="news-titre-de-la-publication">Titre de la publication *</label>
+                  <input id="news-titre-de-la-publication"
                     type="text"
                     required
                     value={newArticle.title}
@@ -499,8 +505,8 @@ export default function News({ navigate }) {
                 {/* Category & Preset Image Row */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-1.5">
-                    <label className="text-xs font-bold text-text-secondary uppercase tracking-wider">Thématique scientifique *</label>
-                    <select
+                    <label className="text-xs font-bold text-text-secondary uppercase tracking-wider" htmlFor="news-thematique-scientifique">Thématique scientifique *</label>
+                    <select id="news-thematique-scientifique"
                       value={newArticle.categorie}
                       onChange={(e) => setNewArticle({ ...newArticle, categorie: e.target.value })}
                       className="w-full px-4 py-3 rounded-xl border border-border-subtle bg-bg-secondary text-xs text-text-primary focus:outline-none focus:border-engine/60 focus:bg-bg-secondary transition-all"
@@ -514,9 +520,10 @@ export default function News({ navigate }) {
                   </div>
 
                   <div className="space-y-1.5">
-                    <label className="text-xs font-bold text-text-secondary uppercase tracking-wider">Illustration / Image</label>
+                    <label htmlFor="news-illustration" className="text-xs font-bold text-text-secondary uppercase tracking-wider">Illustration / Image</label>
                     <div className="flex items-center gap-2">
                       <input
+                        id="news-illustration"
                         type="text"
                         value={newArticle.image}
                         onChange={(e) => setNewArticle({ ...newArticle, image: e.target.value })}
@@ -529,10 +536,10 @@ export default function News({ navigate }) {
 
                 {/* Preset choice row */}
                 <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-text-secondary uppercase tracking-wider flex items-center gap-1.5">
+                  <p className="text-xs font-bold text-text-secondary uppercase tracking-wider flex items-center gap-1.5">
                     <Image className="w-3.5 h-3.5 text-engine" />
                     Ou choisir un visuel scientifique prédéfini :
-                  </label>
+                  </p>
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                     {IMAGE_PRESETS.map((preset) => (
                       <button
@@ -556,8 +563,8 @@ export default function News({ navigate }) {
 
                 {/* Excerpt Textarea */}
                 <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-text-secondary uppercase tracking-wider">Résumé de l'article (Excerpt) *</label>
-                  <textarea
+                  <label className="text-xs font-bold text-text-secondary uppercase tracking-wider" htmlFor="news-resume-de-l-article-excerpt">Résumé de l'article (Excerpt) *</label>
+                  <textarea id="news-resume-de-l-article-excerpt"
                     required
                     rows={2}
                     value={newArticle.excerpt}
@@ -569,8 +576,8 @@ export default function News({ navigate }) {
 
                 {/* Content Textarea */}
                 <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-text-secondary uppercase tracking-wider">Contenu complet de l'article *</label>
-                  <textarea
+                  <label className="text-xs font-bold text-text-secondary uppercase tracking-wider" htmlFor="news-contenu-complet-de-l-article">Contenu complet de l'article *</label>
+                  <textarea id="news-contenu-complet-de-l-article"
                     required
                     rows={6}
                     value={newArticle.content}

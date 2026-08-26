@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { motion } from 'framer-motion';
 import { 
   Search, Sparkles,  ArrowRight, 
@@ -6,26 +6,34 @@ import {
   Compass, Award
 } from 'lucide-react';
 import { api } from '../services/api';
+import StatePanel from '../components/ui/StatePanel.jsx';
 
 export default function Projects({ navigate }) {
   const [projects, setProjects] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [activeFilter, setActiveFilter] = useState('all');
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  const loadProjects = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const res = await api.projects.getAll();
+      if (!res?.success) throw new Error(res?.message);
+      setProjects(res.data || []);
+    } catch (err) {
+      // « Aucun projet » et « projets illisibles » sont deux écrans différents.
+      setProjects([]);
+      setError(err?.serverMessage || err?.message || "Les projets n'ont pas pu être chargés.");
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
   useEffect(() => {
-    // Load initial list from database
-    const loadProjects = async () => {
-      try {
-        const res = await api.projects.getAll();
-        if (res.success) {
-          setProjects(res.data);
-        }
-      } catch (err) {
-        console.error("Erreur de chargement des projets:", err);
-      }
-    };
     loadProjects();
-  }, []);
+  }, [loadProjects]);
 
   // Filter projects by both text query and status
   const filteredProjects = projects.filter(p => {
@@ -109,7 +117,7 @@ export default function Projects({ navigate }) {
         {/* Search */}
         <div className="relative w-full md:max-w-md">
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted" />
-          <input 
+          <input aria-label="Rechercher un projet, une technologie" 
             type="text" 
             placeholder="Rechercher un projet, une technologie..." 
             value={searchQuery}
@@ -155,7 +163,11 @@ export default function Projects({ navigate }) {
 
       {/* Bento Grid layout */}
       <div className="relative z-10">
-        {filteredProjects.length > 0 ? (
+        {loading ? (
+          <StatePanel state="loading" />
+        ) : error ? (
+          <StatePanel state="error" message={error} onRetry={loadProjects} />
+        ) : filteredProjects.length > 0 ? (
           <motion.div 
             variants={gridVariants}
             initial="hidden"

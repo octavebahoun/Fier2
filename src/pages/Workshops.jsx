@@ -10,6 +10,7 @@ import { useTheme } from '../context/useTheme.js';
 import FadeInWhenVisible from '../components/home/FadeInWhenVisible.jsx';
 import PageHeader from '../components/ui/PageHeader.jsx';
 import { useToast } from '../components/ui/Toast.jsx'
+import StatePanel from '../components/ui/StatePanel.jsx';
 
 
 // ─────────────────────────── Card Component ───────────────────────────
@@ -276,6 +277,7 @@ export default function Workshops({ navigate }) {
   const [workshops, setWorkshops] = useState([]);
   const [clubs, setClubs] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState(null);
   const { notify } = useToast()
   const [togglingId, setTogglingId] = useState(null);
 
@@ -284,15 +286,17 @@ export default function Workshops({ navigate }) {
   const [selectedClubId, setSelectedClubId] = useState('ALL');
   const [selectedLevel, setSelectedLevel] = useState('ALL');
 
-  // Load static data from mock database
   const loadData = async () => {
+    setLoading(true);
+    setLoadError(null);
     try {
       const workshopsRes = await api.workshops.getAll();
       const clubsRes = await api.clubs.getAll();
       if (workshopsRes.success) setWorkshops(workshopsRes.data);
       if (clubsRes.success) setClubs(clubsRes.data);
     } catch (err) {
-      console.error("Erreur lors de la récupération des ateliers:", err);
+      setWorkshops([]);
+      setLoadError(err?.serverMessage || err?.message || "Les ateliers n'ont pas pu être chargés.");
     } finally {
       setLoading(false);
     }
@@ -444,7 +448,7 @@ export default function Workshops({ navigate }) {
               {/* Search Bar */}
               <div className="relative w-full md:max-w-md">
                 <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4.5 h-4.5 text-text-muted" />
-                <input
+                <input aria-label="Rechercher un atelier, instructeur, thème"
                   type="text"
                   placeholder="Rechercher un atelier, instructeur, thème..."
                   value={searchQuery}
@@ -547,6 +551,8 @@ export default function Workshops({ navigate }) {
               <div key={n} className="glass-panel h-96 chamfer-sm animate-pulse bg-bg-secondary border border-border-subtle" />
             ))}
           </div>
+        ) : loadError ? (
+          <StatePanel state="error" message={loadError} onRetry={loadData} />
         ) : filteredWorkshops.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6.5">
             {filteredWorkshops.map((w, index) => {

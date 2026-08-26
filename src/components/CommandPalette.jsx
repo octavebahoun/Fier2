@@ -163,7 +163,7 @@ export default function CommandPalette({ navigate }) {
             {/* Header / Search Input */}
             <div className="flex items-center gap-3 px-4 py-3.5 border-b border-border-subtle">
               <Search className="w-5 h-5 text-text-muted shrink-0" />
-              <input
+              <input aria-label="Tapez une commande ou naviguez"
                 ref={inputRef}
                 type="text"
                 value={search}

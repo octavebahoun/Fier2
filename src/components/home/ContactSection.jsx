@@ -149,8 +149,8 @@ export default function ContactSection({ contact }) {
 
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
-                          <label className="block text-xs font-bold tracking-widest text-text-secondary uppercase mb-2">Votre Nom</label>
-                          <input
+                          <label className="block text-xs font-bold tracking-widest text-text-secondary uppercase mb-2" htmlFor="contactsection-votre-nom">Votre Nom</label>
+                          <input id="contactsection-votre-nom"
                             type="text"
                             required
                             value={formState.name}
@@ -161,8 +161,8 @@ export default function ContactSection({ contact }) {
                           {errors.name && <span className="text-xs text-danger mt-1 block">{errors.name}</span>}
                         </div>
                         <div>
-                          <label className="block text-xs font-bold tracking-widest text-text-secondary uppercase mb-2">Adresse E-mail</label>
-                          <input
+                          <label className="block text-xs font-bold tracking-widest text-text-secondary uppercase mb-2" htmlFor="contactsection-adresse-e-mail">Adresse E-mail</label>
+                          <input id="contactsection-adresse-e-mail"
                             type="email"
                             required
                             value={formState.email}
@@ -175,8 +175,8 @@ export default function ContactSection({ contact }) {
                       </div>
 
                       <div>
-                        <label className="block text-xs font-bold tracking-widest text-text-secondary uppercase mb-2">Sujet de discussion</label>
-                        <input
+                        <label className="block text-xs font-bold tracking-widest text-text-secondary uppercase mb-2" htmlFor="contactsection-sujet-de-discussion">Sujet de discussion</label>
+                        <input id="contactsection-sujet-de-discussion"
                           type="text"
                           value={formState.subject}
                           onChange={(e) => handleChange('subject', e.target.value)}
@@ -186,8 +186,8 @@ export default function ContactSection({ contact }) {
                       </div>
 
                       <div>
-                        <label className="block text-xs font-bold tracking-widest text-text-secondary uppercase mb-2">Message détaillé</label>
-                        <textarea
+                        <label className="block text-xs font-bold tracking-widest text-text-secondary uppercase mb-2" htmlFor="contactsection-message-detaille">Message détaillé</label>
+                        <textarea id="contactsection-message-detaille"
                           required
                           rows="4"
                           value={formState.message}

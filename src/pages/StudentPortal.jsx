@@ -50,6 +50,7 @@ export default function StudentPortal({ navigate }) {
   const { user } = useAuth();
   const userId = user?.id ?? null;
   const [clubs, setClubs] = useState([])
+  const [clubsError, setClubsError] = useState(null)
 
   useEffect(() => {
     const loadClubs = async () => {
@@ -58,8 +59,9 @@ export default function StudentPortal({ navigate }) {
         if (res.success) {
           setClubs(Array.isArray(res.data) ? res.data.slice(0, 3) : []);
         }
-      } catch {
+      } catch (err) {
         setClubs([]);
+        setClubsError(err?.serverMessage || err?.message || "Les clubs n'ont pas pu être chargés.");
       }
     };
     loadClubs();
@@ -151,6 +153,12 @@ export default function StudentPortal({ navigate }) {
             )
           })}
         </div>
+
+        {clubsError && (
+          <p className="border border-danger bg-danger-wash px-4 py-3 text-sm text-danger">
+            {clubsError}
+          </p>
+        )}
 
         {clubs.length > 0 && (
           <div className="glass-panel chamfer p-8 border border-border-subtle relative overflow-hidden">

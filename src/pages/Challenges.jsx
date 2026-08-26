@@ -117,7 +117,7 @@ function CreateChallengeModal({ clubId, onClose, onCreated }) {
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <Field label="Titre *">
-            <input
+            <input aria-label="Défi d'optimisation d'algorithmes"
               className="w-full bg-bg-tertiary border border-border-subtle rounded-xl px-3 py-2.5 text-sm text-text-primary placeholder:text-text-secondary/60 focus:outline-none focus:ring-2 focus:ring-engine/50"
               placeholder="Défi d'optimisation d'algorithmes"
               value={form.title}
@@ -126,7 +126,7 @@ function CreateChallengeModal({ clubId, onClose, onCreated }) {
           </Field>
 
           <Field label="Description *">
-            <textarea
+            <textarea aria-label="Présentez l'objectif du challenge"
               rows={3}
               className="w-full bg-bg-tertiary border border-border-subtle rounded-xl px-3 py-2.5 text-sm text-text-primary placeholder:text-text-secondary/60 focus:outline-none focus:ring-2 focus:ring-engine/50 resize-none"
               placeholder="Présentez l'objectif du challenge…"
@@ -136,7 +136,7 @@ function CreateChallengeModal({ clubId, onClose, onCreated }) {
           </Field>
 
           <Field label="Consignes / règles *">
-            <textarea
+            <textarea aria-label="Décrivez les règles et critères"
               rows={3}
               className="w-full bg-bg-tertiary border border-border-subtle rounded-xl px-3 py-2.5 text-sm text-text-primary placeholder:text-text-secondary/60 focus:outline-none focus:ring-2 focus:ring-engine/50 resize-none"
               placeholder="Décrivez les règles et critères…"
@@ -320,14 +320,14 @@ function SubmissionRow({ submission, isManager, onEvaluate, onToggleWinner, isWi
       {isManager && showEval && (
         <div className="space-y-2 pt-1" onClick={(e) => e.stopPropagation()}>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-            <input
+            <input aria-label="Note /20"
               type="number" min="0" max="20" step="0.5"
               placeholder="Note /20"
               value={grade}
               onChange={(e) => setGrade(e.target.value)}
               className="bg-bg-tertiary border border-border-subtle rounded-lg px-3 py-2 text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-engine/50"
             />
-            <input
+            <input aria-label="Commentaire"
               placeholder="Commentaire"
               value={feedback}
               onChange={(e) => setFeedback(e.target.value)}
@@ -575,7 +575,7 @@ export default function Challenges() {
 
         {/* Sélecteur de CITE */}
         <div className="mb-8 flex flex-col sm:flex-row sm:items-center gap-3">
-          <label className="text-sm font-bold text-text-secondary flex items-center gap-2">
+          <label htmlFor="challenges-club" className="text-sm font-bold text-text-secondary flex items-center gap-2">
             <FlaskConical className="w-4 h-4 text-engine" /> CITE (club) :
           </label>
           {loadingClubs ? (
@@ -586,6 +586,7 @@ export default function Challenges() {
             <span className="text-sm text-text-secondary">Aucun club disponible.</span>
           ) : (
             <select
+              id="challenges-club"
               value={clubId || ''}
               onChange={(e) => setClubId(e.target.value)}
               className="bg-bg-secondary border border-border-subtle rounded-xl px-4 py-2.5 text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-engine/50 min-w-[220px]"
@@ -684,7 +685,7 @@ export default function Challenges() {
                           <AlertCircle className="w-3.5 h-3.5 shrink-0" /> {submitError}
                         </div>
                       )}
-                      <input
+                      <input aria-label="https:// (lien vers votre fichier)"
                         type="url"
                         placeholder="https://… (lien vers votre fichier)"
                         value={fileUrl}

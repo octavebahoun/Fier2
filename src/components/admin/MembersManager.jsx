@@ -157,7 +157,7 @@ export default function MembersManager() {
         <form onSubmit={handleSearchSubmit} className="flex items-center gap-2">
           <div className="relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-text-muted" />
-            <input
+            <input aria-label="Nom, e-mail"
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
@@ -236,6 +236,7 @@ export default function MembersManager() {
                   </span>
                   <div className="relative">
                     <select
+                      aria-label={`Rôle de ${member.firstName} ${member.lastName}`}
                       value={ASSIGNABLE_ROLES.includes(member.role?.toUpperCase()) ? member.role.toUpperCase() : ''}
                       disabled={isBusy || !canSetRole}
                       onChange={(e) => changeRole(member, e.target.value)}
@@ -256,6 +257,7 @@ export default function MembersManager() {
 
                   <div className="relative">
                     <select
+                      aria-label={`Poste de gouvernance de ${member.firstName} ${member.lastName}`}
                       value={member.universityPost?.post || ''}
                       disabled={isBusy || !canSetPost}
                       onChange={(e) => changePost(member, e.target.value)}

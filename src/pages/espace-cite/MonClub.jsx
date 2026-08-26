@@ -25,6 +25,7 @@ export default function MonClub({ navigate }) {
 
   const [projects, setProjects] = useState([])
   const [projectsLoading, setProjectsLoading] = useState(false)
+  const [projectsError, setProjectsError] = useState(null)
 
   useEffect(() => {
     if (!clubId) { setMembers([]); return }
@@ -51,13 +52,16 @@ export default function MonClub({ navigate }) {
     let actif = true
     ;(async () => {
       setProjectsLoading(true)
+      setProjectsError(null)
       try {
         const res = await api.clubSpace.myDashboard()
         if (!actif) return
         const data = res?.data ?? res ?? {}
         setProjects(Array.isArray(data.projects) ? data.projects : [])
-      } catch {
-        if (actif) setProjects([])
+      } catch (err) {
+        if (!actif) return
+        setProjects([])
+        setProjectsError(err?.serverMessage || err?.message || "Les projets n'ont pas pu être chargés.")
       } finally {
         if (actif) setProjectsLoading(false)
       }
@@ -146,6 +150,8 @@ export default function MonClub({ navigate }) {
         >
           {projectsLoading ? (
             <StatePanel state="loading" />
+          ) : projectsError ? (
+            <StatePanel state="error" message={projectsError} />
           ) : projects.length === 0 ? (
             <StatePanel state="empty" message="Aucun projet actif pour ce club." icon={FolderKanban} />
           ) : (

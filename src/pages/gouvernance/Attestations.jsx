@@ -33,6 +33,7 @@ export default function Attestations() {
   const canUploadSignature = can('signature:upload', { universityId })
 
   const [members, setMembers] = useState([])
+  const [certsError, setCertsError] = useState(null)
   const [loadingMembers, setLoadingMembers] = useState(false)
   const [errorMembers, setErrorMembers] = useState(null)
 
@@ -72,11 +73,13 @@ export default function Attestations() {
   const loadCerts = useCallback(async () => {
     if (!user?.id) return
     setLoadingCerts(true)
+    setCertsError(null)
     try {
       const res = await api.certificate.listForMember(user.id)
       setCerts(res?.success && Array.isArray(res.data) ? res.data : [])
-    } catch {
+    } catch (err) {
       setCerts([])
+      setCertsError(err?.serverMessage || err?.message || "Vos attestations n'ont pas pu être chargées.")
     } finally {
       setLoadingCerts(false)
     }
@@ -287,6 +290,8 @@ export default function Attestations() {
         >
           {loadingCerts ? (
             <StatePanel state="loading" />
+          ) : certsError ? (
+            <StatePanel state="error" message={certsError} onRetry={loadCerts} />
           ) : certs.length === 0 ? (
             <StatePanel state="empty" icon={Award} message="Vous n’avez encore reçu aucune attestation." />
           ) : (
