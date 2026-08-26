@@ -75,7 +75,7 @@ export default function StudentPortal({ navigate }) {
             <div className="p-2.5 rounded-xl bg-engine-wash border border-engine/20 text-engine">
               <GraduationCap className="w-5 h-5" />
             </div>
-            <span className="text-[11px] font-extrabold tracking-[0.25em] uppercase text-engine">
+            <span className="text-xs font-extrabold tracking-[0.25em] uppercase text-engine">
               PORTAL ÉTUDIANT
             </span>
           </div>
@@ -136,7 +136,7 @@ export default function StudentPortal({ navigate }) {
                     {section.features.map((f) => (
                       <span
                         key={f}
-                        className="text-[11px] font-semibold text-text-muted bg-bg-tertiary px-2 py-1 rounded-full border border-border-subtle"
+                        className="text-xs font-semibold text-text-muted bg-bg-tertiary px-2 py-1 rounded-full border border-border-subtle"
                       >
                         {f}
                       </span>
@@ -191,7 +191,7 @@ export default function StudentPortal({ navigate }) {
                       </div>
                       <div className="flex flex-col min-w-0">
                         <span className="text-xs font-bold text-text-primary truncate">{club.kicker}</span>
-                        <span className="text-[11px] text-text-muted truncate">{club.membersCount || 0} membres</span>
+                        <span className="text-xs text-text-muted truncate">{club.membersCount || 0} membres</span>
                       </div>
                     </motion.div>
                   )

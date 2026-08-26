@@ -44,7 +44,7 @@ export default function VisionSection({ vision }) {
                   <GraduationCap className="w-5 h-5" />
                 </div>
                 <div>
-                  <div className="text-[13px] font-bold uppercase tracking-widest text-text-primary">FIERI Scientific Board</div>
+                  <div className="text-sm font-bold uppercase tracking-widest text-text-primary">FIERI Scientific Board</div>
                   <div className="eyebrow mt-0.5">Research Leadership Initiative</div>
                 </div>
               </footer>

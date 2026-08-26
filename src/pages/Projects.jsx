@@ -214,7 +214,7 @@ export default function Projects({ navigate }) {
                       {/* Status badge & stars count */}
                       <div className="flex justify-between items-center">
                         <div className="flex items-center gap-2">
-                          <span className={`text-[11px] font-extrabold uppercase tracking-wider px-2.5 py-0.5 rounded-md border ${
+                          <span className={`text-xs font-extrabold uppercase tracking-wider px-2.5 py-0.5 rounded-md border ${
                             p.status === 'Actif'
                               ? 'text-success bg-success-wash border-success'
                               : 'text-warning bg-warning-wash border-warning'
@@ -222,7 +222,7 @@ export default function Projects({ navigate }) {
                             {p.status}
                           </span>
                           {isFeatured && (
-                            <span className="text-[11px] font-extrabold uppercase tracking-wider px-2.5 py-0.5 rounded-md text-engine bg-engine-wash border-engine/10 flex items-center gap-1">
+                            <span className="text-xs font-extrabold uppercase tracking-wider px-2.5 py-0.5 rounded-md text-engine bg-engine-wash border-engine/10 flex items-center gap-1">
                               <Award className="w-2.5 h-2.5 animate-bounce" />
                               À la Une
                             </span>
@@ -231,7 +231,7 @@ export default function Projects({ navigate }) {
                         
                         <div className="flex items-center gap-1 text-text-secondary group-hover:text-warning transition-colors">
                           <Star className={`w-3.5 h-3.5 ${p.starred ? 'fill-warning text-warning' : ''}`} />
-                          <span className="text-[11px] font-bold">{p.stars}</span>
+                          <span className="text-xs font-bold">{p.stars}</span>
                         </div>
                       </div>
 
@@ -242,7 +242,7 @@ export default function Projects({ navigate }) {
                         }`}>
                           {p.title}
                         </h3>
-                        <p className="text-[11px] md:text-xs text-text-secondary leading-relaxed line-clamp-3">
+                        <p className="text-xs md:text-xs text-text-secondary leading-relaxed line-clamp-3">
                           {p.summary}
                         </p>
                       </div>
@@ -250,12 +250,12 @@ export default function Projects({ navigate }) {
                       {/* Technologies tags list */}
                       <div className="flex flex-wrap gap-2 pt-2">
                         {p.technologies.slice(0, isFeatured ? 7 : 4).map((tech, idx) => (
-                          <span key={idx} className="text-[11px] font-extrabold text-text-muted bg-bg-tertiary border border-border-subtle px-2 py-0.5 rounded-md">
+                          <span key={idx} className="text-xs font-extrabold text-text-muted bg-bg-tertiary border border-border-subtle px-2 py-0.5 rounded-md">
                             {tech}
                           </span>
                         ))}
                         {p.technologies.length > (isFeatured ? 7 : 4) && (
-                          <span className="text-[11px] font-extrabold text-engine bg-engine-wash border border-engine/10 px-2 py-0.5 rounded-md">
+                          <span className="text-xs font-extrabold text-engine bg-engine-wash border border-engine/10 px-2 py-0.5 rounded-md">
                             +{p.technologies.length - (isFeatured ? 7 : 4)}
                           </span>
                         )}
@@ -267,7 +267,7 @@ export default function Projects({ navigate }) {
                       
                       {/* Budget indicator bar */}
                       <div className="space-y-1.5">
-                        <div className="flex justify-between items-center text-[11px] font-bold text-text-secondary">
+                        <div className="flex justify-between items-center text-xs font-bold text-text-secondary">
                           <span className="flex items-center gap-1.5">
                             <Coins className="w-3.5 h-3.5 text-engine" />
                             {p.supportersCount} soutien(s)
@@ -287,13 +287,13 @@ export default function Projects({ navigate }) {
                       {/* Author block and visual Explore link */}
                       <div className="flex justify-between items-center gap-4">
                         <div className="flex items-center gap-2.5">
-                          <span className="w-7 h-7 rounded-full bg-engine-wash border border-border-subtle flex items-center justify-center text-[11px] font-extrabold text-engine shrink-0">
+                          <span className="w-7 h-7 rounded-full bg-engine-wash border border-border-subtle flex items-center justify-center text-xs font-extrabold text-engine shrink-0">
                             {p.author ? p.author.charAt(0).toUpperCase() : '?'}
                           </span>
-                          <span className="text-[11px] font-bold text-text-primary line-clamp-1">{p.author}</span>
+                          <span className="text-xs font-bold text-text-primary line-clamp-1">{p.author}</span>
                         </div>
 
-                        <div className="flex items-center gap-1 text-[11px] font-extrabold uppercase tracking-wider text-engine group-hover:translate-x-1 transition-transform">
+                        <div className="flex items-center gap-1 text-xs font-extrabold uppercase tracking-wider text-engine group-hover:translate-x-1 transition-transform">
                           Détails
                           <ArrowRight className="w-3 h-3" />
                         </div>

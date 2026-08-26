@@ -138,7 +138,7 @@ export default function ResearchClubsSection({ clubs, navigate }) {
             <p className="text-text-secondary text-sm font-light mb-4">{error}</p>
             <button
               onClick={() => window.location.reload()}
-              className="inline-flex items-center gap-2 text-[11px] uppercase tracking-widest font-bold bg-engine-wash border border-engine/30 text-engine px-5 py-2.5 chamfer-xs hover:bg-engine-wash transition-all cursor-pointer"
+              className="inline-flex items-center gap-2 text-xs uppercase tracking-widest font-bold bg-engine-wash border border-engine/30 text-engine px-5 py-2.5 chamfer-xs hover:bg-engine-wash transition-all cursor-pointer"
             >
               Réessayer
             </button>
@@ -176,7 +176,7 @@ export default function ResearchClubsSection({ clubs, navigate }) {
                       >
                         <Icon className="w-5 h-5" style={{ color: accent }} />
                       </div>
-                      <span className="text-[11px] font-bold tracking-widest uppercase text-text-muted font-mono">
+                      <span className="text-xs font-bold tracking-widest uppercase text-text-muted font-mono">
                         CITE_{String(i + 1).padStart(2, '0')}
                       </span>
                     </div>
@@ -209,7 +209,7 @@ export default function ResearchClubsSection({ clubs, navigate }) {
           </div>
         )}
 
-        <p className="text-center text-[11px] text-text-muted font-mono uppercase mt-6">
+        <p className="text-center text-xs text-text-muted font-mono uppercase mt-6">
           fieri // glissez ou utilisez les flèches pour parcourir les CITE
         </p>
       </div>

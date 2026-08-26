@@ -114,7 +114,7 @@ export default function ClubDetail({ navigate, clubId }) {
       {Array.isArray(club.divisions) && club.divisions.length > 0 && (
         <div className="flex flex-wrap gap-2">
           {club.divisions.map((d, i) => (
-            <span key={i} className="text-[11px] font-bold px-3 py-1 rounded-full" style={{ background: `${accent}12`, color: accent, border: `1px solid ${accent}25` }}>{d}</span>
+            <span key={i} className="text-xs font-bold px-3 py-1 rounded-full" style={{ background: `${accent}12`, color: accent, border: `1px solid ${accent}25` }}>{d}</span>
           ))}
         </div>
       )}

@@ -218,10 +218,10 @@ export default function ResearchersCarousel({ navigate }) {
                   <h3 className="text-base font-extrabold text-text-primary group-hover:text-engine transition-colors truncate">
                     {researcher.name}
                   </h3>
-                  <span className="text-[11px] font-bold text-engine tracking-wide uppercase truncate">
+                  <span className="text-xs font-bold text-engine tracking-wide uppercase truncate">
                     {researcher.pole}
                   </span>
-                  <span className="text-[11px] font-medium text-text-muted truncate">
+                  <span className="text-xs font-medium text-text-muted truncate">
                     {researcher.university}
                   </span>
                 </div>
@@ -238,7 +238,7 @@ export default function ResearchersCarousel({ navigate }) {
               {/* Card Bottom: Stats & Button */}
               <div className="flex items-center justify-between relative z-10 gap-3">
                 {/* Horizontal Stats */}
-                <div className="flex items-center gap-4 text-[11px] text-text-muted font-extrabold uppercase">
+                <div className="flex items-center gap-4 text-xs text-text-muted font-extrabold uppercase">
                   <div className="flex items-center gap-1.5">
                     <BookOpen className="w-3.5 h-3.5 text-engine/80" />
                     <span>{researcher.publicationsCount} Pubs</span>

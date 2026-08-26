@@ -17,7 +17,7 @@ function UniversityField({ universityId, setUniversityId, universities, loading 
       <div className="flex items-center gap-3 p-3 rounded-xl bg-bg-secondary border border-border-subtle">
         <Building2 className="w-5 h-5 text-engine shrink-0" />
         <div className="min-w-0">
-          <p className="text-[11px] uppercase tracking-widest text-text-secondary">Université bénéficiaire</p>
+          <p className="text-xs uppercase tracking-widest text-text-secondary">Université bénéficiaire</p>
           <p className="text-sm font-semibold text-text-primary truncate">
             {current?.name || `Établissement #${universityId}`}
           </p>
@@ -36,7 +36,7 @@ function UniversityField({ universityId, setUniversityId, universities, loading 
 
   return (
     <div>
-      <label className="block text-[11px] uppercase tracking-widest text-text-secondary mb-1.5">
+      <label className="block text-xs uppercase tracking-widest text-text-secondary mb-1.5">
         Université bénéficiaire *
       </label>
       <select
@@ -145,7 +145,7 @@ function FinancialForm({ universityId, setUniversityId, universities, user, noti
       />
 
       <div>
-        <label className="block text-[11px] uppercase tracking-widest text-text-secondary mb-1.5">Montant (FCFA) *</label>
+        <label className="block text-xs uppercase tracking-widest text-text-secondary mb-1.5">Montant (FCFA) *</label>
         <input
           type="number" min="1" step="any"
           value={amount}
@@ -157,7 +157,7 @@ function FinancialForm({ universityId, setUniversityId, universities, user, noti
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
-          <label className="block text-[11px] uppercase tracking-widest text-text-secondary mb-1.5">Nom du donateur *</label>
+          <label className="block text-xs uppercase tracking-widest text-text-secondary mb-1.5">Nom du donateur *</label>
           <input
             type="text" value={donorName}
             onChange={(e) => setDonorName(e.target.value)}
@@ -166,7 +166,7 @@ function FinancialForm({ universityId, setUniversityId, universities, user, noti
           />
         </div>
         <div>
-          <label className="block text-[11px] uppercase tracking-widest text-text-secondary mb-1.5">Email *</label>
+          <label className="block text-xs uppercase tracking-widest text-text-secondary mb-1.5">Email *</label>
           <input
             type="email" value={donorEmail}
             onChange={(e) => setDonorEmail(e.target.value)}
@@ -177,7 +177,7 @@ function FinancialForm({ universityId, setUniversityId, universities, user, noti
       </div>
 
       <div>
-        <label className="block text-[11px] uppercase tracking-widest text-text-secondary mb-1.5">Message (optionnel)</label>
+        <label className="block text-xs uppercase tracking-widest text-text-secondary mb-1.5">Message (optionnel)</label>
         <textarea
           value={message}
           onChange={(e) => setMessage(e.target.value)}
@@ -316,19 +316,19 @@ function PhysicalForm({ universityId, setUniversityId, universities, user, notif
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
-          <label className="block text-[11px] uppercase tracking-widest text-text-secondary mb-1.5">Nom du partenaire *</label>
+          <label className="block text-xs uppercase tracking-widest text-text-secondary mb-1.5">Nom du partenaire *</label>
           <input type="text" value={donorName} onChange={(e) => setDonorName(e.target.value)} placeholder="Nom / Organisation"
             className="w-full px-3 py-2.5 rounded-xl bg-bg-secondary border border-border-subtle text-text-primary text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-engine" />
         </div>
         <div>
-          <label className="block text-[11px] uppercase tracking-widest text-text-secondary mb-1.5">Email *</label>
+          <label className="block text-xs uppercase tracking-widest text-text-secondary mb-1.5">Email *</label>
           <input type="email" value={donorEmail} onChange={(e) => setDonorEmail(e.target.value)} placeholder="contact@exemple.com"
             className="w-full px-3 py-2.5 rounded-xl bg-bg-secondary border border-border-subtle text-text-primary text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-engine" />
         </div>
       </div>
 
       <div>
-        <label className="block text-[11px] uppercase tracking-widest text-text-secondary mb-1.5">Type de bien *</label>
+        <label className="block text-xs uppercase tracking-widest text-text-secondary mb-1.5">Type de bien *</label>
         <div className="relative">
           <select
             value={physicalType}
@@ -345,7 +345,7 @@ function PhysicalForm({ universityId, setUniversityId, universities, user, notif
       </div>
 
       <div>
-        <label className="block text-[11px] uppercase tracking-widest text-text-secondary mb-1.5">Description *</label>
+        <label className="block text-xs uppercase tracking-widest text-text-secondary mb-1.5">Description *</label>
         <textarea
           value={description} onChange={(e) => setDescription(e.target.value)} rows={3}
           placeholder="Décrivez le bien, sa quantité, son état…"

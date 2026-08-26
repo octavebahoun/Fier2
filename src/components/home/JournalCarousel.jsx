@@ -219,7 +219,7 @@ export default function JournalCarousel({ navigate }) {
           <p className="text-text-secondary text-sm font-light mb-4">{error}</p>
           <button
             onClick={() => window.location.reload()}
-            className="inline-flex items-center gap-2 text-[11px] uppercase tracking-widest font-bold bg-engine-wash border border-engine/30 text-engine px-5 py-2.5 chamfer-xs hover:bg-engine-wash transition-all cursor-pointer"
+            className="inline-flex items-center gap-2 text-xs uppercase tracking-widest font-bold bg-engine-wash border border-engine/30 text-engine px-5 py-2.5 chamfer-xs hover:bg-engine-wash transition-all cursor-pointer"
           >
             Réessayer
           </button>
@@ -257,7 +257,7 @@ export default function JournalCarousel({ navigate }) {
                   <div>
                     <div className="flex items-center justify-between mb-5">
                       <span
-                        className="text-[11px] font-bold uppercase tracking-widest px-2.5 py-0.5 rounded-sm border"
+                        className="text-xs font-bold uppercase tracking-widest px-2.5 py-0.5 rounded-sm border"
                         style={{
                           color: meta.color,
                           borderColor: `${meta.color}55`,
@@ -284,7 +284,7 @@ export default function JournalCarousel({ navigate }) {
                   </div>
 
                   <div className="border-t border-border-subtle/50 pt-4 mt-auto flex items-center justify-between">
-                    <span className="text-[11px] font-mono uppercase text-text-muted truncate pr-2">
+                    <span className="text-xs font-mono uppercase text-text-muted truncate pr-2">
                       {card.meta || 'FIERI Community'}
                     </span>
                     <span className="inline-flex items-center gap-1 text-xs font-bold text-engine shrink-0">

@@ -156,7 +156,7 @@ export default function AppLayout({
                   <div className="flex items-center gap-2.5 select-none text-text-primary">
                     <Logo className="h-5" />
                   </div>
-                  <p className="text-[13px] text-text-secondary leading-relaxed max-w-xs mt-2">
+                  <p className="text-sm text-text-secondary leading-relaxed max-w-xs mt-2">
                     La plateforme officielle de FIERI Research : projets de recherche appliquée,
                     clubs scientifiques et opportunités R&D.
                   </p>
@@ -167,7 +167,7 @@ export default function AppLayout({
                       Newsletter
                     </label>
                     {newsletterSubscribed ? (
-                      <div className="text-[13px] text-ember bg-ember-wash border border-ember/25 p-2.5 rounded-lg font-medium" role="status" aria-live="polite">
+                      <div className="text-sm text-ember bg-ember-wash border border-ember/25 p-2.5 rounded-lg font-medium" role="status" aria-live="polite">
                         ✓ Abonnement validé avec succès !
                       </div>
                     ) : (
@@ -185,11 +185,11 @@ export default function AppLayout({
                             aria-invalid={!!newsletterError}
                             aria-describedby={newsletterError ? 'footer-newsletter-error' : undefined}
                             onChange={(e) => { setNewsletterEmail(e.target.value); if (newsletterError) setNewsletterError(null); }}
-                            className={`bg-bg-secondary border ${newsletterError ? 'border-danger' : 'border-border-subtle hover:border-border-strong focus:border-engine'} rounded-lg px-3 py-2 text-[13px] text-text-primary placeholder:text-text-muted transition-[border-color,background-color,box-shadow] flex-grow min-w-0`}
+                            className={`bg-bg-secondary border ${newsletterError ? 'border-danger' : 'border-border-subtle hover:border-border-strong focus:border-engine'} rounded-lg px-3 py-2 text-sm text-text-primary placeholder:text-text-muted transition-[border-color,background-color,box-shadow] flex-grow min-w-0`}
                           />
                           <button
                             type="submit"
-                            className="min-h-11 min-w-11 bg-engine hover:bg-engine-deep text-on-accent px-4 rounded-lg text-[13px] font-bold transition-colors cursor-pointer shrink-0"
+                            className="min-h-11 min-w-11 bg-engine hover:bg-engine-deep text-on-accent px-4 rounded-lg text-sm font-bold transition-colors cursor-pointer shrink-0"
                           >
                             OK
                           </button>
@@ -206,10 +206,10 @@ export default function AppLayout({
                 <div className="flex flex-col gap-3">
                   <span className="eyebrow">Plateforme</span>
                   <ul className="flex flex-col gap-2">
-                    <li><button onClick={() => navigate('home')} className="text-[13px] text-text-secondary hover:text-text-primary transition-colors text-left cursor-pointer">Accueil Général</button></li>
-                    <li><button onClick={() => navigate('student-portal')} className="text-[13px] text-text-secondary hover:text-text-primary transition-colors text-left cursor-pointer">Portail Étudiant</button></li>
-                    <li><button onClick={() => navigate('projects')} className="text-[13px] text-text-secondary hover:text-text-primary transition-colors text-left cursor-pointer">Projets & Brevets</button></li>
-                    <li><button onClick={() => navigate('opportunities')} className="text-[13px] text-text-secondary hover:text-text-primary transition-colors text-left cursor-pointer">Annonces Recherche</button></li>
+                    <li><button onClick={() => navigate('home')} className="text-sm text-text-secondary hover:text-text-primary transition-colors text-left cursor-pointer">Accueil Général</button></li>
+                    <li><button onClick={() => navigate('student-portal')} className="text-sm text-text-secondary hover:text-text-primary transition-colors text-left cursor-pointer">Portail Étudiant</button></li>
+                    <li><button onClick={() => navigate('projects')} className="text-sm text-text-secondary hover:text-text-primary transition-colors text-left cursor-pointer">Projets & Brevets</button></li>
+                    <li><button onClick={() => navigate('opportunities')} className="text-sm text-text-secondary hover:text-text-primary transition-colors text-left cursor-pointer">Annonces Recherche</button></li>
                   </ul>
                 </div>
 
@@ -217,10 +217,10 @@ export default function AppLayout({
                 <div className="flex flex-col gap-3">
                   <span className="eyebrow">Ressources</span>
                   <ul className="flex flex-col gap-2">
-                    <li><button onClick={() => navigate('news')} className="text-[13px] text-text-secondary hover:text-text-primary transition-colors text-left cursor-pointer">Actualités</button></li>
-                    <li><button onClick={() => navigate('workshops')} className="text-[13px] text-text-secondary hover:text-text-primary transition-colors text-left cursor-pointer">Ateliers & Formations</button></li>
-                    <li><button onClick={() => navigate('events')} className="text-[13px] text-text-secondary hover:text-text-primary transition-colors text-left cursor-pointer">Événements</button></li>
-                    <li><button onClick={() => navigate('clubs')} className="text-[13px] text-text-secondary hover:text-text-primary transition-colors text-left cursor-pointer">CITE Scientifiques</button></li>
+                    <li><button onClick={() => navigate('news')} className="text-sm text-text-secondary hover:text-text-primary transition-colors text-left cursor-pointer">Actualités</button></li>
+                    <li><button onClick={() => navigate('workshops')} className="text-sm text-text-secondary hover:text-text-primary transition-colors text-left cursor-pointer">Ateliers & Formations</button></li>
+                    <li><button onClick={() => navigate('events')} className="text-sm text-text-secondary hover:text-text-primary transition-colors text-left cursor-pointer">Événements</button></li>
+                    <li><button onClick={() => navigate('clubs')} className="text-sm text-text-secondary hover:text-text-primary transition-colors text-left cursor-pointer">CITE Scientifiques</button></li>
                   </ul>
                 </div>
 
@@ -228,9 +228,9 @@ export default function AppLayout({
                 <div className="flex flex-col gap-3">
                   <span className="eyebrow">Espace privé</span>
                   <ul className="flex flex-col gap-2">
-                    <li><button onClick={() => navigate(user ? 'dashboard' : 'auth')} className="text-[13px] text-text-secondary hover:text-text-primary transition-colors text-left cursor-pointer">{user ? 'Mon Dashboard' : 'Se Connecter'}</button></li>
-                    <li><button onClick={() => navigate('researchers')} className="text-[13px] text-text-secondary hover:text-text-primary transition-colors text-left cursor-pointer">Annuaire des Membres</button></li>
-                    <li><button onClick={() => navigate('contact')} className="text-[13px] text-text-secondary hover:text-text-primary transition-colors text-left cursor-pointer">Aide & FAQ</button></li>
+                    <li><button onClick={() => navigate(user ? 'dashboard' : 'auth')} className="text-sm text-text-secondary hover:text-text-primary transition-colors text-left cursor-pointer">{user ? 'Mon Dashboard' : 'Se Connecter'}</button></li>
+                    <li><button onClick={() => navigate('researchers')} className="text-sm text-text-secondary hover:text-text-primary transition-colors text-left cursor-pointer">Annuaire des Membres</button></li>
+                    <li><button onClick={() => navigate('contact')} className="text-sm text-text-secondary hover:text-text-primary transition-colors text-left cursor-pointer">Aide & FAQ</button></li>
                   </ul>
                 </div>
               </div>

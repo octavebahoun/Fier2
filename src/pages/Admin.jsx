@@ -8,12 +8,14 @@ import { useAuth } from '../context/AuthContext.jsx';
 import { api } from '../services/api';
 import MembersManager from '../components/admin/MembersManager.jsx';
 import { useToast } from '../components/ui/Toast.jsx'
+import StatePanel from '../components/ui/StatePanel.jsx';
 
 
 export default function Admin() {
   const { user } = useAuth();
   const [pendingArticles, setPendingArticles] = useState([]);
-  const [approvedCount, setApprovedCount] = useState(42); // Default fallback stats
+  const [approvedCount, setApprovedCount] = useState(null)
+  const [loadError, setLoadError] = useState(null)
   const [loading, setLoading] = useState(true);
   const [actionInProgress, setActionInProgress] = useState(null); // ID of article being approved/rejected
   const [expandedArticleId, setExpandedArticleId] = useState(null); // ID of expanded article for reading
@@ -23,17 +25,18 @@ export default function Admin() {
   // Load pending articles and statistics
   const loadData = async () => {
     setLoading(true);
+    setLoadError(null);
     try {
       const res = await api.news.getAll(true); // Fetch all including PENDING
-      if (res.success) {
-        const allArticles = res.data;
-        const pending = allArticles.filter(a => a.status === 'PENDING');
-        const approved = allArticles.filter(a => a.status === 'APPROVED');
-        setPendingArticles(pending);
-        setApprovedCount(approved.length);
-      }
+      if (!res.success) throw new Error(res.message);
+      const allArticles = res.data;
+      setPendingArticles(allArticles.filter(a => a.status === 'PENDING'));
+      setApprovedCount(allArticles.filter(a => a.status === 'APPROVED').length);
     } catch (err) {
-      console.error("Failed to load admin data", err);
+      // Un compteur faux est pire qu'un compteur absent : on remonte l'échec.
+      setApprovedCount(null);
+      setPendingArticles([]);
+      setLoadError(err?.serverMessage || err?.message || "Les publications n'ont pas pu être chargées.");
     } finally {
       setLoading(false);
     }
@@ -99,7 +102,7 @@ export default function Admin() {
           <div className="p-2.5 rounded-xl bg-danger-wash border border-danger text-danger">
             <Shield className="w-6 h-6" />
           </div>
-          <span className="text-[11px] font-extrabold tracking-[0.25em] uppercase text-danger">
+          <span className="text-xs font-extrabold tracking-[0.25em] uppercase text-danger">
             ESPACE DE CONTRÔLE
           </span>
         </div>
@@ -147,10 +150,10 @@ export default function Admin() {
             <div className="p-2 rounded-lg bg-engine-wash border border-engine text-engine">
               <Users className="w-5 h-5" />
             </div>
-            <span className="text-[11px] font-extrabold uppercase tracking-wider text-text-secondary">Membres</span>
+            <span className="text-xs font-extrabold uppercase tracking-wider text-text-secondary">Membres</span>
           </div>
           <h3 className="text-2xl font-extrabold text-text-primary">1 240</h3>
-          <p className="text-[11px] text-text-secondary mt-1">Utilisateurs inscrits sur la plateforme</p>
+          <p className="text-xs text-text-secondary mt-1">Utilisateurs inscrits sur la plateforme</p>
         </div>
 
         <div className="glass-panel border border-border-subtle bg-bg-secondary p-6 chamfer-sm">
@@ -158,11 +161,15 @@ export default function Admin() {
             <div className="p-2 rounded-lg bg-success-wash border border-success text-success">
               <CheckCircle className="w-5 h-5" />
             </div>
-            <span className="text-[11px] font-extrabold uppercase tracking-wider text-text-secondary">Publications</span>
+            <span className="text-xs font-extrabold uppercase tracking-wider text-text-secondary">Publications</span>
           </div>
-          <h3 className="text-2xl font-extrabold text-text-primary">{approvedCount} Approuvées</h3>
-          <p className="text-[11px] text-text-secondary mt-1">
-            {pendingArticles.length} en attente de comité de lecture
+          <h3 className="text-2xl font-extrabold text-text-primary">
+            {approvedCount === null ? '—' : `${approvedCount} Approuvées`}
+          </h3>
+          <p className="text-sm text-text-secondary mt-1">
+            {approvedCount === null
+              ? 'Chiffre indisponible'
+              : `${pendingArticles.length} en attente de comité de lecture`}
           </p>
         </div>
 
@@ -171,10 +178,10 @@ export default function Admin() {
             <div className="p-2 rounded-lg bg-warning-wash border border-warning text-warning">
               <AlertTriangle className="w-5 h-5" />
             </div>
-            <span className="text-[11px] font-extrabold uppercase tracking-wider text-text-secondary">Système</span>
+            <span className="text-xs font-extrabold uppercase tracking-wider text-text-secondary">Système</span>
           </div>
           <h3 className="text-2xl font-extrabold text-text-primary">100% En Ligne</h3>
-          <p className="text-[11px] text-text-secondary mt-1">Base de données hybride locale</p>
+          <p className="text-xs text-text-secondary mt-1">Base de données hybride locale</p>
         </div>
       </div>
 
@@ -196,9 +203,9 @@ export default function Admin() {
         </div>
 
         {loading ? (
-          <div className="py-12 text-center text-text-secondary animate-pulse text-xs font-semibold">
-            Chargement des articles en attente...
-          </div>
+          <StatePanel state="loading" />
+        ) : loadError ? (
+          <StatePanel state="error" message={loadError} onRetry={loadData} />
         ) : pendingArticles.length === 0 ? (
           <div className="py-16 text-center max-w-md mx-auto">
             <CheckCircle className="w-12 h-12 text-success mx-auto mb-4" />
@@ -225,14 +232,14 @@ export default function Admin() {
                   <div className="p-5 flex flex-col md:flex-row md:items-center justify-between gap-4">
                     <div className="flex-1">
                       <div className="flex flex-wrap items-center gap-2 mb-2">
-                        <span className="inline-flex items-center px-2 py-0.5 rounded-md text-[11px] font-bold border border-engine bg-engine-wash text-engine">
+                        <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-bold border border-engine bg-engine-wash text-engine">
                           {article.categorie}
                         </span>
-                        <span className="inline-flex items-center text-[11px] text-text-secondary gap-1">
+                        <span className="inline-flex items-center text-xs text-text-secondary gap-1">
                           <User className="w-3 h-3 text-engine" />
                           {article.author}
                         </span>
-                        <span className="inline-flex items-center text-[11px] text-text-secondary gap-1 ml-2">
+                        <span className="inline-flex items-center text-xs text-text-secondary gap-1 ml-2">
                           <Calendar className="w-3 h-3" />
                           {article.date}
                         </span>

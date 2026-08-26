@@ -292,14 +292,14 @@ export default function News({ navigate }) {
                     
                     {/* Category Pill */}
                     <div className="absolute top-4 left-4">
-                      <span className={`inline-flex items-center px-3 py-1 rounded-xl text-[11px] font-extrabold border bg-bg-primary shadow-lg ${getCategoryClass(item.categorie)}`}>
+                      <span className={`inline-flex items-center px-3 py-1 rounded-xl text-xs font-extrabold border bg-bg-primary shadow-lg ${getCategoryClass(item.categorie)}`}>
                         {item.categorie}
                       </span>
                     </div>
                   </div>
 
                   {/* Info Metadata */}
-                  <div className="px-6 pt-5 pb-3 flex items-center justify-between text-[11px] text-text-secondary">
+                  <div className="px-6 pt-5 pb-3 flex items-center justify-between text-xs text-text-secondary">
                     <div className="flex items-center gap-1.5">
                       <User className="w-3.5 h-3.5 text-engine" />
                       <span className="font-semibold text-text-primary/90">{item.author}</span>
@@ -372,7 +372,7 @@ export default function News({ navigate }) {
 
                 {/* Category badge */}
                 <div className="absolute bottom-6 left-6 flex flex-col gap-2">
-                  <span className={`self-start inline-flex items-center px-3 py-1 rounded-xl text-[11px] font-extrabold border bg-bg-primary shadow-md ${getCategoryClass(readingArticle.categorie)}`}>
+                  <span className={`self-start inline-flex items-center px-3 py-1 rounded-xl text-xs font-extrabold border bg-bg-primary shadow-md ${getCategoryClass(readingArticle.categorie)}`}>
                     {readingArticle.categorie}
                   </span>
                   <h2 className="text-xl md:text-2xl font-extrabold text-white tracking-tight leading-tight pr-4">
@@ -386,11 +386,11 @@ export default function News({ navigate }) {
                 {/* Metadata details */}
                 <div className="flex flex-wrap items-center gap-6 text-xs text-text-secondary border-b border-border-subtle pb-4 mb-6">
                   <div className="flex items-center gap-2">
-                    <div className="w-8 h-8 rounded-full bg-engine-wash border border-engine/30 flex items-center justify-center text-[11px] text-engine font-bold uppercase shadow-sm">
+                    <div className="w-8 h-8 rounded-full bg-engine-wash border border-engine/30 flex items-center justify-center text-xs text-engine font-bold uppercase shadow-sm">
                       {readingArticle.author.substring(0, 2)}
                     </div>
                     <div>
-                      <div className="text-[11px] text-text-secondary">Auteur</div>
+                      <div className="text-xs text-text-secondary">Auteur</div>
                       <div className="font-semibold text-text-primary">{readingArticle.author}</div>
                     </div>
                   </div>
@@ -398,7 +398,7 @@ export default function News({ navigate }) {
                   <div className="flex items-center gap-2">
                     <Calendar className="w-4 h-4 text-engine shrink-0" />
                     <div>
-                      <div className="text-[11px] text-text-secondary">Publié le</div>
+                      <div className="text-xs text-text-secondary">Publié le</div>
                       <div className="font-semibold text-text-primary">{readingArticle.date}</div>
                     </div>
                   </div>
@@ -406,7 +406,7 @@ export default function News({ navigate }) {
                   <div className="flex items-center gap-2">
                     <Clock className="w-4 h-4 text-engine shrink-0" />
                     <div>
-                      <div className="text-[11px] text-text-secondary">Temps de lecture</div>
+                      <div className="text-xs text-text-secondary">Temps de lecture</div>
                       <div className="font-semibold text-text-primary">4 min</div>
                     </div>
                   </div>
@@ -476,7 +476,7 @@ export default function News({ navigate }) {
               <form onSubmit={handleCreateArticle} className="p-6 overflow-y-auto flex-1 space-y-5 scrollbar-thin scrollbar-thumb-border-subtle">
                 
                 {/* Notice Board */}
-                <div className="p-4 chamfer-xs bg-engine-wash border border-engine/20 text-[11px] text-engine flex items-start gap-3">
+                <div className="p-4 chamfer-xs bg-engine-wash border border-engine/20 text-xs text-engine flex items-start gap-3">
                   <Layers className="w-4 h-4 shrink-0 mt-0.5" />
                   <div>
                     <span className="font-bold">Circuit de relecture scientifique (Peer-review) :</span> Votre article sera soumis pour validation au comité de lecture. Il sera automatiquement marqué avec le statut <span className="font-bold text-engine bg-engine-wash px-1.5 py-0.5 rounded">PENDING</span> et ne sera visible publiquement qu'après approbation par un administrateur.
@@ -485,7 +485,7 @@ export default function News({ navigate }) {
 
                 {/* Form Inputs */}
                 <div className="space-y-1.5">
-                  <label className="text-[11px] font-bold text-text-secondary uppercase tracking-wider">Titre de la publication *</label>
+                  <label className="text-xs font-bold text-text-secondary uppercase tracking-wider">Titre de la publication *</label>
                   <input
                     type="text"
                     required
@@ -499,7 +499,7 @@ export default function News({ navigate }) {
                 {/* Category & Preset Image Row */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-1.5">
-                    <label className="text-[11px] font-bold text-text-secondary uppercase tracking-wider">Thématique scientifique *</label>
+                    <label className="text-xs font-bold text-text-secondary uppercase tracking-wider">Thématique scientifique *</label>
                     <select
                       value={newArticle.categorie}
                       onChange={(e) => setNewArticle({ ...newArticle, categorie: e.target.value })}
@@ -514,7 +514,7 @@ export default function News({ navigate }) {
                   </div>
 
                   <div className="space-y-1.5">
-                    <label className="text-[11px] font-bold text-text-secondary uppercase tracking-wider">Illustration / Image</label>
+                    <label className="text-xs font-bold text-text-secondary uppercase tracking-wider">Illustration / Image</label>
                     <div className="flex items-center gap-2">
                       <input
                         type="text"
@@ -529,7 +529,7 @@ export default function News({ navigate }) {
 
                 {/* Preset choice row */}
                 <div className="space-y-1.5">
-                  <label className="text-[11px] font-bold text-text-secondary uppercase tracking-wider flex items-center gap-1.5">
+                  <label className="text-xs font-bold text-text-secondary uppercase tracking-wider flex items-center gap-1.5">
                     <Image className="w-3.5 h-3.5 text-engine" />
                     Ou choisir un visuel scientifique prédéfini :
                   </label>
@@ -547,7 +547,7 @@ export default function News({ navigate }) {
                       >
                         <img src={preset.url} alt={preset.name} className="w-full h-full object-cover" />
                         <div className="absolute inset-0 bg-scrim flex items-center justify-center p-1 text-center">
-                          <span className="text-[11px] font-bold text-white leading-tight group-hover:scale-105 transition-transform">{preset.name}</span>
+                          <span className="text-xs font-bold text-white leading-tight group-hover:scale-105 transition-transform">{preset.name}</span>
                         </div>
                       </button>
                     ))}
@@ -556,7 +556,7 @@ export default function News({ navigate }) {
 
                 {/* Excerpt Textarea */}
                 <div className="space-y-1.5">
-                  <label className="text-[11px] font-bold text-text-secondary uppercase tracking-wider">Résumé de l'article (Excerpt) *</label>
+                  <label className="text-xs font-bold text-text-secondary uppercase tracking-wider">Résumé de l'article (Excerpt) *</label>
                   <textarea
                     required
                     rows={2}
@@ -569,7 +569,7 @@ export default function News({ navigate }) {
 
                 {/* Content Textarea */}
                 <div className="space-y-1.5">
-                  <label className="text-[11px] font-bold text-text-secondary uppercase tracking-wider">Contenu complet de l'article *</label>
+                  <label className="text-xs font-bold text-text-secondary uppercase tracking-wider">Contenu complet de l'article *</label>
                   <textarea
                     required
                     rows={6}

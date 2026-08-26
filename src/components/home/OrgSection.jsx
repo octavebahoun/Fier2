@@ -87,7 +87,7 @@ export default function OrgSection({ organisation, navigate }) {
                   </p>
 
                   {/* CTA */}
-                  <div className={`mt-8 inline-flex items-center gap-2 px-4 py-2 rounded-sm chamfer-sm border text-[12px] font-bold uppercase tracking-wider transition-colors cursor-pointer ${config.cta}`}>
+                  <div className={`mt-8 inline-flex items-center gap-2 px-4 py-2 rounded-sm chamfer-sm border text-xs font-bold uppercase tracking-wider transition-colors cursor-pointer ${config.cta}`}>
                     <span>Explorer</span>
                     <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" aria-hidden="true" />
                   </div>

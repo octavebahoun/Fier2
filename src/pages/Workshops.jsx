@@ -51,7 +51,7 @@ function WorkshopCard({ workshop, club, user, onToggleRegister, isToggling, navi
         <div className="space-y-1.5 flex-1 min-w-0">
           <div className="flex flex-wrap items-center gap-2">
             <span 
-              className="text-[11px] font-extrabold uppercase tracking-widest px-2.5 py-0.5 rounded-full"
+              className="text-xs font-extrabold uppercase tracking-widest px-2.5 py-0.5 rounded-full"
               style={{
                 background: `${clubAccent}12`,
                 color: clubAccent,
@@ -61,7 +61,7 @@ function WorkshopCard({ workshop, club, user, onToggleRegister, isToggling, navi
               {workshop.level}
             </span>
             {club && (
-              <span className="text-[11px] font-bold text-text-secondary bg-bg-tertiary border border-border-subtle px-2.5 py-0.5 rounded-full truncate">
+              <span className="text-xs font-bold text-text-secondary bg-bg-tertiary border border-border-subtle px-2.5 py-0.5 rounded-full truncate">
                 {club.kicker}
               </span>
             )}
@@ -102,19 +102,19 @@ function WorkshopCard({ workshop, club, user, onToggleRegister, isToggling, navi
 
           <div className="flex items-center justify-between pt-1">
             {isFull ? (
-              <span className="inline-flex items-center gap-1 text-[11px] font-bold text-danger bg-danger-wash border border-danger px-2 py-0.5 rounded-full">
+              <span className="inline-flex items-center gap-1 text-xs font-bold text-danger bg-danger-wash border border-danger px-2 py-0.5 rounded-full">
                 <AlertCircle className="w-3 h-3 shrink-0" />
                 Complet (Waitlist Active)
               </span>
             ) : (
-              <span className="text-[11px] text-ember font-medium bg-ember-wash border border-ember/20 px-2 py-0.5 rounded-full">
+              <span className="text-xs text-ember font-medium bg-ember-wash border border-ember/20 px-2 py-0.5 rounded-full">
                 {workshop.placesLeft} places restantes
               </span>
             )}
 
             {/* List count display */}
             {workshop.waitlistUsers && workshop.waitlistUsers.length > 0 && (
-              <span className="text-[11px] text-warning font-semibold flex items-center gap-1 bg-warning-wash border border-warning px-2.5 py-0.5 rounded-full">
+              <span className="text-xs text-warning font-semibold flex items-center gap-1 bg-warning-wash border border-warning px-2.5 py-0.5 rounded-full">
                 <Users className="w-3.5 h-3.5 shrink-0" />
                 {workshop.waitlistUsers.length} en attente
               </span>
@@ -144,18 +144,18 @@ function WorkshopCard({ workshop, club, user, onToggleRegister, isToggling, navi
         {/* Mini waitlist preview inside card for real-time visual verification (AC 4.4 proof of FIFO) */}
         {workshop.waitlistUsers && workshop.waitlistUsers.length > 0 && (
           <div className="mt-3 p-2.5 rounded-lg bg-bg-primary border border-border-subtle space-y-1">
-            <div className="text-[11px] font-extrabold uppercase tracking-widest text-text-muted">
+            <div className="text-xs font-extrabold uppercase tracking-widest text-text-muted">
               Liste d'attente ordonnée (FIFO) :
             </div>
             <div className="flex flex-col gap-1">
               {workshop.waitlistUsers.slice(0, 3).map((name, i) => (
-                <div key={i} className="flex items-center justify-between text-[11px] text-text-secondary pl-1 font-mono">
+                <div key={i} className="flex items-center justify-between text-xs text-text-secondary pl-1 font-mono">
                   <span>{i + 1}. {name}</span>
-                  {i === 0 && <span className="text-[11px] text-warning uppercase font-extrabold tracking-wider animate-pulse">Premier en attente</span>}
+                  {i === 0 && <span className="text-xs text-warning uppercase font-extrabold tracking-wider animate-pulse">Premier en attente</span>}
                 </div>
               ))}
               {workshop.waitlistUsers.length > 3 && (
-                <div className="text-[11px] text-text-muted italic pl-1">
+                <div className="text-xs text-text-muted italic pl-1">
                   + {workshop.waitlistUsers.length - 3} autres membres en attente
                 </div>
               )}

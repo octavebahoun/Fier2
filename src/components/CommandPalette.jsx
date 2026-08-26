@@ -174,7 +174,7 @@ export default function CommandPalette({ navigate }) {
                 placeholder="Tapez une commande ou naviguez..."
                 className="w-full bg-transparent border-none text-text-primary placeholder:text-text-muted text-sm focus:outline-none focus:ring-0"
               />
-              <span className="text-[11px] bg-bg-tertiary border border-border-subtle text-text-muted px-2 py-0.5 rounded font-mono shrink-0">
+              <span className="text-xs bg-bg-tertiary border border-border-subtle text-text-muted px-2 py-0.5 rounded font-mono shrink-0">
                 ÉCHAP
               </span>
             </div>
@@ -211,7 +211,7 @@ export default function CommandPalette({ navigate }) {
                             role="option"
                             aria-selected={isSelected}
                             onClick={cmd.action}
-                            className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-left text-[13px] transition-all cursor-pointer ${
+                            className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-left text-sm transition-all cursor-pointer ${
                               isSelected
                                 ? 'bg-engine-wash text-text-primary font-semibold border border-engine/25'
                                 : 'bg-transparent text-text-secondary border border-transparent hover:text-text-primary hover:bg-bg-tertiary'
@@ -228,7 +228,7 @@ export default function CommandPalette({ navigate }) {
                               <span>{cmd.label}</span>
                             </div>
                             {isSelected && (
-                              <span className="text-[11px] text-engine font-bold uppercase tracking-widest">
+                              <span className="text-xs text-engine font-bold uppercase tracking-widest">
                                 Valider
                               </span>
                             )}
@@ -242,7 +242,7 @@ export default function CommandPalette({ navigate }) {
                 <div className="py-8 px-4 text-center flex flex-col items-center justify-center gap-2">
                   <Search className="w-6 h-6 text-text-muted" />
                   <p className="text-sm font-bold text-text-primary">Aucune commande trouvée</p>
-                  <p className="text-[13px] text-text-secondary">
+                  <p className="text-sm text-text-secondary">
                     Aucune action ne correspond à votre recherche « {search} »
                   </p>
                 </div>
@@ -250,7 +250,7 @@ export default function CommandPalette({ navigate }) {
             </div>
 
             {/* Footer / Instructions */}
-            <div className="px-4 py-2 bg-bg-tertiary border-t border-border-subtle flex items-center justify-between text-[11px] text-text-muted">
+            <div className="px-4 py-2 bg-bg-tertiary border-t border-border-subtle flex items-center justify-between text-xs text-text-muted">
               <div className="flex items-center gap-3">
                 <span className="flex items-center gap-1">
                   <span className="px-1 py-0.5 bg-bg-tertiary rounded border border-border-subtle">↑↓</span> Naviguer

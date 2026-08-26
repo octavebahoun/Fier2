@@ -28,7 +28,7 @@ function StatusPill({ status }) {
   };
   const s = map[status] || { label: status || '—', cls: 'bg-bg-tertiary border-border-subtle text-text-secondary' };
   return (
-    <span className={`text-[11px] font-bold px-2.5 py-0.5 rounded-full border ${s.cls}`}>
+    <span className={`text-xs font-bold px-2.5 py-0.5 rounded-full border ${s.cls}`}>
       {s.label}
     </span>
   );
@@ -101,7 +101,7 @@ function CreateChallengeModal({ clubId, onClose, onCreated }) {
             <FlaskConical className="w-5 h-5 text-engine" />
           </div>
           <div>
-            <p className="text-[11px] font-bold uppercase tracking-widest text-engine">Nouveau</p>
+            <p className="text-xs font-bold uppercase tracking-widest text-engine">Nouveau</p>
             <h2 className="text-lg font-extrabold text-text-primary">Créer un challenge</h2>
           </div>
           <button onClick={onClose} className="ml-auto opacity-60 hover:opacity-100 transition-opacity">
@@ -195,7 +195,7 @@ function CreateChallengeModal({ clubId, onClose, onCreated }) {
 function Field({ label, children }) {
   return (
     <label className="block">
-      <span className="block text-[11px] font-bold uppercase tracking-wider text-text-secondary mb-1.5">
+      <span className="block text-xs font-bold uppercase tracking-wider text-text-secondary mb-1.5">
         {label}
       </span>
       {children}
@@ -220,7 +220,7 @@ function ChallengeCard({ challenge, onOpen, index }) {
         <div className="flex items-start justify-between gap-3 mb-3">
           <div className="flex items-center gap-2 text-engine">
             <FlaskConical className="w-5 h-5" />
-            <span className="text-[11px] font-bold uppercase tracking-widest">Challenge</span>
+            <span className="text-xs font-bold uppercase tracking-widest">Challenge</span>
           </div>
           <StatusPill status={challenge.status} />
         </div>
@@ -242,7 +242,7 @@ function ChallengeCard({ challenge, onOpen, index }) {
         </div>
 
         {challenge.rewardBadgeType && (
-          <div className="mt-3 inline-flex items-center gap-1.5 text-[11px] font-semibold text-warning bg-warning-wash border border-warning px-2 py-0.5 rounded-full">
+          <div className="mt-3 inline-flex items-center gap-1.5 text-xs font-semibold text-warning bg-warning-wash border border-warning px-2 py-0.5 rounded-full">
             <Award className="w-3 h-3" /> {challenge.rewardBadgeType}
           </div>
         )}
@@ -291,7 +291,7 @@ function SubmissionRow({ submission, isManager, onEvaluate, onToggleWinner, isWi
           )}
         </div>
         {submission.isWinner && (
-          <span className="flex items-center gap-1 text-[11px] font-bold text-warning bg-warning-wash border border-warning px-2 py-0.5 rounded-full shrink-0">
+          <span className="flex items-center gap-1 text-xs font-bold text-warning bg-warning-wash border border-warning px-2 py-0.5 rounded-full shrink-0">
             <Crown className="w-3 h-3" /> Gagnant
           </span>
         )}
@@ -355,7 +355,7 @@ function HackathonCard({ hackathon }) {
       <div className="flex items-start justify-between gap-3 mb-2">
         <div className="flex items-center gap-2 text-ember">
           <CalendarDays className="w-5 h-5" />
-          <span className="text-[11px] font-bold uppercase tracking-widest">Hackathon</span>
+          <span className="text-xs font-bold uppercase tracking-widest">Hackathon</span>
         </div>
         <StatusPill status={hackathon.status} />
       </div>
@@ -634,7 +634,7 @@ export default function Challenges() {
                 <div>
                   <div className="flex items-center gap-2 text-engine mb-1">
                     <FlaskConical className="w-5 h-5" />
-                    <span className="text-[11px] font-bold uppercase tracking-widest">Challenge</span>
+                    <span className="text-xs font-bold uppercase tracking-widest">Challenge</span>
                   </div>
                   <h2 className="text-text-primary font-extrabold text-2xl leading-tight">{selectedChallenge.title}</h2>
                 </div>
@@ -645,13 +645,13 @@ export default function Challenges() {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-5 text-sm">
                 <div className="p-3 rounded-xl bg-bg-tertiary border border-border-subtle">
-                  <p className="text-[11px] font-bold uppercase tracking-wider text-text-secondary mb-1">Date limite</p>
+                  <p className="text-xs font-bold uppercase tracking-wider text-text-secondary mb-1">Date limite</p>
                   <p className="text-text-primary flex items-center gap-1.5">
                     <CalendarDays className="w-4 h-4 text-engine" /> {fmtDate(selectedChallenge.dueDate)}
                   </p>
                 </div>
                 <div className="p-3 rounded-xl bg-bg-tertiary border border-border-subtle">
-                  <p className="text-[11px] font-bold uppercase tracking-wider text-text-secondary mb-1">Badge de récompense</p>
+                  <p className="text-xs font-bold uppercase tracking-wider text-text-secondary mb-1">Badge de récompense</p>
                   <p className="text-text-primary flex items-center gap-1.5">
                     <Award className="w-4 h-4 text-warning" /> {selectedChallenge.rewardBadgeType || 'Aucun'}
                   </p>
@@ -660,7 +660,7 @@ export default function Challenges() {
 
               {selectedChallenge.rules && (
                 <div className="p-4 rounded-xl bg-engine/[0.06] border border-engine/20 mb-6">
-                  <p className="text-[11px] font-bold uppercase tracking-wider text-engine mb-1.5">Règles & consignes</p>
+                  <p className="text-xs font-bold uppercase tracking-wider text-engine mb-1.5">Règles & consignes</p>
                   <p className="text-text-secondary text-sm leading-relaxed whitespace-pre-line">{selectedChallenge.rules}</p>
                 </div>
               )}
@@ -803,7 +803,7 @@ export default function Challenges() {
                     <CalendarDays className="w-5 h-5 text-ember" /> Hackathons
                   </h2>
                   {can('hackathon:create') && (
-                    <span className="text-[11px] text-text-secondary italic">
+                    <span className="text-xs text-text-secondary italic">
                       Création réservée Chef Universitaire
                     </span>
                   )}

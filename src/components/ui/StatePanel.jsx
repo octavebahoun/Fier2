@@ -36,7 +36,7 @@ export default function StatePanel({ state = 'loading', message, onRetry, icon: 
       {onRetry && (
         <button
           onClick={onRetry}
-          className="inline-flex items-center gap-2 text-[11px] uppercase tracking-widest font-bold bg-engine-wash border border-engine/30 text-engine px-5 py-2.5 chamfer-xs hover:bg-engine-wash transition-all cursor-pointer"
+          className="inline-flex items-center gap-2 text-xs uppercase tracking-widest font-bold bg-engine-wash border border-engine/30 text-engine px-5 py-2.5 chamfer-xs hover:bg-engine-wash transition-all cursor-pointer"
         >
           <RefreshCw className="w-3.5 h-3.5" />
           Réessayer

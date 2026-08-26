@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest'
 import { readFileSync, readdirSync, statSync } from 'node:fs'
 import { join } from 'node:path'
 import { CAPABILITIES, CAPABILITY_LIST, PENDING_UI } from './capabilities.js'
-import { DESTINATIONS, navAccessOf, routeAccessOf } from '../navigation/destinations.js'
+import { DESTINATIONS, getDestination, navAccessOf, routeAccessOf } from '../navigation/destinations.js'
 
 /** Tout le code applicatif, hors tests et hors table elle-même. */
 function sourceFiles(dir = 'src', acc = []) {
@@ -142,5 +142,25 @@ describe('le registre des destinations et la table se répondent', () => {
       expect(fautifs, `« ${mot} » n’existe pas côté backend — trouvé dans ${fautifs.join(', ')}`)
         .toEqual([])
     }
+  })
+})
+
+describe('navigation — aucune cible écrite en dur ne ment', () => {
+  it('chaque navigate(\'…\') désigne une destination du registre', () => {
+    // Le découpage du chantier 02 a déplacé des écrans ; deux appels du
+    // tableau de bord ont continué de pointer sur l'ancienne cible, dont
+    // « Trésorerie » qui ouvrait la page PUBLIQUE de dons. La sidebar et la
+    // palette étaient vérifiées ; ces chaînes-là ne l'étaient pas.
+    const inconnues = []
+    for (const f of sourceFiles()) {
+      const code = readFileSync(f, 'utf8')
+      for (const m of code.matchAll(/navigate\??\.?\(\s*'([a-z0-9-]+)'/g)) {
+        // getDestination résout aussi les alias historiques.
+        if (!getDestination(m[1])) {
+          inconnues.push(`${f} — navigate('${m[1]}')`)
+        }
+      }
+    }
+    expect(inconnues, `Destination inconnue :\n${inconnues.join('\n')}`).toEqual([])
   })
 })

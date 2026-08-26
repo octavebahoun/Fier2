@@ -165,7 +165,7 @@ export default function Contact({ navigate }) {
           <div className="p-2 rounded-xl bg-engine-wash border border-engine/20 text-engine">
             <MessageCircle className="w-5 h-5" />
           </div>
-          <span className="text-[11px] font-extrabold tracking-[0.25em] uppercase text-engine">
+          <span className="text-xs font-extrabold tracking-[0.25em] uppercase text-engine">
             SUPPORT & AIDE
           </span>
         </div>
@@ -203,7 +203,7 @@ export default function Contact({ navigate }) {
                 <Mail className="w-4 h-4" />
               </div>
               <div>
-                <p className="text-[11px] uppercase tracking-widest text-text-muted font-bold">Email</p>
+                <p className="text-xs uppercase tracking-widest text-text-muted font-bold">Email</p>
                 <p className="text-xs font-bold text-text-primary mt-0.5">contact@fieri.research</p>
               </div>
             </div>
@@ -212,7 +212,7 @@ export default function Contact({ navigate }) {
                 <MapPin className="w-4 h-4" />
               </div>
               <div>
-                <p className="text-[11px] uppercase tracking-widest text-text-muted font-bold">Localisation</p>
+                <p className="text-xs uppercase tracking-widest text-text-muted font-bold">Localisation</p>
                 <p className="text-xs font-bold text-text-primary mt-0.5">Abomey-Calavi, Bénin</p>
               </div>
             </div>
@@ -234,7 +234,7 @@ export default function Contact({ navigate }) {
 
             {/* Champ Nom */}
             <div className="flex flex-col gap-1.5">
-              <label htmlFor="contact-name" className="text-[11px] font-bold uppercase tracking-widest text-text-secondary">
+              <label htmlFor="contact-name" className="text-xs font-bold uppercase tracking-widest text-text-secondary">
                 Nom complet
               </label>
               <input
@@ -256,13 +256,13 @@ export default function Contact({ navigate }) {
                 }`}
               />
               {errors.name && (
-                <span id="error-name" role="alert" className="text-[11px] text-danger">{errors.name}</span>
+                <span id="error-name" role="alert" className="text-xs text-danger">{errors.name}</span>
               )}
             </div>
 
             {/* Champ Email */}
             <div className="flex flex-col gap-1.5">
-              <label htmlFor="contact-email" className="text-[11px] font-bold uppercase tracking-widest text-text-secondary">
+              <label htmlFor="contact-email" className="text-xs font-bold uppercase tracking-widest text-text-secondary">
                 Adresse e-mail
               </label>
               <input
@@ -284,13 +284,13 @@ export default function Contact({ navigate }) {
                 }`}
               />
               {errors.email && (
-                <span id="error-email" role="alert" className="text-[11px] text-danger">{errors.email}</span>
+                <span id="error-email" role="alert" className="text-xs text-danger">{errors.email}</span>
               )}
             </div>
 
             {/* Champ Sujet */}
             <div className="flex flex-col gap-1.5">
-              <label htmlFor="contact-subject" className="text-[11px] font-bold uppercase tracking-widest text-text-secondary">
+              <label htmlFor="contact-subject" className="text-xs font-bold uppercase tracking-widest text-text-secondary">
                 Sujet
               </label>
               <input
@@ -309,13 +309,13 @@ export default function Contact({ navigate }) {
                 }`}
               />
               {errors.subject && (
-                <span id="error-subject" role="alert" className="text-[11px] text-danger">{errors.subject}</span>
+                <span id="error-subject" role="alert" className="text-xs text-danger">{errors.subject}</span>
               )}
             </div>
 
             {/* Champ Message */}
             <div className="flex flex-col gap-1.5">
-              <label htmlFor="contact-message" className="text-[11px] font-bold uppercase tracking-widest text-text-secondary">
+              <label htmlFor="contact-message" className="text-xs font-bold uppercase tracking-widest text-text-secondary">
                 Message
               </label>
               <textarea
@@ -335,7 +335,7 @@ export default function Contact({ navigate }) {
                 }`}
               />
               {errors.message && (
-                <span id="error-message" role="alert" className="text-[11px] text-danger">{errors.message}</span>
+                <span id="error-message" role="alert" className="text-xs text-danger">{errors.message}</span>
               )}
             </div>
 
@@ -362,7 +362,7 @@ export default function Contact({ navigate }) {
             </button>
 
             {/* Indicateur de sécurité */}
-            <p className="text-[9.5px] text-text-muted text-center">
+            <p className="text-xs text-text-muted text-center">
               Vos données sont protégées et ne seront jamais partagées.
             </p>
           </form>

@@ -132,8 +132,8 @@ export default function SiteHeader({ currentPage, navigate, user }) {
           aria-label="Ouvrir la recherche"
         >
           <Search className="w-4 h-4" aria-hidden="true" />
-          <span className="hidden sm:inline text-[13px] font-medium">Rechercher…</span>
-          <kbd className="hidden md:inline text-[11px] font-mono font-semibold px-1.5 py-0.5 rounded border border-border-subtle bg-bg-primary">⌘K</kbd>
+          <span className="hidden sm:inline text-sm font-medium">Rechercher…</span>
+          <kbd className="hidden md:inline text-xs font-mono font-semibold px-1.5 py-0.5 rounded border border-border-subtle bg-bg-primary">⌘K</kbd>
         </button>
 
         <button
@@ -153,7 +153,7 @@ export default function SiteHeader({ currentPage, navigate, user }) {
         >
           <Bell className="w-4 h-4" aria-hidden="true" />
           {unreadCount > 0 && (
-            <span className="absolute -top-0.5 -right-0.5 inline-flex items-center justify-center min-w-[16px] h-4 px-1 rounded-full bg-ember text-on-accent text-[11px] font-extrabold">
+            <span className="absolute -top-0.5 -right-0.5 inline-flex items-center justify-center min-w-[16px] h-4 px-1 rounded-full bg-ember text-on-accent text-xs font-extrabold">
               {unreadCount > 99 ? '99+' : unreadCount}
             </span>
           )}

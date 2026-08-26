@@ -150,7 +150,7 @@ export default function Members({ navigate }) {
           <div className="p-2.5 rounded-xl bg-engine-wash border border-engine/20 text-engine">
             <Users className="w-5 h-5" />
           </div>
-          <span className="text-[11px] font-extrabold tracking-[0.25em] uppercase text-engine">
+          <span className="text-xs font-extrabold tracking-[0.25em] uppercase text-engine">
             COMMUNAUTÉ R&D
           </span>
         </div>
@@ -331,7 +331,7 @@ export default function Members({ navigate }) {
                           className="w-16 h-16 chamfer-sm object-cover border border-border-subtle group-hover:border-engine/40 transition-colors"
                           loading="lazy"
                         />
-                        <span className="absolute -bottom-1 -right-1 w-5 h-5 rounded-lg bg-engine border border-bg-secondary flex items-center justify-center text-[11px] text-on-accent font-extrabold shadow-md">
+                        <span className="absolute -bottom-1 -right-1 w-5 h-5 rounded-lg bg-engine border border-bg-secondary flex items-center justify-center text-xs text-on-accent font-extrabold shadow-md">
                           {r.stars > 200 ? '★' : '👤'}
                         </span>
                       </div>
@@ -355,14 +355,14 @@ export default function Members({ navigate }) {
 
                     {/* Tags & Specialties (Badges) */}
                     <div className="flex flex-wrap gap-1.5 relative z-10">
-                      <span className="inline-flex items-center gap-1 text-[11px] font-extrabold uppercase text-engine bg-engine-wash px-2.5 py-1 rounded-full border border-engine/20">
+                      <span className="inline-flex items-center gap-1 text-xs font-extrabold uppercase text-engine bg-engine-wash px-2.5 py-1 rounded-full border border-engine/20">
                         <Layers className="w-3 h-3 shrink-0" />
                         {r.pole}
                       </span>
                       {specialties.map((spec) => (
                         <span
                           key={spec}
-                          className="inline-flex text-[11px] font-semibold text-text-secondary bg-bg-tertiary px-2.5 py-1 rounded-full border border-border-subtle truncate max-w-32"
+                          className="inline-flex text-xs font-semibold text-text-secondary bg-bg-tertiary px-2.5 py-1 rounded-full border border-border-subtle truncate max-w-32"
                         >
                           {spec}
                         </span>
@@ -402,7 +402,7 @@ export default function Members({ navigate }) {
                     </div>
 
                     {/* Academic Institution Footer Label */}
-                    <div className="text-[11px] text-text-muted/65 italic border-t border-border-subtle pt-2 flex items-center gap-1 relative z-10">
+                    <div className="text-xs text-text-muted/65 italic border-t border-border-subtle pt-2 flex items-center gap-1 relative z-10">
                       <span>Membre académique :</span>
                       <span className="font-bold text-text-muted">{university}</span>
                     </div>

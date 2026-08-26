@@ -191,11 +191,11 @@ function RegistrantsModal({ state, onClose }) {
                             <p className="text-xs text-text-secondary truncate">{r.email}</p>
                           </div>
                           {r.status && (
-                            <span className="text-[11px] uppercase tracking-wider px-2 py-0.5 rounded-full
+                            <span className="text-xs uppercase tracking-wider px-2 py-0.5 rounded-full
                               bg-bg-tertiary text-text-secondary whitespace-nowrap">{r.status}</span>
                           )}
                           {r.attended && (
-                            <span className="inline-flex items-center gap-1 text-[11px] uppercase tracking-wider
+                            <span className="inline-flex items-center gap-1 text-xs uppercase tracking-wider
                               px-2 py-0.5 rounded-full bg-success-wash border border-success
                               text-success whitespace-nowrap">
                               <CheckCircle2 size={10} /> Présent

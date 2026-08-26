@@ -503,14 +503,14 @@ export default function CiteIntegration({ navigate }) {
             <div className="max-w-2xl lg:max-w-[45%]">
               <button
                 onClick={() => navigate('home')}
-                className="inline-flex items-center gap-2 text-[11px] uppercase tracking-widest font-extrabold text-text-secondary hover:text-text-primary transition-colors cursor-pointer mb-5"
+                className="inline-flex items-center gap-2 text-xs uppercase tracking-widest font-extrabold text-text-secondary hover:text-text-primary transition-colors cursor-pointer mb-5"
               >
                 <ArrowLeft className="w-3.5 h-3.5" />
                 Retour à l’accueil
               </button>
               <div className="inline-flex items-center gap-2 bg-engine-wash border border-engine/30 px-4 py-1.5 rounded-full mb-5">
                 <Sparkles className="w-3.5 h-3.5 text-ember" />
-                <span className="text-[11px] font-extrabold uppercase tracking-widest">Parcours d’intégration FIERI</span>
+                <span className="text-xs font-extrabold uppercase tracking-widest">Parcours d’intégration FIERI</span>
               </div>
               <h1 className="text-3xl md:text-5xl font-extrabold tracking-tight leading-tight">
                 Intégrer notre cité, du niveau international jusqu’au club local.
@@ -533,7 +533,7 @@ export default function CiteIntegration({ navigate }) {
           </header>
 
             <div className="glass-panel chamfer-sm p-4 min-w-0 lg:min-w-[320px]">
-              <div className="text-[11px] uppercase tracking-widest font-extrabold text-text-muted mb-3">Position actuelle</div>
+              <div className="text-xs uppercase tracking-widest font-extrabold text-text-muted mb-3">Position actuelle</div>
               <div className="flex flex-wrap items-center gap-2 text-xs text-text-secondary">
                 <Crumb label="International" active={view === 'countries' || view === 'global'} onClick={goCountries} />
                 {selectedCountry && <Crumb label={selectedCountry.name} active={view === 'country' || view === 'national'} onClick={() => goCountry()} />}
@@ -661,7 +661,7 @@ function Crumb({ label, active, onClick }) {
   return (
     <button
       onClick={onClick}
-      className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-[11px] uppercase tracking-wider font-extrabold cursor-pointer transition-all ${
+      className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs uppercase tracking-wider font-extrabold cursor-pointer transition-all ${
         active
           ? 'bg-engine-wash border-engine/35 text-text-primary'
           : 'border-border-subtle text-text-secondary hover:text-text-primary hover:bg-bg-tertiary'
@@ -692,7 +692,7 @@ function Metric({ icon: Icon, label, value }) {
     <div className="chamfer-sm border border-border-subtle bg-bg-secondary p-4">
       <Icon className="w-5 h-5 text-ember mb-3" />
       <div className="text-2xl font-extrabold">{value}</div>
-      <div className="text-[11px] uppercase tracking-widest font-bold text-text-muted mt-1">{label}</div>
+      <div className="text-xs uppercase tracking-widest font-bold text-text-muted mt-1">{label}</div>
     </div>
   );
 }
@@ -736,7 +736,7 @@ function CountriesView({ countries, query, setQuery, onCountrySelect, onGlobalGo
             <h3 className="mt-5 text-xl font-extrabold">{country.name}</h3>
             <p className="text-xs uppercase tracking-widest font-bold text-ember mt-1">{country.region}</p>
             <p className="text-sm text-text-secondary mt-4 leading-relaxed">{country.summary}</p>
-            <div className="flex gap-2 mt-5 text-[11px] uppercase tracking-wider font-extrabold text-text-muted">
+            <div className="flex gap-2 mt-5 text-xs uppercase tracking-wider font-extrabold text-text-muted">
               <span>{country.universities.length} université(s)</span>
               <span>•</span>
               <span>{country.universities.reduce((sum, university) => sum + university.clubs.length, 0)} club(s)</span>
@@ -829,7 +829,7 @@ function CountryView({ country, universities, query, setQuery, onUniversitySelec
               {university.city}
             </p>
             <div className="flex items-center justify-between mt-5">
-              <span className="text-[11px] uppercase tracking-widest font-extrabold text-text-muted">{university.clubs.length} club(s)</span>
+              <span className="text-xs uppercase tracking-widest font-extrabold text-text-muted">{university.clubs.length} club(s)</span>
               <ArrowRight className="w-4 h-4 text-text-muted group-hover:text-ember transition-colors" />
             </div>
           </button>
@@ -860,10 +860,10 @@ function UniversityView({ university, clubs, query, setQuery, onClubSelect, onUn
             <h3 className="text-xl font-extrabold mt-4">{club.name}</h3>
             <p className="text-sm text-text-secondary mt-2">{club.domain}</p>
             <div className="flex flex-wrap gap-2 mt-5">
-              <span className="rounded-full bg-engine-wash border border-engine/25 px-3 py-1 text-[11px] uppercase tracking-widest font-extrabold">
+              <span className="rounded-full bg-engine-wash border border-engine/25 px-3 py-1 text-xs uppercase tracking-widest font-extrabold">
                 {club.members} membres
               </span>
-              <span className="rounded-full bg-ember-wash border border-ember/20 px-3 py-1 text-[11px] uppercase tracking-widest font-extrabold">
+              <span className="rounded-full bg-ember-wash border border-ember/20 px-3 py-1 text-xs uppercase tracking-widest font-extrabold">
                 Recrutement ouvert
               </span>
             </div>
@@ -969,7 +969,7 @@ function JoinView({ club, form, submitted, onBack, onChange, onSubmit }) {
           <FormField label="Téléphone" value={form.phone} onChange={(value) => onChange('phone', value)} required />
           <FormField label="Filière / spécialité" value={form.field} onChange={(value) => onChange('field', value)} required />
           <label className="grid gap-2">
-            <span className="text-[11px] uppercase tracking-widest font-extrabold text-text-muted">Motivation</span>
+            <span className="text-xs uppercase tracking-widest font-extrabold text-text-muted">Motivation</span>
             <textarea
               value={form.motivation}
               onChange={(event) => onChange('motivation', event.target.value)}
@@ -1002,7 +1002,7 @@ function LevelHeader({ icon: Icon, title, subtitle, metrics }) {
         </div>
         <div className="flex flex-wrap gap-2">
           {metrics.map((metric) => (
-            <span key={metric} className="chamfer-xs border border-border-subtle bg-bg-tertiary px-4 py-2 text-[11px] uppercase tracking-widest font-extrabold text-text-secondary">
+            <span key={metric} className="chamfer-xs border border-border-subtle bg-bg-tertiary px-4 py-2 text-xs uppercase tracking-widest font-extrabold text-text-secondary">
               {metric}
             </span>
           ))}
@@ -1026,7 +1026,7 @@ function ContactTile({ icon: Icon, label, value }) {
   return (
     <div className="chamfer-sm border border-border-subtle bg-bg-primary p-4">
       <Icon className="w-4 h-4 text-ember mb-3" />
-      <div className="text-[11px] uppercase tracking-widest font-extrabold text-text-muted">{label}</div>
+      <div className="text-xs uppercase tracking-widest font-extrabold text-text-muted">{label}</div>
       <div className="text-sm font-bold mt-1 break-words">{value}</div>
     </div>
   );
@@ -1035,7 +1035,7 @@ function ContactTile({ icon: Icon, label, value }) {
 function FormField({ label, value, onChange, type = 'text', required = false }) {
   return (
     <label className="grid gap-2">
-      <span className="text-[11px] uppercase tracking-widest font-extrabold text-text-muted">{label}</span>
+      <span className="text-xs uppercase tracking-widest font-extrabold text-text-muted">{label}</span>
       <input
         type={type}
         value={value}

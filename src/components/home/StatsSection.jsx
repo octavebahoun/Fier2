@@ -24,7 +24,7 @@ export default function StatsSection({ stats }) {
                 <div className="text-3xl sm:text-4xl font-bold text-ember font-mono tracking-tight">
                   <AnimatedCounter value={stat.value} />
                 </div>
-                <div className="mt-2 text-[13px] text-text-secondary">
+                <div className="mt-2 text-sm text-text-secondary">
                   {stat.label}
                 </div>
               </div>

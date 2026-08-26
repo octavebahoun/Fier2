@@ -78,7 +78,7 @@ export default function HeroSection({ hero, navigate }) {
                 <span className="text-2xl font-bold text-text-primary font-mono tracking-tight">
                   {stat.value}
                 </span>
-                <span className="text-[13px] text-text-muted">
+                <span className="text-sm text-text-muted">
                   {stat.label}
                 </span>
                 {i < HERO_STATS.length - 1 && <span className="hidden" aria-hidden="true" />}

@@ -117,6 +117,26 @@ describe('chanfrein — la signature reste lisible', () => {
   })
 })
 
+describe('typographie — l’échelle est fermée', () => {
+  it('n’utilise aucune taille de texte arbitraire', () => {
+    // MASTER.md : « Aucun texte < 12px ». 285 `text-[11px]`, `text-[8px]` et
+    // consorts contournaient l'échelle ; le plus petit d'entre eux portait
+    // l'avertissement « Simulation de validation » sur un dépôt de fichier.
+    const trouves = SEGMENTS.filter((s) => /(?<![-\w])text-\[[0-9.]+(px|rem|em)\]/.test(s.texte))
+    expect(trouves.length, `Utiliser l'échelle (text-xs = 12px, plancher) :\n${lister(trouves)}`).toBe(0)
+  })
+})
+
+describe('données — rien d’inventé', () => {
+  it('ne fabrique aucune URL de stockage', () => {
+    // Deux écrans de candidature ne gardaient que le NOM du fichier déposé,
+    // en fabriquaient une URL `https://fieri-storage.local/…` envoyée au
+    // serveur et stockée en base, puis affichaient « Fichier lié ».
+    const trouves = SEGMENTS.filter((s) => /fieri-storage\.local|\.local\//.test(s.texte))
+    expect(trouves.length, `URL fabriquée :\n${lister(trouves)}`).toBe(0)
+  })
+})
+
 describe('lumière — pas de néon', () => {
   it('n’utilise pas d’ombre colorée par un accent', () => {
     // MASTER.md, liste des anti-patterns : « pas de néon, pas de verre ».

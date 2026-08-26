@@ -25,7 +25,7 @@ export default function NotificationItem({ notification, onMarkRead, onClick }) 
           <div>
             <div className="text-sm font-semibold text-text-primary">{displayTitle}</div>
             {displayBody && <div className="text-xs text-text-secondary mt-1">{displayBody}</div>}
-            <div className="text-[11px] text-text-muted mt-1">{createdAt || date}</div>
+            <div className="text-xs text-text-muted mt-1">{createdAt || date}</div>
           </div>
           <div className="flex flex-col items-end gap-2 shrink-0">
             {!read && <span className="w-2.5 h-2.5 rounded-full bg-success animate-pulse" />}

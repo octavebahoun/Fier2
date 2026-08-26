@@ -36,7 +36,7 @@ const buttonVariants = cva(
         default: "h-11 gap-2 px-5",
         lg: "h-12 gap-2 px-6 text-base",
         // Barres d'outils denses uniquement, et jamais pour une action unique.
-        sm: "h-9 gap-1.5 px-3 text-[0.8rem]",
+        sm: "h-9 gap-1.5 px-3 text-xs",
         xs: "h-8 gap-1 px-2.5 text-xs [&_svg:not([class*='size-'])]:size-3.5",
         icon: "size-11",
         "icon-lg": "size-12",

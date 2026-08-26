@@ -134,14 +134,14 @@ export default function NotificationsModal({ open, onClose, navigate }) {
           <div className="flex items-center gap-2 px-5 py-2.5 border-b border-border-subtle/40 shrink-0">
             <button
               onClick={markAllRead}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-semibold text-text-secondary hover:text-text-primary hover:bg-bg-tertiary transition-all cursor-pointer"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-text-secondary hover:text-text-primary hover:bg-bg-tertiary transition-all cursor-pointer"
             >
               <CheckCheck className="w-3.5 h-3.5" />
               Tout marquer lu
             </button>
             <button
               onClick={clearAll}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-semibold text-danger hover:text-danger hover:bg-danger-wash transition-all cursor-pointer"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-danger hover:text-danger hover:bg-danger-wash transition-all cursor-pointer"
             >
               <Trash2 className="w-3.5 h-3.5" />
               Tout effacer
@@ -195,7 +195,7 @@ export default function NotificationsModal({ open, onClose, navigate }) {
                         {notif.title || notif.text || 'Notification'}
                       </p>
                       {notif.body && (
-                        <p className="text-[11px] text-text-secondary mt-0.5 line-clamp-2">{notif.body}</p>
+                        <p className="text-xs text-text-secondary mt-0.5 line-clamp-2">{notif.body}</p>
                       )}
                       <p className="text-xs text-text-muted mt-1">{notif.createdAt || notif.date}</p>
                     </div>

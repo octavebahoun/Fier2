@@ -199,7 +199,7 @@ export default function MembersManager() {
       ) : (
         <div className="space-y-2">
           {/* En-têtes de colonnes (desktop) */}
-          <div className="hidden md:grid grid-cols-[1fr_auto] gap-4 px-4 pb-2 text-[11px] font-extrabold uppercase tracking-wider text-text-muted">
+          <div className="hidden md:grid grid-cols-[1fr_auto] gap-4 px-4 pb-2 text-xs font-extrabold uppercase tracking-wider text-text-muted">
             <span>Membre</span>
             <span className="text-right pr-2">Rôle</span>
           </div>
@@ -218,20 +218,20 @@ export default function MembersManager() {
                 {/* Identité */}
                 <div className="flex items-center gap-3 min-w-0">
                   <div className="w-9 h-9 shrink-0 rounded-full bg-engine-wash border border-engine/30 flex items-center justify-center">
-                    <span className="text-text-primary font-bold text-[11px]">{initials}</span>
+                    <span className="text-text-primary font-bold text-xs">{initials}</span>
                   </div>
                   <div className="min-w-0">
                     <p className="text-xs font-bold text-text-primary truncate">
                       {member.firstName} {member.lastName}
-                      {isSelf && <span className="ml-2 text-[11px] font-extrabold uppercase tracking-wider text-engine">(vous)</span>}
+                      {isSelf && <span className="ml-2 text-xs font-extrabold uppercase tracking-wider text-engine">(vous)</span>}
                     </p>
-                    <p className="text-[11px] text-text-muted truncate">{member.email}</p>
+                    <p className="text-xs text-text-muted truncate">{member.email}</p>
                   </div>
                 </div>
 
                 {/* Deux axes : le rôle, puis le poste de gouvernance */}
                 <div className="flex flex-wrap items-center gap-2.5 justify-end">
-                  <span className={`hidden sm:inline text-[11px] uppercase tracking-wider font-extrabold px-2.5 py-0.5 border ${pres.badgeClassName}`}>
+                  <span className={`hidden sm:inline text-xs uppercase tracking-wider font-extrabold px-2.5 py-0.5 border ${pres.badgeClassName}`}>
                     {pres.short}
                   </span>
                   <div className="relative">
@@ -239,7 +239,7 @@ export default function MembersManager() {
                       value={ASSIGNABLE_ROLES.includes(member.role?.toUpperCase()) ? member.role.toUpperCase() : ''}
                       disabled={isBusy || !canSetRole}
                       onChange={(e) => changeRole(member, e.target.value)}
-                      className="appearance-none bg-bg-secondary border border-border-subtle focus:border-engine/40 rounded-lg py-1.5 pl-3 pr-8 text-[11px] font-bold text-text-primary outline-none cursor-pointer transition-all disabled:opacity-50 disabled:cursor-wait"
+                      className="appearance-none bg-bg-secondary border border-border-subtle focus:border-engine/40 rounded-lg py-1.5 pl-3 pr-8 text-xs font-bold text-text-primary outline-none cursor-pointer transition-all disabled:opacity-50 disabled:cursor-wait"
                       title={isSelf ? "Attention : modifier votre propre rôle" : "Changer le rôle"}
                     >
                       {!ASSIGNABLE_ROLES.includes(member.role?.toUpperCase()) && (
@@ -259,7 +259,7 @@ export default function MembersManager() {
                       value={member.universityPost?.post || ''}
                       disabled={isBusy || !canSetPost}
                       onChange={(e) => changePost(member, e.target.value)}
-                      className="appearance-none bg-bg-secondary border border-border-subtle focus:border-engine/40 rounded-lg py-1.5 pl-3 pr-8 text-[11px] font-bold text-text-primary outline-none cursor-pointer transition-all disabled:opacity-50 disabled:cursor-wait"
+                      className="appearance-none bg-bg-secondary border border-border-subtle focus:border-engine/40 rounded-lg py-1.5 pl-3 pr-8 text-xs font-bold text-text-primary outline-none cursor-pointer transition-all disabled:opacity-50 disabled:cursor-wait"
                       title="Poste de gouvernance dans l’université"
                     >
                       <option value="">Aucun poste</option>

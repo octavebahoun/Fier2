@@ -118,7 +118,7 @@ export default function Navbar({
           >
             <Search className="w-4 h-4" aria-hidden="true" />
             <span className="text-sm font-medium">Rechercher</span>
-            <kbd className="text-[11px] font-mono font-semibold px-1.5 py-0.5 rounded border border-border-subtle bg-bg-primary">
+            <kbd className="text-xs font-mono font-semibold px-1.5 py-0.5 rounded border border-border-subtle bg-bg-primary">
               ⌘K
             </kbd>
           </button>
@@ -151,7 +151,7 @@ export default function Navbar({
             {user ? 'Mon dashboard' : 'Connexion'}
             {!user && <ArrowUpRight className="w-4 h-4" aria-hidden="true" />}
             {user && unreadCount > 0 && (
-              <span className="inline-flex items-center justify-center min-w-[18px] h-[18px] px-1 rounded-full bg-ember text-on-accent text-[11px] font-extrabold">
+              <span className="inline-flex items-center justify-center min-w-[18px] h-[18px] px-1 rounded-full bg-ember text-on-accent text-xs font-extrabold">
                 {unreadCount > 99 ? '99+' : unreadCount}
               </span>
             )}
@@ -162,7 +162,7 @@ export default function Navbar({
               <RoleBadge
                 role={user.role}
                 variant="pill"
-                className="text-[11px] uppercase tracking-wide font-bold px-2.5 py-1 rounded-full border shrink-0"
+                className="text-xs uppercase tracking-wide font-bold px-2.5 py-1 rounded-full border shrink-0"
               />
             </div>
           )}
@@ -230,7 +230,7 @@ export default function Navbar({
                     <RoleBadge
                       role={user.role}
                       variant="pill"
-                      className="text-[11px] uppercase tracking-wide font-bold px-2.5 py-0.5 rounded-full border shrink-0 bg-bg-tertiary border-border-strong"
+                      className="text-xs uppercase tracking-wide font-bold px-2.5 py-0.5 rounded-full border shrink-0 bg-bg-tertiary border-border-strong"
                     />
                   )}
                 </button>

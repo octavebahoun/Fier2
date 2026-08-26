@@ -45,7 +45,7 @@ export default function PartnersSection({ partenaires }) {
                     <span className="text-sm font-extrabold text-text-primary group-hover:text-engine transition-colors truncate">
                       {partner.name}
                     </span>
-                    <span className="text-[11px] font-bold uppercase tracking-wider text-text-muted">
+                    <span className="text-xs font-bold uppercase tracking-wider text-text-muted">
                       {partner.type}
                     </span>
                   </div>

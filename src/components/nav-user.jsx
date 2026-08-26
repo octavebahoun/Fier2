@@ -29,7 +29,7 @@ export function NavUser({ user, navigate, handleLogout }) {
   const identityRow = (
     <>
       <Avatar className="chamfer-sm h-8 w-8 rounded-none border border-engine/30 bg-engine-wash">
-        <AvatarFallback className="rounded-none bg-transparent text-[12px] font-bold text-engine">
+        <AvatarFallback className="rounded-none bg-transparent text-xs font-bold text-engine">
           {initials}
         </AvatarFallback>
       </Avatar>
@@ -37,7 +37,7 @@ export function NavUser({ user, navigate, handleLogout }) {
         <span className="truncate font-display font-bold tracking-tight">
           {user?.firstName} {user?.lastName}
         </span>
-        <span className="truncate font-mono text-[11px] text-muted-foreground">{user?.email}</span>
+        <span className="truncate font-mono text-xs text-muted-foreground">{user?.email}</span>
       </div>
     </>
   )
@@ -68,11 +68,11 @@ export function NavUser({ user, navigate, handleLogout }) {
                     axes du modèle, affichés côte à côte. Le poste de
                     gouvernance n'apparaissait nulle part jusqu'ici. */}
                 <div className="flex flex-wrap gap-1.5">
-                  <span className={`border px-2 py-0.5 text-[11px] font-bold ${rolePres.badgeClassName}`}>
+                  <span className={`border px-2 py-0.5 text-xs font-bold ${rolePres.badgeClassName}`}>
                     {rolePres.label}
                   </span>
                   {postPres && (
-                    <span className={`border px-2 py-0.5 text-[11px] font-bold ${postPres.badgeClassName}`}>
+                    <span className={`border px-2 py-0.5 text-xs font-bold ${postPres.badgeClassName}`}>
                       {postPres.label}
                     </span>
                   )}

@@ -52,7 +52,7 @@ function JoinConfirmModal({ club, onConfirm, onCancel }) {
             <Icon className="w-7 h-7" style={{ color: club.accent }} />
           </div>
           <div>
-            <p className="text-[11px] font-bold uppercase tracking-widest" style={{ color: club.accent }}>
+            <p className="text-xs font-bold uppercase tracking-widest" style={{ color: club.accent }}>
               Rejoindre
             </p>
             <h2 className="text-lg font-extrabold text-text-primary leading-snug">{club.kicker}</h2>
@@ -140,7 +140,7 @@ function ClubCard({ club, user, navigate, onJoin, onLeave, isPending, joiningId,
         </div>
         <div className="flex-1 min-w-0">
           <span
-            className="inline-block text-[11px] font-bold uppercase tracking-widest rounded-full px-2.5 py-0.5 mb-1"
+            className="inline-block text-xs font-bold uppercase tracking-widest rounded-full px-2.5 py-0.5 mb-1"
             style={{
               background: `${club.accent}18`,
               color: club.accent,
@@ -176,7 +176,7 @@ function ClubCard({ club, user, navigate, onJoin, onLeave, isPending, joiningId,
             {club.divisions.map((div) => (
               <span
                 key={div}
-                className="text-[11px] font-medium px-2 py-0.5 rounded-full bg-bg-tertiary text-text-secondary border border-border-subtle"
+                className="text-xs font-medium px-2 py-0.5 rounded-full bg-bg-tertiary text-text-secondary border border-border-subtle"
               >
                 {div}
               </span>
@@ -278,7 +278,7 @@ function ClubCard({ club, user, navigate, onJoin, onLeave, isPending, joiningId,
                 <ShieldCheck className="w-4 h-4 text-success" />
                 <span>Gérer les adhésions</span>
               </div>
-              <span className="px-2 py-0.5 rounded-full bg-success-wash border border-success text-[11px] text-success">
+              <span className="px-2 py-0.5 rounded-full bg-success-wash border border-success text-xs text-success">
                 {pendingMembers.length} en attente
               </span>
             </button>
@@ -292,7 +292,7 @@ function ClubCard({ club, user, navigate, onJoin, onLeave, isPending, joiningId,
                   className="overflow-hidden space-y-2 pt-1"
                 >
                   {pendingMembers.length === 0 ? (
-                    <p className="text-[11px] text-success italic text-center py-1">
+                    <p className="text-xs text-success italic text-center py-1">
                       Aucune demande d'adhésion en attente.
                     </p>
                   ) : (
@@ -300,7 +300,7 @@ function ClubCard({ club, user, navigate, onJoin, onLeave, isPending, joiningId,
                       {pendingMembers.map((req) => (
                         <div
                           key={req.id}
-                          className="flex items-center justify-between p-2 rounded-lg bg-bg-tertiary border border-border-subtle text-[11px]"
+                          className="flex items-center justify-between p-2 rounded-lg bg-bg-tertiary border border-border-subtle text-xs"
                         >
                           <div className="min-w-0 flex-1 pr-2">
                             {(() => {
@@ -314,7 +314,7 @@ function ClubCard({ club, user, navigate, onJoin, onLeave, isPending, joiningId,
                               return (
                                 <>
                                   <p className="font-bold text-text-primary truncate">{displayName}</p>
-                                  {email && <p className="text-[11px] text-text-secondary truncate">{email}</p>}
+                                  {email && <p className="text-xs text-text-secondary truncate">{email}</p>}
                                 </>
                               )
                             })()}

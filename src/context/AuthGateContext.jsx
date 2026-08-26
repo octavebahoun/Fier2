@@ -53,7 +53,7 @@ export function AuthGateProvider({ children }) {
                 <button onClick={goToLogin} className="flex items-center justify-center gap-2 py-2.5 rounded-xl border border-border-subtle text-text-primary text-xs font-bold hover:bg-bg-tertiary transition-all">
                   <UserPlus className="w-4 h-4" /> Créer un compte
                 </button>
-                <button onClick={close} className="text-[11px] text-text-muted hover:text-text-secondary mt-1 transition-colors">
+                <button onClick={close} className="text-xs text-text-muted hover:text-text-secondary mt-1 transition-colors">
                   Continuer la visite
                 </button>
               </div>

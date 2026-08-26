@@ -217,7 +217,7 @@ export default function ProjectDetail({ navigate, projectId }) {
           Retourner au Hub R&D
         </button>
         
-        <div className="flex items-center gap-2 text-[11px] font-extrabold text-text-muted uppercase tracking-widest">
+        <div className="flex items-center gap-2 text-xs font-extrabold text-text-muted uppercase tracking-widest">
           <span>Projets</span>
           <ChevronRight className="w-3.5 h-3.5" />
           <span className="text-engine font-extrabold truncate max-w-[200px]">{project.title}</span>
@@ -253,7 +253,7 @@ export default function ProjectDetail({ navigate, projectId }) {
             {/* Header info */}
             <div className="glass-panel chamfer p-8 flex flex-col gap-6">
               <div className="flex justify-between items-start gap-4">
-                <span className="text-[11px] font-extrabold uppercase tracking-wider text-success bg-success-wash border border-success px-3 py-1 rounded-md">
+                <span className="text-xs font-extrabold uppercase tracking-wider text-success bg-success-wash border border-success px-3 py-1 rounded-md">
                   {project.status}
                 </span>
                 <span className="text-xs font-bold text-text-muted bg-bg-tertiary border border-border-subtle px-3 py-1 rounded-md">
@@ -273,7 +273,7 @@ export default function ProjectDetail({ navigate, projectId }) {
               {/* Technologies list */}
               <div className="flex flex-wrap gap-2 pt-2 border-t border-border-subtle">
                 {project.technologies && project.technologies.map((tech, idx) => (
-                  <span key={idx} className="text-[11px] font-extrabold text-text-muted bg-bg-tertiary px-2.5 py-1 rounded-md border border-border-subtle">
+                  <span key={idx} className="text-xs font-extrabold text-text-muted bg-bg-tertiary px-2.5 py-1 rounded-md border border-border-subtle">
                     {tech}
                   </span>
                 ))}
@@ -335,11 +335,11 @@ export default function ProjectDetail({ navigate, projectId }) {
                           }`}>
                             {step.title}
                           </h4>
-                          <span className="text-[11px] font-bold text-text-muted bg-bg-secondary border border-border-subtle px-2 py-0.5 rounded w-fit shrink-0">
+                          <span className="text-xs font-bold text-text-muted bg-bg-secondary border border-border-subtle px-2 py-0.5 rounded w-fit shrink-0">
                             {step.date}
                           </span>
                         </div>
-                        <p className="text-[11px] text-text-muted leading-relaxed">
+                        <p className="text-xs text-text-muted leading-relaxed">
                           {step.completed 
                             ? "Jalon validé avec succès par le laboratoire." 
                             : isCurrent
@@ -379,7 +379,7 @@ export default function ProjectDetail({ navigate, projectId }) {
                         <h4 className="text-xs font-bold text-text-primary group-hover/member:text-engine transition-colors">
                           {member.name}
                         </h4>
-                        <p className="text-[11px] text-text-secondary">{member.role}</p>
+                        <p className="text-xs text-text-secondary">{member.role}</p>
                       </div>
                     </motion.div>
                   );
@@ -395,7 +395,7 @@ export default function ProjectDetail({ navigate, projectId }) {
             {/* Financial Pledge Progress Bento */}
             <div className="glass-panel border border-border-subtle chamfer p-6 bg-bg-secondary flex flex-col gap-6 justify-between relative overflow-hidden">
               <div className="space-y-4 relative z-10">
-                <div className="flex items-center gap-2 text-[11px] font-extrabold text-engine uppercase tracking-wider">
+                <div className="flex items-center gap-2 text-xs font-extrabold text-engine uppercase tracking-wider">
                   <Landmark className="w-4 h-4" />
                   Campagne de Financement
                 </div>
@@ -420,7 +420,7 @@ export default function ProjectDetail({ navigate, projectId }) {
                   />
                 </div>
 
-                <div className="flex justify-between items-center text-[11px] font-bold text-text-muted">
+                <div className="flex justify-between items-center text-xs font-bold text-text-muted">
                   <span>Cible : {budgetGoal} $</span>
                   <span>{budgetPercentage}% atteints</span>
                 </div>
@@ -434,7 +434,7 @@ export default function ProjectDetail({ navigate, projectId }) {
                   <Coins className="w-4 h-4" />
                   Soutenir ce projet
                 </button>
-                <p className="text-[11px] text-text-muted text-center leading-relaxed font-medium">
+                <p className="text-xs text-text-muted text-center leading-relaxed font-medium">
                   * Simulation académique de promesse d'investissement financier. Aucun fonds réel n'est engagé.
                 </p>
               </div>
@@ -443,7 +443,7 @@ export default function ProjectDetail({ navigate, projectId }) {
             {/* Interactive Subscription / Follow Card */}
             <div className="glass-panel border border-border-subtle chamfer p-6 bg-bg-secondary flex flex-col gap-6 relative overflow-hidden">
               <div className="space-y-4 relative z-10">
-                <div className="flex items-center gap-2 text-[11px] font-extrabold text-engine uppercase tracking-wider">
+                <div className="flex items-center gap-2 text-xs font-extrabold text-engine uppercase tracking-wider">
                   <Star className="w-4 h-4" />
                   Abonnements
                 </div>
@@ -473,7 +473,7 @@ export default function ProjectDetail({ navigate, projectId }) {
             {/* Associated Research Club Bento */}
             <div className="glass-panel border border-border-subtle chamfer p-6 bg-bg-secondary flex flex-col justify-between relative overflow-hidden group/club">
               <div className="space-y-4">
-                <span className="text-[11px] font-extrabold uppercase tracking-wider text-text-muted">
+                <span className="text-xs font-extrabold uppercase tracking-wider text-text-muted">
                   Laboratoire Parent
                 </span>
                 <h3 className="text-base font-extrabold text-text-primary leading-tight group-hover/club:text-engine transition-colors">
@@ -484,7 +484,7 @@ export default function ProjectDetail({ navigate, projectId }) {
               <div className="pt-6 border-t border-border-subtle mt-4 flex items-center justify-between">
                 <button
                   onClick={() => navigate('clubs')}
-                  className="text-[11px] font-extrabold uppercase tracking-wider text-engine hover:text-engine/80 transition-colors flex items-center gap-1.5 cursor-pointer"
+                  className="text-xs font-extrabold uppercase tracking-wider text-engine hover:text-engine/80 transition-colors flex items-center gap-1.5 cursor-pointer"
                 >
                   Visiter le club
                   <ArrowLeft className="w-3 h-3 rotate-180" />
@@ -550,7 +550,7 @@ export default function ProjectDetail({ navigate, projectId }) {
               <form onSubmit={handlePledgeSubmit} className="flex flex-col gap-5">
                 
                 <div className="flex flex-col gap-2">
-                  <label htmlFor="pledge-input" className="text-[11px] font-extrabold uppercase tracking-wider text-text-secondary">
+                  <label htmlFor="pledge-input" className="text-xs font-extrabold uppercase tracking-wider text-text-secondary">
                     Montant de la promesse ($)
                   </label>
                   <div className="relative">
@@ -570,7 +570,7 @@ export default function ProjectDetail({ navigate, projectId }) {
                     />
                   </div>
                   {pledgeError && (
-                    <span className="text-[11px] text-danger font-bold mt-1 flex items-center gap-1.5">
+                    <span className="text-xs text-danger font-bold mt-1 flex items-center gap-1.5">
                       <ShieldAlert className="w-3.5 h-3.5" />
                       {pledgeError}
                     </span>
@@ -579,7 +579,7 @@ export default function ProjectDetail({ navigate, projectId }) {
 
                 {/* Preset quick buttons */}
                 <div className="flex flex-col gap-2">
-                  <span className="text-[11px] font-extrabold uppercase tracking-wider text-text-muted">
+                  <span className="text-xs font-extrabold uppercase tracking-wider text-text-muted">
                     Montants Prédéfinis
                   </span>
                   <div className="grid grid-cols-3 gap-3">

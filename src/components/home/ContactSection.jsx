@@ -78,7 +78,7 @@ export default function ContactSection({ contact }) {
                       <Mail className="w-4 h-4" />
                     </div>
                     <div>
-                      <div className="text-[11px] font-bold text-text-muted uppercase">Adresse E-mail</div>
+                      <div className="text-xs font-bold text-text-muted uppercase">Adresse E-mail</div>
                       <a href={`mailto:${contact.info.email}`} className="text-sm text-text-primary hover:text-engine font-medium font-mono">
                         {contact.info.email}
                       </a>
@@ -90,7 +90,7 @@ export default function ContactSection({ contact }) {
                       <Phone className="w-4 h-4" />
                     </div>
                     <div>
-                      <div className="text-[11px] font-bold text-text-muted uppercase">Téléphone</div>
+                      <div className="text-xs font-bold text-text-muted uppercase">Téléphone</div>
                       <a href={`tel:${contact.info.tel}`} className="text-sm text-text-primary hover:text-engine font-medium font-mono">
                         {contact.info.tel}
                       </a>
@@ -102,7 +102,7 @@ export default function ContactSection({ contact }) {
                       <MapPin className="w-4 h-4" />
                     </div>
                     <div>
-                      <div className="text-[11px] font-bold text-text-muted uppercase">Localisation</div>
+                      <div className="text-xs font-bold text-text-muted uppercase">Localisation</div>
                       <div className="text-sm text-text-primary font-medium">
                         {contact.info.adresse}
                       </div>
@@ -149,7 +149,7 @@ export default function ContactSection({ contact }) {
 
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
-                          <label className="block text-[11px] font-bold tracking-widest text-text-secondary uppercase mb-2">Votre Nom</label>
+                          <label className="block text-xs font-bold tracking-widest text-text-secondary uppercase mb-2">Votre Nom</label>
                           <input
                             type="text"
                             required
@@ -158,10 +158,10 @@ export default function ContactSection({ contact }) {
                             placeholder="Nom complet"
                             className={`w-full px-4 py-3 rounded-lg bg-bg-primary/80 border ${errors.name ? 'border-danger' : 'border-border-subtle focus:border-engine'} focus:outline-none text-text-primary text-xs sm:text-sm font-medium transition-all`}
                           />
-                          {errors.name && <span className="text-[11px] text-danger mt-1 block">{errors.name}</span>}
+                          {errors.name && <span className="text-xs text-danger mt-1 block">{errors.name}</span>}
                         </div>
                         <div>
-                          <label className="block text-[11px] font-bold tracking-widest text-text-secondary uppercase mb-2">Adresse E-mail</label>
+                          <label className="block text-xs font-bold tracking-widest text-text-secondary uppercase mb-2">Adresse E-mail</label>
                           <input
                             type="email"
                             required
@@ -170,12 +170,12 @@ export default function ContactSection({ contact }) {
                             placeholder="adresse@mail.com"
                             className={`w-full px-4 py-3 rounded-lg bg-bg-primary/80 border ${errors.email ? 'border-danger' : 'border-border-subtle focus:border-engine'} focus:outline-none text-text-primary text-xs sm:text-sm font-medium transition-all`}
                           />
-                          {errors.email && <span className="text-[11px] text-danger mt-1 block">{errors.email}</span>}
+                          {errors.email && <span className="text-xs text-danger mt-1 block">{errors.email}</span>}
                         </div>
                       </div>
 
                       <div>
-                        <label className="block text-[11px] font-bold tracking-widest text-text-secondary uppercase mb-2">Sujet de discussion</label>
+                        <label className="block text-xs font-bold tracking-widest text-text-secondary uppercase mb-2">Sujet de discussion</label>
                         <input
                           type="text"
                           value={formState.subject}
@@ -186,7 +186,7 @@ export default function ContactSection({ contact }) {
                       </div>
 
                       <div>
-                        <label className="block text-[11px] font-bold tracking-widest text-text-secondary uppercase mb-2">Message détaillé</label>
+                        <label className="block text-xs font-bold tracking-widest text-text-secondary uppercase mb-2">Message détaillé</label>
                         <textarea
                           required
                           rows="4"
@@ -195,7 +195,7 @@ export default function ContactSection({ contact }) {
                           placeholder="Décrivez votre idée de projet, vos besoins..."
                           className={`w-full px-4 py-3 rounded-lg bg-bg-primary/80 border ${errors.message ? 'border-danger' : 'border-border-subtle focus:border-engine'} focus:outline-none text-text-primary text-xs sm:text-sm font-medium transition-all resize-none`}
                         />
-                        {errors.message && <span className="text-[11px] text-danger mt-1 block">{errors.message}</span>}
+                        {errors.message && <span className="text-xs text-danger mt-1 block">{errors.message}</span>}
                       </div>
 
                       <button

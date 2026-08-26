@@ -23,7 +23,7 @@ export default function Opportunities({ navigate }) {
 
   // Application Modal state
   const [selectedOpportunity, setSelectedOpportunity] = useState(null);
-  const [applyForm, setApplyForm] = useState({ name: '', email: '', achievements: '', cvFile: '' });
+  const [applyForm, setApplyForm] = useState({ name: '', email: '', achievements: '' });
   const [applyError, setApplyError] = useState('');
 
   // Publication Modal state (for researchers)
@@ -146,8 +146,7 @@ export default function Opportunities({ navigate }) {
     setApplyForm({
       name: user.firstName && user.lastName ? `${user.firstName} ${user.lastName}` : (user.name || ''),
       email: user.email || '',
-      achievements: '',
-      cvFile: ''
+      achievements: ''
     });
   };
 
@@ -161,7 +160,8 @@ export default function Opportunities({ navigate }) {
       const res = await api.applications.submit({
         opportunityId: selectedOpportunity.id,
         coverLetter: applyForm.achievements,
-        cvUrl: applyForm.cvFile ? `https://fieri-storage.local/${applyForm.cvFile}` : null
+        // Pas de pièce jointe : la plateforme ne sait pas encore en recevoir.
+        cvUrl: null,
       });
 
       if (res.success) {
@@ -368,7 +368,7 @@ export default function Opportunities({ navigate }) {
                     <div className="space-y-4">
                       {/* Top info row */}
                       <div className="flex justify-between items-center gap-4">
-                        <span className={`text-[11px] font-extrabold uppercase tracking-wider px-2.5 py-0.5 rounded-md border ${
+                        <span className={`text-xs font-extrabold uppercase tracking-wider px-2.5 py-0.5 rounded-md border ${
                           opt.type === 'CDD R&D'
                             ? 'text-engine bg-engine-wash border-engine/10'
                             : opt.type === 'Doctorat'
@@ -378,7 +378,7 @@ export default function Opportunities({ navigate }) {
                           {opt.type}
                         </span>
 
-                        <span className="text-[11px] font-extrabold uppercase tracking-wider bg-bg-tertiary px-2 py-0.5 rounded text-text-muted">
+                        <span className="text-xs font-extrabold uppercase tracking-wider bg-bg-tertiary px-2 py-0.5 rounded text-text-muted">
                           {opt.discipline}
                         </span>
                       </div>
@@ -388,7 +388,7 @@ export default function Opportunities({ navigate }) {
                         <h3 className="text-xl font-extrabold tracking-tight text-text-primary">
                           {opt.title}
                         </h3>
-                        <p className="text-[11px] text-text-muted flex items-center gap-1">
+                        <p className="text-xs text-text-muted flex items-center gap-1">
                           Proposé par : <strong className="text-engine font-bold">{opt.author}</strong>
                         </p>
                       </div>
@@ -396,19 +396,19 @@ export default function Opportunities({ navigate }) {
                       {/* Body details */}
                       <div className="space-y-3 pt-3 border-t border-border-subtle">
                         <div>
-                          <h4 className="text-[11px] font-extrabold uppercase tracking-wider text-text-secondary mb-1">
+                          <h4 className="text-xs font-extrabold uppercase tracking-wider text-text-secondary mb-1">
                             Mission
                           </h4>
-                          <p className="text-[11px] text-text-secondary leading-relaxed line-clamp-3 font-medium">
+                          <p className="text-xs text-text-secondary leading-relaxed line-clamp-3 font-medium">
                             {opt.description}
                           </p>
                         </div>
 
                         <div>
-                          <h4 className="text-[11px] font-extrabold uppercase tracking-wider text-text-secondary mb-1">
+                          <h4 className="text-xs font-extrabold uppercase tracking-wider text-text-secondary mb-1">
                             Pré-requis
                           </h4>
-                          <p className="text-[11px] text-text-muted leading-relaxed line-clamp-2">
+                          <p className="text-xs text-text-muted leading-relaxed line-clamp-2">
                             {opt.requirements}
                           </p>
                         </div>
@@ -423,14 +423,14 @@ export default function Opportunities({ navigate }) {
                       </div>
 
                       {appliedOpportunityIds.has(opt.id) ? (
-                        <span className="px-4 py-2 text-[11px] font-extrabold uppercase tracking-wider text-success bg-success-wash border border-success rounded-xl flex items-center gap-1.5">
+                        <span className="px-4 py-2 text-xs font-extrabold uppercase tracking-wider text-success bg-success-wash border border-success rounded-xl flex items-center gap-1.5">
                           Candidature transmise
                           <CheckCircle2 className="w-3.5 h-3.5" />
                         </span>
                       ) : (
                         <button
                           onClick={() => openApplyModal(opt)}
-                          className="px-4 py-2 text-[11px] font-extrabold uppercase tracking-wider text-on-accent transition-all rounded-xl shadow-lg flex items-center gap-1.5 cursor-pointer bg-engine hover:bg-engine"
+                          className="px-4 py-2 text-xs font-extrabold uppercase tracking-wider text-on-accent transition-all rounded-xl shadow-lg flex items-center gap-1.5 cursor-pointer bg-engine hover:bg-engine"
                         >
                           Postuler
                           <ArrowRight className="w-3.5 h-3.5" />
@@ -494,7 +494,7 @@ export default function Opportunities({ navigate }) {
 
                   <form onSubmit={handleApplySubmit} className="flex flex-col gap-4">
                     {applyError && (
-                      <div className="p-3 bg-danger-wash border border-danger text-danger rounded-xl text-[11px] font-bold flex items-center gap-1.5">
+                      <div className="p-3 bg-danger-wash border border-danger text-danger rounded-xl text-xs font-bold flex items-center gap-1.5">
                         <ShieldAlert className="w-4 h-4 shrink-0" />
                         {applyError}
                       </div>
@@ -502,7 +502,7 @@ export default function Opportunities({ navigate }) {
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div className="flex flex-col gap-1.5">
-                        <label htmlFor="student-name" className="text-[11px] font-extrabold uppercase tracking-wider text-text-secondary">Nom Complet</label>
+                        <label htmlFor="student-name" className="text-xs font-extrabold uppercase tracking-wider text-text-secondary">Nom Complet</label>
                         <div className="relative">
                           <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted" />
                           <input
@@ -518,7 +518,7 @@ export default function Opportunities({ navigate }) {
                       </div>
 
                       <div className="flex flex-col gap-1.5">
-                        <label htmlFor="student-email" className="text-[11px] font-extrabold uppercase tracking-wider text-text-secondary">Email de contact</label>
+                        <label htmlFor="student-email" className="text-xs font-extrabold uppercase tracking-wider text-text-secondary">Email de contact</label>
                         <div className="relative">
                           <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted" />
                           <input
@@ -534,7 +534,7 @@ export default function Opportunities({ navigate }) {
                     </div>
 
                     <div className="flex flex-col gap-1.5">
-                      <label htmlFor="student-achievements" className="text-[11px] font-extrabold uppercase tracking-wider text-text-secondary">
+                      <label htmlFor="student-achievements" className="text-xs font-extrabold uppercase tracking-wider text-text-secondary">
                         Réalisations Scientifiques Majeures / Motivations
                       </label>
                       <textarea
@@ -548,31 +548,12 @@ export default function Opportunities({ navigate }) {
                       />
                     </div>
 
-                    <div className="flex flex-col gap-1.5">
-                      <span className="text-[11px] font-extrabold uppercase tracking-wider text-text-secondary">
-                        Curriculum Vitae / Portfolio
-                      </span>
-                      <div className="border border-dashed border-border-subtle chamfer-sm p-4 bg-bg-secondary text-center flex flex-col items-center justify-center gap-2 hover:border-engine/40 hover:bg-bg-tertiary transition-colors cursor-pointer relative">
-                        <FileText className="w-6 h-6 text-engine" />
-                        <div>
-                          <p className="text-[11px] text-text-primary font-bold">
-                            Simuler le dépôt d'un fichier PDF
-                          </p>
-                          <p className="text-[8px] text-text-muted mt-0.5">Taille max: 10 Mo (Simulation de validation)</p>
-                        </div>
-                        <input
-                          type="file"
-                          accept=".pdf,.zip,.jpg,.png"
-                          className="absolute inset-0 opacity-0 cursor-pointer"
-                          onChange={(e) => setApplyForm({ ...applyForm, cvFile: e.target.files[0]?.name || '' })}
-                        />
-                      </div>
-                      {applyForm.cvFile && (
-                        <span className="text-[11px] text-success font-bold mt-1 flex items-center gap-1.5 bg-success-wash px-3 py-1.5 rounded-xl border border-success w-fit">
-                          <CheckCircle2 className="w-3.5 h-3.5" />
-                          Fichier lié : {applyForm.cvFile}
-                        </span>
-                      )}
+                    <div className="flex items-start gap-3 border border-border-strong bg-bg-secondary p-4">
+                      <FileText className="mt-0.5 h-5 w-5 shrink-0 text-engine" aria-hidden="true" />
+                      <p className="text-sm leading-relaxed text-text-secondary">
+                        Aucune pièce jointe à ce stade : si un document est nécessaire, il vous
+                        sera demandé par e-mail après examen de votre candidature.
+                      </p>
                     </div>
 
                     <div className="flex gap-4 pt-4 border-t border-border-subtle">
@@ -636,7 +617,7 @@ export default function Opportunities({ navigate }) {
 
                   <form onSubmit={handlePublishSubmit} className="flex flex-col gap-4">
                     {publishError && (
-                      <div className="p-3 bg-danger-wash border border-danger text-danger rounded-xl text-[11px] font-bold flex items-center gap-1.5">
+                      <div className="p-3 bg-danger-wash border border-danger text-danger rounded-xl text-xs font-bold flex items-center gap-1.5">
                         <ShieldAlert className="w-4 h-4 shrink-0" />
                         {publishError}
                       </div>
@@ -644,7 +625,7 @@ export default function Opportunities({ navigate }) {
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div className="flex flex-col gap-1.5">
-                        <label htmlFor="publish-title" className="text-[11px] font-extrabold uppercase tracking-wider text-text-secondary">Intitulé du Poste</label>
+                        <label htmlFor="publish-title" className="text-xs font-extrabold uppercase tracking-wider text-text-secondary">Intitulé du Poste</label>
                         <input
                           ref={publishInputRef}
                           id="publish-title"
@@ -658,7 +639,7 @@ export default function Opportunities({ navigate }) {
                       </div>
 
                       <div className="flex flex-col gap-1.5">
-                        <label htmlFor="publish-type" className="text-[11px] font-extrabold uppercase tracking-wider text-text-secondary">Type de contrat</label>
+                        <label htmlFor="publish-type" className="text-xs font-extrabold uppercase tracking-wider text-text-secondary">Type de contrat</label>
                         <select
                           id="publish-type"
                           value={publishForm.type}
@@ -674,7 +655,7 @@ export default function Opportunities({ navigate }) {
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div className="flex flex-col gap-1.5">
-                        <label htmlFor="publish-discipline" className="text-[11px] font-extrabold uppercase tracking-wider text-text-secondary">Discipline</label>
+                        <label htmlFor="publish-discipline" className="text-xs font-extrabold uppercase tracking-wider text-text-secondary">Discipline</label>
                         <input
                           id="publish-discipline"
                           type="text"
@@ -687,7 +668,7 @@ export default function Opportunities({ navigate }) {
                       </div>
 
                       <div className="flex flex-col gap-1.5">
-                        <label htmlFor="publish-salary" className="text-[11px] font-extrabold uppercase tracking-wider text-text-secondary">Salaire indicatif ($ / mois)</label>
+                        <label htmlFor="publish-salary" className="text-xs font-extrabold uppercase tracking-wider text-text-secondary">Salaire indicatif ($ / mois)</label>
                         <div className="relative">
                           <span className="absolute left-3 top-1/2 -translate-y-1/2 font-extrabold text-xs text-text-muted">$</span>
                           <input
@@ -705,7 +686,7 @@ export default function Opportunities({ navigate }) {
                     </div>
 
                     <div className="flex flex-col gap-1.5">
-                      <label htmlFor="publish-desc" className="text-[11px] font-extrabold uppercase tracking-wider text-text-secondary">Description détaillée des missions</label>
+                      <label htmlFor="publish-desc" className="text-xs font-extrabold uppercase tracking-wider text-text-secondary">Description détaillée des missions</label>
                       <textarea
                         id="publish-desc"
                         rows="3"
@@ -718,7 +699,7 @@ export default function Opportunities({ navigate }) {
                     </div>
 
                     <div className="flex flex-col gap-1.5">
-                      <label htmlFor="publish-req" className="text-[11px] font-extrabold uppercase tracking-wider text-text-secondary">Pré-requis techniques / diplômes requis</label>
+                      <label htmlFor="publish-req" className="text-xs font-extrabold uppercase tracking-wider text-text-secondary">Pré-requis techniques / diplômes requis</label>
                       <textarea
                         id="publish-req"
                         rows="2"

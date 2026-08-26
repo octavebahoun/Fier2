@@ -414,11 +414,11 @@ export default function ResearcherProfile({ navigate, researcherId }) {
                   Retour à l'annuaire
                 </button>
                 <div className="flex items-center gap-2.5 mt-1">
-                  <span className="text-[11px] font-extrabold tracking-[0.25em] uppercase text-engine">
+                  <span className="text-xs font-extrabold tracking-[0.25em] uppercase text-engine">
                     {roleConfig.category}
                   </span>
                   <span className="w-1.5 h-1.5 rounded-full bg-engine-wash" />
-                  <span className="text-[11px] font-bold text-text-muted uppercase">
+                  <span className="text-xs font-bold text-text-muted uppercase">
                     {researcher.pole || 'Pôle R&D'}
                   </span>
                 </div>
@@ -464,12 +464,12 @@ export default function ResearcherProfile({ navigate, researcherId }) {
                     <div className="space-y-2">
                       {/* Role Badge Pill */}
                       <div className="flex flex-wrap items-center justify-center md:justify-start gap-2">
-                        <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-xl text-[11px] font-extrabold uppercase tracking-wider border ${roleConfig.badgeClass}`}>
+                        <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-xl text-xs font-extrabold uppercase tracking-wider border ${roleConfig.badgeClass}`}>
                           <RoleIcon className="w-3.5 h-3.5" />
                           {roleConfig.title}
                         </span>
                         {isOwnProfile && (
-                          <span className="inline-flex items-center gap-1 text-[11px] font-bold uppercase text-success bg-success-wash px-2.5 py-0.5 rounded-lg border border-success">
+                          <span className="inline-flex items-center gap-1 text-xs font-bold uppercase text-success bg-success-wash px-2.5 py-0.5 rounded-lg border border-success">
                             Votre Compte
                           </span>
                         )}
@@ -499,7 +499,7 @@ export default function ResearcherProfile({ navigate, researcherId }) {
                       {researcher.specialties?.map((tag, idx) => (
                         <span
                           key={idx}
-                          className="text-[11px] font-bold text-text-primary bg-bg-tertiary border border-border-subtle px-3 py-1 rounded-xl shadow-sm"
+                          className="text-xs font-bold text-text-primary bg-bg-tertiary border border-border-subtle px-3 py-1 rounded-xl shadow-sm"
                         >
                           {tag}
                         </span>
@@ -515,7 +515,7 @@ export default function ResearcherProfile({ navigate, researcherId }) {
                       <ShieldCheck className={`w-5 h-5 ${roleConfig.iconColor}`} />
                       Attributions & Prérogatives du Rôle
                     </h2>
-                    <span className={`text-[11px] font-extrabold uppercase px-2.5 py-1 rounded-lg border ${roleConfig.badgeClass}`}>
+                    <span className={`text-xs font-extrabold uppercase px-2.5 py-1 rounded-lg border ${roleConfig.badgeClass}`}>
                       Accréditation FIERI
                     </span>
                   </div>
@@ -630,7 +630,7 @@ export default function ResearcherProfile({ navigate, researcherId }) {
                           <Lock className="w-3.5 h-3.5" />
                           S'abonner
                         </button>
-                        <p className="text-[11px] font-bold text-danger bg-danger-wash border border-danger py-2 px-3 rounded-xl leading-relaxed">
+                        <p className="text-xs font-bold text-danger bg-danger-wash border border-danger py-2 px-3 rounded-xl leading-relaxed">
                           L'abonnement aux flux scientifiques est réservé aux membres connectés de l'alliance FIERI.
                         </p>
                       </div>
@@ -742,10 +742,10 @@ export default function ResearcherProfile({ navigate, researcherId }) {
                     >
                       <div className="space-y-2">
                         <div className="flex justify-between items-start gap-2">
-                          <span className="text-[11px] font-extrabold uppercase tracking-wider text-engine bg-engine-wash px-2 py-0.5 rounded-md border border-engine/10">
+                          <span className="text-xs font-extrabold uppercase tracking-wider text-engine bg-engine-wash px-2 py-0.5 rounded-md border border-engine/10">
                             {pub.year}
                           </span>
-                          <span className="text-[11px] font-bold text-text-muted">
+                          <span className="text-xs font-bold text-text-muted">
                             {pub.citations} Citations
                           </span>
                         </div>
@@ -755,7 +755,7 @@ export default function ResearcherProfile({ navigate, researcherId }) {
                       </div>
                       
                       <div className="flex justify-between items-center gap-2 pt-2 border-t border-border-subtle">
-                        <span className="text-[11px] font-medium text-text-secondary truncate pr-3">
+                        <span className="text-xs font-medium text-text-secondary truncate pr-3">
                           {pub.journal}
                         </span>
                         <a
