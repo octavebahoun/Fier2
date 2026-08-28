@@ -8,6 +8,7 @@ import api from '../../services/api.js'
 
 const NAV_LINKS = [
   { id: 'home', label: 'Accueil' },
+  { id: 'student-portal', label: 'Portail Étudiant' },
   { id: 'cite', label: 'Gouvernance' },
   { id: 'projects', label: 'Institut' },
   { id: 'workshops', label: 'Formations' },

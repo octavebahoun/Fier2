@@ -88,9 +88,11 @@ export const DESTINATIONS = [
     inNav: false, inPalette: false, parent: 'profile',
   },
   {
+    // Présentation d'entrée de jeu : elle a sa place dans le menu, pas
+    // seulement au fond de la palette.
     id: 'student-portal', path: '/students', label: 'Portail étudiant',
     aliases: ['/student-portal'], section: SECTIONS.ESPACE.id, access: PUBLIC,
-    inNav: false, inPalette: true, icon: 'GraduationCap',
+    inNav: true, inPalette: true, icon: 'Compass',
   },
 
   // ── Espace CITE ─────────────────────────────────────────────────────────
@@ -238,9 +240,14 @@ export const DESTINATIONS = [
     inNav: true, inPalette: true, icon: 'Contact',
   },
   {
+    // C'est ici que se lisent les responsables — postes de gouvernance de
+    // l'université et responsables de club. La page est publique, mais elle
+    // n'était dans AUCUN menu de l'espace connecté : la barre latérale
+    // remplace la navbar dès la connexion, et l'entrée disparaissait avec
+    // elle. On la voyait donc en visiteur, plus du tout en membre.
     id: 'cite', path: '/cite', label: 'Organisation CITE',
     aliases: ['/cite-integration'], section: SECTIONS.COMMUNAUTE.id, access: PUBLIC,
-    inNav: false, inPalette: true, icon: 'Layers',
+    inNav: true, inPalette: true, icon: 'Layers',
   },
 
   // ── Support ─────────────────────────────────────────────────────────────
