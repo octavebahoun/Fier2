@@ -13,22 +13,30 @@ import {
 } from 'lucide-react';
 import api from '../../services/api.js';
 
-// Configuration des badges & catégories du Journal
+/**
+ * Les catégories du Journal — UNE seule table.
+ *
+ * Il y en avait deux : la liste des onglets et la table des badges. Les
+ * actualités ne figuraient que dans la seconde — elles étaient donc chargées,
+ * fusionnées, affichées sous « Tout »… et impossibles à filtrer, faute
+ * d'onglet. Deux tables qui décrivent la même chose finissent toujours par
+ * diverger ; la table des badges se déduit maintenant de celle des onglets.
+ *
+ * Le Journal est le résumé de tout ce que fait la communauté : les actualités
+ * y viennent en tête, juste après « Tout ».
+ */
 export const JOURNAL_CATEGORIES = [
   { id: 'all', label: 'Tout', color: 'var(--color-engine)' },
+  { id: 'actu', label: 'Actualités', color: 'var(--color-ember)', icon: Newspaper, badgeLabel: 'ACTUALITÉ' },
   { id: 'atelier', label: 'Ateliers', color: 'var(--color-engine)', icon: GraduationCap, badgeLabel: 'ATELIER' },
   { id: 'appel', label: 'Appels', color: 'var(--color-ember)', icon: Megaphone, badgeLabel: 'APPEL À PARTICIPATION' },
   { id: 'bootcamp', label: 'Bootcamps', color: 'var(--color-engine-deep)', icon: Rocket, badgeLabel: 'BOOTCAMP' },
   { id: 'offre', label: 'Offres', color: 'var(--color-success)', icon: Tag, badgeLabel: 'OFFRE SPÉCIALE' }
 ];
 
-const CATEGORY_MAP = {
-  atelier: { color: 'var(--color-engine)', icon: GraduationCap, badgeLabel: 'ATELIER' },
-  appel: { color: 'var(--color-ember)', icon: Megaphone, badgeLabel: 'APPEL À PARTICIPATION' },
-  bootcamp: { color: 'var(--color-engine-deep)', icon: Rocket, badgeLabel: 'BOOTCAMP' },
-  offre: { color: 'var(--color-success)', icon: Tag, badgeLabel: 'OFFRE SPÉCIALE' },
-  actu: { color: 'var(--color-ember)', icon: Newspaper, badgeLabel: 'ACTUALITÉ' }
-};
+const CATEGORY_MAP = Object.fromEntries(
+  JOURNAL_CATEGORIES.filter((c) => c.icon).map((c) => [c.id, c])
+);
 
 export default function JournalCarousel({ navigate }) {
   const [activeTab, setActiveTab] = useState('all');
@@ -174,7 +182,12 @@ export default function JournalCarousel({ navigate }) {
                     : 'bg-bg-secondary/70 text-text-secondary border-border-subtle hover:text-text-primary hover:bg-bg-tertiary'
                 }`}
               >
-                {cat.icon && <cat.icon className="w-3.5 h-3.5" style={{ color: isActive ? '#fff' : cat.color }} />}
+                {cat.icon && (
+                  <cat.icon
+                    className="w-3.5 h-3.5"
+                    style={isActive ? undefined : { color: cat.color }}
+                  />
+                )}
                 {cat.label}
               </button>
             );
@@ -225,8 +238,26 @@ export default function JournalCarousel({ navigate }) {
           </button>
         </div>
       ) : filteredCards.length === 0 ? (
-        <div className="text-center py-16 glass-panel rounded-2xl border border-border-subtle/60 bg-bg-secondary/30">
-          <p className="text-text-secondary text-sm font-light">Aucun contenu trouvé dans cette catégorie.</p>
+        <div className="glass-panel rounded-2xl border border-border-subtle bg-bg-secondary py-16 text-center">
+          {cards.length === 0 ? (
+            <p className="text-sm font-light text-text-secondary">
+              Le Journal n’a encore rien à montrer : ateliers, appels et actualités
+              y apparaîtront dès leur publication.
+            </p>
+          ) : (
+            <>
+              <p className="text-sm font-light text-text-secondary">
+                Rien dans « {JOURNAL_CATEGORIES.find((c) => c.id === activeTab)?.label} » pour l’instant.
+              </p>
+              <button
+                type="button"
+                onClick={() => setActiveTab('all')}
+                className="mt-4 inline-flex min-h-11 cursor-pointer items-center gap-2 border border-border-strong px-5 text-xs font-bold uppercase tracking-widest text-text-primary transition-colors hover:bg-bg-tertiary"
+              >
+                Voir tout le Journal
+              </button>
+            </>
+          )}
         </div>
       ) : (
         <div

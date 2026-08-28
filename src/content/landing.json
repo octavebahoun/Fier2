@@ -8,13 +8,13 @@
     "ctaSecondary": "Voir les projets en cours"
   },
   "decouvrir": {
-    "tag": "01 — NOUS DÉCOUVRIR",
+    "tag": "NOUS DÉCOUVRIR",
     "title": "La CITE de l'excellence scientifique et de la R&D appliquée",
     "description": "Le Front International des Étudiants et Chercheurs (FIERI) est un écosystème d'innovation ouvert aux esprits brillants. Notre ambition est de fédérer les compétences en ingénierie et en recherche pour faire émerger des innovations technologiques, physiques et logicielles de premier plan.",
     "cta": "Découvrir la CITE"
   },
   "organisation": {
-    "tag": "01 — Le parcours",
+    "tag": "Le parcours",
     "title": "Trois entités, un seul objectif : voir vos projets aboutir",
     "subtitle": "Chaque étape a une mission précise, de la première soudure au contrat industriel.",
     "entities": [
@@ -36,7 +36,7 @@
     ]
   },
   "mission": {
-    "tag": "02 — Nos piliers",
+    "tag": "Nos piliers",
     "title": "Quatre engagements concrets envers nos membres",
     "pillars": [
       {
@@ -58,7 +58,7 @@
     ]
   },
   "vision": {
-    "tag": "03 — La vision",
+    "tag": "La vision",
     "title": "Bâtir notre souveraineté technologique, une invention à la fois",
     "text": "L'avenir industriel du continent repose sur la capacité de ses talents à concevoir et breveter leurs propres solutions. Le FIERI forme cette génération de leaders scientifiques — ceux qui mèneront la transition industrielle au lieu de la subir.",
     "highlights": [
@@ -171,9 +171,10 @@
     ]
   },
   "journal": {
-    "tag": "08 — JOURNAL FIERI",
-    "title": "Le Journal : bootcamps, ateliers & offres",
-    "cards": []
+    "tag": "JOURNAL FIERI",
+    "title": "Le Journal : actualités, ateliers, appels & offres",
+    "cards": [],
+    "description": "Le résumé de tout ce qui bouge au FIERI : les actualités de la communauté, les ateliers et bootcamps à venir, les appels à participation et les offres."
   },
   "programmes": {
     "tag": "Nos programmes",
