@@ -81,11 +81,12 @@ export default function Home({ navigate }) {
       {/* 7. JOURNAL — les preuves vivantes */}
       <JournalSection journal={journal} navigate={navigate} />
 
-      {/* 8. PROGRAMMES */}
-      <ProgrammesSection programmes={programmes} navigate={navigate} />
-
-      {/* 9. PARTENAIRES */}
+      {/* 8. PARTENAIRES — mis en vedette : ils passent avant les programmes,
+             juste après les preuves du Journal. */}
       <PartnersSection partenaires={partenaires} />
+
+      {/* 9. PROGRAMMES */}
+      <ProgrammesSection programmes={programmes} navigate={navigate} />
 
       {/* 10. FAQ */}
       <FAQSection faq={faq} />

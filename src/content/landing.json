@@ -204,7 +204,7 @@
     ]
   },
   "partenaires": {
-    "tag": "09 — PARTENAIRES COMMERCIAUX",
+    "tag": "Nos partenaires",
     "title": "Ils soutiennent l'excellence scientifique du FIERI",
     "logos": [
       {
@@ -231,7 +231,8 @@
         "name": "Soneb Innovation",
         "type": "Partenaire d'expérimentation"
       }
-    ]
+    ],
+    "description": "Universités, laboratoires, industriels et institutions : chacun apporte quelque chose de différent, et son badge le dit."
   },
   "faq": {
     "tag": "FAQ",
