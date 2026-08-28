@@ -167,7 +167,7 @@ export default function AppLayout({
                       Newsletter
                     </label>
                     {newsletterSubscribed ? (
-                      <div className="text-sm text-ember bg-ember-wash border border-ember/25 p-2.5 rounded-lg font-medium" role="status" aria-live="polite">
+                      <div className="text-sm text-ember bg-ember-wash border border-ember p-2.5 rounded-lg font-medium" role="status" aria-live="polite">
                         ✓ Abonnement validé avec succès !
                       </div>
                     ) : (

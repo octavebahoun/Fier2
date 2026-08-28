@@ -43,7 +43,7 @@ export default function ProgrammesSection({ programmes, navigate }) {
                   className="glass-panel group relative rounded-2xl border border-border-subtle bg-bg-secondary p-7 flex flex-col justify-between overflow-hidden transition-colors hover:border-border-strong"
                 >
                   <div>
-                    <div className="w-12 h-12 rounded-sm chamfer-sm flex items-center justify-center bg-engine-wash border border-engine/25 mb-5">
+                    <div className="w-12 h-12 rounded-sm chamfer-sm flex items-center justify-center bg-engine-wash border border-engine mb-5">
                       <Icon className="w-6 h-6 text-engine" />
                     </div>
                     <h3 className="text-lg font-extrabold text-text-primary mb-3 leading-snug">

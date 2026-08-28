@@ -162,7 +162,7 @@ export default function Contact({ navigate }) {
       {/* En-tête */}
       <div className="flex flex-col gap-3 mb-16 max-w-2xl">
         <div className="flex items-center gap-3 mb-1">
-          <div className="p-2 rounded-xl bg-engine-wash border border-engine/20 text-engine">
+          <div className="p-2 rounded-xl bg-engine-wash border border-engine text-engine">
             <MessageCircle className="w-5 h-5" />
           </div>
           <span className="text-xs font-extrabold tracking-[0.25em] uppercase text-engine">
@@ -199,7 +199,7 @@ export default function Contact({ navigate }) {
           {/* Infos de contact directes */}
           <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="glass-panel border border-border-subtle p-5 chamfer-sm flex items-start gap-3">
-              <div className="p-2 rounded-lg bg-engine-wash border border-engine/20 text-engine shrink-0">
+              <div className="p-2 rounded-lg bg-engine-wash border border-engine text-engine shrink-0">
                 <Mail className="w-4 h-4" />
               </div>
               <div>
@@ -208,7 +208,7 @@ export default function Contact({ navigate }) {
               </div>
             </div>
             <div className="glass-panel border border-border-subtle p-5 chamfer-sm flex items-start gap-3">
-              <div className="p-2 rounded-lg bg-ember-wash border border-ember/20 text-engine shrink-0">
+              <div className="p-2 rounded-lg bg-ember-wash border border-ember text-engine shrink-0">
                 <MapPin className="w-4 h-4" />
               </div>
               <div>
@@ -252,7 +252,7 @@ export default function Contact({ navigate }) {
                     ? 'border-border-subtle text-text-secondary cursor-not-allowed opacity-70'
                     : errors.name
                     ? 'border-danger focus:border-danger'
-                    : 'border-border-subtle hover:border-engine/30 focus:border-engine'
+                    : 'border-border-subtle hover:border-engine focus:border-engine'
                 }`}
               />
               {errors.name && (
@@ -280,7 +280,7 @@ export default function Contact({ navigate }) {
                     ? 'border-border-subtle text-text-secondary cursor-not-allowed opacity-70'
                     : errors.email
                     ? 'border-danger focus:border-danger'
-                    : 'border-border-subtle hover:border-engine/30 focus:border-engine'
+                    : 'border-border-subtle hover:border-engine focus:border-engine'
                 }`}
               />
               {errors.email && (
@@ -305,7 +305,7 @@ export default function Contact({ navigate }) {
                 className={`bg-bg-primary border rounded-xl px-4 py-2.5 text-xs text-text-primary placeholder:text-text-muted transition-all focus:outline-none ${
                   errors.subject
                     ? 'border-danger focus:border-danger'
-                    : 'border-border-subtle hover:border-engine/30 focus:border-engine'
+                    : 'border-border-subtle hover:border-engine focus:border-engine'
                 }`}
               />
               {errors.subject && (
@@ -331,7 +331,7 @@ export default function Contact({ navigate }) {
                 className={`bg-bg-primary border rounded-xl px-4 py-2.5 text-xs text-text-primary placeholder:text-text-muted transition-all focus:outline-none resize-none leading-relaxed ${
                   errors.message
                     ? 'border-danger focus:border-danger'
-                    : 'border-border-subtle hover:border-engine/30 focus:border-engine'
+                    : 'border-border-subtle hover:border-engine focus:border-engine'
                 }`}
               />
               {errors.message && (

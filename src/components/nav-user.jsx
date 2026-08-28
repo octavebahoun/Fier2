@@ -28,7 +28,7 @@ export function NavUser({ user, navigate, handleLogout }) {
 
   const identityRow = (
     <>
-      <Avatar className="chamfer-sm h-8 w-8 rounded-none border border-engine/30 bg-engine-wash">
+      <Avatar className="chamfer-sm h-8 w-8 rounded-none border border-engine bg-engine-wash">
         <AvatarFallback className="rounded-none bg-transparent text-xs font-bold text-engine">
           {initials}
         </AvatarFallback>
@@ -49,7 +49,7 @@ export function NavUser({ user, navigate, handleLogout }) {
           <DropdownMenuTrigger asChild>
             <SidebarMenuButton
               size="lg"
-              className="chamfer-sm cursor-pointer rounded-none border border-border-subtle hover:bg-bg-tertiary data-[state=open]:border-engine/25 data-[state=open]:bg-engine-wash"
+              className="chamfer-sm cursor-pointer rounded-none border border-border-subtle hover:bg-bg-tertiary data-[state=open]:border-engine data-[state=open]:bg-engine-wash"
             >
               {identityRow}
               <ChevronsUpDownIcon className="ml-auto size-4" />

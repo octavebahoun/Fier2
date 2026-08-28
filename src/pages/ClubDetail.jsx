@@ -130,9 +130,9 @@ export default function ClubDetail({ navigate, clubId }) {
                 <button
                   key={m.id}
                   onClick={() => navigate?.('profile', { researcherId: m.id })}
-                  className="flex items-center gap-3 p-3 chamfer-sm bg-bg-tertiary border border-border-subtle hover:border-engine/40 transition-all text-left"
+                  className="flex items-center gap-3 p-3 chamfer-sm bg-bg-tertiary border border-border-subtle hover:border-engine transition-all text-left"
                 >
-                  <div className="w-9 h-9 rounded-full bg-engine-wash border border-engine/25 flex items-center justify-center shrink-0 text-xs font-bold text-text-primary uppercase">
+                  <div className="w-9 h-9 rounded-full bg-engine-wash border border-engine flex items-center justify-center shrink-0 text-xs font-bold text-text-primary uppercase">
                     {name[0]}
                   </div>
                   <span className="text-xs font-bold text-text-primary truncate">{name}</span>

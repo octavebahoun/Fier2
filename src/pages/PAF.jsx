@@ -30,9 +30,9 @@ export default function PAF({ navigate }) {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.1 }}
-              className="glass-panel chamfer-sm p-6 hover:border-engine/30 transition-all group"
+              className="glass-panel chamfer-sm p-6 hover:border-engine transition-all group"
             >
-              <div className="w-10 h-10 rounded-lg bg-engine-wash border border-engine/20 flex items-center justify-center text-engine mb-4 group-hover:scale-110 transition-transform">
+              <div className="w-10 h-10 rounded-lg bg-engine-wash border border-engine flex items-center justify-center text-engine mb-4 group-hover:scale-110 transition-transform">
                 {item.icon}
               </div>
               <h3 className="text-base font-bold text-text-primary mb-2 font-display">{item.title}</h3>
@@ -47,7 +47,7 @@ export default function PAF({ navigate }) {
           transition={{ delay: 0.5 }}
           className="text-center"
         >
-          <div className="inline-flex items-center gap-3 p-1 chamfer-sm bg-engine-wash border border-engine/20">
+          <div className="inline-flex items-center gap-3 p-1 chamfer-sm bg-engine-wash border border-engine">
             <span className="text-xs text-text-secondary font-light px-3">Prêt à rejoindre l'élite ?</span>
             <button
               onClick={() => navigate('auth')}

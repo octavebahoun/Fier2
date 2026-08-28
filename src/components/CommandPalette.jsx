@@ -213,14 +213,14 @@ export default function CommandPalette({ navigate }) {
                             onClick={cmd.action}
                             className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-left text-sm transition-all cursor-pointer ${
                               isSelected
-                                ? 'bg-engine-wash text-text-primary font-semibold border border-engine/25'
+                                ? 'bg-engine-wash text-text-primary font-semibold border border-engine'
                                 : 'bg-transparent text-text-secondary border border-transparent hover:text-text-primary hover:bg-bg-tertiary'
                             }`}
                           >
                             <div className="flex items-center gap-3">
                               <div className={`p-1.5 rounded-lg border transition-colors ${
                                 isSelected
-                                  ? 'bg-engine-wash border-engine/30 text-engine'
+                                  ? 'bg-engine-wash border-engine text-engine'
                                   : 'bg-bg-tertiary border-border-subtle text-text-muted'
                               }`}>
                                 <Icon className="w-3.5 h-3.5" />

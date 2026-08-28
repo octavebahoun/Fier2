@@ -136,7 +136,7 @@ function RegistrantsModal({ state, onClose }) {
             {/* Header */}
             <div className="flex items-center justify-between px-5 py-4 border-b border-border-subtle">
               <div className="flex items-center gap-3 min-w-0">
-                <span className="p-1.5 rounded-lg bg-engine-wash border border-engine/30">
+                <span className="p-1.5 rounded-lg bg-engine-wash border border-engine">
                   <ListChecks size={16} className="text-engine" />
                 </span>
                 <div className="min-w-0">
@@ -316,7 +316,7 @@ function EventCard({ event, user, onRegister, onLiveAccess, isRegistering, canMa
             className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold
               transition-all duration-200 cursor-pointer
               ${!user
-                ? 'bg-bg-secondary border border-border-subtle text-text-primary hover:bg-bg-tertiary hover:border-engine/50'
+                ? 'bg-bg-secondary border border-border-subtle text-text-primary hover:bg-bg-tertiary hover:border-engine'
                 : 'bg-engine text-on-accent hover:bg-engine active:scale-95 shadow-lg'
               }`}
           >
@@ -344,7 +344,7 @@ function EventCard({ event, user, onRegister, onLiveAccess, isRegistering, canMa
                 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isRegistering === event.id ? (
-                <span className="w-4 h-4 border-2 border-text-muted/30 border-t-text-muted rounded-full animate-spin" />
+                <span className="w-4 h-4 border-2 border-text-muted border-t-text-muted rounded-full animate-spin" />
               ) : null}
               Se désinscrire
             </button>
@@ -373,7 +373,7 @@ function EventCard({ event, user, onRegister, onLiveAccess, isRegistering, canMa
               onClick={() => onViewRegistrants(event)}
               className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold
                 bg-bg-secondary border border-border-subtle text-text-primary hover:bg-bg-tertiary
-                hover:border-engine/50 transition-all duration-200 active:scale-95 cursor-pointer"
+                hover:border-engine transition-all duration-200 active:scale-95 cursor-pointer"
             >
               <ListChecks size={15} className="text-engine" />
               Voir les inscrits

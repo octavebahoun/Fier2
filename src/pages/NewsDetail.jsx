@@ -94,7 +94,7 @@ export default function NewsDetail({ navigate, newsId }) {
       <header className="flex flex-col gap-4">
         <div className="flex items-center gap-2 flex-wrap text-xs font-extrabold uppercase tracking-wider">
           {article.categorie && (
-            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-engine-wash border border-engine/25 text-engine">
+            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-engine-wash border border-engine text-engine">
               <Tag className="w-3 h-3" /> {article.categorie}
             </span>
           )}

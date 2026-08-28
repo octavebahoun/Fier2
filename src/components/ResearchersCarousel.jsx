@@ -191,7 +191,7 @@ export default function ResearchersCarousel({ navigate }) {
           return (
             <motion.div
               key={researcher.id}
-              className="snap-start shrink-0 w-80 md:w-96 glass-panel rounded-3xl p-6 border border-border-subtle shadow-lg relative overflow-hidden flex flex-col justify-between gap-5 group cursor-pointer focus-within:border-engine/40"
+              className="snap-start shrink-0 w-80 md:w-96 glass-panel rounded-3xl p-6 border border-border-subtle shadow-lg relative overflow-hidden flex flex-col justify-between gap-5 group cursor-pointer focus-within:border-engine"
               whileHover={{ y: -5, scale: 1.01 }}
               transition={{ type: 'spring', stiffness: 400, damping: 30 }}
               onClick={() => navigate('profile', { researcherId: researcher.id })}
@@ -205,7 +205,7 @@ export default function ResearchersCarousel({ navigate }) {
                   <img
                     src={researcher.avatar}
                     alt={researcher.name}
-                    className="w-16 h-16 rounded-2xl object-cover border border-border-subtle group-hover:border-engine/40 transition-colors"
+                    className="w-16 h-16 rounded-2xl object-cover border border-border-subtle group-hover:border-engine transition-colors"
                   />
                   {followersCount > 150 && (
                     <span className="absolute -bottom-1 -right-1 w-5 h-5 rounded-lg bg-warning border border-bg-secondary flex items-center justify-center shadow-md">
@@ -256,7 +256,7 @@ export default function ResearchersCarousel({ navigate }) {
                     e.stopPropagation()
                     navigate('profile', { researcherId: researcher.id })
                   }}
-                  className="flex items-center gap-1 text-xs font-bold text-engine hover:text-engine/80 transition-colors group/btn cursor-pointer py-1.5 px-3 bg-bg-tertiary rounded-xl border border-border-subtle group-hover:border-engine/20"
+                  className="flex items-center gap-1 text-xs font-bold text-engine hover:text-engine/80 transition-colors group/btn cursor-pointer py-1.5 px-3 bg-bg-tertiary rounded-xl border border-border-subtle group-hover:border-engine"
                   aria-label={`Consulter le profil de ${researcher.name}`}
                 >
                   <span>Voir</span>

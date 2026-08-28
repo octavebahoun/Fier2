@@ -592,7 +592,7 @@ export default function ResearcherProfile({ navigate, researcherId }) {
                     {isOwnProfile ? (
                       <button
                         onClick={() => setIsEditModalOpen(true)}
-                        className="w-full py-3.5 chamfer-sm chamfer-shadow text-xs font-bold bg-engine-wash border border-engine/30 text-on-accent hover:bg-engine hover:text-on-accent transition-all flex items-center justify-center gap-2 cursor-pointer "
+                        className="w-full py-3.5 chamfer-sm chamfer-shadow text-xs font-bold bg-engine-wash border border-engine text-on-accent hover:bg-engine hover:text-on-accent transition-all flex items-center justify-center gap-2 cursor-pointer "
                       >
                         <Edit3 className="w-4 h-4" />
                         Gérer mon profil
@@ -738,11 +738,11 @@ export default function ResearcherProfile({ navigate, researcherId }) {
                   {publications.map((pub, idx) => (
                     <div
                       key={idx}
-                      className="bg-bg-secondary hover:bg-bg-tertiary border border-border-subtle hover:border-engine/20 p-5 chamfer-sm chamfer-shadow flex flex-col justify-between gap-5 transition-all group/card "
+                      className="bg-bg-secondary hover:bg-bg-tertiary border border-border-subtle hover:border-engine p-5 chamfer-sm chamfer-shadow flex flex-col justify-between gap-5 transition-all group/card "
                     >
                       <div className="space-y-2">
                         <div className="flex justify-between items-start gap-2">
-                          <span className="text-xs font-extrabold uppercase tracking-wider text-engine bg-engine-wash px-2 py-0.5 rounded-md border border-engine/10">
+                          <span className="text-xs font-extrabold uppercase tracking-wider text-engine bg-engine-wash px-2 py-0.5 rounded-md border border-engine">
                             {pub.year}
                           </span>
                           <span className="text-xs font-bold text-text-muted">
@@ -798,7 +798,7 @@ export default function ResearcherProfile({ navigate, researcherId }) {
               {/* Header */}
               <div className="flex items-center justify-between border-b border-border-subtle pb-4 mb-6">
                 <div className="flex items-center gap-3">
-                  <div className="p-2.5 rounded-xl bg-engine-wash border border-engine/30 text-engine">
+                  <div className="p-2.5 rounded-xl bg-engine-wash border border-engine text-engine">
                     <Edit3 className="w-5 h-5" />
                   </div>
                   <div>

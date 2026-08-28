@@ -127,18 +127,18 @@ export default function ResearchClubsSection({ clubs, navigate }) {
         {loading ? (
           <div className="flex gap-6 overflow-hidden">
             {[1, 2, 3].map((n) => (
-              <div key={n} className="glass-panel h-80 rounded-2xl animate-pulse bg-bg-secondary/40 border border-border-subtle/60 shrink-0" style={{ width: cardWidth }} />
+              <div key={n} className="glass-panel h-80 rounded-2xl animate-pulse bg-bg-secondary/40 border border-border-subtle shrink-0" style={{ width: cardWidth }} />
             ))}
           </div>
         ) : error ? (
           <div className="text-center py-16">
-            <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-engine-wash border border-engine/20 mb-4">
+            <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-engine-wash border border-engine mb-4">
               <Layers className="w-6 h-6 text-engine" />
             </div>
             <p className="text-text-secondary text-sm font-light mb-4">{error}</p>
             <button
               onClick={() => window.location.reload()}
-              className="inline-flex items-center gap-2 text-xs uppercase tracking-widest font-bold bg-engine-wash border border-engine/30 text-engine px-5 py-2.5 chamfer-xs hover:bg-engine-wash transition-all cursor-pointer"
+              className="inline-flex items-center gap-2 text-xs uppercase tracking-widest font-bold bg-engine-wash border border-engine text-engine px-5 py-2.5 chamfer-xs hover:bg-engine-wash transition-all cursor-pointer"
             >
               Réessayer
             </button>
@@ -188,7 +188,7 @@ export default function ResearchClubsSection({ clubs, navigate }) {
                     </p>
                   </div>
 
-                  <div className="border-t border-border-subtle/50 pt-4 mt-auto flex items-center justify-end">
+                  <div className="border-t border-border-subtle pt-4 mt-auto flex items-center justify-end">
                     <span
                       className="inline-flex items-center gap-1 text-xs font-bold"
                     >

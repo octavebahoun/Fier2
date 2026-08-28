@@ -15,11 +15,11 @@ import StatePanel from '../components/ui/StatePanel.jsx';
 
 // ─────────────────────────── Category Color Mapping ───────────────────────────
 const CATEGORY_COLORS = {
-  "Intelligence Artificielle": "from-engine/20 to-engine-deep/20 border-engine/30 text-engine",
+  "Intelligence Artificielle": "from-engine/20 to-engine-deep/20 border-engine text-engine",
   "Lancement R&D": "from-warning to-ember border-warning text-warning",
   "Éco-énergie": "from-success to-success/20 border-success text-success",
-  "Bio-Tech": "from-ember/20 to-ember-soft/20 border-ember/30 text-ember",
-  "Robotique": "from-ember/20 to-ember-soft/20 border-ember/30 text-ember"
+  "Bio-Tech": "from-ember/20 to-ember-soft/20 border-ember text-ember",
+  "Robotique": "from-ember/20 to-ember-soft/20 border-ember text-ember"
 };
 
 const getCategoryClass = (cat) => {
@@ -154,7 +154,7 @@ export default function News({ navigate }) {
             onClick={() => setActiveTab('actualites')}
             className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
               activeTab === 'actualites'
-                ? 'bg-engine-wash border border-engine/30 text-engine shadow-sm'
+                ? 'bg-engine-wash border border-engine text-engine shadow-sm'
                 : 'text-text-secondary hover:text-text-primary border border-transparent'
             }`}
           >
@@ -165,7 +165,7 @@ export default function News({ navigate }) {
             onClick={() => setActiveTab('evenements')}
             className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
               activeTab === 'evenements'
-                ? 'bg-engine-wash border border-engine/30 text-engine shadow-sm'
+                ? 'bg-engine-wash border border-engine text-engine shadow-sm'
                 : 'text-text-secondary hover:text-text-primary border border-transparent'
             }`}
           >
@@ -220,7 +220,7 @@ export default function News({ navigate }) {
               onClick={() => setSelectedCategory(cat)}
               className={`px-4 py-2 rounded-xl text-xs font-bold border transition-all whitespace-nowrap cursor-pointer ${
                 selectedCategory === cat
-                  ? 'bg-engine-wash border-engine/30 text-engine'
+                  ? 'bg-engine-wash border-engine text-engine'
                   : 'bg-bg-secondary border-border-subtle text-text-secondary hover:text-text-primary'
               }`}
             >
@@ -237,7 +237,7 @@ export default function News({ navigate }) {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Rechercher par titre, résumé ou chercheur..."
-            className="w-full pl-11 pr-4 py-3 rounded-xl border border-border-subtle bg-bg-secondary text-xs text-text-primary placeholder:text-text-secondary focus:outline-none focus:border-engine/60 focus:bg-bg-secondary transition-all"
+            className="w-full pl-11 pr-4 py-3 rounded-xl border border-border-subtle bg-bg-secondary text-xs text-text-primary placeholder:text-text-secondary focus:outline-none focus:border-engine focus:bg-bg-secondary transition-all"
           />
           {searchQuery && (
             <button
@@ -331,7 +331,7 @@ export default function News({ navigate }) {
                 <div className="px-6 pb-6 pt-4">
                   <button
                     onClick={() => navigate?.('news-detail', { newsId: item.id })}
-                    className="w-full flex items-center justify-center gap-2 py-3 rounded-xl border border-border-subtle hover:border-engine/40 bg-bg-tertiary hover:bg-engine-wash text-xs font-bold text-text-primary hover:text-engine transition-all cursor-pointer"
+                    className="w-full flex items-center justify-center gap-2 py-3 rounded-xl border border-border-subtle hover:border-engine bg-bg-tertiary hover:bg-engine-wash text-xs font-bold text-text-primary hover:text-engine transition-all cursor-pointer"
                   >
                     <span>Consulter la publication</span>
                     <ArrowRight className="w-4 h-4" />
@@ -392,7 +392,7 @@ export default function News({ navigate }) {
                 {/* Metadata details */}
                 <div className="flex flex-wrap items-center gap-6 text-xs text-text-secondary border-b border-border-subtle pb-4 mb-6">
                   <div className="flex items-center gap-2">
-                    <div className="w-8 h-8 rounded-full bg-engine-wash border border-engine/30 flex items-center justify-center text-xs text-engine font-bold uppercase shadow-sm">
+                    <div className="w-8 h-8 rounded-full bg-engine-wash border border-engine flex items-center justify-center text-xs text-engine font-bold uppercase shadow-sm">
                       {readingArticle.author.substring(0, 2)}
                     </div>
                     <div>
@@ -419,7 +419,7 @@ export default function News({ navigate }) {
                 </div>
 
                 {/* Excerpt Section */}
-                <div className="bg-engine-wash border-l-2 border-engine/50 p-4 rounded-r-xl text-xs font-semibold text-text-primary/90 italic mb-6">
+                <div className="bg-engine-wash border-l-2 border-engine p-4 rounded-r-xl text-xs font-semibold text-text-primary/90 italic mb-6">
                   {readingArticle.excerpt}
                 </div>
 
@@ -482,7 +482,7 @@ export default function News({ navigate }) {
               <form onSubmit={handleCreateArticle} className="p-6 overflow-y-auto flex-1 space-y-5 scrollbar-thin scrollbar-thumb-border-subtle">
                 
                 {/* Notice Board */}
-                <div className="p-4 chamfer-xs bg-engine-wash border border-engine/20 text-xs text-engine flex items-start gap-3">
+                <div className="p-4 chamfer-xs bg-engine-wash border border-engine text-xs text-engine flex items-start gap-3">
                   <Layers className="w-4 h-4 shrink-0 mt-0.5" />
                   <div>
                     <span className="font-bold">Circuit de relecture scientifique (Peer-review) :</span> Votre article sera soumis pour validation au comité de lecture. Il sera automatiquement marqué avec le statut <span className="font-bold text-engine bg-engine-wash px-1.5 py-0.5 rounded">PENDING</span> et ne sera visible publiquement qu'après approbation par un administrateur.
@@ -498,7 +498,7 @@ export default function News({ navigate }) {
                     value={newArticle.title}
                     onChange={(e) => setNewArticle({ ...newArticle, title: e.target.value })}
                     placeholder="ex: Modélisation d'un réseau maillé LoRaWAN résilient"
-                    className="w-full px-4 py-3 rounded-xl border border-border-subtle bg-bg-secondary text-xs text-text-primary focus:outline-none focus:border-engine/60 focus:bg-bg-secondary transition-all"
+                    className="w-full px-4 py-3 rounded-xl border border-border-subtle bg-bg-secondary text-xs text-text-primary focus:outline-none focus:border-engine focus:bg-bg-secondary transition-all"
                   />
                 </div>
 
@@ -509,7 +509,7 @@ export default function News({ navigate }) {
                     <select id="news-thematique-scientifique"
                       value={newArticle.categorie}
                       onChange={(e) => setNewArticle({ ...newArticle, categorie: e.target.value })}
-                      className="w-full px-4 py-3 rounded-xl border border-border-subtle bg-bg-secondary text-xs text-text-primary focus:outline-none focus:border-engine/60 focus:bg-bg-secondary transition-all"
+                      className="w-full px-4 py-3 rounded-xl border border-border-subtle bg-bg-secondary text-xs text-text-primary focus:outline-none focus:border-engine focus:bg-bg-secondary transition-all"
                     >
                       <option value="Intelligence Artificielle">Intelligence Artificielle</option>
                       <option value="Lancement R&D">Lancement R&D</option>
@@ -528,7 +528,7 @@ export default function News({ navigate }) {
                         value={newArticle.image}
                         onChange={(e) => setNewArticle({ ...newArticle, image: e.target.value })}
                         placeholder="URL de l'image..."
-                        className="w-full px-4 py-3 rounded-xl border border-border-subtle bg-bg-secondary text-xs text-text-primary focus:outline-none focus:border-engine/60 focus:bg-bg-secondary transition-all"
+                        className="w-full px-4 py-3 rounded-xl border border-border-subtle bg-bg-secondary text-xs text-text-primary focus:outline-none focus:border-engine focus:bg-bg-secondary transition-all"
                       />
                     </div>
                   </div>
@@ -570,7 +570,7 @@ export default function News({ navigate }) {
                     value={newArticle.excerpt}
                     onChange={(e) => setNewArticle({ ...newArticle, excerpt: e.target.value })}
                     placeholder="Synthèse courte de vos travaux pour la carte de prévisualisation (max. 150 caractères)..."
-                    className="w-full px-4 py-3 rounded-xl border border-border-subtle bg-bg-secondary text-xs text-text-primary placeholder:text-text-secondary/60 focus:outline-none focus:border-engine/60 focus:bg-bg-secondary transition-all resize-none"
+                    className="w-full px-4 py-3 rounded-xl border border-border-subtle bg-bg-secondary text-xs text-text-primary placeholder:text-text-secondary/60 focus:outline-none focus:border-engine focus:bg-bg-secondary transition-all resize-none"
                   />
                 </div>
 
@@ -583,7 +583,7 @@ export default function News({ navigate }) {
                     value={newArticle.content}
                     onChange={(e) => setNewArticle({ ...newArticle, content: e.target.value })}
                     placeholder="Détail complet de la publication : méthodologie, protocoles expérimentaux, conclusions de recherche..."
-                    className="w-full px-4 py-3 rounded-xl border border-border-subtle bg-bg-secondary text-xs text-text-primary placeholder:text-text-secondary/60 focus:outline-none focus:border-engine/60 focus:bg-bg-secondary transition-all"
+                    className="w-full px-4 py-3 rounded-xl border border-border-subtle bg-bg-secondary text-xs text-text-primary placeholder:text-text-secondary/60 focus:outline-none focus:border-engine focus:bg-bg-secondary transition-all"
                   />
                 </div>
 

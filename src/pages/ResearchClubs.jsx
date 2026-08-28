@@ -455,7 +455,7 @@ export default function ResearchClubs({ navigate }) {
         {/* ── Bandeau invitation connexion (visiteur) ── */}
         {!user && (
           <FadeInWhenVisible direction="up" delay={0.1}>
-            <div className="mb-10 flex items-center gap-4 p-4 chamfer-sm bg-engine-wash border border-engine/20 text-sm">
+            <div className="mb-10 flex items-center gap-4 p-4 chamfer-sm bg-engine-wash border border-engine text-sm">
               <Lock className="w-5 h-5 text-engine shrink-0" />
               <p className="text-text-secondary">
                 <span className="text-text-primary font-semibold">Connectez-vous</span> pour rejoindre

@@ -147,7 +147,7 @@ export default function Members({ navigate }) {
       {/* Page Header */}
       <div className="flex flex-col gap-4 mb-16 max-w-2xl relative z-10">
         <div className="flex items-center gap-3">
-          <div className="p-2.5 rounded-xl bg-engine-wash border border-engine/20 text-engine">
+          <div className="p-2.5 rounded-xl bg-engine-wash border border-engine text-engine">
             <Users className="w-5 h-5" />
           </div>
           <span className="text-xs font-extrabold tracking-[0.25em] uppercase text-engine">
@@ -180,7 +180,7 @@ export default function Members({ navigate }) {
               placeholder="Rechercher un chercheur par nom..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-11 pr-4 py-3 bg-bg-tertiary border border-border-subtle chamfer-sm text-sm text-text-primary focus:outline-none focus:border-engine/40 focus:ring-1 focus:ring-engine/30 transition-all placeholder:text-text-muted font-medium"
+              className="w-full pl-11 pr-4 py-3 bg-bg-tertiary border border-border-subtle chamfer-sm text-sm text-text-primary focus:outline-none focus:border-engine focus:ring-1 focus:ring-engine/30 transition-all placeholder:text-text-muted font-medium"
               aria-label="Rechercher par nom"
             />
           </div>
@@ -190,7 +190,7 @@ export default function Members({ navigate }) {
             <select
               value={poleFilter}
               onChange={(e) => setPoleFilter(e.target.value)}
-              className="w-full pl-4 pr-10 py-3 bg-bg-tertiary border border-border-subtle chamfer-sm text-sm text-text-primary focus:outline-none focus:border-engine/40 transition-colors appearance-none cursor-pointer font-medium"
+              className="w-full pl-4 pr-10 py-3 bg-bg-tertiary border border-border-subtle chamfer-sm text-sm text-text-primary focus:outline-none focus:border-engine transition-colors appearance-none cursor-pointer font-medium"
               aria-label="Filtrer par discipline"
             >
               <option value="Toutes" className="bg-bg-secondary text-text-primary">Toutes disciplines</option>
@@ -208,7 +208,7 @@ export default function Members({ navigate }) {
             <select
               value={universityFilter}
               onChange={(e) => setUniversityFilter(e.target.value)}
-              className="w-full pl-4 pr-10 py-3 bg-bg-tertiary border border-border-subtle chamfer-sm text-sm text-text-primary focus:outline-none focus:border-engine/40 transition-colors appearance-none cursor-pointer font-medium"
+              className="w-full pl-4 pr-10 py-3 bg-bg-tertiary border border-border-subtle chamfer-sm text-sm text-text-primary focus:outline-none focus:border-engine transition-colors appearance-none cursor-pointer font-medium"
               aria-label="Filtrer par université ou institution"
             >
               <option value="Toutes" className="bg-bg-secondary text-text-primary">Toutes institutions</option>
@@ -328,7 +328,7 @@ export default function Members({ navigate }) {
                         <img
                           src={r.avatar}
                           alt={r.name}
-                          className="w-16 h-16 chamfer-sm object-cover border border-border-subtle group-hover:border-engine/40 transition-colors"
+                          className="w-16 h-16 chamfer-sm object-cover border border-border-subtle group-hover:border-engine transition-colors"
                           loading="lazy"
                         />
                         <span className="absolute -bottom-1 -right-1 w-5 h-5 rounded-lg bg-engine border border-bg-secondary flex items-center justify-center text-xs text-on-accent font-extrabold shadow-md">
@@ -355,7 +355,7 @@ export default function Members({ navigate }) {
 
                     {/* Tags & Specialties (Badges) */}
                     <div className="flex flex-wrap gap-1.5 relative z-10">
-                      <span className="inline-flex items-center gap-1 text-xs font-extrabold uppercase text-engine bg-engine-wash px-2.5 py-1 rounded-full border border-engine/20">
+                      <span className="inline-flex items-center gap-1 text-xs font-extrabold uppercase text-engine bg-engine-wash px-2.5 py-1 rounded-full border border-engine">
                         <Layers className="w-3 h-3 shrink-0" />
                         {r.pole}
                       </span>
@@ -394,7 +394,7 @@ export default function Members({ navigate }) {
                       {/* Action Button: Navigate to Public Profile */}
                       <button
                         onClick={() => navigate('profile', { researcherId: r.id })}
-                        className="flex items-center gap-1.5 text-xs font-bold text-engine hover:text-engine/80 transition-colors group/btn cursor-pointer py-1.5 px-3 bg-bg-tertiary rounded-xl border border-border-subtle hover:border-engine/20"
+                        className="flex items-center gap-1.5 text-xs font-bold text-engine hover:text-engine/80 transition-colors group/btn cursor-pointer py-1.5 px-3 bg-bg-tertiary rounded-xl border border-border-subtle hover:border-engine"
                       >
                         Profil
                         <ExternalLink className="w-3 h-3 group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5 transition-transform duration-200" />

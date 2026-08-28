@@ -113,7 +113,7 @@ export default function ContactSection({ contact }) {
             </div>
 
             <FadeInWhenVisible direction="left" delay={0.15}>
-              <div className="mt-6 border-t border-border-subtle/50 pt-6">
+              <div className="mt-6 border-t border-border-subtle pt-6">
                 <a
                   href="https://wa.me/+22941642355?text=Bonjour,%20FIERI"
                   target="_blank"
@@ -227,7 +227,7 @@ export default function ContactSection({ contact }) {
                       exit={{ opacity: 0 }}
                       className="py-12 text-center"
                     >
-                      <div className="w-16 h-16 rounded-full bg-engine-wash border border-engine/40 flex items-center justify-center mx-auto text-engine mb-6">
+                      <div className="w-16 h-16 rounded-full bg-engine-wash border border-engine flex items-center justify-center mx-auto text-engine mb-6">
                         <CheckCircle2 className="w-8 h-8" />
                       </div>
                       <h3 className="text-xl font-bold text-text-primary mb-2">Message transmis avec succès !</h3>

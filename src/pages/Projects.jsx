@@ -122,7 +122,7 @@ export default function Projects({ navigate }) {
             placeholder="Rechercher un projet, une technologie..." 
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full bg-bg-secondary border border-border-subtle focus:border-engine/40 rounded-xl py-2.5 pl-11 pr-4 text-xs text-text-primary placeholder:text-text-muted focus:outline-none transition-all"
+            className="w-full bg-bg-secondary border border-border-subtle focus:border-engine rounded-xl py-2.5 pl-11 pr-4 text-xs text-text-primary placeholder:text-text-muted focus:outline-none transition-all"
           />
         </div>
 
@@ -234,7 +234,7 @@ export default function Projects({ navigate }) {
                             {p.status}
                           </span>
                           {isFeatured && (
-                            <span className="text-xs font-extrabold uppercase tracking-wider px-2.5 py-0.5 rounded-md text-engine bg-engine-wash border-engine/10 flex items-center gap-1">
+                            <span className="text-xs font-extrabold uppercase tracking-wider px-2.5 py-0.5 rounded-md text-engine bg-engine-wash border-engine flex items-center gap-1">
                               <Award className="w-2.5 h-2.5 animate-bounce" />
                               À la Une
                             </span>
@@ -267,7 +267,7 @@ export default function Projects({ navigate }) {
                           </span>
                         ))}
                         {p.technologies.length > (isFeatured ? 7 : 4) && (
-                          <span className="text-xs font-extrabold text-engine bg-engine-wash border border-engine/10 px-2 py-0.5 rounded-md">
+                          <span className="text-xs font-extrabold text-engine bg-engine-wash border border-engine px-2 py-0.5 rounded-md">
                             +{p.technologies.length - (isFeatured ? 7 : 4)}
                           </span>
                         )}

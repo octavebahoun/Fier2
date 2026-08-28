@@ -81,6 +81,19 @@ describe('couleurs — une seule palette', () => {
     expect(trouves.length, `Passer par un token (bg-bg-tertiary, bg-scrim…) :\n${lister(trouves)}`).toBe(0)
   })
 
+  it('ne pose aucune bordure translucide', () => {
+    // Meme defaut que `bg-engine/10`, moitie de la regle seulement ecrite :
+    // 159 bordures etaient posees a l'opacite. Mesure sur PANEL en theme
+    // sombre : border-engine/10 = 1,12:1, /30 = 1,54:1, /60 = 2,65:1 — aucune
+    // n'atteint les 3:1 qu'exige WCAG 1.4.11 pour cerner un composant, et
+    // border-border-subtle/50 tombe a 1,24:1, sous le seuil du simple
+    // separateur. C'est la plainte « le contraste des bordures me derange,
+    // et certains cadres sont sans bordure ».
+    const motif = new RegExp(`(?<![-\\w])border-(${A}|border-subtle|border-strong)(-wash)?/\\d`)
+    const trouves = SEGMENTS.filter((s) => motif.test(s.texte))
+    expect(trouves.length, `Utiliser le token opaque (border-engine, border-border-strong…) :\n${lister(trouves)}`).toBe(0)
+  })
+
   it('ne pose pas de teinte d’accent translucide', () => {
     // `bg-engine/10` ne dépasse pas 1,11:1 sur INK : le panneau ne se voit pas.
     // C'est la cause mécanique de « rien n'est opaque ».

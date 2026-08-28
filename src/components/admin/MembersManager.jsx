@@ -162,7 +162,7 @@ export default function MembersManager() {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Nom, e-mail…"
-              className="w-full md:w-56 bg-bg-secondary border border-border-subtle focus:border-engine/40 rounded-xl py-2 pl-9 pr-3 text-xs text-text-primary outline-none transition-all"
+              className="w-full md:w-56 bg-bg-secondary border border-border-subtle focus:border-engine rounded-xl py-2 pl-9 pr-3 text-xs text-text-primary outline-none transition-all"
             />
           </div>
           <button
@@ -213,11 +213,11 @@ export default function MembersManager() {
               <motion.div
                 key={member.id}
                 layout
-                className="grid grid-cols-[1fr_auto] gap-4 items-center px-4 py-3 chamfer-sm border border-border-subtle/70 bg-bg-secondary hover:border-engine/20 transition-colors"
+                className="grid grid-cols-[1fr_auto] gap-4 items-center px-4 py-3 chamfer-sm border border-border-subtle bg-bg-secondary hover:border-engine transition-colors"
               >
                 {/* Identité */}
                 <div className="flex items-center gap-3 min-w-0">
-                  <div className="w-9 h-9 shrink-0 rounded-full bg-engine-wash border border-engine/30 flex items-center justify-center">
+                  <div className="w-9 h-9 shrink-0 rounded-full bg-engine-wash border border-engine flex items-center justify-center">
                     <span className="text-text-primary font-bold text-xs">{initials}</span>
                   </div>
                   <div className="min-w-0">
@@ -240,7 +240,7 @@ export default function MembersManager() {
                       value={ASSIGNABLE_ROLES.includes(member.role?.toUpperCase()) ? member.role.toUpperCase() : ''}
                       disabled={isBusy || !canSetRole}
                       onChange={(e) => changeRole(member, e.target.value)}
-                      className="appearance-none bg-bg-secondary border border-border-subtle focus:border-engine/40 rounded-lg py-1.5 pl-3 pr-8 text-xs font-bold text-text-primary outline-none cursor-pointer transition-all disabled:opacity-50 disabled:cursor-wait"
+                      className="appearance-none bg-bg-secondary border border-border-subtle focus:border-engine rounded-lg py-1.5 pl-3 pr-8 text-xs font-bold text-text-primary outline-none cursor-pointer transition-all disabled:opacity-50 disabled:cursor-wait"
                       title={isSelf ? "Attention : modifier votre propre rôle" : "Changer le rôle"}
                     >
                       {!ASSIGNABLE_ROLES.includes(member.role?.toUpperCase()) && (
@@ -261,7 +261,7 @@ export default function MembersManager() {
                       value={member.universityPost?.post || ''}
                       disabled={isBusy || !canSetPost}
                       onChange={(e) => changePost(member, e.target.value)}
-                      className="appearance-none bg-bg-secondary border border-border-subtle focus:border-engine/40 rounded-lg py-1.5 pl-3 pr-8 text-xs font-bold text-text-primary outline-none cursor-pointer transition-all disabled:opacity-50 disabled:cursor-wait"
+                      className="appearance-none bg-bg-secondary border border-border-subtle focus:border-engine rounded-lg py-1.5 pl-3 pr-8 text-xs font-bold text-text-primary outline-none cursor-pointer transition-all disabled:opacity-50 disabled:cursor-wait"
                       title="Poste de gouvernance dans l’université"
                     >
                       <option value="">Aucun poste</option>

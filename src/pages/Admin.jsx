@@ -128,7 +128,7 @@ export default function Admin() {
               onClick={() => setTab(t.id)}
               className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
                 active
-                  ? 'bg-engine-wash border border-engine/30 text-text-primary'
+                  ? 'bg-engine-wash border border-engine text-text-primary'
                   : 'text-text-secondary hover:text-text-primary border border-transparent'
               }`}
             >
@@ -226,7 +226,7 @@ export default function Admin() {
                   layout
                   initial={{ opacity: 0, y: 15 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="border border-border-subtle/80 bg-bg-secondary chamfer-sm overflow-hidden transition-colors hover:border-engine"
+                  className="border border-border-subtle bg-bg-secondary chamfer-sm overflow-hidden transition-colors hover:border-engine"
                 >
                   {/* Article Summary Row */}
                   <div className="p-5 flex flex-col md:flex-row md:items-center justify-between gap-4">

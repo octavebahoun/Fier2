@@ -74,7 +74,7 @@ export default function StudentPortal({ navigate }) {
       <div className="relative z-10">
         <div className="flex flex-col gap-4 mb-16 max-w-3xl">
           <div className="flex items-center gap-3">
-            <div className="p-2.5 rounded-xl bg-engine-wash border border-engine/20 text-engine">
+            <div className="p-2.5 rounded-xl bg-engine-wash border border-engine text-engine">
               <GraduationCap className="w-5 h-5" />
             </div>
             <span className="text-xs font-extrabold tracking-[0.25em] uppercase text-engine">
@@ -91,7 +91,7 @@ export default function StudentPortal({ navigate }) {
 
           {/* Bandeau invitation connexion si non connecté */}
           {!user && (
-            <div className="flex items-center gap-4 p-4 chamfer-sm bg-engine-wash border border-engine/20 text-sm mt-2">
+            <div className="flex items-center gap-4 p-4 chamfer-sm bg-engine-wash border border-engine text-sm mt-2">
               <Lock className="w-5 h-5 text-engine shrink-0" />
               <p className="text-text-secondary text-xs">
                 <span className="text-text-primary font-semibold">Connectez-vous</span> pour rejoindre des clubs, vous inscrire aux ateliers et accéder à votre tableau de bord.

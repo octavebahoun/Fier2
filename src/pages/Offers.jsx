@@ -289,8 +289,8 @@ export default function Offers({ navigate }) {
           {[
             { name: "MUA", role: "Mutuelle & Santé", desc: "Mutuelle Universitaire d'Afrique", color: "from-success to-success/5 hover:border-success", textColor: "text-success" },
             { name: "COUS", role: "Logement & Social", desc: "Centre des Œuvres Universitaires", color: "from-warning to-ember hover:border-warning", textColor: "text-warning" },
-            { name: "Trans-Metro", role: "Mobilité Urbaine", desc: "Navettes & mobilités durables", color: "from-engine/10 to-engine-deep/5 hover:border-engine/30", textColor: "text-engine" },
-            { name: "Valkyrie R&D Labs", role: "Équipement & Logiciels", desc: "Dotation technologique", color: "from-ember/10 to-engine/5 hover:border-ember/30", textColor: "text-ember" }
+            { name: "Trans-Metro", role: "Mobilité Urbaine", desc: "Navettes & mobilités durables", color: "from-engine/10 to-engine-deep/5 hover:border-engine", textColor: "text-engine" },
+            { name: "Valkyrie R&D Labs", role: "Équipement & Logiciels", desc: "Dotation technologique", color: "from-ember/10 to-engine/5 hover:border-ember", textColor: "text-ember" }
           ].map(partner => (
             <div key={partner.name} className={`p-5 chamfer-sm bg-gradient-to-br ${partner.color} border border-border-subtle flex flex-col gap-2 transition-all`}>
               <div className="flex justify-between items-start">
@@ -315,11 +315,11 @@ export default function Offers({ navigate }) {
             placeholder="Rechercher une exclusivité, un partenaire..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full bg-bg-secondary border border-border-subtle focus:border-engine/40 rounded-xl py-2.5 pl-11 pr-4 text-xs text-text-primary focus:outline-none transition-all"
+            className="w-full bg-bg-secondary border border-border-subtle focus:border-engine rounded-xl py-2.5 pl-11 pr-4 text-xs text-text-primary focus:outline-none transition-all"
           />
         </div>
 
-        <div className="text-xs font-extrabold uppercase tracking-wider text-ember bg-ember-wash border border-ember/25 px-3.5 py-2 rounded-xl flex items-center gap-1.5 shrink-0">
+        <div className="text-xs font-extrabold uppercase tracking-wider text-ember bg-ember-wash border border-ember px-3.5 py-2 rounded-xl flex items-center gap-1.5 shrink-0">
           <Sparkles className="w-3.5 h-3.5" />
           <span>Offres Partenaires Socialement Engagés</span>
         </div>
@@ -347,12 +347,12 @@ export default function Offers({ navigate }) {
                   borderColor: "rgba(244, 63, 94, 0.25)",
                   boxShadow: "0 0 30px rgba(244, 63, 94, 0.1)"
                 }}
-                className="glass-panel border bg-bg-secondary chamfer p-6 md:p-8 flex flex-col justify-between gap-6 transition-all border-ember/20"
+                className="glass-panel border bg-bg-secondary chamfer p-6 md:p-8 flex flex-col justify-between gap-6 transition-all border-ember"
               >
                 <div className="space-y-4">
                   {/* Top info row */}
                   <div className="flex justify-between items-center gap-4">
-                    <span className="text-xs font-extrabold uppercase tracking-wider px-2.5 py-0.5 rounded-md border text-ember bg-ember-wash border-ember/15">
+                    <span className="text-xs font-extrabold uppercase tracking-wider px-2.5 py-0.5 rounded-md border text-ember bg-ember-wash border-ember">
                       Partenaire Social
                     </span>
                     <span className="text-xs font-extrabold uppercase tracking-wider bg-bg-tertiary px-2 py-0.5 rounded text-ember-soft">
@@ -471,7 +471,7 @@ export default function Offers({ navigate }) {
 
               <form onSubmit={handleApplySubmit} className="flex flex-col gap-4">
                 {applyError && (
-                  <div className="p-3 bg-ember-wash border border-ember/25 text-ember rounded-xl text-xs font-bold flex items-center gap-1.5">
+                  <div className="p-3 bg-ember-wash border border-ember text-ember rounded-xl text-xs font-bold flex items-center gap-1.5">
                     <ShieldAlert className="w-4 h-4 shrink-0" />
                     {applyError}
                   </div>
@@ -489,7 +489,7 @@ export default function Offers({ navigate }) {
                         required
                         value={applyForm.name}
                         onChange={(e) => setApplyForm({ ...applyForm, name: e.target.value })}
-                        className="w-full bg-bg-secondary border border-border-subtle rounded-xl py-2.5 pl-10 pr-4 text-xs font-semibold text-text-primary focus:outline-none focus:border-engine/40"
+                        className="w-full bg-bg-secondary border border-border-subtle rounded-xl py-2.5 pl-10 pr-4 text-xs font-semibold text-text-primary focus:outline-none focus:border-engine"
                       />
                     </div>
                   </div>
@@ -504,7 +504,7 @@ export default function Offers({ navigate }) {
                         required
                         value={applyForm.email}
                         onChange={(e) => setApplyForm({ ...applyForm, email: e.target.value })}
-                        className="w-full bg-bg-secondary border border-border-subtle rounded-xl py-2.5 pl-10 pr-4 text-xs font-semibold text-text-primary focus:outline-none focus:border-engine/40"
+                        className="w-full bg-bg-secondary border border-border-subtle rounded-xl py-2.5 pl-10 pr-4 text-xs font-semibold text-text-primary focus:outline-none focus:border-engine"
                       />
                     </div>
                   </div>
@@ -521,7 +521,7 @@ export default function Offers({ navigate }) {
                     placeholder="Veuillez indiquer vos motivations ou préciser vos besoins par rapport à cet avantage social."
                     value={applyForm.achievements}
                     onChange={(e) => setApplyForm({ ...applyForm, achievements: e.target.value })}
-                    className="w-full bg-bg-secondary border border-border-subtle rounded-xl p-3 text-xs font-semibold text-text-primary focus:outline-none focus:border-engine/40 placeholder:text-text-muted"
+                    className="w-full bg-bg-secondary border border-border-subtle rounded-xl p-3 text-xs font-semibold text-text-primary focus:outline-none focus:border-engine placeholder:text-text-muted"
                   />
                 </div>
 
@@ -594,7 +594,7 @@ export default function Offers({ navigate }) {
 
               <form onSubmit={handlePublishSubmit} className="flex flex-col gap-4">
                 {publishError && (
-                  <div className="p-3 bg-ember-wash border border-ember/25 text-ember rounded-xl text-xs font-bold flex items-center gap-1.5">
+                  <div className="p-3 bg-ember-wash border border-ember text-ember rounded-xl text-xs font-bold flex items-center gap-1.5">
                     <ShieldAlert className="w-4 h-4 shrink-0" />
                     {publishError}
                   </div>
@@ -611,7 +611,7 @@ export default function Offers({ navigate }) {
                       placeholder="ex. Réduction Logement COUS"
                       value={publishForm.title}
                       onChange={(e) => setPublishForm({ ...publishForm, title: e.target.value })}
-                      className="w-full bg-bg-secondary border border-border-subtle rounded-xl py-2.5 px-4 text-xs font-semibold text-text-primary focus:outline-none focus:border-engine/40"
+                      className="w-full bg-bg-secondary border border-border-subtle rounded-xl py-2.5 px-4 text-xs font-semibold text-text-primary focus:outline-none focus:border-engine"
                     />
                   </div>
 
@@ -624,7 +624,7 @@ export default function Offers({ navigate }) {
                       placeholder="ex. Logement / Transport"
                       value={publishForm.discipline}
                       onChange={(e) => setPublishForm({ ...publishForm, discipline: e.target.value })}
-                      className="w-full bg-bg-secondary border border-border-subtle rounded-xl py-2.5 px-4 text-xs font-semibold text-text-primary focus:outline-none focus:border-engine/40"
+                      className="w-full bg-bg-secondary border border-border-subtle rounded-xl py-2.5 px-4 text-xs font-semibold text-text-primary focus:outline-none focus:border-engine"
                     />
                   </div>
                 </div>
@@ -638,7 +638,7 @@ export default function Offers({ navigate }) {
                     placeholder="Remise de 30% / Loyer subventionné"
                     value={publishForm.salary}
                     onChange={(e) => setPublishForm({ ...publishForm, salary: e.target.value })}
-                    className="w-full bg-bg-secondary border border-border-subtle rounded-xl py-2.5 px-4 text-xs font-semibold text-text-primary focus:outline-none focus:border-engine/40"
+                    className="w-full bg-bg-secondary border border-border-subtle rounded-xl py-2.5 px-4 text-xs font-semibold text-text-primary focus:outline-none focus:border-engine"
                   />
                 </div>
 
@@ -651,7 +651,7 @@ export default function Offers({ navigate }) {
                     placeholder="Décrivez précisément l'avantage exclusif et comment en bénéficier."
                     value={publishForm.description}
                     onChange={(e) => setPublishForm({ ...publishForm, description: e.target.value })}
-                    className="w-full bg-bg-secondary border border-border-subtle rounded-xl p-3 text-xs font-semibold text-text-primary focus:outline-none focus:border-engine/40"
+                    className="w-full bg-bg-secondary border border-border-subtle rounded-xl p-3 text-xs font-semibold text-text-primary focus:outline-none focus:border-engine"
                   />
                 </div>
 
@@ -664,7 +664,7 @@ export default function Offers({ navigate }) {
                     placeholder="ex. Réservé aux étudiants boursiers, carte d'adhérent requise."
                     value={publishForm.requirements}
                     onChange={(e) => setPublishForm({ ...publishForm, requirements: e.target.value })}
-                    className="w-full bg-bg-secondary border border-border-subtle rounded-xl p-3 text-xs font-semibold text-text-primary focus:outline-none focus:border-engine/40"
+                    className="w-full bg-bg-secondary border border-border-subtle rounded-xl p-3 text-xs font-semibold text-text-primary focus:outline-none focus:border-engine"
                   />
                 </div>
 

@@ -218,7 +218,7 @@ export default function Navbar({
                     aria-current={isActive(link.id) ? 'page' : undefined}
                     className={`w-full text-left px-3 py-2.5 rounded-lg text-sm font-semibold transition-colors cursor-pointer ${
                       isActive(link.id)
-                        ? 'bg-engine-wash border border-engine/25 text-engine'
+                        ? 'bg-engine-wash border border-engine text-engine'
                         : 'text-text-secondary hover:text-text-primary hover:bg-bg-tertiary border border-transparent'
                     }`}
                   >

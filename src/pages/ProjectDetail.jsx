@@ -370,7 +370,7 @@ export default function ProjectDetail({ navigate, projectId }) {
                       key={idx}
                       whileHover={{ scale: 1.01 }}
                       onClick={() => navigate('profile', { researcherId })}
-                      className="bg-bg-secondary hover:bg-bg-tertiary border border-border-subtle hover:border-engine/20 p-4 chamfer-sm flex items-center gap-3 transition-all cursor-pointer group/member"
+                      className="bg-bg-secondary hover:bg-bg-tertiary border border-border-subtle hover:border-engine p-4 chamfer-sm flex items-center gap-3 transition-all cursor-pointer group/member"
                     >
                       <div className="w-9 h-9 rounded-full bg-engine-wash border border-engine flex items-center justify-center font-extrabold text-xs text-engine group-hover/member:bg-engine group-hover/member:text-on-accent transition-colors">
                         {member.name.split(' ').map(n => n[0]).join('')}
@@ -535,7 +535,7 @@ export default function ProjectDetail({ navigate, projectId }) {
 
               {/* Title Header */}
               <div className="space-y-2 text-center">
-                <div className="mx-auto w-12 h-12 bg-engine-wash border border-engine/20 rounded-full flex items-center justify-center text-engine animate-bounce">
+                <div className="mx-auto w-12 h-12 bg-engine-wash border border-engine rounded-full flex items-center justify-center text-engine animate-bounce">
                   <Landmark className="w-6 h-6" />
                 </div>
                 <h3 id="modal-title" className="text-xl font-extrabold text-text-primary tracking-tight">
@@ -566,7 +566,7 @@ export default function ProjectDetail({ navigate, projectId }) {
                         setPledgeAmount(e.target.value);
                         setPledgeError('');
                       }}
-                      className="w-full bg-bg-secondary border border-border-subtle focus:border-engine/30 rounded-xl py-3 pl-9 pr-4 text-xs font-bold text-text-primary focus:outline-none focus:ring-1 focus:ring-engine/25 transition-all"
+                      className="w-full bg-bg-secondary border border-border-subtle focus:border-engine rounded-xl py-3 pl-9 pr-4 text-xs font-bold text-text-primary focus:outline-none focus:ring-1 focus:ring-engine/25 transition-all"
                     />
                   </div>
                   {pledgeError && (
@@ -591,7 +591,7 @@ export default function ProjectDetail({ navigate, projectId }) {
                           setPledgeAmount(val.toString());
                           setPledgeError('');
                         }}
-                        className="py-2.5 rounded-xl border border-border-subtle bg-bg-secondary hover:bg-bg-tertiary hover:border-engine/30 text-xs font-extrabold text-text-primary transition-all cursor-pointer"
+                        className="py-2.5 rounded-xl border border-border-subtle bg-bg-secondary hover:bg-bg-tertiary hover:border-engine text-xs font-extrabold text-text-primary transition-all cursor-pointer"
                       >
                         + {val} $
                       </button>
