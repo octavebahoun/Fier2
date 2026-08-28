@@ -188,11 +188,7 @@ export default function ResearchClubsSection({ clubs, navigate }) {
                     </p>
                   </div>
 
-                  <div className="border-t border-border-subtle/50 pt-4 mt-auto flex items-center justify-between">
-                    <span className="inline-flex items-center gap-1.5 text-xs font-medium text-text-secondary">
-                      <Users className="w-4 h-4 text-text-muted" />
-                      {club.membersCount || 0} membres
-                    </span>
+                  <div className="border-t border-border-subtle/50 pt-4 mt-auto flex items-center justify-end">
                     <span
                       className="inline-flex items-center gap-1 text-xs font-bold"
                     >

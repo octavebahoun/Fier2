@@ -191,7 +191,6 @@ export default function StudentPortal({ navigate }) {
                       </div>
                       <div className="flex flex-col min-w-0">
                         <span className="text-xs font-bold text-text-primary truncate">{club.kicker}</span>
-                        <span className="text-xs text-text-muted truncate">{club.membersCount || 0} membres</span>
                       </div>
                     </motion.div>
                   )

@@ -106,10 +106,6 @@ function ClubCard({ club, user, navigate, onJoin, onLeave, isPending, joiningId,
           <span className="inline-block text-xs font-bold uppercase tracking-widest rounded-full px-2.5 py-0.5 mb-1 border border-engine bg-engine-wash text-engine">
             {club.kicker}
           </span>
-          <div className="flex items-center gap-1.5 text-text-secondary text-xs">
-            <Users className="w-3.5 h-3.5" />
-            <span>{club.membersCount.toLocaleString('fr-FR')} membres</span>
-          </div>
         </div>
       </div>
 
@@ -321,7 +317,6 @@ export default function ResearchClubs({ navigate }) {
     : clubs;
 
   const joinedCount = displayClubs.filter((c) => c.joined).length;
-  const totalMembers = displayClubs.reduce((acc, c) => acc + c.membersCount, 0);
 
   // Charger toutes les données (clubs, demandes de l'utilisateur connecté, et demandes en attente pour les managers)
   const loadData = async () => {
@@ -436,16 +431,6 @@ export default function ResearchClubs({ navigate }) {
         >
           {/* Stats rapides */}
           <div className="flex items-center justify-center flex-wrap gap-6 pt-2">
-              <div className="flex items-center gap-2 text-sm text-text-secondary">
-                <Users className="w-4 h-4 text-engine" />
-                <span>
-                  <strong className="text-text-primary font-bold">
-                    {totalMembers.toLocaleString('fr-FR')}
-                  </strong>{' '}
-                  membres actifs
-                </span>
-              </div>
-              <div className="w-px h-4 bg-border-subtle hidden sm:block" />
               <div className="flex items-center gap-2 text-sm text-text-secondary">
                 <Star className="w-4 h-4 text-ember" />
                 <span>
