@@ -1,17 +1,22 @@
 import { motion, useReducedMotion } from 'framer-motion'
 import { ArrowRight, ArrowUpRight } from 'lucide-react'
-import SpecimenCard from './SpecimenCard.jsx'
-
-const HERO_STATS = [
-  { value: '5000+', label: 'membres actifs' },
-  { value: '120+', label: 'projets réalisés' },
-  { value: '30+', label: 'partenaires industriels' },
-]
+import couverture from '../../assets/hero.webp'
 
 /**
- * Hero — identité « La Preuve ».
- * Éditorial à gauche (titre Exo, annotation mono, CTA chanfreinés),
- * signature SpecimenCard à droite. Pas d'image photo, pas de circuit néon.
+ * Hero — couverture pleine section.
+ *
+ * L'illustration de droite (une fiche d'échantillon inventée de toutes pièces :
+ * « Rover SLAM autonome, phase 3/5 ») a laissé place à une photographie de la
+ * plateforme. Elle occupe toute la section ; le texte se pose dessus, à gauche.
+ *
+ * Les trois chiffres qui vivaient ici en dur — 5000+ membres, 120+ projets,
+ * 30+ partenaires — ont disparu : ils sont un sous-ensemble exact de la section
+ * Statistiques rendue juste en dessous, qui les lit dans `landing.json`. Le
+ * visiteur les voyait donc deux fois à trois secondes d'intervalle.
+ *
+ * Le contraste du texte est porté par `.hero-cover` (src/index.css), qui
+ * redéfinit localement les tokens d'encre : la photo est sombre dans les deux
+ * thèmes, le libellé reste clair dans les deux.
  */
 export default function HeroSection({ hero, navigate }) {
   const shouldReduceMotion = useReducedMotion()
@@ -25,85 +30,69 @@ export default function HeroSection({ hero, navigate }) {
   return (
     <section
       id="hero"
-      className="relative min-h-[92vh] flex items-center pt-28 pb-20 px-6 md:px-12 lg:px-12 border-b border-border-subtle overflow-hidden"
+      className="hero-cover relative flex min-h-[92vh] items-center overflow-hidden border-b border-border-subtle"
     >
-      {/* Texture de fond discrète */}
-      <div className="absolute inset-0 blueprint-grid opacity-60 pointer-events-none" />
-      <div className="max-w-[92rem] mx-auto w-full relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-10 items-center">
-        {/* ── Colonne éditoriale ── */}
-        <div className="flex flex-col items-start text-left max-w-xl">
+      {/* La couverture. `alt` vide : la photographie illustre le propos, elle
+          ne le porte pas — le titre juste à côté le dit déjà. */}
+      <img
+        src={couverture}
+        alt=""
+        aria-hidden="true"
+        fetchPriority="high"
+        decoding="async"
+        className="absolute inset-0 h-full w-full object-cover object-center"
+      />
+      <div className="hero-cover__voile absolute inset-0" aria-hidden="true" />
+
+      <div className="relative z-10 mx-auto w-full max-w-[92rem] px-6 pt-28 pb-20 md:px-12">
+        <div className="flex max-w-2xl flex-col items-start text-left">
           <motion.div {...fadeUp(0.05)}>
             <span className="eyebrow flex items-center gap-3">
-              <span className="w-8 h-px bg-ember inline-block" aria-hidden="true" />
+              <span className="inline-block h-px w-8 bg-ember" aria-hidden="true" />
               {hero.eyebrow}
             </span>
           </motion.div>
 
           <motion.h1
             {...fadeUp(0.12)}
-            className="mt-6 text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-text-primary leading-[1.05] font-display"
+            className="mt-6 font-display text-4xl font-extrabold leading-[1.05] tracking-tight text-text-primary sm:text-5xl lg:text-6xl"
           >
             {hero.title}
           </motion.h1>
 
           <motion.p
             {...fadeUp(0.2)}
-            className="mt-6 text-base md:text-lg text-text-secondary leading-relaxed"
+            className="mt-6 text-base leading-relaxed text-text-secondary md:text-lg"
           >
             {hero.description}
           </motion.p>
 
-          {/* CTA */}
-          <motion.div {...fadeUp(0.28)} className="mt-10 flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5">
+          <motion.div
+            {...fadeUp(0.28)}
+            className="mt-10 flex flex-col items-stretch gap-3.5 sm:flex-row sm:items-center"
+          >
             <button
               onClick={() => navigate('auth')}
-              className="inline-flex items-center justify-center gap-2.5 h-12 px-7 chamfer-sm bg-engine text-on-accent text-sm font-bold transition-colors hover:bg-engine-deep cursor-pointer"
+              className="chamfer-sm inline-flex h-12 cursor-pointer items-center justify-center gap-2.5 bg-engine px-7 text-sm font-bold text-on-accent transition-colors hover:bg-engine-deep"
             >
               {hero.ctaPrimary}
-              <ArrowRight className="w-4 h-4" aria-hidden="true" />
+              <ArrowRight className="h-4 w-4" aria-hidden="true" />
             </button>
             <button
               onClick={() => navigate('projects')}
-              className="inline-flex items-center justify-center gap-2.5 h-12 px-7 chamfer-sm border border-border-strong text-text-secondary hover:text-text-primary hover:border-engine/60 transition-colors cursor-pointer"
+              className="chamfer-sm inline-flex h-12 cursor-pointer items-center justify-center gap-2.5 border border-border-strong px-7 text-sm text-text-secondary transition-colors hover:border-engine hover:text-text-primary"
             >
               {hero.ctaSecondary}
-              <ArrowUpRight className="w-4 h-4" aria-hidden="true" />
+              <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
             </button>
           </motion.div>
 
-          {/* Preuve rapide */}
-          <motion.div {...fadeUp(0.36)} className="mt-14 flex items-center gap-8">
-            {HERO_STATS.map((stat, i) => (
-              <div key={stat.label} className="flex flex-col gap-0.5">
-                <span className="text-2xl font-bold text-text-primary font-mono tracking-tight">
-                  {stat.value}
-                </span>
-                <span className="text-sm text-text-muted">
-                  {stat.label}
-                </span>
-                {i < HERO_STATS.length - 1 && <span className="hidden" aria-hidden="true" />}
-              </div>
-            ))}
+          <motion.div {...fadeUp(0.36)} className="mt-12 flex items-center gap-2.5">
+            <span className="h-2 w-2 rounded-full bg-ember animate-pulse-live" aria-hidden="true" />
+            <span className="eyebrow">{hero.badge}</span>
           </motion.div>
         </div>
-
-        {/* ── Signature : étiquette d'échantillon ── */}
-        <div className="relative flex justify-center lg:justify-end">
-          <SpecimenCard />
-        </div>
       </div>
-
-      {/* Badge "lab-to-market" en bas à droite */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1.3, duration: 0.6 }}
-        className="hidden lg:flex absolute bottom-8 right-12 items-center gap-2.5"
-        aria-hidden="true"
-      >
-        <span className="w-2 h-2 rounded-full bg-ember animate-pulse-live" />
-        <span className="eyebrow">{hero.badge}</span>
-      </motion.div>
     </section>
   )
 }

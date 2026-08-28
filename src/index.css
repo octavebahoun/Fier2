@@ -496,6 +496,52 @@ body.light-theme .glass-panel {
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
+   HERO COVER — la photo occupe la section, le texte se pose dessus.
+   ─────────────────────────────────────────────────────────────────────────
+   La couverture est sombre dans les deux thèmes : la couche de texte garde
+   donc l'encre claire en clair comme en sombre. Les tokens sont redéfinis ICI,
+   localement, plutôt que remplacés par des couleurs en dur dans le composant —
+   le hero continue d'écrire `text-text-secondary`, et le système reste la
+   seule source de couleur. C'est la même mécanique que le thème clair, à une
+   section près au lieu du document entier.
+
+   `--color-on-accent` n'est PAS redéfini : un bouton peint son propre aplat,
+   et son libellé se juge sur cet aplat, pas sur la photo.
+   ═══════════════════════════════════════════════════════════════════════════ */
+.hero-cover {
+  --color-text-primary: #F2F5FA;
+  --color-text-secondary: #C6D2E4;
+  --color-text-muted: #A9B6CC;
+  --color-border-strong: #8D9BB4;
+  --color-border-subtle: #55627A;
+}
+
+/* Le voile : la seule translucidité assumée du système, ici en dégradé.
+   Il part opaque là où le texte se pose et s'efface là où la photo doit
+   rester lisible — vertical sur mobile (le texte occupe toute la largeur),
+   horizontal dès que la colonne se range à gauche. */
+.hero-cover__voile {
+  background: linear-gradient(
+    to top,
+    rgba(4, 8, 16, 0.94) 0%,
+    rgba(4, 8, 16, 0.82) 50%,
+    rgba(4, 8, 16, 0.52) 100%
+  );
+}
+
+@media (min-width: 1024px) {
+  .hero-cover__voile {
+    background: linear-gradient(
+      to right,
+      rgba(4, 8, 16, 0.95) 0%,
+      rgba(4, 8, 16, 0.88) 34%,
+      rgba(4, 8, 16, 0.52) 68%,
+      rgba(4, 8, 16, 0.3) 100%
+    );
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
    ACCESSIBILITÉ — prefers-reduced-motion
    ═══════════════════════════════════════════════════════════════════════════ */
 @media (prefers-reduced-motion: reduce) {
