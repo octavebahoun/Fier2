@@ -1,22 +1,24 @@
 {
   "hero": {
-    "eyebrow": "FIERI — Recherche appliquée · Lab → Market",
-    "title": "Vos idées sortent du labo.",
-    "description": "FIERI réunit étudiants-ingénieurs et chercheurs pour transformer des concepts ambitieux en prototypes, brevets et startups industrielles. Ici, une idée ne reste pas une idée.",
+    "title": "Rejoignez le Front des Étudiants et Chercheurs",
+    "description": "Nous formons, connectons et accompagnons les talents pour transformer la connaissance en recherche, en innovation et en impact.",
     "badge": "Pôle d'excellence actif — 6 CITE universitaires",
     "ctaPrimary": "Rejoindre une CITE",
     "ctaSecondary": "Voir les projets en cours"
   },
   "decouvrir": {
-    "tag": "NOUS DÉCOUVRIR",
-    "title": "La CITE de l'excellence scientifique et de la R&D appliquée",
-    "description": "Le Front International des Étudiants et Chercheurs (FIERI) est un écosystème d'innovation ouvert aux esprits brillants. Notre ambition est de fédérer les compétences en ingénierie et en recherche pour faire émerger des innovations technologiques, physiques et logicielles de premier plan.",
-    "cta": "Découvrir la CITE"
+    "tag": "FIERI",
+    "title": "Nous découvrir",
+    "paragraphes": [
+      "La FIERI est un écosystème international qui rassemble étudiants, chercheurs et jeunes talents autour d’une ambition commune : faire émerger une génération capable d’innover et d’agir face aux défis de son environnement.",
+      "À travers ses formations, ses communautés de recherche, ses projets collaboratifs et ses initiatives entrepreneuriales, la FIERI offre aux talents un cadre pour apprendre, expérimenter, collaborer et concrétiser leurs idées.",
+      "Présente au sein des universités, centres de formation, instituts de recherche et laboratoires, elle crée des passerelles entre science, technologie, innovation, entrepreneuriat et monde socio-économique."
+    ]
   },
   "organisation": {
-    "tag": "Le parcours",
-    "title": "Trois entités, un seul objectif : voir vos projets aboutir",
-    "subtitle": "Chaque étape a une mission précise, de la première soudure au contrat industriel.",
+    "tag": "FIERI",
+    "title": "Notre organisation",
+    "subtitle": "La FIERI s’appuie sur trois espaces complémentaires pour révéler et accompagner les talents.",
     "entities": [
       {
         "id": "CF_01",
