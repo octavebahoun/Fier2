@@ -210,27 +210,39 @@
     "logos": [
       {
         "name": "Université d'Abomey-Calavi",
-        "type": "Université partenaire"
+        "type": "Université partenaire",
+        "description": "Première université publique du Bénin, elle accueille plusieurs des CITE du réseau FIERI sur ses campus.",
+        "apport": "Locaux, encadrement académique et accès aux laboratoires pour les équipes de recherche étudiantes."
       },
       {
         "name": "Valkyrie R&D Labs",
-        "type": "Partenaire technologique"
+        "type": "Partenaire technologique",
+        "description": "Laboratoire privé de recherche appliquée, spécialisé en systèmes embarqués et en intelligence artificielle.",
+        "apport": "Revues techniques, mentorat industriel et bancs d'essai pour les prototypes issus des CITE."
       },
       {
         "name": "EcoGrid Africa",
-        "type": "Partenaire industriel"
+        "type": "Partenaire industriel",
+        "description": "Opérateur de micro-réseaux électriques déployés dans les zones non desservies par le réseau national.",
+        "apport": "Terrains d'expérimentation réels et données de terrain pour les projets énergie du réseau."
       },
       {
         "name": "Ministère de la Recherche",
-        "type": "Soutien institutionnel"
+        "type": "Soutien institutionnel",
+        "description": "Tutelle publique de la recherche scientifique et de l'innovation.",
+        "apport": "Reconnaissance officielle des programmes FIERI et appui institutionnel aux dépôts de brevets."
       },
       {
         "name": "African Tech Fund",
-        "type": "Soutien financier"
+        "type": "Soutien financier",
+        "description": "Fonds d'investissement dédié aux jeunes entreprises technologiques du continent.",
+        "apport": "Financement d'amorçage et accompagnement des projets FIERI qui passent au stade entrepreneurial."
       },
       {
         "name": "Soneb Innovation",
-        "type": "Partenaire d'expérimentation"
+        "type": "Partenaire d'expérimentation",
+        "description": "Cellule d'innovation d'un opérateur national, tournée vers la gestion de la ressource en eau.",
+        "apport": "Cas d'usage industriels et validation en conditions réelles des solutions développées par les CITE."
       }
     ],
     "description": "Universités, laboratoires, industriels et institutions : chacun apporte quelque chose de différent, et son badge le dit."
