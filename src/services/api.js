@@ -217,6 +217,14 @@ export const api = {
       return { ...r, data: Array.isArray(r.data) ? r.data.map(normalizeEvent) : r.data }
     },
 
+    // POST /events — ADMIN / RESPONSABLE. `streamUrl` non vide = evenement en
+    // ligne ; `isLive` dit que la diffusion est EN COURS, pas qu'elle aura lieu.
+    create: (dto) => post('/events', dto),
+
+    // PUT /events/:id — ADMIN / RESPONSABLE. Sert aussi a ouvrir et fermer la
+    // diffusion d'un webinaire, en basculant `isLive`.
+    update: (id, dto) => put(`/events/${id}`, dto),
+
     register: (id) => post(`/events/${id}/register`),
 
     // DELETE /events/:id/register — annulation de sa propre inscription.

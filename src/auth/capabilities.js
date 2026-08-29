@@ -381,7 +381,6 @@ export const PENDING_UI = [
   'census:read',          // historique des recensements jamais affiché
   'club:edit',            // édition de la fiche club absente
   'country:govern',       // GOUVERNANT_PAYS — aucun écran national
-  'event:manage',         // création/édition d'événement absente du front
   'formation:create',     // création de formation absente
   'membership:remove',    // retrait d'un membre absent de l'espace club
   'org:manage',           // pays / universités / filières / clubs : aucun écran

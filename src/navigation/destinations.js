@@ -237,6 +237,13 @@ export const DESTINATIONS = [
     inNav: true, inPalette: true, icon: 'CalendarDays',
   },
   {
+    // `POST /events` et `PUT /events/:id` existaient depuis le debut, ouverts
+    // au RESPONSABLE et a l'ADMIN, sans aucune interface pour les appeler.
+    id: 'evenement-nouveau', path: '/evenements/nouveau', label: 'Créer un événement',
+    section: SECTIONS.COMMUNAUTE.id, access: { capability: 'event:manage' },
+    inNav: true, inPalette: true, icon: 'CalendarPlus', parent: 'events',
+  },
+  {
     id: 'challenges', path: '/challenges', label: 'Challenges',
     section: SECTIONS.COMMUNAUTE.id, access: PUBLIC,
     inNav: true, inPalette: true, icon: 'Trophy',

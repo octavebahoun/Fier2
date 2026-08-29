@@ -38,6 +38,7 @@ import Figures from './pages/gouvernance/Figures.jsx'
 import Tresorerie from './pages/Tresorerie.jsx'
 import Taches from './pages/projets/Taches.jsx'
 import Candidatures from './pages/projets/Candidatures.jsx'
+import CreationEvenement from './pages/evenements/Creation.jsx'
 import Challenges from './pages/Challenges.jsx'
 import Soutiens from './pages/Soutiens.jsx'
 
@@ -163,6 +164,11 @@ function App() {
         } />
         <Route path="/candidatures" element={
           <ProtectedRoute destination="candidatures"><Candidatures /></ProtectedRoute>
+        } />
+
+        {/* Responsable de club : annoncer une rencontre ou un webinaire. */}
+        <Route path="/evenements/nouveau" element={
+          <ProtectedRoute destination="evenement-nouveau"><CreationEvenement /></ProtectedRoute>
         } />
 
         <Route path="/challenges" element={<Challenges navigate={navigate} />} />
