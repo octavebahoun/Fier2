@@ -83,10 +83,15 @@ export function useCiteTree() {
     setError(null)
     try {
       // Un échec ici doit se voir : c'est toute la page qui n'a pas de contenu.
+      // Les responsables viennent de l'annuaire PUBLIC, pas de `GET /members` :
+      // celui-ci exige un compte et ne rend l'adresse e-mail qu'a un ADMIN.
+      // Cette page presente des responsabilites, elle n'a besoin ni de l'un ni
+      // de l'autre — et elle restait vide pour tout le monde sauf un
+      // administrateur.
       const [pays, clubsRes, membresRes] = await Promise.all([
         api.org.getCountries(),
         api.clubs.getAll(),
-        api.members.list({ limit: 500 }),
+        api.governance.getLeaders(),
       ])
       if (!pays?.success) throw new Error(pays?.message)
 

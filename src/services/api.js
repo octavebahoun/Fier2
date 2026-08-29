@@ -373,7 +373,14 @@ export const api = {
       post(`/members/${memberId}/toggle-emblematic`, { isEmblematic }),
 
     // GET /emblematic-figures — Figures emblématiques de la communauté.
-    getEmblematicFigures: () => get('/emblematic-figures')
+    getEmblematicFigures: () => get('/emblematic-figures'),
+
+    // GET /governance/leaders — annuaire PUBLIC des responsables : postes
+    // d'université, postes de pays, responsables de club et figures
+    // emblématiques. Sans adresse e-mail. C'est ce que lit la page
+    // « Organisation CITE », qui passait jusqu'ici par GET /members — réservé
+    // à l'ADMIN, donc vide pour tout le monde d'autre.
+    getLeaders: () => get('/governance/leaders')
   },
 
   // ── 16. ATTESTATIONS & CERTIFICATS ───────────────────────────────────────
