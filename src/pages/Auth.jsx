@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import { useData } from '../context/DataContext.jsx';
 import { useAuth } from '../context/AuthContext.jsx';
+import api from '../services/api.js';
 
 export default function Auth({ navigate, redirectTo, onAuthComplete }) {
   const { login, register, user } = useAuth();
@@ -36,7 +37,10 @@ export default function Auth({ navigate, redirectTo, onAuthComplete }) {
     confirmPassword: '',
     countryId: '',
     universityId: '',
-    branchId: ''
+    branchId: '',
+    // Facultatif, et décoché par défaut : on ne coche pas à la place de
+    // quelqu'un une case qui l'engage à recevoir du courrier.
+    newsletter: false
     // Le rôle n'est pas choisi par l'utilisateur : toute inscription démarre en
     // ETUDIANT côté serveur. L'élévation de rôle est une décision serveur.
   });
@@ -173,6 +177,14 @@ export default function Auth({ navigate, redirectTo, onAuthComplete }) {
     setLoading(false);
 
     if (res.success) {
+      // L'abonnement vient APRÈS le compte, et son échec ne remonte pas ici :
+      // rater sa lettre d'information ne doit pas transformer une inscription
+      // réussie en message d'erreur.
+      if (registerData.newsletter) {
+        api.newsletter.subscribe(email, 'inscription').catch((err) => {
+          console.warn('[FIERI Auth] Abonnement à la newsletter non enregistré :', err?.message)
+        })
+      }
       setSuccessMsg(`Votre compte a été créé et connecté avec succès ! Redirection...`);
       setTimeout(() => {
         if (redirectTo?.pageName) {
@@ -773,6 +785,30 @@ export default function Auth({ navigate, redirectTo, onAuthComplete }) {
                           </div>
                         </div>
                       </div>
+
+                      {/* Lettre d'information — facultative. */}
+                      <label
+                        htmlFor="register-newsletter"
+                        className="flex cursor-pointer items-start gap-3 chamfer-xs border border-border-strong bg-bg-secondary px-3 py-3"
+                      >
+                        <input
+                          id="register-newsletter"
+                          name="newsletter"
+                          type="checkbox"
+                          checked={registerData.newsletter}
+                          onChange={(e) => setRegisterData({ ...registerData, newsletter: e.target.checked })}
+                          className="mt-0.5 h-4 w-4 shrink-0 accent-engine"
+                        />
+                        <span className="min-w-0">
+                          <span className="block text-sm font-semibold text-text-primary">
+                            Recevoir la lettre d’information
+                          </span>
+                          <span className="mt-0.5 block text-sm text-text-secondary">
+                            Une fois par mois. Facultatif, et vous pouvez vous désabonner
+                            à tout moment.
+                          </span>
+                        </span>
+                      </label>
 
                       {/* Soumettre Inscription Finale */}
                       <button

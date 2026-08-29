@@ -291,6 +291,22 @@ export const api = {
     markNotificationAsRead: (id) => put(`/notifications/${id}/read`)
   },
 
+  // ── 9b. LETTRE D'INFORMATION ───────────────────────────────────────────────
+  // Le formulaire du pied de page n'envoyait rien : il attendait 800 ms puis
+  // annonçait « Abonnement validé ». Les adresses atterrissent maintenant dans
+  // `NewsletterSubscriber`, et un ADMIN les relit par GET /newsletter/subscribers.
+  newsletter: {
+    // POST /newsletter/subscribe — public. `source` : footer | inscription | banniere.
+    subscribe: (email, source = 'footer') =>
+      post('/newsletter/subscribe', { email, source }),
+
+    // POST /newsletter/unsubscribe — public.
+    unsubscribe: (email) => post('/newsletter/unsubscribe', { email }),
+
+    // GET /newsletter/subscribers — ADMIN. L'export des abonnés actifs.
+    list: () => get('/newsletter/subscribers')
+  },
+
   // ── 10. FORMULAIRE DE CONTACT ──────────────────────────────────────────────
   contact: {
     sendMessage: ({ name, email, subject, message }) =>
