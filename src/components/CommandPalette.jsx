@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, useMemo } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
-  Search, Sun, Moon, Compass,
+  Search, Sun, Moon, Compass, Sparkles,
   LayoutDashboard, UserRound, FolderGit2, Users, GraduationCap, Briefcase,
   Newspaper, CalendarDays, Contact, Shield, Trophy, HeartHandshake, ShieldCheck,
   LayoutList, LifeBuoy, Layers, UserPlus, ClipboardList, FileText, Award,
@@ -12,7 +12,7 @@ import { useAuth } from '../context/AuthContext.jsx'
 import { DESTINATIONS, SECTIONS, navAccessOf } from '../navigation/destinations.js'
 
 const ICONS = {
-  LayoutDashboard, UserRound, FolderGit2, Users, GraduationCap, Briefcase,
+  Sparkles, LayoutDashboard, UserRound, FolderGit2, Users, GraduationCap, Briefcase,
   Newspaper, CalendarDays, Contact, Shield, Trophy, HeartHandshake, ShieldCheck,
   LayoutList, LifeBuoy, Layers, UserPlus, ClipboardList, FileText, Award,
   UserX, Star, Wallet,

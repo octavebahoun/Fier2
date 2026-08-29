@@ -52,7 +52,6 @@ export default function Home({ navigate }) {
     vision,
     clubs,
     journal,
-    programmes,
     partenaires,
     faq,
     contact
@@ -86,7 +85,7 @@ export default function Home({ navigate }) {
       <PartnersSection partenaires={partenaires} />
 
       {/* 9. PROGRAMMES */}
-      <ProgrammesSection programmes={programmes} navigate={navigate} />
+      <ProgrammesSection navigate={navigate} />
 
       {/* 10. FAQ */}
       <FAQSection faq={faq} />

@@ -23,7 +23,7 @@ import {
 
 /** Les icônes nommées par le registre. */
 const ICONS = {
-  LayoutDashboard, UserRound, FolderGit2, Users, GraduationCap, Briefcase,
+  Sparkles, LayoutDashboard, UserRound, FolderGit2, Users, GraduationCap, Briefcase,
   Newspaper, CalendarDays, Contact, Shield, Trophy, HeartHandshake, ShieldCheck,
   LayoutList, LifeBuoy, Layers, Compass, UserPlus, ClipboardList, FileText,
   Award, UserX, Star, Wallet, ListChecks, Inbox,

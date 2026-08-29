@@ -1,0 +1,121 @@
+{
+  "tag": "Nos programmes",
+  "title": "Quatre programmes, quatre sorties concrètes",
+  "description": "Excellence, représentation, coopération, entrepreneuriat : chaque programme mène quelque part.",
+  "items": [
+    {
+      "id": "pef",
+      "code": "PEF",
+      "name": "Programme d’Excellence FIERI",
+      "icon": "award",
+      "tagline": "Distinguer ce qui mérite de l’être — les personnes, les Cités, les inventions.",
+      "description": "Le PEF reconnaît l’excellence là où elle se manifeste : dans les parcours académiques, dans la vie des Cités FIERI, et dans l’innovation. Il ne récompense pas une promesse, il constate un résultat.",
+      "volets": [
+        {
+          "titre": "Excellence académique",
+          "points": [
+            "Les meilleurs aux examens nationaux",
+            "Les meilleurs parcours universitaires",
+            "La distinction des lauréats"
+          ]
+        },
+        {
+          "titre": "Excellence institutionnelle des Cités FIERI",
+          "intro": "Un système de labellisation distingue les Cités sur la qualité de leur animation, de leurs projets et de leur gouvernance.",
+          "labels": [
+            { "niveau": "Or", "detail": "Cité FIERI Excellence Or" },
+            { "niveau": "Argent", "detail": "Cité FIERI Excellence Argent" },
+            { "niveau": "Bronze", "detail": "Cité FIERI Excellence Bronze" }
+          ]
+        },
+        {
+          "titre": "Excellence dans l’innovation",
+          "points": [
+            "Valorisation des participants et lauréats du Forum National des Innovateurs",
+            "Reconnaissance des meilleurs projets issus des Cités"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "paf",
+      "code": "PAF",
+      "name": "Programme Ambassadeur FIERI",
+      "icon": "megaphone",
+      "tagline": "Porter FIERI sur son campus, et faire grandir ceux qui arrivent.",
+      "description": "L’ambassadeur est le visage de FIERI dans son université. Il fait connaître le réseau, anime la vie de sa Cité et accompagne les nouveaux membres. Le bénévolat technique et le mentorat, qui étaient présentés séparément, font partie de ce programme : ce sont deux façons de l’exercer.",
+      "volets": [
+        {
+          "titre": "Représentation",
+          "points": [
+            "Faire connaître FIERI dans son université et auprès des partenaires",
+            "Représenter le réseau lors des salons, forums et événements d’innovation"
+          ]
+        },
+        {
+          "titre": "Animation",
+          "points": [
+            "Organiser les rencontres, ateliers et sessions de découverte de sa Cité",
+            "Accueillir et orienter les nouveaux membres"
+          ]
+        },
+        {
+          "titre": "Bénévolat technique et mentorat",
+          "points": [
+            "Encadrer de jeunes chercheurs sur leurs premiers projets",
+            "Animer des ateliers de compétences",
+            "Contribuer aux projets qui ont besoin de bras"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "peci",
+      "code": "PECI",
+      "name": "Programme des Échanges et de la Coopération Internationale",
+      "icon": "network",
+      "tagline": "Développer les échanges, collaborations et partenariats avec des acteurs nationaux et internationaux.",
+      "description": "Le PECI ouvre le réseau vers l’extérieur : universités, laboratoires, entreprises et institutions, au Bénin comme au-delà. Un projet de recherche gagne à ne pas rester dans son campus.",
+      "volets": [
+        {
+          "titre": "Échanges",
+          "points": [
+            "Mobilité de chercheurs et d’étudiants entre établissements",
+            "Projets menés conjointement par plusieurs Cités"
+          ]
+        },
+        {
+          "titre": "Coopération",
+          "points": [
+            "Partenariats avec des laboratoires et des entreprises",
+            "Conventions avec des acteurs institutionnels, nationaux et internationaux"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pei",
+      "code": "PEI",
+      "name": "Programme Entrepreneuriat et Incubation",
+      "icon": "rocket",
+      "tagline": "Accompagner les membres dans la transformation de leurs idées, innovations et projets en initiatives entrepreneuriales viables et durables.",
+      "description": "Le PEI prend le relais quand un projet de recherche est prêt à devenir autre chose qu’un projet. Il en accompagne le passage : modèle économique, structuration, mise en relation avec des financements.",
+      "volets": [
+        {
+          "titre": "Accompagnement",
+          "points": [
+            "Passage du prototype au produit : viabilité, modèle économique, marché",
+            "Structuration juridique et administrative de l’initiative"
+          ]
+        },
+        {
+          "titre": "Incubation",
+          "points": [
+            "Suivi dans la durée par des mentors industriels",
+            "Mise en relation avec les partenaires financiers du réseau"
+          ]
+        }
+      ]
+    }
+  ]
+}

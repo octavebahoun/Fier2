@@ -26,7 +26,7 @@ import Contact from './pages/Contact.jsx'
 import Auth from './pages/Auth.jsx'
 import Opportunities from './pages/Opportunities.jsx'
 import Admin from './pages/Admin.jsx'
-import PAF from './pages/PAF.jsx'
+import Programmes from './pages/Programmes.jsx'
 import MonClub from './pages/espace-cite/MonClub.jsx'
 import Adhesions from './pages/espace-cite/Adhesions.jsx'
 import Activites from './pages/espace-cite/Activites.jsx'
@@ -117,7 +117,9 @@ function App() {
         <Route path="/workshops" element={<Workshops navigate={navigate} />} />
         <Route path="/events" element={<Events navigate={navigate} />} />
         <Route path="/opportunities" element={<Opportunities navigate={navigate} />} />
-        <Route path="/paf" element={<PAF navigate={navigate} />} />
+        <Route path="/programmes" element={<Programmes navigate={navigate} />} />
+        {/* L'ancien chemin du seul programme qui avait une page mene a son onglet. */}
+        <Route path="/paf" element={<Navigate to="/programmes?p=paf" replace />} />
 
         {/* ── Espace CITE : une intention par écran ── */}
         <Route path="/espace-cite" element={

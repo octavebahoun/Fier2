@@ -63,8 +63,15 @@ export const DESTINATIONS = [
     inNav: false, inPalette: false,
   },
   {
-    id: 'paf', path: '/paf', label: 'PAF',
-    section: SECTIONS.PUBLIC.id, access: PUBLIC, inNav: false, inPalette: false,
+    // Les quatre programmes vivent sur une seule page, un onglet chacun.
+    // `/paf` etait la page du seul programme qui en avait une : le chemin
+    // reste valide et mene desormais a son onglet.
+    id: 'programmes',
+    build: (p = {}) => (p.programme ? `/programmes?p=${p.programme}` : '/programmes'),
+    match: (path) => path === '/programmes' || path === '/paf',
+    label: 'Nos programmes',
+    aliases: ['/paf'], section: SECTIONS.PUBLIC.id, access: PUBLIC,
+    inNav: false, inPalette: true, icon: 'Sparkles',
   },
 
   // ── Mon espace ──────────────────────────────────────────────────────────
@@ -263,6 +270,7 @@ export const DESTINATION_BY_ID = Object.fromEntries(DESTINATIONS.map((d) => [d.i
 
 /** Alias historiques : `navigate('formations')` continue de fonctionner. */
 export const ID_ALIASES = {
+  paf: 'programmes',
   'cite-integration': 'cite',
   formations: 'workshops',
   students: 'student-portal',

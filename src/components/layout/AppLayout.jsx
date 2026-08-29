@@ -13,7 +13,7 @@ import { ToastProvider } from '../ui/Toast.jsx'
 // connecté. Ce sont des pages pleine largeur avec leur propre mise en page
 // (hero, sections full-bleed, écran de login) : les enfermer dans le shell
 // applicatif donnerait une landing page encadrée par un tableau de bord.
-const MARKETING_PAGES = new Set(['home', 'auth', 'paf'])
+const MARKETING_PAGES = new Set(['home', 'auth', 'programmes'])
 
 // Referme le tiroir mobile de la sidebar à chaque navigation (le clic sur un
 // lien dans le Sheet ne le fait pas fermer tout seul).
@@ -208,6 +208,7 @@ export default function AppLayout({
                   <ul className="flex flex-col gap-2">
                     <li><button onClick={() => navigate('home')} className="text-sm text-text-secondary hover:text-text-primary transition-colors text-left cursor-pointer">Accueil Général</button></li>
                     <li><button onClick={() => navigate('student-portal')} className="text-sm text-text-secondary hover:text-text-primary transition-colors text-left cursor-pointer">Portail Étudiant</button></li>
+                    <li><button onClick={() => navigate('programmes')} className="text-sm text-text-secondary hover:text-text-primary transition-colors text-left cursor-pointer">Nos Programmes</button></li>
                     <li><button onClick={() => navigate('projects')} className="text-sm text-text-secondary hover:text-text-primary transition-colors text-left cursor-pointer">Projets & Brevets</button></li>
                     <li><button onClick={() => navigate('opportunities')} className="text-sm text-text-secondary hover:text-text-primary transition-colors text-left cursor-pointer">Annonces Recherche</button></li>
                   </ul>

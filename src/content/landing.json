@@ -176,34 +176,6 @@
     "cards": [],
     "description": "Le résumé de tout ce qui bouge au FIERI : les actualités de la communauté, les ateliers et bootcamps à venir, les appels à participation et les offres."
   },
-  "programmes": {
-    "tag": "Nos programmes",
-    "title": "Des programmes pour avancer, pas pour remplir un CV",
-    "description": "Chaque programme a une sortie concrète : un réseau, une compétence, un financement.",
-    "items": [
-      {
-        "icon": "megaphone",
-        "title": "Ambassadeurs FIERI",
-        "desc": "Représentez la recherche FIERI sur votre campus, organisez des événements et développez votre réseau.",
-        "cta": "Devenir ambassadeur",
-        "route": "contact"
-      },
-      {
-        "icon": "hand-heart",
-        "title": "Bénévolat technique",
-        "desc": "Encadrez de jeunes chercheurs, animez des ateliers et contribuez aux projets qui comptent.",
-        "cta": "Proposer mon aide",
-        "route": "contact"
-      },
-      {
-        "icon": "user-check",
-        "title": "Mentorat R&D",
-        "desc": "Un mentor industriel suit votre projet pendant 6 mois : revues techniques, orientation, réseau.",
-        "cta": "Trouver un mentor",
-        "route": "contact"
-      }
-    ]
-  },
   "partenaires": {
     "tag": "Nos partenaires",
     "title": "Ils soutiennent l'excellence scientifique du FIERI",
