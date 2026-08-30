@@ -113,16 +113,16 @@ export default function Programmes({ navigate }) {
                 {actif.name}
               </h2>
               <p className="mt-3 text-base font-light leading-relaxed text-text-secondary">
-                {actif.tagline}
+                {actif.description}
               </p>
             </div>
           </div>
-          <p className="mt-5 text-sm leading-relaxed text-text-secondary">{actif.description}</p>
         </div>
 
-        {/* Les volets */}
+        {/* Les volets — seul le PEF en a pour l'instant. Un programme sans
+            volet n'affiche pas de grille vide : son contenu détaillé viendra. */}
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-          {actif.volets.map((volet) => (
+          {(actif.volets || []).map((volet) => (
             <article
               key={volet.titre}
               className="chamfer-sm flex flex-col border border-border-strong bg-bg-secondary"

@@ -61,7 +61,7 @@ export default function ProgrammesSection({ navigate }) {
                       {item.name}
                     </h3>
                     <p className="mb-6 text-sm font-light leading-relaxed text-text-secondary">
-                      {item.tagline}
+                      {item.description}
                     </p>
                   </div>
 
