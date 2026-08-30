@@ -22,7 +22,7 @@ export default function FAQSection({ faq }) {
                 {faq.title}
               </h2>
               <p className="text-text-secondary text-sm font-light leading-relaxed max-w-md">
-                Vous hésitez encore ? Voici les réponses aux questions que les étudiants nous posent le plus souvent.
+                {faq.description}
               </p>
             </FadeInWhenVisible>
           </div>

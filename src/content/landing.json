@@ -86,7 +86,7 @@
     ]
   },
   "clubs": {
-    "tag": "Les CITE",
+    "tag": "Nos ateliers",
     "title": "Choisissez votre atelier de recherche",
     "items": [
       {
@@ -209,6 +209,7 @@
   "faq": {
     "tag": "FAQ",
     "title": "Les questions qu'on nous pose vraiment",
+    "description": "Étudiants, chercheurs, partenaires : voici les réponses aux questions qui reviennent le plus.",
     "questions": [
       {
         "q": "Je suis étudiant en licence, puis-je rejoindre une CITE ?",
