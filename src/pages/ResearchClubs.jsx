@@ -102,11 +102,6 @@ function ClubCard({ club, user, navigate, onJoin, onLeave, isPending, joiningId,
         <div className="flex items-center justify-center w-12 h-12 rounded-xl shrink-0 border border-engine bg-engine-wash">
           <Icon className="w-6 h-6 text-engine" />
         </div>
-        <div className="flex-1 min-w-0">
-          <span className="inline-block text-xs font-bold uppercase tracking-widest rounded-full px-2.5 py-0.5 mb-1 border border-engine bg-engine-wash text-engine">
-            {club.kicker}
-          </span>
-        </div>
       </div>
 
       {/* Corps : titre + description */}
@@ -424,7 +419,6 @@ export default function ResearchClubs({ navigate }) {
         {/* ── Hero Section ── */}
         <PageHeader
           align="center"
-          tag="Student Hub · Epic 4"
           icon={Zap}
           title="CITE de Recherche"
           description={<>Rejoignez l'une de nos <span className="text-text-primary font-semibold">6 communautés thématiques</span> et collaborez avec les meilleurs chercheurs et ingénieurs de la plateforme FIERI.</>}

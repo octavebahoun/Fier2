@@ -8,14 +8,12 @@ export default function OrgSection({ organisation, navigate }) {
       case 0:
         return {
           icon: <Compass className="w-5.5 h-5.5 text-ember" />,
-          badge: 'text-ember border-ember bg-ember-wash',
           cta: 'bg-ember-wash border-ember text-ember hover:bg-ember-wash',
           chip: 'text-ember bg-ember-wash border-ember',
         };
       case 1:
         return {
           icon: <GraduationCap className="w-5.5 h-5.5 text-engine" />,
-          badge: 'text-engine border-engine bg-engine-wash',
           cta: 'bg-engine-wash border-engine text-engine hover:bg-engine-wash',
           chip: 'text-engine bg-engine-wash border-engine',
         };
@@ -23,9 +21,8 @@ export default function OrgSection({ organisation, navigate }) {
       default:
         return {
           icon: <LayoutDashboard className="w-5.5 h-5.5 text-engine-deep" />,
-          badge: 'text-engine-deep border-engine-deep bg-engine-deep/8',
-          cta: 'bg-engine-deep/10 border-engine-deep text-engine-deep hover:bg-engine-deep/20',
-          chip: 'text-engine-deep bg-engine-deep/12 border-engine-deep',
+          cta: 'bg-engine-wash border-engine-deep text-engine-deep hover:bg-bg-tertiary',
+          chip: 'text-engine-deep bg-engine-wash border-engine-deep',
         };
     }
   };
@@ -71,9 +68,6 @@ export default function OrgSection({ organisation, navigate }) {
                 >
                   {/* Référence d'entité (mono) + icône */}
                   <div className="flex items-center justify-between mb-8">
-                    <span className={`eyebrow px-3 py-1.5 rounded border uppercase ${config.badge}`}>
-                      {entity.id}
-                    </span>
                     <div className={`p-2.5 rounded-sm chamfer-sm border transition-transform duration-300 group-hover:scale-110 ${config.chip}`}>
                       {config.icon}
                     </div>

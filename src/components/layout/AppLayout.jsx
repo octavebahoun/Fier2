@@ -267,8 +267,6 @@ export default function AppLayout({
                 </span>
                 <div className="flex gap-4">
                   <span className="text-xs text-text-muted hover:text-text-secondary cursor-pointer transition-colors">Politique de Confidentialité</span>
-                  <span className="text-xs text-text-muted">•</span>
-                  <span className="text-xs text-text-muted hover:text-text-secondary cursor-pointer transition-colors">Charte Graphique v2</span>
                 </div>
               </div>
             </div>

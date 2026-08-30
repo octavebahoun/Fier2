@@ -230,14 +230,6 @@ export default function Auth({ navigate, redirectTo, onAuthComplete }) {
         {/* Contenu textuel et statistiques */}
         <div className="relative z-10 flex flex-col gap-5 md:gap-7">
 
-          {/* Badge Eyebrow */}
-          <div className="flex items-center gap-2">
-            <span className="w-2.5 h-2.5 rounded-full bg-engine animate-pulse-dot" />
-            <span className="text-xs font-extrabold tracking-[0.25em] uppercase text-engine">
-              FIERI RESEARCH
-            </span>
-          </div>
-
           {/* Citation dynamique */}
           <div className="min-h-[100px] flex flex-col justify-center">
             <AnimatePresence mode="wait">

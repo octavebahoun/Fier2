@@ -196,9 +196,6 @@ export default function ResearchersCarousel({ navigate }) {
               transition={{ type: 'spring', stiffness: 400, damping: 30 }}
               onClick={() => navigate('profile', { researcherId: researcher.id })}
             >
-              {/* Subtle hover radial glow behind avatar */}
-              <div className="absolute -inset-px bg-gradient-to-r from-engine/5 to-engine/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none rounded-3xl" />
-              
               {/* Card Top: Identity */}
               <div className="flex gap-4 items-start relative z-10">
                 <div className="relative shrink-0">

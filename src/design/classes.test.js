@@ -97,7 +97,11 @@ describe('couleurs — une seule palette', () => {
   it('ne pose pas de teinte d’accent translucide', () => {
     // `bg-engine/10` ne dépasse pas 1,11:1 sur INK : le panneau ne se voit pas.
     // C'est la cause mécanique de « rien n'est opaque ».
-    const motif = new RegExp(`(?<![-\\w])bg-(${A})/\\d`)
+    //
+    // Les variantes comptent aussi : la première version ne nommait que les
+    // cinq accents, et `bg-engine-deep/8` passait au travers — de même que les
+    // dégradés, qui posent la teinte par `from-` et `to-`.
+    const motif = new RegExp(`(?<![-\\w])(bg|from|to|via)-(${A})(-deep|-soft|-wash)?/\\d`)
     const trouves = SEGMENTS.filter((s) => motif.test(s.texte))
     expect(trouves.length, `Utiliser bg-<accent>-wash, qui est opaque :\n${lister(trouves)}`).toBe(0)
   })

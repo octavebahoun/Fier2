@@ -1,8 +1,9 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Users, ChevronLeft, ChevronRight, ArrowRight, Layers, Cpu, Zap, Flame, Atom, Binary, Building2, Beaker } from 'lucide-react';
 import FadeInWhenVisible from './FadeInWhenVisible.jsx';
 import { api } from '../../services/api.js';
+import { useCarrousel, PISTE } from './useCarrousel.js';
 
 const ICONS = [Cpu, Zap, Flame, Layers, Binary, Atom, Beaker, Building2, Users];
 
@@ -12,13 +13,8 @@ export default function ResearchClubsSection({ clubs, navigate }) {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [perView, setPerView] = useState(3);
 
-  const trackRef = useRef(null);
-  const isDown = useRef(false);
-  const startX = useRef(0);
-  const scrollStart = useRef(0);
-  const moved = useRef(false);
+  const { pisteRef, largeurCarte, defiler, liaisons, aBouge } = useCarrousel();
 
   // ── Récupération de TOUTES les CITE depuis l'API (pas de mock) ──
   useEffect(() => {
@@ -38,48 +34,10 @@ export default function ResearchClubsSection({ clubs, navigate }) {
     return () => { active = false; };
   }, []);
 
-  // ── Nombre de cartes visibles selon la largeur (responsive) ──
-  useEffect(() => {
-    const calc = () => {
-      const w = window.innerWidth;
-      setPerView(w < 640 ? 1 : w < 1024 ? 2 : 3);
-    };
-    calc();
-    window.addEventListener('resize', calc);
-    return () => window.removeEventListener('resize', calc);
-  }, []);
 
-  const cardWidth = `calc((100% - ${(perView - 1) * 1.5}rem) / ${perView})`;
-
-  const scrollByStep = useCallback((dir) => {
-    const el = trackRef.current;
-    if (!el) return;
-    const first = el.children[0];
-    const step = first ? first.offsetWidth + 24 : el.clientWidth;
-    el.scrollBy({ left: dir * step, behavior: 'smooth' });
-  }, []);
-
-  // ── Drag-to-scroll (navigation manuelle, aucun autoplay) ──
-  const onPointerDown = (e) => {
-    const el = trackRef.current;
-    if (!el) return;
-    isDown.current = true;
-    moved.current = false;
-    startX.current = e.clientX;
-    scrollStart.current = el.scrollLeft;
-    el.setPointerCapture?.(e.pointerId);
-  };
-  const onPointerMove = (e) => {
-    const el = trackRef.current;
-    if (!isDown.current || !el) return;
-    const walk = e.clientX - startX.current;
-    if (Math.abs(walk) > 4) moved.current = true;
-    el.scrollLeft = scrollStart.current - walk;
-  };
-  const endDrag = () => { isDown.current = false; };
-
+  /** Un relâchement après glissement n'est pas un clic sur la carte. */
   const safeNavigate = (route) => {
-    if (moved.current) return;
+    if (aBouge()) return;
     navigate(route);
   };
 
@@ -106,14 +64,14 @@ export default function ResearchClubsSection({ clubs, navigate }) {
           <FadeInWhenVisible direction="right" delay={0.1}>
             <div className="flex items-center gap-2">
               <button
-                onClick={() => scrollByStep(-1)}
+                onClick={() => defiler(-1)}
                 aria-label="Précédent"
                 className="p-3 rounded-full bg-bg-secondary/80 border border-border-subtle text-text-secondary hover:text-text-primary hover:bg-bg-tertiary backdrop-blur-md transition-all cursor-pointer"
               >
                 <ChevronLeft className="w-5 h-5" />
               </button>
               <button
-                onClick={() => scrollByStep(1)}
+                onClick={() => defiler(1)}
                 aria-label="Suivant"
                 className="p-3 rounded-full bg-bg-secondary/80 border border-border-subtle text-text-secondary hover:text-text-primary hover:bg-bg-tertiary backdrop-blur-md transition-all cursor-pointer"
               >
@@ -127,7 +85,7 @@ export default function ResearchClubsSection({ clubs, navigate }) {
         {loading ? (
           <div className="flex gap-6 overflow-hidden">
             {[1, 2, 3].map((n) => (
-              <div key={n} className="glass-panel h-80 rounded-2xl animate-pulse bg-bg-secondary/40 border border-border-subtle shrink-0" style={{ width: cardWidth }} />
+              <div key={n} className="glass-panel h-80 rounded-2xl animate-pulse bg-bg-secondary/40 border border-border-subtle shrink-0" style={{ width: largeurCarte }} />
             ))}
           </div>
         ) : error ? (
@@ -148,15 +106,7 @@ export default function ResearchClubsSection({ clubs, navigate }) {
             <p className="text-text-secondary text-sm font-light">Aucune CITE disponible pour le moment.</p>
           </div>
         ) : (
-          <div
-            ref={trackRef}
-            onPointerDown={onPointerDown}
-            onPointerMove={onPointerMove}
-            onPointerUp={endDrag}
-            onPointerLeave={endDrag}
-            className="flex gap-6 overflow-x-auto snap-x snap-mandatory scroll-smooth pb-4 cursor-grab active:cursor-grabbing [scrollbar-width:none] [-ms-overflow-style:none]"
-            style={{ scrollbarWidth: 'none' }}
-          >
+          <div ref={pisteRef} {...liaisons} className={PISTE}>
             {items.map((club, i) => {
               const Icon = getClubIcon(i);
               return (
@@ -165,7 +115,7 @@ export default function ResearchClubsSection({ clubs, navigate }) {
                   onClick={() => safeNavigate('clubs')}
                   whileHover={{ y: -6 }}
                   className="glass-panel group relative shrink-0 snap-center rounded-2xl border border-border-subtle bg-bg-secondary p-7 flex flex-col justify-between overflow-hidden transition-colors hover:border-border-strong cursor-pointer select-none"
-                  style={{ width: cardWidth }}
+                  style={{ width: largeurCarte }}
                 >
                   <div>
                     <div className="flex items-center gap-3 mb-5">
@@ -174,9 +124,6 @@ export default function ResearchClubsSection({ clubs, navigate }) {
                       >
                         <Icon className="w-5 h-5 text-engine" />
                       </div>
-                      <span className="text-xs font-bold tracking-widest uppercase text-text-muted font-mono">
-                        CITE_{String(i + 1).padStart(2, '0')}
-                      </span>
                     </div>
 
                     <h3 className="text-xl font-extrabold text-text-primary mb-3 leading-snug group-hover:text-engine transition-colors font-display">

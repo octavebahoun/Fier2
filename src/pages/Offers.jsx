@@ -289,7 +289,7 @@ export default function Offers({ navigate }) {
           {[
             { name: "MUA", role: "Mutuelle & Santé", desc: "Mutuelle Universitaire d'Afrique", color: "from-success to-success/5 hover:border-success", textColor: "text-success" },
             { name: "COUS", role: "Logement & Social", desc: "Centre des Œuvres Universitaires", color: "from-warning to-ember hover:border-warning", textColor: "text-warning" },
-            { name: "Trans-Metro", role: "Mobilité Urbaine", desc: "Navettes & mobilités durables", color: "from-engine/10 to-engine-deep/5 hover:border-engine", textColor: "text-engine" },
+            { name: "Trans-Metro", role: "Mobilité Urbaine", desc: "Navettes & mobilités durables", color: "bg-engine-wash hover:border-engine", textColor: "text-engine" },
             { name: "Valkyrie R&D Labs", role: "Équipement & Logiciels", desc: "Dotation technologique", color: "from-ember/10 to-engine/5 hover:border-ember", textColor: "text-ember" }
           ].map(partner => (
             <div key={partner.name} className={`p-5 chamfer-sm bg-gradient-to-br ${partner.color} border border-border-subtle flex flex-col gap-2 transition-all`}>

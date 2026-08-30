@@ -44,7 +44,6 @@ function getRoleBadgeConfig(researcher, currentUser) {
       category: 'ADMINISTRATION FIERI',
       title: 'SUPER ADMINISTRATEUR & BUREAU EXÉCUTIF',
       badgeClass: 'bg-warning-wash border-warning text-warning',
-      gradientGlow: 'from-warning via-engine to-engine/20',
       icon: ShieldCheck,
       iconColor: 'text-warning',
       responsibilities: [
@@ -67,7 +66,6 @@ function getRoleBadgeConfig(researcher, currentUser) {
       category: 'GOUVERNANCE LOCALE',
       title: 'CHEF D\'ÉTABLISSEMENT UNIVERSITAIRE',
       badgeClass: 'bg-engine-wash border-engine text-engine',
-      gradientGlow: 'from-engine via-engine to-engine/20',
       icon: GraduationCap,
       iconColor: 'text-engine',
       responsibilities: [
@@ -90,7 +88,6 @@ function getRoleBadgeConfig(researcher, currentUser) {
       category: 'DIRECTION TECHNIQUE',
       title: 'RESPONSABLE DE PÔLE DE RECHERCHE & CLUB',
       badgeClass: 'bg-success-wash border-success text-success',
-      gradientGlow: 'from-success via-success/15 to-engine/20',
       icon: Award,
       iconColor: 'text-success',
       responsibilities: [
@@ -113,7 +110,6 @@ function getRoleBadgeConfig(researcher, currentUser) {
       category: 'RECHERCHE APPLIQUÉE',
       title: 'ÉTIUDIANT CHERCHEUR ACCRÉDITÉ R&D',
       badgeClass: 'bg-engine-wash border-engine text-engine',
-      gradientGlow: 'from-engine/20 via-engine/10 to-engine/20',
       icon: Microscope,
       iconColor: 'text-engine',
       responsibilities: [
@@ -136,7 +132,6 @@ function getRoleBadgeConfig(researcher, currentUser) {
     category: 'COMMUNAUTÉ ÉTUDIANTE',
     title: 'MEMBRE ÉTUDIANT ACADÉMIQUE',
     badgeClass: 'bg-engine-wash border-engine text-engine',
-    gradientGlow: 'from-engine/20 via-engine to-engine/20',
     icon: UserCheck,
     iconColor: 'text-engine',
     responsibilities: [
@@ -445,7 +440,6 @@ export default function ResearcherProfile({ navigate, researcherId }) {
                 {/* 1. Header Identity Bento Cell with Custom Role Glow */}
                 <div className="glass-panel chamfer chamfer-shadow p-8 md:p-10 flex flex-col md:flex-row gap-8 items-center md:items-start relative overflow-hidden border border-border-subtle group">
                   {/* Custom Background Radial Glow according to Role */}
-                  <div className={`absolute -inset-px bg-gradient-to-r ${roleConfig.gradientGlow} opacity-60 group-hover:opacity-100 transition-opacity duration-500 chamfer pointer-events-none`} />
 
                   {/* Photo Avatar */}
                   <div className="relative shrink-0 z-10">

@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from 'react'
+import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   ChevronLeft,
@@ -12,6 +12,7 @@ import {
 
 } from 'lucide-react';
 import api from '../../services/api.js';
+import { useCarrousel, PISTE } from './useCarrousel.js';
 
 /**
  * Les catégories du Journal — UNE seule table.
@@ -43,13 +44,8 @@ export default function JournalCarousel({ navigate }) {
   const [cards, setCards] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [perView, setPerView] = useState(3);
 
-  const trackRef = useRef(null);
-  const isDown = useRef(false);
-  const startX = useRef(0);
-  const scrollStart = useRef(0);
-  const moved = useRef(false);
+  const { pisteRef, largeurCarte, defiler, liaisons, aBouge } = useCarrousel();
 
   // Charger et assembler les flux du Journal (Workshops, Opportunités, News)
   useEffect(() => {
@@ -114,54 +110,13 @@ export default function JournalCarousel({ navigate }) {
     return () => { active = false; };
   }, []);
 
-  // Détection réactive de la taille de l'écran
-  useEffect(() => {
-    const calc = () => {
-      const w = window.innerWidth;
-      setPerView(w < 640 ? 1 : w < 1024 ? 2 : 3);
-    };
-    calc();
-    window.addEventListener('resize', calc);
-    return () => window.removeEventListener('resize', calc);
-  }, []);
-
   const filteredCards = cards.filter((card) => {
     if (activeTab === 'all') return true;
     return card.kind === activeTab;
   });
 
-  const cardWidth = `calc((100% - ${(perView - 1) * 1.5}rem) / ${perView})`;
-
-  const scrollByStep = useCallback((dir) => {
-    const el = trackRef.current;
-    if (!el) return;
-    const first = el.children[0];
-    const step = first ? first.offsetWidth + 24 : el.clientWidth;
-    el.scrollBy({ left: dir * step, behavior: 'smooth' });
-  }, []);
-
-  const onPointerDown = (e) => {
-    const el = trackRef.current;
-    if (!el) return;
-    isDown.current = true;
-    moved.current = false;
-    startX.current = e.clientX;
-    scrollStart.current = el.scrollLeft;
-    el.setPointerCapture?.(e.pointerId);
-  };
-
-  const onPointerMove = (e) => {
-    const el = trackRef.current;
-    if (!isDown.current || !el) return;
-    const walk = e.clientX - startX.current;
-    if (Math.abs(walk) > 4) moved.current = true;
-    el.scrollLeft = scrollStart.current - walk;
-  };
-
-  const endDrag = () => { isDown.current = false; };
-
   const safeNavigate = (route) => {
-    if (moved.current) return;
+    if (aBouge()) return;
     if (navigate) navigate(route);
   };
 
@@ -197,14 +152,14 @@ export default function JournalCarousel({ navigate }) {
         {/* Boutons de navigation manuelle */}
         <div className="flex items-center gap-2 shrink-0">
           <button
-            onClick={() => scrollByStep(-1)}
+            onClick={() => defiler(-1)}
             aria-label="Précédent"
             className="p-3 rounded-full bg-bg-secondary/80 border border-border-subtle text-text-secondary hover:text-text-primary hover:bg-bg-tertiary backdrop-blur-md transition-all cursor-pointer"
           >
             <ChevronLeft className="w-5 h-5" />
           </button>
           <button
-            onClick={() => scrollByStep(1)}
+            onClick={() => defiler(1)}
             aria-label="Suivant"
             className="p-3 rounded-full bg-bg-secondary/80 border border-border-subtle text-text-secondary hover:text-text-primary hover:bg-bg-tertiary backdrop-blur-md transition-all cursor-pointer"
           >
@@ -220,7 +175,7 @@ export default function JournalCarousel({ navigate }) {
             <div
               key={n}
               className="glass-panel h-72 rounded-2xl animate-pulse bg-bg-secondary/40 border border-border-subtle shrink-0"
-              style={{ width: cardWidth }}
+              style={{ width: largeurCarte }}
             />
           ))}
         </div>
@@ -260,15 +215,7 @@ export default function JournalCarousel({ navigate }) {
           )}
         </div>
       ) : (
-        <div
-          ref={trackRef}
-          onPointerDown={onPointerDown}
-          onPointerMove={onPointerMove}
-          onPointerUp={endDrag}
-          onPointerLeave={endDrag}
-          className="flex gap-6 overflow-x-auto snap-x snap-mandatory scroll-smooth pb-4 cursor-grab active:cursor-grabbing [scrollbar-width:none]"
-          style={{ scrollbarWidth: 'none' }}
-        >
+        <div ref={pisteRef} {...liaisons} className={PISTE}>
           <AnimatePresence mode="popLayout">
             {filteredCards.map((card, i) => {
               const meta = CATEGORY_MAP[card.kind] || CATEGORY_MAP.actu;
@@ -283,7 +230,7 @@ export default function JournalCarousel({ navigate }) {
                   onClick={() => safeNavigate(card.route)}
                   whileHover={{ y: -6 }}
                   className="glass-panel group relative shrink-0 snap-center rounded-2xl border border-border-subtle bg-bg-secondary p-7 flex flex-col justify-between overflow-hidden transition-colors hover:border-border-strong cursor-pointer select-none"
-                  style={{ width: cardWidth }}
+                  style={{ width: largeurCarte }}
                 >
                   <div>
                     <div className="flex items-center justify-between mb-5">

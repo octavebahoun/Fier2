@@ -15,11 +15,11 @@ import StatePanel from '../components/ui/StatePanel.jsx';
 
 // ─────────────────────────── Category Color Mapping ───────────────────────────
 const CATEGORY_COLORS = {
-  "Intelligence Artificielle": "from-engine/20 to-engine-deep/20 border-engine text-engine",
+  "Intelligence Artificielle": "bg-engine-wash border-engine text-engine",
   "Lancement R&D": "from-warning to-ember border-warning text-warning",
-  "Éco-énergie": "from-success to-success/20 border-success text-success",
-  "Bio-Tech": "from-ember/20 to-ember-soft/20 border-ember text-ember",
-  "Robotique": "from-ember/20 to-ember-soft/20 border-ember text-ember"
+  "Éco-énergie": "bg-success-wash border-success text-success",
+  "Bio-Tech": "bg-ember-wash border-ember text-ember",
+  "Robotique": "bg-ember-wash border-ember text-ember"
 };
 
 const getCategoryClass = (cat) => {

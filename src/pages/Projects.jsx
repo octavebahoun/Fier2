@@ -195,9 +195,6 @@ export default function Projects({ navigate }) {
                   transition={{ duration: 0.2, ease: "easeOut" }}
                   onClick={() => navigate('project-detail', { projectId: p.id })}
                 >
-                  {/* Radial accent glow visible on card hover */}
-                  <div className="absolute inset-0 bg-gradient-to-br from-engine/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
-                  
                   {/* Card Cover Image */}
                   <div className={`relative overflow-hidden border-border-subtle shrink-0 ${
                     isFeatured 

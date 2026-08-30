@@ -66,13 +66,6 @@ export default function HeroSection({ hero, navigate }) {
               <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
             </button>
           </motion.div>
-
-          {hero.badge && (
-            <motion.div {...fadeUp(0.3)} className="mt-12 flex items-center gap-2.5">
-              <span className="h-2 w-2 rounded-full bg-ember animate-pulse-live" aria-hidden="true" />
-              <span className="eyebrow">{hero.badge}</span>
-            </motion.div>
-          )}
         </div>
       </div>
     </section>
