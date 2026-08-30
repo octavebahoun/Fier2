@@ -37,45 +37,31 @@
     ]
   },
   "mission": {
-    "tag": "Nos piliers",
-    "title": "Quatre engagements concrets envers nos membres",
+    "tag": "FIERI",
+    "title": "Nos missions",
     "pillars": [
       {
         "title": "Inspiration scientifique",
-        "desc": "De la rigueur et de l'audace technique, cultivées par une pratique concrète — pas par la théorie pour la théorie."
+        "desc": "Développer une culture scientifique forte en stimulant la curiosité, l’expérimentation et l’esprit critique chez les jeunes talents."
       },
       {
         "title": "Innovation pratique",
-        "desc": "Des découvertes traduites en prototypes physiques qui répondent aux besoins réels de nos communautés."
+        "desc": "Transformer les idées en solutions concrètes à travers des projets innovants adaptés aux réalités locales et globales."
       },
       {
         "title": "Réseau collaboratif",
-        "desc": "Une communauté intercontinentale d'étudiants, chercheurs, ingénieurs et industriels qui s'entraident."
+        "desc": "Construire un écosystème dynamique reliant étudiants, chercheurs et professionnels pour favoriser le partage de connaissances et les collaborations."
       },
       {
-        "title": "Accompagnement d'élite",
-        "desc": "Chaque projet d'excellence est suivi de l'idée brute jusqu'au déploiement commercial."
+        "title": "Accompagnement",
+        "desc": "Encadrer et soutenir les porteurs de projets innovants à chaque étape, de l’idée à la mise en œuvre."
       }
     ]
   },
   "vision": {
-    "tag": "La vision",
-    "title": "Bâtir notre souveraineté technologique, une invention à la fois",
-    "text": "L'avenir industriel du continent repose sur la capacité de ses talents à concevoir et breveter leurs propres solutions. Le FIERI forme cette génération de leaders scientifiques — ceux qui mèneront la transition industrielle au lieu de la subir.",
-    "highlights": [
-      {
-        "title": "Souveraineté",
-        "desc": "Concevoir nos propres infrastructures cyber-physiques pour ne plus dépendre de l'extérieur."
-      },
-      {
-        "title": "Impact local",
-        "desc": "Résoudre les défis de nos communautés par des innovations locales : agriculture, énergie, robotique."
-      },
-      {
-        "title": "Lab-to-Market",
-        "desc": "Transformer l'excellence académique en succès industriel, jusqu'à la création de startups."
-      }
-    ]
+    "tag": "Notre vision",
+    "title": "Bâtir notre souveraineté, une innovation à la fois.",
+    "text": "Nous sommes convaincus que chaque étudiant, chercheur et jeune talent peut devenir un acteur du changement lorsqu’il dispose des compétences, des opportunités et d’un environnement favorable. Nous aspirons ainsi à bâtir une génération capable d’innover, d’entreprendre et de transformer les défis de son environnement en solutions durables, au service du progrès de ses communautés et du monde."
   },
   "stats": {
     "tag": "Les preuves",
@@ -175,11 +161,11 @@
     "tag": "JOURNAL FIERI",
     "title": "Le Journal : actualités, ateliers, appels & offres",
     "cards": [],
-    "description": "Le résumé de tout ce qui bouge au FIERI : les actualités de la communauté, les ateliers et bootcamps à venir, les appels à participation et les offres."
+    "description": "Le résumé de tout ce qui bouge à la FIERI : les actualités de la communauté, les ateliers et bootcamps à venir, les appels à participation et les offres."
   },
   "partenaires": {
     "tag": "Nos partenaires",
-    "title": "Ils soutiennent l'excellence scientifique du FIERI",
+    "title": "Ils soutiennent l’excellence scientifique de la FIERI",
     "logos": [
       {
         "name": "Université d'Abomey-Calavi",
@@ -233,7 +219,7 @@
         "a": "Présentez-la au responsable de la CITE de votre campus. Si elle est jugée pertinente, vous entrez dans le programme d'accompagnement : cadrage, équipe, budget, puis prototypage."
       },
       {
-        "q": "Qu'est-ce que le FIERI m'apporte concrètement ?",
+        "q": "Qu’est-ce que la FIERI m’apporte concrètement ?",
         "a": "Un atelier équipé, des mentors, des formations, des concours internationaux, un réseau d'industriels — et l'expérience de mener un vrai projet de A à Z. C'est ce que les recruteurs cherchent."
       }
     ]

@@ -107,7 +107,7 @@ export default function NewsletterInvite({ user }) {
             </div>
             <div className="min-w-0">
               <p className="font-display text-base font-extrabold leading-snug text-text-primary">
-                Ne rien manquer du FIERI
+                Ne rien manquer de la FIERI
               </p>
               <p className="mt-1 text-sm leading-relaxed text-text-secondary">
                 Une lettre par mois : les projets qui aboutissent, les appels à

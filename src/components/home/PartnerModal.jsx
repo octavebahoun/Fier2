@@ -101,7 +101,7 @@ export default function PartnerModal({ partner, icon: Icon, onClose }) {
               )}
               {partner.apport && (
                 <section>
-                  <h3 className="eyebrow mb-2">Ce qu’il apporte au FIERI</h3>
+                  <h3 className="eyebrow mb-2">Ce qu’il apporte à la FIERI</h3>
                   <p className="text-sm leading-relaxed text-text-secondary">
                     {partner.apport}
                   </p>
