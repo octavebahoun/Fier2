@@ -137,7 +137,20 @@ export const api = {
     getCountries: () => get('/countries'),
     getCountryById: (id) => get(`/countries/${id}`),
     getUniversities: (countryId) => get(`/countries/${countryId}/universities`),
-    getBranches: (universityId) => get(`/universities/${universityId}/branches`)
+    getBranches: (universityId) => get(`/universities/${universityId}/branches`),
+
+    // ── Creation : ADMIN uniquement (RolesGuard @Roles('ADMIN')) ────────────
+    // POST /countries — body { name }.
+    createCountry: (name) => post('/countries', { name }),
+
+    // POST /universities — body { name, countryId }. `countryId` passe par un
+    // ParseIntPipe cote serveur : on envoie un nombre, pas une chaine.
+    createUniversity: (name, countryId) =>
+      post('/universities', { name, countryId: Number(countryId) }),
+
+    // POST /branches — body { name, universityId }. Meme remarque.
+    createBranch: (name, universityId) =>
+      post('/branches', { name, universityId: Number(universityId) })
   },
 
   // ── 3. PROJETS DE RECHERCHE R&D ────────────────────────────────────────────
@@ -186,6 +199,9 @@ export const api = {
       const r = await get(`/clubs/${id}`)
       return { ...r, data: normalizeClub(r.data) }
     },
+    // POST /clubs — ADMIN. Body { name, discipline, description? }.
+    create: (data) => post('/clubs', data),
+
     // PUT /clubs/:id — responsable DU club, ou ADMIN (ClubManagerGuard).
     update: (id, data) => put(`/clubs/${id}`, data),
 

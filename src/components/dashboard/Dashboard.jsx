@@ -3,7 +3,7 @@ import {
   Users, BookOpen, ArrowRight, Award, Bell,
   Shield, ShieldCheck, Briefcase, PenSquare, UserCog, Lock, FolderGit2,
   GraduationCap, LayoutList, Wallet, Calendar, ListChecks, Inbox,
-  FolderPlus, FilePlus2, Settings2,
+  FolderPlus, FilePlus2, Settings2, ClipboardCheck, Globe2,
 } from 'lucide-react'
 import { api } from '../../services/api.js'
 import { useAuth, getRolePresentation, getPostPresentation } from '../../context/AuthContext.jsx'
@@ -88,6 +88,8 @@ export default function Dashboard({ navigate }) {
     { cap: 'admin:access',       label: 'Console d’administration', desc: 'Membres, rôles et postes de gouvernance', icon: Shield,      page: 'admin' },
     { cap: 'news:moderate',      label: 'Modérer les actualités',   desc: 'Approuver ou rejeter les articles',       icon: PenSquare,   page: 'news' },
     { cap: 'certificate:issue',  label: 'Émettre une attestation',  desc: 'Document officiel signé de l’université', icon: ShieldCheck, page: 'gouvernance' },
+    { cap: 'census:read',        label: 'Recensements',             desc: 'Effectifs déclarés par les clubs',        icon: ClipboardCheck, page: 'gouvernance-recensements' },
+    { cap: 'country:govern',     label: 'Universités du pays',      desc: 'Le périmètre national',                   icon: Globe2,      page: 'gouvernance-pays' },
     { cap: 'treasury:read',      label: 'Trésorerie',               desc: 'Grand livre et opérations',               icon: Wallet,      page: 'tresorerie' },
     { cap: 'report:read',        label: 'Rapports des clubs',       desc: 'Suivi d’activité de l’université',        icon: LayoutList,  page: 'cite-rapports' },
     { cap: 'report:submit',      label: 'Rapport de mon club',      desc: 'Recensement et activité mensuelle',       icon: LayoutList,  page: 'cite-rapports' },

@@ -374,10 +374,11 @@ export const CAPABILITY_LIST = Object.keys(CAPABILITIES)
  * capacités non utilisées : elle ne peut donc pas grossir en silence, et toute
  * capacité qu'on branche à un écran doit en être retirée.
  *
- * C'est le carnet de dette du chantier 02.
+ * ── La liste est vide, et c'est le but ────────────────────────────────────
+ * Elle a compté jusqu'à neuf entrées. Chacune a désormais son écran : les
+ * trente-sept capacités de la table sont toutes atteignables depuis
+ * l'interface. La liste reste ici parce que le mécanisme sert encore : une
+ * capacité ajoutée sans écran fera échouer le test tant qu'elle n'est pas soit
+ * branchée, soit inscrite ici — explicitement, en connaissance de cause.
  */
-export const PENDING_UI = [
-  'census:read',          // historique des recensements jamais affiché
-  'country:govern',       // GOUVERNANT_PAYS — aucun écran national
-  'org:manage',           // pays / universités / filières / clubs : aucun écran
-]
+export const PENDING_UI = []

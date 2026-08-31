@@ -1,18 +1,22 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
-  Shield, CheckCircle, AlertTriangle, Users, BookOpen, 
+  Shield, CheckCircle, AlertTriangle, Users, BookOpen, Building2,
   Check, Trash2, Calendar, User, ChevronDown, ChevronUp 
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext.jsx';
 import { api } from '../services/api';
 import MembersManager from '../components/admin/MembersManager.jsx';
+import OrganisationManager from '../components/admin/OrganisationManager.jsx';
 import { useToast } from '../components/ui/Toast.jsx'
 import StatePanel from '../components/ui/StatePanel.jsx';
 
 
 export default function Admin() {
-  const { user } = useAuth();
+  const { user, can } = useAuth();
+  // `POST /countries · /universities · /branches · /clubs` sont ADMIN : l'onglet
+  // ne s'affiche que pour qui les obtiendra, comme partout ailleurs.
+  const canManageOrg = can('org:manage');
   const [pendingArticles, setPendingArticles] = useState([]);
   const [approvedCount, setApprovedCount] = useState(null)
   const [loadError, setLoadError] = useState(null)
@@ -119,6 +123,7 @@ export default function Admin() {
         {[
           { id: 'moderation', label: 'Comité de lecture', icon: BookOpen },
           { id: 'members', label: 'Membres', icon: Users },
+          ...(canManageOrg ? [{ id: 'organisation', label: 'Organisation', icon: Building2 }] : []),
         ].map((t) => {
           const TabIcon = t.icon;
           const active = tab === t.id;
@@ -139,7 +144,9 @@ export default function Admin() {
         })}
       </div>
 
-      {tab === 'members' ? (
+      {tab === 'organisation' && canManageOrg ? (
+        <OrganisationManager />
+      ) : tab === 'members' ? (
         <MembersManager />
       ) : (
       <>

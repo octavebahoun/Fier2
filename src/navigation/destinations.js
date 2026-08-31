@@ -161,6 +161,23 @@ export const DESTINATIONS = [
     inNav: true, inPalette: true, icon: 'Star', parent: 'gouvernance',
   },
   {
+    // `GET /universities/:id/census-history` n'etait affiche nulle part : les
+    // clubs declaraient leurs effectifs dans le vide, et `census:validate`
+    // n'avait aucun bouton.
+    // Sans `parent` : la destination `gouvernance` s'appelle « Attestations »,
+    // et un fil d'Ariane « Gouvernance > Attestations > Recensements » ferait
+    // passer cet ecran pour une sous-page de l'emission d'attestations.
+    id: 'gouvernance-recensements', path: '/gouvernance/recensements', label: 'Recensements',
+    section: SECTIONS.GOUVERNANCE.id, access: { capability: 'census:read' },
+    inNav: true, inPalette: true, icon: 'ClipboardCheck',
+  },
+  {
+    // Le poste GOUVERNANT_PAYS existait sans le moindre ecran national.
+    id: 'gouvernance-pays', path: '/gouvernance/pays', label: 'Universités du pays',
+    section: SECTIONS.GOUVERNANCE.id, access: { capability: 'country:govern' },
+    inNav: true, inPalette: true, icon: 'Globe2',
+  },
+  {
     id: 'tresorerie', path: '/tresorerie', label: 'Trésorerie',
     section: SECTIONS.GOUVERNANCE.id, access: { capability: 'treasury:read' },
     inNav: true, inPalette: true, icon: 'Wallet',

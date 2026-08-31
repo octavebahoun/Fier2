@@ -37,6 +37,8 @@ import Badges from './pages/Badges.jsx'
 import Attestations from './pages/gouvernance/Attestations.jsx'
 import Exclusions from './pages/gouvernance/Exclusions.jsx'
 import Figures from './pages/gouvernance/Figures.jsx'
+import Recensements from './pages/gouvernance/Recensements.jsx'
+import Pays from './pages/gouvernance/Pays.jsx'
 import Tresorerie from './pages/Tresorerie.jsx'
 import Taches from './pages/projets/Taches.jsx'
 import Candidatures from './pages/projets/Candidatures.jsx'
@@ -171,6 +173,12 @@ function App() {
         } />
 
         {/* ── Trésorerie : l'outil interne, séparé de la page de dons ── */}
+        <Route path="/gouvernance/recensements" element={
+          <ProtectedRoute destination="gouvernance-recensements"><Recensements /></ProtectedRoute>
+        } />
+        <Route path="/gouvernance/pays" element={
+          <ProtectedRoute destination="gouvernance-pays"><Pays /></ProtectedRoute>
+        } />
         <Route path="/tresorerie" element={
           <ProtectedRoute destination="tresorerie"><Tresorerie /></ProtectedRoute>
         } />
