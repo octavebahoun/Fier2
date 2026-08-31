@@ -3,6 +3,7 @@ import {
   Users, BookOpen, ArrowRight, Award, Bell,
   Shield, ShieldCheck, Briefcase, PenSquare, UserCog, Lock, FolderGit2,
   GraduationCap, LayoutList, Wallet, Calendar, ListChecks, Inbox,
+  FolderPlus, FilePlus2,
 } from 'lucide-react'
 import { api } from '../../services/api.js'
 import { useAuth, getRolePresentation, getPostPresentation } from '../../context/AuthContext.jsx'
@@ -94,6 +95,9 @@ export default function Dashboard({ navigate }) {
     { cap: 'task:manage',        label: 'Tâches de projet',         desc: 'Répartir le travail et suivre l’avancement', icon: ListChecks, page: 'projet-taches' },
     { cap: 'application:review', label: 'Candidatures reçues',      desc: 'Examiner et décider',                     icon: Inbox,       page: 'candidatures' },
     { cap: 'badge:award',        label: 'Attribuer un badge',       desc: 'Distinguer un membre encadré',            icon: Award,       page: 'challenges' },
+    { cap: 'project:create',     label: 'Créer un projet R&D',      desc: 'Ouvrir un projet de recherche',           icon: FolderPlus,  page: 'projet-nouveau' },
+    { cap: 'publication:create', label: 'Déposer une publication',  desc: 'Verser un travail au fonds scientifique', icon: FilePlus2,   page: 'publication-nouvelle' },
+    { cap: 'formation:create',   label: 'Créer une formation',      desc: 'Ouvrir une session de l’Académie',        icon: GraduationCap, page: 'formation-nouvelle' },
     { cap: 'opportunity:create', label: 'Publier une opportunité',  desc: 'Diffuser une offre R&D',                  icon: Briefcase,   page: 'opportunities' },
     { cap: 'news:submit',        label: 'Rédiger un article',       desc: 'Soumettre au journal scientifique',       icon: PenSquare,   page: 'news' },
     { cap: 'profile:editOwn',    label: 'Modifier mon profil',      desc: 'Bio, spécialités, portfolio',             icon: UserCog,     page: 'researcher-profile-edit' },

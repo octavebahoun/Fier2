@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import {
   Search, Sun, Moon, Compass, Sparkles,
   LayoutDashboard, UserRound, FolderGit2, Users, GraduationCap, Briefcase,
-  Newspaper, CalendarDays, CalendarPlus, Contact, Shield, Trophy, HeartHandshake, ShieldCheck,
+  Newspaper, CalendarDays, CalendarPlus, FolderPlus, FilePlus2, Contact, Shield, Trophy, HeartHandshake, ShieldCheck,
   LayoutList, LifeBuoy, Layers, UserPlus, ClipboardList, FileText, Award,
   UserX, Star, Wallet,
 } from 'lucide-react'
@@ -12,7 +12,7 @@ import { useAuth } from '../context/AuthContext.jsx'
 import { DESTINATIONS, SECTIONS, navAccessOf } from '../navigation/destinations.js'
 
 const ICONS = {
-  Sparkles, CalendarPlus, LayoutDashboard, UserRound, FolderGit2, Users, GraduationCap, Briefcase,
+  Sparkles, CalendarPlus, FolderPlus, FilePlus2, LayoutDashboard, UserRound, FolderGit2, Users, GraduationCap, Briefcase,
   Newspaper, CalendarDays, Contact, Shield, Trophy, HeartHandshake, ShieldCheck,
   LayoutList, LifeBuoy, Layers, UserPlus, ClipboardList, FileText, Award,
   UserX, Star, Wallet,

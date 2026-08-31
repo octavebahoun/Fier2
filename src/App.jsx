@@ -39,6 +39,9 @@ import Tresorerie from './pages/Tresorerie.jsx'
 import Taches from './pages/projets/Taches.jsx'
 import Candidatures from './pages/projets/Candidatures.jsx'
 import CreationEvenement from './pages/evenements/Creation.jsx'
+import CreationProjet from './pages/projets/Creation.jsx'
+import CreationPublication from './pages/publications/Creation.jsx'
+import CreationFormation from './pages/formations/Creation.jsx'
 import Challenges from './pages/Challenges.jsx'
 import Soutiens from './pages/Soutiens.jsx'
 
@@ -112,8 +115,17 @@ function App() {
         <Route path="/clubs" element={<ResearchClubs navigate={navigate} />} />
         <Route path="/clubs/:clubId" element={<ClubDetailRoute />} />
         <Route path="/projects" element={<Projects navigate={navigate} />} />
+        <Route path="/projects/nouveau" element={
+          <ProtectedRoute destination="projet-nouveau"><CreationProjet navigate={navigate} /></ProtectedRoute>
+        } />
         <Route path="/projects/:projectId" element={<ProjectDetailRoute />} />
         {/* Formations (ex-Ateliers) */}
+        <Route path="/formations/nouvelle" element={
+          <ProtectedRoute destination="formation-nouvelle"><CreationFormation /></ProtectedRoute>
+        } />
+        <Route path="/publications/nouvelle" element={
+          <ProtectedRoute destination="publication-nouvelle"><CreationPublication /></ProtectedRoute>
+        } />
         <Route path="/formations" element={<Workshops navigate={navigate} />} />
         <Route path="/workshops" element={<Workshops navigate={navigate} />} />
         <Route path="/events" element={<Events navigate={navigate} />} />

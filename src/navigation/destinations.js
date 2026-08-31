@@ -186,9 +186,32 @@ export const DESTINATIONS = [
     inNav: false, inPalette: false, parent: 'projects',
   },
   {
+    // `POST /projects` etait ouvert au CHERCHEUR et au RESPONSABLE depuis le
+    // debut, sans aucun ecran pour l'appeler.
+    id: 'projet-nouveau', path: '/projects/nouveau', label: 'Créer un projet',
+    section: SECTIONS.RECHERCHE.id, access: { capability: 'project:create' },
+    inNav: true, inPalette: true, icon: 'FolderPlus', parent: 'projects',
+  },
+  {
+    // Le fonds scientifique : `POST /publications` n'avait pas d'ecran, et
+    // `GET /publications` n'etait lu nulle part.
+    // Sans `parent` : une publication n'est pas une sous-page du catalogue de
+    // projets, et le fil d'Ariane ne doit pas le laisser croire.
+    id: 'publication-nouvelle', path: '/publications/nouvelle', label: 'Déposer une publication',
+    section: SECTIONS.RECHERCHE.id, access: { capability: 'publication:create' },
+    inNav: true, inPalette: true, icon: 'FilePlus2',
+  },
+  {
     id: 'workshops', path: '/formations', label: 'Formations',
     aliases: ['/workshops'], section: SECTIONS.RECHERCHE.id, access: PUBLIC,
     inNav: true, inPalette: true, icon: 'GraduationCap',
+  },
+  {
+    // `POST /formations` : le catalogue de l'Academie ne pouvait grandir que
+    // par la base de donnees.
+    id: 'formation-nouvelle', path: '/formations/nouvelle', label: 'Créer une formation',
+    section: SECTIONS.RECHERCHE.id, access: { capability: 'formation:create' },
+    inNav: true, inPalette: true, icon: 'GraduationCap', parent: 'workshops',
   },
   {
     id: 'opportunities', path: '/opportunities', label: 'Opportunités',

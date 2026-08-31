@@ -154,6 +154,11 @@ export const api = {
       return { ...r, data: normalizeProject(r.data) }
     },
 
+    // POST /projects — CHERCHEUR / RESPONSABLE / ADMIN.
+    // `clubId` est facultatif ; s'il est fourni, le serveur vérifie que le
+    // compte appartient bien à ce club (ProjectClubMemberGuard).
+    create: (data) => post('/projects', data),
+
     // POST /projects/:id/follow — bascule favori. Renvoie { starred }.
     toggleFollow: async (id) => {
       const r = await post(`/projects/${id}/follow`);
@@ -191,6 +196,14 @@ export const api = {
       const r = await get('/workshops')
       return { ...r, data: Array.isArray(r.data) ? r.data.map(normalizeWorkshop) : r.data }
     },
+
+    // POST /formations — CHERCHEUR / ADMIN. La formation créée ici apparaît
+    // dans GET /workshops : les deux routes lisent la même table.
+    create: ({ title, instructor, capacity }) =>
+      post('/formations', { title, instructor, capacity }),
+
+    // PUT /formations/:id — CHERCHEUR / ADMIN.
+    update: (id, data) => put(`/formations/${id}`, data),
 
     // POST /workshops/:id/register (body userFullName) → { action, position, ... }
     register: (id, userFullName) => post(`/workshops/${id}/register`, { userFullName }),
@@ -282,6 +295,34 @@ export const api = {
     submit: (articleData) => post('/news', articleData),
     approve: (id) => patch(`/news/${id}/approve`),
     reject: (id) => del(`/news/${id}`)
+  },
+
+  // ── 8b. PUBLICATIONS SCIENTIFIQUES ─────────────────────────────────────────
+  // `POST /publications` existait depuis le début, ouvert au CHERCHEUR, sans
+  // aucune interface pour l'appeler.
+  publications: {
+    // GET /publications — public. Filtres : authorId, clubId, projectId.
+    getAll: (filters = {}) =>
+      get(`/publications${qs({
+        authorId: filters.authorId,
+        clubId: filters.clubId,
+        projectId: filters.projectId,
+        page: filters.page,
+        limit: filters.limit,
+      })}`),
+
+    // GET /publications/:id — public.
+    getById: (id) => get(`/publications/${id}`),
+
+    // POST /publications — CHERCHEUR / ADMIN. L'auteur vient du jeton.
+    create: ({ title, content, category, projectId, clubId }) =>
+      post('/publications', {
+        title,
+        content,
+        category,
+        ...(projectId ? { projectId } : {}),
+        ...(clubId ? { clubId } : {}),
+      }),
   },
 
   // ── 9. TABLEAU DE BORD & NOTIFICATIONS ─────────────────────────────────────
