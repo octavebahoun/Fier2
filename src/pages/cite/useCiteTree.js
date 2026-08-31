@@ -77,21 +77,32 @@ export function useCiteTree() {
   const [members, setMembers] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+  const [partiel, setPartiel] = useState(null)
 
   const load = useCallback(async () => {
     setLoading(true)
     setError(null)
+    setPartiel(null)
     try {
-      // Un échec ici doit se voir : c'est toute la page qui n'a pas de contenu.
+      // ── Ce qui est essentiel, et ce qui ne l'est pas ───────────────────
+      //
+      // Les trois appels partaient dans un seul `Promise.all` : le premier qui
+      // echouait emportait la page entiere. C'est exactement ce qui s'est
+      // produit — « la gouvernance ne marche plus » — quand une seule des
+      // routes a manque a l'appel. Or le contenu de cette page, c'est l'arbre
+      // pays → universite → club ; les responsables sont un COMPLEMENT.
+      //
+      // Les pays restent donc bloquants : sans eux, il n'y a rien a montrer.
+      // Les clubs et les responsables echouent chacun pour leur compte, et
+      // leur absence est ANNONCEE — le module refuse depuis toujours de faire
+      // passer une panne pour une cite vide.
+      //
       // Les responsables viennent de l'annuaire PUBLIC, pas de `GET /members` :
       // celui-ci exige un compte et ne rend l'adresse e-mail qu'a un ADMIN.
-      // Cette page presente des responsabilites, elle n'a besoin ni de l'un ni
-      // de l'autre — et elle restait vide pour tout le monde sauf un
-      // administrateur.
       const [pays, clubsRes, membresRes] = await Promise.all([
         api.org.getCountries(),
-        api.clubs.getAll(),
-        api.governance.getLeaders(),
+        api.clubs.getAll().catch((err) => ({ success: false, erreur: err })),
+        api.governance.getLeaders().catch((err) => ({ success: false, erreur: err })),
       ])
       if (!pays?.success) throw new Error(pays?.message)
 
@@ -99,6 +110,16 @@ export function useCiteTree() {
       setCountries(liste)
       setClubs(clubsRes?.success ? clubsRes.data || [] : [])
       setMembers(membresRes?.success ? membresRes.data || [] : [])
+
+      const manquants = [
+        !clubsRes?.success && 'les clubs',
+        !membresRes?.success && 'les responsables',
+      ].filter(Boolean)
+      if (manquants.length) {
+        setPartiel(
+          `${manquants.join(' et ')} n’ont pas pu être chargés. Le reste de l’organisation est à jour.`,
+        )
+      }
 
       const parPays = {}
       const parUniversite = {}
@@ -116,6 +137,7 @@ export function useCiteTree() {
     } catch (err) {
       setCountries([])
       setError(err?.serverMessage || err?.message || "L'organisation CITE n'a pas pu être chargée.")
+      setPartiel(null)
     } finally {
       setLoading(false)
     }
@@ -175,5 +197,5 @@ export function useCiteTree() {
     [members],
   )
 
-  return { tree, globalGovernance, loading, error, reload: load, members }
+  return { tree, globalGovernance, loading, error, partiel, reload: load, members }
 }

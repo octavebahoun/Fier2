@@ -24,7 +24,7 @@ import {
 export default function OrganisationCite({ navigate }) {
   const { user } = useAuth()
   const { notify } = useToast()
-  const { tree, globalGovernance, loading, error, reload } = useCiteTree()
+  const { tree, globalGovernance, loading, error, partiel, reload } = useCiteTree()
   const sel = useCiteSelection()
   const [envoi, setEnvoi] = useState(false)
 
@@ -228,6 +228,24 @@ export default function OrganisationCite({ navigate }) {
               {club && <Crumb label={club.name} active={!!club} onClick={() => sel.goClub(club.id)} />}
             </div>
           </nav>
+
+          {/* Une partie des donnees a manque, mais l'arbre est la : on le dit,
+              sans remplacer la page par un panneau d'erreur. */}
+          {!loading && !error && partiel && (
+            <p
+              role="status"
+              className="mb-6 border border-warning bg-warning-wash px-4 py-3 text-sm text-warning"
+            >
+              {partiel}{' '}
+              <button
+                type="button"
+                onClick={reload}
+                className="cursor-pointer font-bold underline underline-offset-2"
+              >
+                Réessayer
+              </button>
+            </p>
+          )}
 
           {loading ? (
             <StatePanel state="loading" />
