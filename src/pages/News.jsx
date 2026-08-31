@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
   BookOpen, Calendar, User, Search, PlusCircle, X,
   Clock, ArrowRight, BookMarked, Layers, FileText, Image,
-  Newspaper, CalendarDays
+  Newspaper, CalendarDays, Upload, Loader2
 } from 'lucide-react';
 import Events from './Events.jsx';
 import { api } from '../services/api';
@@ -25,6 +25,21 @@ const CATEGORY_COLORS = {
 const getCategoryClass = (cat) => {
   return CATEGORY_COLORS[cat] || "from-slate-500/20 to-zinc-500/20 border-slate-500/30 text-slate-400";
 };
+
+/**
+ * Thematiques deja employees sur la plateforme. Ce sont des SUGGESTIONS, pas
+ * une liste fermee : le serveur stocke une chaine libre, et le client l'a
+ * demande — « il pouvait avoir autre non prevu, laissez le champ libre de
+ * saisir ». Une liste fermee obligeait a ranger un article sur l'hydrologie
+ * dans « Bio-Tech ».
+ */
+const THEMATIQUES = [
+  'Intelligence Artificielle',
+  'Lancement R&D',
+  'Éco-énergie',
+  'Bio-Tech',
+  'Robotique',
+];
 
 // Preset images for science publications
 const IMAGE_PRESETS = [
@@ -66,6 +81,30 @@ export default function News({ navigate }) {
     content: ''
   });
 
+  const [envoiImage, setEnvoiImage] = useState(false);
+
+  /**
+   * Depose l'illustration et retient son adresse.
+   *
+   * Le champ demandait « URL de l'image ». Personne n'a l'URL de la photo qu'il
+   * vient de prendre : il fallait d'abord trouver un hebergeur. On envoie
+   * maintenant le fichier, et le serveur renvoie l'adresse.
+   */
+  const envoyerIllustration = async (fichier) => {
+    if (!fichier || envoiImage) return;
+    setEnvoiImage(true);
+    try {
+      const res = await api.uploads.image(fichier);
+      if (!res?.success || !res.data?.url) throw new Error(res?.message);
+      setNewArticle((a) => ({ ...a, image: res.data.url }));
+      notify('Illustration ajoutée.', 'success');
+    } catch (err) {
+      notify(err?.serverMessage || err?.message || "L'image n'a pas pu être envoyée.", 'error');
+    } finally {
+      setEnvoiImage(false);
+    }
+  };
+
   // Reading modal state
   const [readingArticle, setReadingArticle] = useState(null);
   const { notify } = useToast()
@@ -100,10 +139,13 @@ export default function News({ navigate }) {
     setSubmitting(true);
     try {
       const authorName = user?.name || "Chercheur FIERI";
-      const { categorie, ...rest } = newArticle;
+      const { categorie, image, ...rest } = newArticle;
       const payload = {
         ...rest,
         category: categorie,
+        // Le serveur range l'illustration sous `imageUrl`. Le formulaire
+        // envoyait `image`, que rien ne lisait : le choix etait perdu.
+        imageUrl: image,
         author: authorName,
       };
 
@@ -506,31 +548,49 @@ export default function News({ navigate }) {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-1.5">
                     <label className="text-xs font-bold text-text-secondary uppercase tracking-wider" htmlFor="news-thematique-scientifique">Thématique scientifique *</label>
-                    <select id="news-thematique-scientifique"
+                    <input id="news-thematique-scientifique"
+                      type="text"
+                      required
+                      list="news-thematiques"
                       value={newArticle.categorie}
                       onChange={(e) => setNewArticle({ ...newArticle, categorie: e.target.value })}
-                      className="w-full px-4 py-3 rounded-xl border border-border-subtle bg-bg-secondary text-xs text-text-primary focus:outline-none focus:border-engine focus:bg-bg-secondary transition-all"
-                    >
-                      <option value="Intelligence Artificielle">Intelligence Artificielle</option>
-                      <option value="Lancement R&D">Lancement R&D</option>
-                      <option value="Éco-énergie">Éco-énergie</option>
-                      <option value="Bio-Tech">Bio-Tech</option>
-                      <option value="Robotique">Robotique</option>
-                    </select>
+                      placeholder="Choisissez, ou saisissez la vôtre"
+                      className="w-full px-4 py-3 rounded-xl border border-border-subtle bg-bg-secondary text-xs text-text-primary placeholder:text-text-secondary/60 focus:outline-none focus:border-engine focus:bg-bg-secondary transition-all"
+                    />
+                    <datalist id="news-thematiques">
+                      {THEMATIQUES.map((t) => <option key={t} value={t} />)}
+                    </datalist>
                   </div>
 
                   <div className="space-y-1.5">
-                    <label htmlFor="news-illustration" className="text-xs font-bold text-text-secondary uppercase tracking-wider">Illustration / Image</label>
-                    <div className="flex items-center gap-2">
+                    <label htmlFor="news-illustration" className="text-xs font-bold text-text-secondary uppercase tracking-wider">Illustration de l’article</label>
+                    <div className="flex items-center gap-3">
+                      <img
+                        src={newArticle.image}
+                        alt=""
+                        className="h-12 w-16 shrink-0 rounded-lg border border-border-subtle object-cover"
+                      />
+                      <label
+                        htmlFor="news-illustration"
+                        className="inline-flex min-h-11 flex-1 cursor-pointer items-center justify-center gap-2 rounded-xl border border-border-subtle bg-bg-secondary px-4 text-xs font-bold text-text-primary transition-all hover:border-engine"
+                      >
+                        {envoiImage
+                          ? <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
+                          : <Upload className="h-4 w-4 text-engine" aria-hidden="true" />}
+                        {envoiImage ? 'Envoi…' : 'Choisir une image'}
+                      </label>
                       <input
                         id="news-illustration"
-                        type="text"
-                        value={newArticle.image}
-                        onChange={(e) => setNewArticle({ ...newArticle, image: e.target.value })}
-                        placeholder="URL de l'image..."
-                        className="w-full px-4 py-3 rounded-xl border border-border-subtle bg-bg-secondary text-xs text-text-primary focus:outline-none focus:border-engine focus:bg-bg-secondary transition-all"
+                        type="file"
+                        accept="image/png,image/jpeg,image/webp,image/gif"
+                        disabled={envoiImage}
+                        onChange={(e) => envoyerIllustration(e.target.files?.[0])}
+                        className="sr-only"
                       />
                     </div>
+                    <p className="text-xs text-text-secondary">
+                      Depuis votre appareil. PNG, JPG, WEBP ou GIF, 3 Mo maximum.
+                    </p>
                   </div>
                 </div>
 

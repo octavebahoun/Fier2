@@ -371,6 +371,33 @@ export const api = {
     list: () => get('/newsletter/subscribers')
   },
 
+  // ── 9c. DEPOT D'IMAGES ─────────────────────────────────────────────────────
+  // Les deux champs d'illustration du site — celui d'un article, celui d'une
+  // photo de profil — reclamaient l'URL d'une image deja en ligne. Personne
+  // n'a d'URL pour la photo qu'il vient de prendre : on envoie le fichier.
+  uploads: {
+    // POST /uploads/image (multipart, champ 'image') — toute personne
+    // connectee. Renvoie une adresse stable, servie par GET /files/images/:nom.
+    image: async (file) => {
+      const token = localStorage.getItem('fieri_auth_token');
+      const form = new FormData();
+      form.append('image', file);
+      const res = await fetch(`${BASE_URL}/uploads/image`, {
+        method: 'POST',
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
+        body: form,
+      });
+      if (!res.ok) {
+        const b = await res.clone().json().catch(() => ({}));
+        const err = new Error(b?.message || `HTTP Error: ${res.status}`);
+        err.status = res.status;
+        err.serverMessage = b?.message;
+        throw err;
+      }
+      return res.json();
+    }
+  },
+
   // ── 10. FORMULAIRE DE CONTACT ──────────────────────────────────────────────
   contact: {
     sendMessage: ({ name, email, subject, message }) =>

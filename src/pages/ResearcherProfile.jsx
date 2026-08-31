@@ -23,7 +23,9 @@ import {
   Save,
   Check,
   Zap,
-  FileText
+  FileText,
+  Upload,
+  Loader2
 } from 'lucide-react'
 import { useAuth } from '../context/AuthContext.jsx'
 import { useAuthGate } from '../context/AuthGateContext.jsx'
@@ -213,6 +215,30 @@ export default function ResearcherProfile({ navigate, researcherId }) {
     portfolioUrl: '',
     cvUrl: ''
   })
+  const [envoiAvatar, setEnvoiAvatar] = useState(false)
+
+  /**
+   * Depose la photo de profil et retient son adresse.
+   *
+   * Le champ demandait l'URL d'une image deja en ligne — autant demander a
+   * quelqu'un d'heberger sa photo avant de pouvoir la montrer. L'enregistrement
+   * du profil reste une action explicite : on prepare l'apercu, la personne
+   * valide.
+   */
+  const envoyerAvatar = async (fichier) => {
+    if (!fichier || envoiAvatar) return
+    setEnvoiAvatar(true)
+    try {
+      const res = await api.uploads.image(fichier)
+      if (!res?.success || !res.data?.url) throw new Error(res?.message)
+      setEditValues((v) => ({ ...v, avatar: res.data.url }))
+      notify('Photo prête. Enregistrez pour la conserver.', 'success')
+    } catch (err) {
+      notify(err?.serverMessage || err?.message || "La photo n'a pas pu être envoyée.", 'error')
+    } finally {
+      setEnvoiAvatar(false)
+    }
+  }
 
   // Fetch researcher details
   useEffect(() => {
@@ -868,24 +894,39 @@ export default function ResearcherProfile({ navigate, researcherId }) {
 
                 </div>
 
-                {/* Photo de profil avec Preview */}
+                {/* Photo de profil : un fichier, pas une adresse a trouver.
+                    Le champ reclamait « https://images.unsplash.com/... » —
+                    personne n'a l'URL de sa propre photo, et le client a
+                    signale qu'on n'arrivait pas a la mettre a jour. */}
                 <div className="space-y-2">
-                  <label htmlFor="edit-avatar" className="text-xs font-bold text-text-secondary">Photo de profil (URL d'image)</label>
+                  <span className="text-xs font-bold text-text-secondary">Photo de profil</span>
                   <div className="flex items-center gap-4">
                     <img
                       src={editValues.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80'}
                       alt="Aperçu"
                       className="w-14 h-14 chamfer-sm object-cover border border-border-subtle shrink-0"
                     />
+                    <label
+                      htmlFor="edit-avatar"
+                      className="inline-flex min-h-11 flex-1 cursor-pointer items-center justify-center gap-2 chamfer-sm border border-border-subtle bg-bg-tertiary px-4 text-sm font-bold text-text-primary transition-colors hover:border-engine"
+                    >
+                      {envoiAvatar
+                        ? <Loader2 className="w-4 h-4 animate-spin" aria-hidden="true" />
+                        : <Upload className="w-4 h-4 text-engine" aria-hidden="true" />}
+                      {envoiAvatar ? 'Envoi…' : 'Choisir une photo'}
+                    </label>
                     <input
                       id="edit-avatar"
-                      type="url"
-                      value={editValues.avatar}
-                      onChange={(e) => setEditValues(v => ({ ...v, avatar: e.target.value }))}
-                      className="w-full px-4 py-3 chamfer-sm bg-bg-tertiary border border-border-subtle text-sm text-text-primary focus:outline-none focus:border-engine"
-                      placeholder="https://images.unsplash.com/..."
+                      type="file"
+                      accept="image/png,image/jpeg,image/webp,image/gif"
+                      disabled={envoiAvatar}
+                      onChange={(e) => envoyerAvatar(e.target.files?.[0])}
+                      className="sr-only"
                     />
                   </div>
+                  <p className="text-xs text-text-secondary">
+                    Depuis votre appareil. PNG, JPG, WEBP ou GIF, 3 Mo maximum.
+                  </p>
                 </div>
 
                 {/* Spécialités */}
