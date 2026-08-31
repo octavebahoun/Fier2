@@ -32,6 +32,8 @@ import Adhesions from './pages/espace-cite/Adhesions.jsx'
 import Activites from './pages/espace-cite/Activites.jsx'
 import Rapports from './pages/espace-cite/Rapports.jsx'
 import Annuaire from './pages/espace-cite/Annuaire.jsx'
+import GestionClub from './pages/espace-cite/Gestion.jsx'
+import Badges from './pages/Badges.jsx'
 import Attestations from './pages/gouvernance/Attestations.jsx'
 import Exclusions from './pages/gouvernance/Exclusions.jsx'
 import Figures from './pages/gouvernance/Figures.jsx'
@@ -147,6 +149,9 @@ function App() {
         <Route path="/espace-cite/rapports" element={
           <ProtectedRoute destination="cite-rapports"><Rapports /></ProtectedRoute>
         } />
+        <Route path="/espace-cite/gestion" element={
+          <ProtectedRoute destination="cite-gestion"><GestionClub /></ProtectedRoute>
+        } />
         <Route path="/espace-cite/annuaire" element={
           <ProtectedRoute destination="cite-annuaire"><Annuaire /></ProtectedRoute>
         } />
@@ -183,6 +188,9 @@ function App() {
           <ProtectedRoute destination="evenement-nouveau"><CreationEvenement /></ProtectedRoute>
         } />
 
+        <Route path="/badges" element={
+          <ProtectedRoute destination="badges"><Badges /></ProtectedRoute>
+        } />
         <Route path="/challenges" element={<Challenges navigate={navigate} />} />
         <Route path="/soutiens" element={<Soutiens navigate={navigate} />} />
         <Route path="/help" element={<Contact navigate={navigate} />} />

@@ -1,7 +1,7 @@
 import { useMemo } from "react"
 import {
   LayoutDashboard, UserRound, FolderGit2, Users, GraduationCap, Briefcase,
-  Newspaper, CalendarDays, CalendarPlus, FolderPlus, FilePlus2, Contact, Shield, Trophy, HeartHandshake, ShieldCheck,
+  Newspaper, CalendarDays, CalendarPlus, FolderPlus, FilePlus2, Settings2, Contact, Shield, Trophy, HeartHandshake, ShieldCheck,
   LayoutList, LifeBuoy, Sparkles, Layers, Compass, UserPlus, ClipboardList,
   FileText, Award, UserX, Star, Wallet, ListChecks, Inbox,
 } from "lucide-react"
@@ -23,7 +23,7 @@ import {
 
 /** Les icônes nommées par le registre. */
 const ICONS = {
-  Sparkles, CalendarPlus, FolderPlus, FilePlus2, LayoutDashboard, UserRound, FolderGit2, Users, GraduationCap, Briefcase,
+  Sparkles, CalendarPlus, FolderPlus, FilePlus2, Settings2, LayoutDashboard, UserRound, FolderGit2, Users, GraduationCap, Briefcase,
   Newspaper, CalendarDays, Contact, Shield, Trophy, HeartHandshake, ShieldCheck,
   LayoutList, LifeBuoy, Layers, Compass, UserPlus, ClipboardList, FileText,
   Award, UserX, Star, Wallet, ListChecks, Inbox,

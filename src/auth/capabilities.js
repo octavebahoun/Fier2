@@ -377,10 +377,7 @@ export const CAPABILITY_LIST = Object.keys(CAPABILITIES)
  * C'est le carnet de dette du chantier 02.
  */
 export const PENDING_UI = [
-  'badge:revoke',         // MENTOR — retrait de badge absent de l'interface
   'census:read',          // historique des recensements jamais affiché
-  'club:edit',            // édition de la fiche club absente
   'country:govern',       // GOUVERNANT_PAYS — aucun écran national
-  'membership:remove',    // retrait d'un membre absent de l'espace club
   'org:manage',           // pays / universités / filières / clubs : aucun écran
 ]

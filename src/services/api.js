@@ -186,7 +186,14 @@ export const api = {
       const r = await get(`/clubs/${id}`)
       return { ...r, data: normalizeClub(r.data) }
     },
+    // PUT /clubs/:id — responsable DU club, ou ADMIN (ClubManagerGuard).
+    update: (id, data) => put(`/clubs/${id}`, data),
+
     join: (id) => post(`/clubs/${id}/join`),
+
+    // DELETE /clubs/:id/join — QUITTER de son propre chef. Toute personne
+    // connectée le peut, pour elle-même. À ne pas confondre avec
+    // `memberships.remove`, qui est l'exclusion prononcée par un responsable.
     leave: (id) => del(`/clubs/${id}/join`)
   },
 
@@ -380,7 +387,10 @@ export const api = {
     getUserRequests: (userId) => get(`/memberships/requests/user/${userId}`),
     approve: (requestId) => patch(`/memberships/requests/${requestId}/approve`),
     reject: (requestId, reason = '') => patch(`/memberships/requests/${requestId}/reject`, { reason }),
-    leave: (clubId, userId) => del(`/memberships/${clubId}/user/${userId}`)
+    // DELETE /memberships/:clubId/user/:userId — RETRAIT prononcé par le
+    // responsable du club (@Roles('RESPONSABLE') + ClubManagerGuard). Ce n'est
+    // pas la porte de sortie d'un membre : voir `clubs.leave`.
+    remove: (clubId, userId) => del(`/memberships/${clubId}/user/${userId}`)
   },
 
   // ── OPPORTUNITÉS ───────────────────────────────────────────────────────────

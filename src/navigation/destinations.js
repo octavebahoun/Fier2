@@ -122,6 +122,14 @@ export const DESTINATIONS = [
     inNav: true, inPalette: true, icon: 'ClipboardList', parent: 'espace-cite',
   },
   {
+    // `PUT /clubs/:id` et `DELETE /memberships/:clubId/user/:userId` etaient
+    // ouverts au responsable du club sans aucun ecran pour les appeler.
+    id: 'cite-gestion', path: '/espace-cite/gestion', label: 'Gérer le club',
+    section: SECTIONS.CITE.id,
+    access: { anyOf: ['club:edit', 'membership:remove'] },
+    inNav: true, inPalette: true, icon: 'Settings2', parent: 'espace-cite',
+  },
+  {
     id: 'cite-rapports', path: '/espace-cite/rapports', label: 'Rapports',
     section: SECTIONS.CITE.id,
     // Un responsable dépose, le secrétariat et le chef lisent : deux portes,
@@ -222,6 +230,15 @@ export const DESTINATIONS = [
     id: 'projet-taches', path: '/projets/taches', label: 'Tâches de projet',
     section: SECTIONS.RECHERCHE.id, access: { capability: 'task:manage' },
     inNav: true, inPalette: true, icon: 'ListChecks',
+  },
+  {
+    // Le vrai droit du MENTOR : `POST /badges/award` et `DELETE /badges/:id`
+    // n'etaient appeles nulle part, et le raccourci du tableau de bord menait
+    // aux Challenges, qui ne distribuent aucun badge.
+    id: 'badges', path: '/badges', label: 'Badges d’honneur',
+    section: SECTIONS.COMMUNAUTE.id,
+    access: { anyOf: ['badge:award', 'badge:revoke'] },
+    inNav: true, inPalette: true, icon: 'Award',
   },
   {
     id: 'candidatures', path: '/candidatures', label: 'Candidatures reçues',

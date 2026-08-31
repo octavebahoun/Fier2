@@ -362,7 +362,10 @@ export default function ResearchClubs({ navigate }) {
   const handleLeaveClick = async (clubId) => {
     if (!user || !userId || joiningId) return;
     setJoiningId(clubId);
-    const res = await api.memberships.leave(clubId, userId);
+    // `memberships.remove` est reserve au responsable du club : un membre qui
+    // s'en servait pour partir se prenait un 403. La sortie volontaire, c'est
+    // DELETE /clubs/:id/join, ouverte a toute personne connectee.
+    const res = await api.clubs.leave(clubId);
     if (res.success) {
       notify(res.message, 'info');
       loadData();
