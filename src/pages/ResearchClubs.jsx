@@ -265,6 +265,29 @@ export default function ResearchClubs({ navigate }) {
   const nombrePoles = displayClubs.length;
   const compteurLisible = chargement || nombrePoles === 0 ? null : nombrePoles;
 
+  /**
+   * L'amorce du sous-titre. Trois cas, parce que le francais en a trois.
+   *
+   * « Rejoignez l'une de nos 1 communaute thematique » : le compteur branche
+   * sur la vraie liste avait rendu la faute visible, mais elle etait deja dans
+   * la phrase — « l'une de nos » ne se decline pas au singulier. Un club
+   * unique se dit « notre », et on ne choisit pas parmi un seul.
+   */
+  const amorce = (() => {
+    if (!compteurLisible) return <>Rejoignez une communauté thématique</>;
+    if (compteurLisible === 1) {
+      return <>Rejoignez <span className="text-text-primary font-semibold">notre communauté thématique</span></>;
+    }
+    return (
+      <>
+        Rejoignez l’une de nos{' '}
+        <span className="text-text-primary font-semibold">
+          {compteurLisible} communautés thématiques
+        </span>
+      </>
+    );
+  })();
+
   // Charger toutes les données (clubs, demandes de l'utilisateur connecté, et demandes en attente pour les managers)
   const loadData = async () => {
     const clubsRes = await api.clubs.getAll();
@@ -379,11 +402,7 @@ export default function ResearchClubs({ navigate }) {
           align="center"
           icon={Zap}
           title="CITE de Recherche"
-          description={
-            compteurLisible
-              ? <>Rejoignez l'une de nos <span className="text-text-primary font-semibold">{compteurLisible} communauté{compteurLisible > 1 ? 's' : ''} thématique{compteurLisible > 1 ? 's' : ''}</span> et collaborez avec les meilleurs chercheurs et ingénieurs de la plateforme FIERI.</>
-              : <>Rejoignez une communauté thématique et collaborez avec les meilleurs chercheurs et ingénieurs de la plateforme FIERI.</>
-          }
+          description={<>{amorce} et collaborez avec les meilleurs chercheurs et ingénieurs de la plateforme FIERI.</>}
         >
           {/* Stats rapides */}
           <div className="flex items-center justify-center flex-wrap gap-6 pt-2">
