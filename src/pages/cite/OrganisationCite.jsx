@@ -5,6 +5,7 @@ import { api } from '../../services/api.js'
 import { useAuth } from '../../context/AuthContext.jsx'
 import { useToast } from '../../components/ui/Toast.jsx'
 import StatePanel from '../../components/ui/StatePanel.jsx'
+import DemandeAdhesionModal from '../../components/clubs/DemandeAdhesionModal.jsx'
 import { useCiteSelection, useCiteTree, titreDe } from './useCiteTree.js'
 import {
   BackButton, ChiefView, ClubView, CountryView, Crumb,
@@ -27,6 +28,7 @@ export default function OrganisationCite({ navigate }) {
   const { tree, globalGovernance, loading, error, partiel, reload } = useCiteTree()
   const sel = useCiteSelection()
   const [envoi, setEnvoi] = useState(false)
+  const [demandeOuverte, setDemandeOuverte] = useState(false)
 
   const pays = tree.find((c) => String(c.id) === String(sel.countryId)) || null
   const universite = pays?.universities.find((u) => String(u.id) === String(sel.universityId)) || null
@@ -53,13 +55,20 @@ export default function OrganisationCite({ navigate }) {
     return liste.filter((x) => champs.some((f) => String(x[f] ?? '').toLowerCase().includes(q)))
   }
 
-  const demanderAdhesion = async () => {
+  /** Ouvre le formulaire : une demande ne part plus sur un simple clic. */
+  const demanderAdhesion = () => {
+    if (!club) return
+    setDemandeOuverte(true)
+  }
+
+  const envoyerDemande = async (valeurs) => {
     if (envoi || !club) return
     setEnvoi(true)
     try {
-      const res = await api.memberships.requestJoin(club.id, { id: user.id })
+      const res = await api.memberships.requestJoin(club.id, valeurs)
       if (!res?.success) throw new Error(res?.message)
       notify(`Demande envoyée au bureau de ${club.name}.`, 'success')
+      setDemandeOuverte(false)
       sel.goClub(club.id)
     } catch (err) {
       // L'ancienne version utilisait alert() et annonçait « enregistrée dans
@@ -262,6 +271,15 @@ export default function OrganisationCite({ navigate }) {
           )}
         </div>
       </div>
+
+      {demandeOuverte && (
+        <DemandeAdhesionModal
+          club={club}
+          envoi={envoi}
+          onSubmit={envoyerDemande}
+          onCancel={() => setDemandeOuverte(false)}
+        />
+      )}
     </div>
   )
 }

@@ -10,71 +10,10 @@ import { useAuth } from '../context/AuthContext.jsx';
 import FadeInWhenVisible from '../components/home/FadeInWhenVisible.jsx';
 import PageHeader from '../components/ui/PageHeader.jsx';
 import { useToast } from '../components/ui/Toast.jsx'
+import DemandeAdhesionModal from '../components/clubs/DemandeAdhesionModal.jsx'
 
 
 // ────────────────────────────── Join Confirm Modal ────────────────────────────
-function JoinConfirmModal({ club, onConfirm, onCancel }) {
-  const Icon = CLUB_ICONS[club?.id] || Star;
-  if (!club) return null;
-  return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-scrim backdrop-blur-sm"
-      onClick={onCancel}
-    >
-      <motion.div
-        initial={{ opacity: 0, scale: 0.92, y: 20 }}
-        animate={{ opacity: 1, scale: 1, y: 0 }}
-        exit={{ opacity: 0, scale: 0.92, y: 20 }}
-        transition={{ type: 'spring', stiffness: 380, damping: 28 }}
-        onClick={(e) => e.stopPropagation()}
-        className="relative w-full max-w-md chamfer chamfer-shadow border border-border-strong bg-bg-secondary p-8"
-      >
-
-        {/* Icone + titre */}
-        <div className="flex items-center gap-4 mb-6 relative z-10">
-          <div className="w-14 h-14 chamfer-sm flex items-center justify-center shrink-0 border border-engine bg-engine-wash">
-            <Icon className="w-7 h-7 text-engine" />
-          </div>
-          <div>
-            <p className="text-xs font-bold uppercase tracking-widest text-engine">
-              Rejoindre
-            </p>
-            <h2 className="text-lg font-extrabold text-text-primary leading-snug">{club.kicker}</h2>
-          </div>
-        </div>
-
-        {/* Charte */}
-        <div className="p-4 rounded-xl text-xs text-text-secondary leading-relaxed mb-6 relative z-10 border border-border-strong bg-bg-tertiary">
-<p className="font-bold text-text-primary mb-1.5">En demandant votre adhésion, vous vous engagez à&nbsp;:</p>
-          <ul className="list-disc pl-4 space-y-1">
-            <li>Participer activement aux activités et réunions du club.</li>
-            <li>Respecter les membres et le règlement intérieur.</li>
-            <li>Votre demande sera validée sous 48h par le Responsable.</li>
-          </ul>
-        </div>
-
-        {/* Boutons */}
-        <div className="flex gap-3 relative z-10">
-          <button
-            onClick={onCancel}
-            className="flex-1 py-3 rounded-xl text-xs font-bold text-text-secondary bg-bg-secondary border border-border-subtle hover:bg-bg-tertiary transition-all"
-          >
-            Annuler
-          </button>
-          <button
-            onClick={onConfirm}
-            className="flex-1 min-h-11 rounded-xl text-xs font-bold bg-engine text-on-accent hover:bg-engine-deep transition-colors cursor-pointer"
-          >
-            Soumettre la demande
-          </button>
-        </div>
-      </motion.div>
-    </motion.div>
-  );
-}
 
 // ─────────────────────────── Club Icon Map ───────────────────────────
 const CLUB_ICONS = {
@@ -376,14 +315,16 @@ export default function ResearchClubs({ navigate }) {
   };
 
   // Exécuter l'adhésion (création demande) après confirmation
-  const handleJoinConfirm = async () => {
+  const handleJoinConfirm = async (valeurs) => {
     const clubId = confirmClub?.id;
     if (!clubId || !user || joiningId) return;
-    setConfirmClub(null);
     setJoiningId(clubId);
 
-    const res = await api.memberships.requestJoin(clubId, user);
+    // La modale reste ouverte pendant l'envoi : si le serveur refuse, la
+    // motivation qu'on vient d'ecrire n'est pas perdue.
+    const res = await api.memberships.requestJoin(clubId, valeurs);
     if (res.success) {
+      setConfirmClub(null);
       notify(res.message, 'success');
       loadData();
     } else {
@@ -528,9 +469,11 @@ export default function ResearchClubs({ navigate }) {
       {/* ── Modale de confirmation d'adhésion ── */}
       <AnimatePresence>
         {confirmClub && (
-          <JoinConfirmModal
+          <DemandeAdhesionModal
             club={confirmClub}
-            onConfirm={() => handleJoinConfirm()}
+            icon={CLUB_ICONS[confirmClub.id] || Star}
+            envoi={joiningId === confirmClub.id}
+            onSubmit={handleJoinConfirm}
             onCancel={() => setConfirmClub(null)}
           />
         )}

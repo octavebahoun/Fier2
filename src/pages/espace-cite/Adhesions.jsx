@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
-import { UserPlus, Check, X } from 'lucide-react'
+import { UserPlus, Check, X, Phone } from 'lucide-react'
 import api from '../../services/api.js'
 import PageHeader from '../../components/ui/PageHeader.jsx'
 import SectionCard from '../../components/ui/SectionCard.jsx'
@@ -108,10 +108,24 @@ export default function Adhesions() {
                 className="flex flex-col gap-3 border border-border-subtle bg-bg-primary px-4 py-3 sm:flex-row sm:items-center sm:justify-between"
               >
                 <div className="min-w-0">
-                  <p className="truncate text-sm font-semibold text-text-primary">{nomComplet(req.user)}</p>
-                  <p className="truncate text-sm text-text-muted">
+                  <p className="text-sm font-semibold text-text-primary">{nomComplet(req.user)}</p>
+                  <p className="text-sm text-text-muted">
                     {req.user?.email || 'Adresse non renseignée'} · demandé le {formatDateFr(req.createdAt)}
                   </p>
+
+                  {/* Ce sur quoi la decision se prend. La file n'affichait
+                      qu'un nom : accepter ou refuser tenait de la devinette. */}
+                  {req.contact && (
+                    <p className="mt-1 flex items-center gap-1.5 text-sm text-text-secondary">
+                      <Phone className="h-3.5 w-3.5 shrink-0 text-engine" aria-hidden="true" />
+                      {req.contact}
+                    </p>
+                  )}
+                  {req.motivation && (
+                    <p className="mt-2 border-l-2 border-border-strong pl-3 text-sm leading-relaxed text-text-secondary">
+                      {req.motivation}
+                    </p>
+                  )}
                 </div>
                 <div className="flex shrink-0 gap-2">
                   <button

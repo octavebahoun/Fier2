@@ -424,7 +424,11 @@ export const api = {
 
   // ── 13. ADHÉSIONS DE CLUBS AVEC VALIDATION ─────────────────────────────────
   memberships: {
-    requestJoin: (clubId, user) => post('/memberships/requests', { clubId, user }),
+    // POST /memberships/requests — l'identite vient du jeton ; le `user` qu'on
+    // envoyait etait ignore par le serveur. La motivation et le moyen de
+    // contact, eux, sont ce sur quoi le responsable decide.
+    requestJoin: (clubId, { motivation, contact } = {}) =>
+      post('/memberships/requests', { clubId, motivation, contact }),
     getPendingRequests: (clubId) => get(`/memberships/requests/pending/${clubId}`),
     getAllRequests: (clubId) => get(`/memberships/requests/club/${clubId}`),
     getUserRequests: (userId) => get(`/memberships/requests/user/${userId}`),
