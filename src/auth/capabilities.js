@@ -202,7 +202,7 @@ export const CAPABILITIES = {
     label: 'Valider ou refuser les adhésions',
     roles: [ROLES.RESPONSABLE],
     scope: SCOPE.CLUB,
-    route: 'PATCH /memberships/requests/:id/approve',
+    route: 'PATCH /memberships/requests/:requestId/approve',
   },
   'membership:remove': {
     label: 'Retirer un membre du club',
@@ -304,13 +304,13 @@ export const CAPABILITIES = {
     label: 'Désigner une figure emblématique',
     universityPosts: [UNIVERSITY_POSTS.CHEF_UNIVERSITAIRE],
     scope: SCOPE.UNIVERSITY,
-    route: 'POST /governance/members/:id/toggle-emblematic',
+    route: 'POST /members/:id/toggle-emblematic',
   },
   'signature:upload': {
     label: 'Téléverser sa griffe officielle',
     universityPosts: [UNIVERSITY_POSTS.CHEF_UNIVERSITAIRE],
     scope: SCOPE.UNIVERSITY,
-    route: 'POST /governance/members/upload-signature',
+    route: 'POST /members/upload-signature',
   },
 
   // ── Communication d'université — poste RESP_COMMUNICATION ────────────────
