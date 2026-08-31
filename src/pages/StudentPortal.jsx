@@ -20,9 +20,12 @@ const HUB_SECTIONS = [
   {
     id: 'clubs',
     title: 'CITE de Recherche',
-    desc: 'Rejoignez nos 6 clubs thématiques et collaborez avec des chercheurs passionnés.',
+    // Sans nombre : cette carte ne charge aucune donnee, elle ne peut donc pas
+    // savoir combien il y a de clubs. Le « 6 » qui etait ecrit ici vieillissait
+    // au premier club cree.
+    desc: 'Rejoignez nos clubs thématiques et collaborez avec des chercheurs passionnés.',
     color: 'var(--color-engine)',
-    features: ['6 pôles scientifiques', 'Adhésion en un clic', 'Accents distinctifs'],
+    features: ['Pôles scientifiques', 'Adhésion en un clic', 'Accents distinctifs'],
     link: 'clubs',
     icon: Users
   },

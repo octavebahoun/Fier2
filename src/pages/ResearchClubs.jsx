@@ -221,6 +221,7 @@ export default function ResearchClubs({ navigate }) {
   const { user, can } = useAuth();
   const userId = user?.id ?? null;
   const [clubs, setClubs] = useState([]);
+  const [chargement, setChargement] = useState(true);
   const [myRequests, setMyRequests] = useState([]);
   const [pendingRequests, setPendingRequests] = useState({});
   const { notify } = useToast()
@@ -252,11 +253,24 @@ export default function ResearchClubs({ navigate }) {
 
   const joinedCount = displayClubs.filter((c) => c.joined).length;
 
+  /**
+   * Le nombre de poles annonce.
+   *
+   * Il etait ecrit « 6 » en toutes lettres, a deux endroits, au-dessus d'une
+   * liste chargee depuis l'API : creer un club de plus ne changeait rien au
+   * titre. Le compteur compte donc ce que la page montre reellement, et se
+   * tait tant qu'il n'a rien a compter — annoncer « 0 pole » pendant le
+   * chargement serait un mensonge de plus, juste plus court.
+   */
+  const nombrePoles = displayClubs.length;
+  const compteurLisible = chargement || nombrePoles === 0 ? null : nombrePoles;
+
   // Charger toutes les données (clubs, demandes de l'utilisateur connecté, et demandes en attente pour les managers)
   const loadData = async () => {
     const clubsRes = await api.clubs.getAll();
     const allClubs = clubsRes.success ? clubsRes.data : [];
     setClubs(allClubs);
+    setChargement(false);
 
     if (userId) {
       const res = await api.memberships.getUserRequests(userId);
@@ -365,16 +379,23 @@ export default function ResearchClubs({ navigate }) {
           align="center"
           icon={Zap}
           title="CITE de Recherche"
-          description={<>Rejoignez l'une de nos <span className="text-text-primary font-semibold">6 communautés thématiques</span> et collaborez avec les meilleurs chercheurs et ingénieurs de la plateforme FIERI.</>}
+          description={
+            compteurLisible
+              ? <>Rejoignez l'une de nos <span className="text-text-primary font-semibold">{compteurLisible} communauté{compteurLisible > 1 ? 's' : ''} thématique{compteurLisible > 1 ? 's' : ''}</span> et collaborez avec les meilleurs chercheurs et ingénieurs de la plateforme FIERI.</>
+              : <>Rejoignez une communauté thématique et collaborez avec les meilleurs chercheurs et ingénieurs de la plateforme FIERI.</>
+          }
         >
           {/* Stats rapides */}
           <div className="flex items-center justify-center flex-wrap gap-6 pt-2">
-              <div className="flex items-center gap-2 text-sm text-text-secondary">
-                <Star className="w-4 h-4 text-ember" />
-                <span>
-                  <strong className="text-text-primary font-bold">6</strong> pôles scientifiques
-                </span>
-              </div>
+              {compteurLisible && (
+                <div className="flex items-center gap-2 text-sm text-text-secondary">
+                  <Star className="w-4 h-4 text-ember" />
+                  <span>
+                    <strong className="text-text-primary font-bold">{compteurLisible}</strong>
+                    {' '}pôle{compteurLisible > 1 ? 's' : ''} scientifique{compteurLisible > 1 ? 's' : ''}
+                  </span>
+                </div>
+              )}
               {user && joinedCount > 0 && (
                 <>
                   <div className="w-px h-4 bg-border-subtle hidden sm:block" />
