@@ -500,6 +500,30 @@ body.light-theme .glass-panel {
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
+   TEXTE JUSTIFIÉ — les paragraphes de lecture de l'accueil.
+   ─────────────────────────────────────────────────────────────────────────
+   Justifier sans couper les mots creuse des rivières blanches au milieu du
+   paragraphe : le navigateur étire les espaces jusqu'à ce que la ligne tombe
+   juste. `hyphens: auto` lui rend le droit de couper — le document est en
+   `lang="fr"`, la césure suit donc les règles françaises.
+
+   `text-wrap: pretty` évite en prime le mot seul en dernière ligne.
+   ═══════════════════════════════════════════════════════════════════════════ */
+.texte-justifie {
+  text-align: justify;
+  hyphens: auto;
+  text-wrap: pretty;
+}
+
+/* Sur un écran étroit, une ligne justifiée porte trop peu de mots pour que les
+   espaces se répartissent : on la laisse au fer à gauche. */
+@media (max-width: 480px) {
+  .texte-justifie {
+    text-align: left;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
    HERO COVER — la photo occupe la section, le texte se pose dessus.
    ─────────────────────────────────────────────────────────────────────────
    La couverture est sombre dans les deux thèmes : la couche de texte garde

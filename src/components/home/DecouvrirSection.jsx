@@ -29,20 +29,14 @@ export default function DecouvrirSection({ decouvrir }) {
           </h2>
         </FadeInWhenVisible>
 
-        <div className="mt-8 flex flex-col gap-5">
-          {decouvrir.paragraphes.map((paragraphe, index) => (
-            <FadeInWhenVisible key={index} delay={0.08 + index * 0.06} direction="up">
-              <p
-                className={
-                  index === 0
-                    ? 'text-lg leading-relaxed text-text-primary'
-                    : 'text-base font-light leading-relaxed text-text-secondary'
-                }
-              >
+        <div className="mt-8 text-base leading-relaxed text-text-secondary">
+          <FadeInWhenVisible delay={0.08} direction="up">
+            {decouvrir.paragraphes.map((paragraphe, index) => (
+              <p key={index} className={`texte-justifie${index > 0 ? ' indent-8' : ''}`}>
                 {paragraphe}
               </p>
-            </FadeInWhenVisible>
-          ))}
+            ))}
+          </FadeInWhenVisible>
         </div>
       </div>
     </section>

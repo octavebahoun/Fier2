@@ -32,7 +32,7 @@ export default function VisionSection({ vision }) {
         </FadeInWhenVisible>
 
         <FadeInWhenVisible direction="up" delay={0.15}>
-          <p className="mt-8 text-base leading-relaxed text-text-secondary sm:text-lg">
+          <p className="texte-justifie mt-8 text-base leading-relaxed text-text-secondary sm:text-lg">
             {vision.text}
           </p>
         </FadeInWhenVisible>

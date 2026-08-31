@@ -53,7 +53,7 @@ export default function MissionsSection({ mission }) {
                     {pillar.title}
                   </h3>
 
-                  <p className="mt-3 text-sm text-text-secondary leading-relaxed font-light">
+                  <p className="texte-justifie mt-3 text-sm text-text-secondary leading-relaxed font-light">
                     {pillar.desc}
                   </p>
                 </div>

@@ -61,7 +61,7 @@ export default function PartnersSection({ partenaires }) {
               {partenaires.title}
             </h2>
             {partenaires.description && (
-              <p className="mt-3 max-w-xl text-base font-light leading-relaxed text-text-secondary">
+              <p className="texte-justifie mt-3 max-w-xl text-base font-light leading-relaxed text-text-secondary">
                 {partenaires.description}
               </p>
             )}
@@ -114,7 +114,7 @@ export default function PartnersSection({ partenaires }) {
                 </span>
 
                 {partner.description && (
-                  <p className="line-clamp-3 text-sm font-light leading-relaxed text-text-secondary">
+                  <p className="texte-justifie line-clamp-3 text-sm font-light leading-relaxed text-text-secondary">
                     {partner.description}
                   </p>
                 )}

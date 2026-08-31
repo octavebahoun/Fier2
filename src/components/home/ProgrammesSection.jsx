@@ -60,7 +60,7 @@ export default function ProgrammesSection({ navigate }) {
                     <h3 className="mt-1 mb-3 font-display text-lg font-extrabold leading-snug text-text-primary transition-colors group-hover:text-engine">
                       {item.name}
                     </h3>
-                    <p className="mb-6 text-sm font-light leading-relaxed text-text-secondary">
+                    <p className="texte-justifie mb-6 text-sm font-light leading-relaxed text-text-secondary">
                       {item.description}
                     </p>
                   </div>

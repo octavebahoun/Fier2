@@ -82,14 +82,13 @@ export default function Home({ navigate }) {
       {/* 7. JOURNAL — les preuves vivantes */}
       <JournalSection journal={journal} navigate={navigate} />
 
-      {/* 8. PARTENAIRES — mis en vedette : ils passent avant les programmes,
-             juste après les preuves du Journal. */}
-      <PartnersSection partenaires={partenaires} />
-
-      {/* 9. PROGRAMMES */}
+      {/* 8. PROGRAMMES */}
       <ProgrammesSection navigate={navigate} />
 
-      {/* 10. STATS — la preuve, une fois le propos posé */}
+      {/* 9. PARTENAIRES — après les programmes, avant les chiffres. */}
+      <PartnersSection partenaires={partenaires} />
+
+      {/* 10. CHIFFRES CLÉS — la preuve, une fois le propos posé */}
       <StatsSection stats={stats} />
 
       {/* 11. FAQ */}

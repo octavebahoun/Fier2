@@ -58,9 +58,9 @@ export default function FAQSection({ faq }) {
                             animate={{ height: 'auto', opacity: 1 }}
                             exit={{ height: 0, opacity: 0 }}
                             transition={{ duration: 0.25, ease: 'easeInOut' }}
-                            className="border-t border-border-subtle bg-bg-tertiary/40"
+                            className="border-t border-border-subtle bg-bg-tertiary"
                           >
-                            <p className="p-5 text-sm text-text-secondary leading-relaxed">
+                            <p className="texte-justifie p-5 text-sm text-text-secondary leading-relaxed">
                               {item.a}
                             </p>
                           </motion.div>

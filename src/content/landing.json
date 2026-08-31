@@ -64,7 +64,7 @@
     "text": "Nous sommes convaincus que chaque étudiant, chercheur et jeune talent peut devenir un acteur du changement lorsqu’il dispose des compétences, des opportunités et d’un environnement favorable. Nous aspirons ainsi à bâtir une génération capable d’innover, d’entreprendre et de transformer les défis de son environnement en solutions durables, au service du progrès de ses communautés et du monde."
   },
   "stats": {
-    "tag": "Les preuves",
+    "tag": "Nos chiffres clés",
     "title": "Une dynamique mesurable, pas des promesses",
     "items": [
       {
@@ -212,16 +212,32 @@
     "description": "Étudiants, chercheurs, partenaires : voici les réponses aux questions qui reviennent le plus.",
     "questions": [
       {
-        "q": "Je suis étudiant en licence, puis-je rejoindre une CITE ?",
-        "a": "Oui. Les CITE sont ouvertes à tous les niveaux : licence, master et doctorat. Vous commencez par les ateliers d'initiation, puis vous intégrez une équipe de projet selon vos compétences."
-      },
-      {
-        "q": "J'ai une idée de projet. Par où commencer ?",
-        "a": "Présentez-la au responsable de la CITE de votre campus. Si elle est jugée pertinente, vous entrez dans le programme d'accompagnement : cadrage, équipe, budget, puis prototypage."
-      },
-      {
         "q": "Qu’est-ce que la FIERI m’apporte concrètement ?",
-        "a": "Un atelier équipé, des mentors, des formations, des concours internationaux, un réseau d'industriels — et l'expérience de mener un vrai projet de A à Z. C'est ce que les recruteurs cherchent."
+        "a": "La FIERI vous offre un environnement pour développer vos compétences, accéder à des opportunités, rencontrer des personnes partageant les mêmes ambitions et participer à des projets concrets. Selon votre parcours et votre engagement, vous pouvez également bénéficier de formations, de mentorat, d’expériences collaboratives, de possibilités de recherche, d’innovation et d’entrepreneuriat, ainsi que d’une reconnaissance au sein du réseau."
+      },
+      {
+        "q": "Qui peut rejoindre la FIERI ?",
+        "a": "La FIERI est ouverte aux étudiants, chercheurs, enseignants, professionnels, entrepreneurs, innovateurs et autres acteurs qui souhaitent contribuer à la recherche, à l’innovation, à l’entrepreneuriat ou aux initiatives de développement durable."
+      },
+      {
+        "q": "Comment rejoindre la FIERI ?",
+        "a": "Vous pouvez rejoindre la communauté à travers une CITE FIERI, participer à ses programmes, intégrer le réseau des ambassadeurs ou prendre part aux différentes initiatives proposées."
+      },
+      {
+        "q": "La FIERI s’intéresse-t-elle aux enjeux environnementaux ?",
+        "a": "Oui. La transition écologique et l’éco-innovation font partie des domaines d’action de la FIERI. À travers ses initiatives, elle encourage la conception de solutions innovantes face aux défis environnementaux et climatiques."
+      },
+      {
+        "q": "Puis-je proposer un projet ou une idée ?",
+        "a": "Oui. La FIERI encourage les initiatives dans des domaines variés, notamment la science, la technologie, l’innovation, l’entrepreneuriat et l’écologie."
+      },
+      {
+        "q": "La FIERI travaille-t-elle avec des entreprises et des institutions ?",
+        "a": "Oui. La FIERI développe des collaborations avec des universités, établissements d’enseignement, laboratoires, entreprises, institutions, organisations et autres acteurs aux niveaux national et international."
+      },
+      {
+        "q": "Comment devenir partenaire de la FIERI ?",
+        "a": "Les organisations intéressées peuvent nous contacter pour explorer des possibilités de partenariat, de recherche, de formation, d’innovation ou de développement de projets communs."
       }
     ]
   },
