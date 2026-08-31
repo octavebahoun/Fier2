@@ -32,9 +32,13 @@ export default function VisionSection({ vision }) {
         </FadeInWhenVisible>
 
         <FadeInWhenVisible direction="up" delay={0.15}>
-          <p className="texte-justifie mt-8 text-base leading-relaxed text-text-secondary sm:text-lg">
-            {vision.text}
-          </p>
+          {/* Meme cadre que « Nous decouvrir » et que les autres sections : le
+              texte est pose sur une surface, pas laisse au milieu du fond. */}
+          <div className="chamfer-sm chamfer-shadow mt-8 border border-border-strong bg-bg-secondary p-7 md:p-9">
+            <p className="texte-justifie text-base leading-relaxed text-text-secondary sm:text-lg">
+              {vision.text}
+            </p>
+          </div>
         </FadeInWhenVisible>
       </div>
     </section>

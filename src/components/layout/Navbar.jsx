@@ -11,10 +11,14 @@ const NAV_LINKS = [
   { id: 'student-portal', label: 'Portail Étudiant' },
   { id: 'cite', label: 'Gouvernance' },
   { id: 'projects', label: 'Institut' },
-  { id: 'workshops', label: 'Formations' },
+  { id: 'workshops', label: 'Académie' },
   { id: 'clubs', label: 'CITE' },
   { id: 'opportunities', label: 'Opportunités' },
   { id: 'news', label: 'Actualités' },
+  // La page de mecenat n'etait joignable que par la palette ⌘K : personne ne
+  // la trouvait. Elle ferme le menu, apres ce que la FIERI propose — on
+  // demande un soutien une fois qu'on a montre pour quoi.
+  { id: 'soutiens', label: 'Nous soutenir' },
 ]
 
 /**

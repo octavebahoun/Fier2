@@ -7,8 +7,14 @@ import FadeInWhenVisible from './FadeInWhenVisible.jsx';
  * part : personne ne lisait ce texte. Il porte maintenant la présentation
  * officielle, et il est enfin affiché.
  *
- * Trois paragraphes, une colonne : c'est de la lecture, pas une grille de
- * cartes. Le premier porte l'ambition, les deux autres la mettent au sol.
+ * ── Un seul bloc, dans un cadre ───────────────────────────────────────────
+ * Le client : « vous n'avez pas besoin d'aller à la ligne avant de continuer,
+ * tout en un bloc ». Les trois paragraphes de `landing.json` restent trois
+ * entrées — c'est la forme du contenu, et elle sert à l'édition — mais ils se
+ * lisent d'un trait, séparés par une espace et non par un alinéa.
+ *
+ * Le cadre est celui des autres sections de l'accueil : bordure franche,
+ * surface secondaire, coins chanfreinés. Le texte cesse de flotter sur le fond.
  */
 export default function DecouvrirSection({ decouvrir }) {
   if (!decouvrir?.paragraphes?.length) return null;
@@ -29,15 +35,13 @@ export default function DecouvrirSection({ decouvrir }) {
           </h2>
         </FadeInWhenVisible>
 
-        <div className="mt-8 text-base leading-relaxed text-text-secondary">
-          <FadeInWhenVisible delay={0.08} direction="up">
-            {decouvrir.paragraphes.map((paragraphe, index) => (
-              <p key={index} className={`texte-justifie${index > 0 ? ' indent-8' : ''}`}>
-                {paragraphe}
-              </p>
-            ))}
-          </FadeInWhenVisible>
-        </div>
+        <FadeInWhenVisible delay={0.08} direction="up">
+          <div className="chamfer-sm chamfer-shadow mt-8 border border-border-strong bg-bg-secondary p-7 md:p-9">
+            <p className="texte-justifie text-base leading-relaxed text-text-secondary">
+              {decouvrir.paragraphes.join(' ')}
+            </p>
+          </div>
+        </FadeInWhenVisible>
       </div>
     </section>
   );

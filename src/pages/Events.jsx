@@ -12,6 +12,23 @@ import { api } from '@/services/api.js';
 import { useToast } from '../components/ui/Toast.jsx'
 
 
+/**
+ * La date d'un evenement, en francais.
+ *
+ * La carte affichait `event.date` tel quel : le backend renvoie une date ISO,
+ * et le visiteur lisait « 2026-08-31T18:40:00.000Z ». On rend la date ET
+ * l'heure, parce qu'un webinaire se rate a l'heure pres.
+ */
+function formatDateEvenement(valeur) {
+  if (!valeur) return null;
+  const d = new Date(valeur);
+  if (Number.isNaN(d.getTime())) return String(valeur);
+  return d.toLocaleString('fr-FR', {
+    day: '2-digit', month: 'long', year: 'numeric',
+    hour: '2-digit', minute: '2-digit',
+  });
+}
+
 // ─── Live Badge ──────────────────────────────────────────────────────────────
 function LiveBadge() {
   return (
@@ -233,7 +250,9 @@ function EventCard({ event, user, onRegister, onLiveAccess, isRegistering, canMa
           <div className="flex-1">
             <div className="flex items-center gap-2 mb-2 flex-wrap">
               {event.isLive && <LiveBadge />}
-              {event.prizePool !== 'Accès libre' && (
+              {/* Une dotation ne s'affiche que si elle existe : un evenement sans
+                  prix montrait une pastille trophee entierement vide. */}
+              {event.prizePool && event.prizePool !== 'Accès libre' && (
                 <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full
                   bg-warning-wash border border-warning text-warning text-xs font-medium">
                   <Trophy size={10} />
@@ -248,14 +267,20 @@ function EventCard({ event, user, onRegister, onLiveAccess, isRegistering, canMa
 
         {/* Meta info */}
         <div className="flex flex-wrap gap-x-4 gap-y-2 text-text-secondary text-xs mt-4">
-          <span className="flex items-center gap-1.5">
-            <Calendar size={12} className="text-engine" />
-            {event.date}
-          </span>
-          <span className="flex items-center gap-1.5">
-            <MapPin size={12} className="text-engine" />
-            {event.location}
-          </span>
+          {formatDateEvenement(event.date) && (
+            <span className="flex items-center gap-1.5">
+              <Calendar size={12} className="text-engine" />
+              {formatDateEvenement(event.date)}
+            </span>
+          )}
+          {/* Un evenement en ligne n'a pas de lieu : l'epingle s'affichait seule,
+              sans rien apres elle. Elle dit maintenant « En ligne », ou se tait. */}
+          {(event.location || event.liveUrl) && (
+            <span className="flex items-center gap-1.5">
+              <MapPin size={12} className="text-engine" />
+              {event.location || 'En ligne'}
+            </span>
+          )}
           <span className="flex items-center gap-1.5">
             <Users size={12} className="text-engine" />
             {event.participantsCount.toLocaleString()} participants
@@ -351,7 +376,7 @@ function EventCard({ event, user, onRegister, onLiveAccess, isRegistering, canMa
           </div>
         )}
 
-        {/* Live access button — only visible when event.isLive */}
+        {/* L'acces au direct : le lecteur integre quand l'antenne est ouverte. */}
         {event.isLive && (
           <button
             id={`live-btn-${event.id}`}
@@ -363,6 +388,26 @@ function EventCard({ event, user, onRegister, onLiveAccess, isRegistering, canMa
             <Radio size={15} className="animate-pulse" />
             Rejoindre le Live
           </button>
+        )}
+
+        {/* Un evenement en ligne qui ne diffuse pas ENCORE avait son lien nulle
+            part : le bouton ci-dessus ne sortait que pendant le direct, et le
+            lecteur integre ne sait de toute facon afficher qu'une video
+            embarquable. Le lien de connexion (Meet, Zoom, Teams…) s'ouvre donc
+            simplement dans un nouvel onglet, des l'annonce de l'evenement. */}
+        {!event.isLive && event.liveUrl && (
+          <a
+            id={`lien-btn-${event.id}`}
+            href={event.liveUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold
+              bg-engine hover:bg-engine-deep text-on-accent transition-colors
+              active:scale-95 cursor-pointer"
+          >
+            <ExternalLink size={15} />
+            Ouvrir le lien de l’événement
+          </a>
         )}
 
         {/* Management actions — only for authorized roles (RESP_COMM / CHEF_UNIV / organisateur) */}
