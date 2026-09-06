@@ -320,7 +320,10 @@ export const api = {
     },
     submit: (articleData) => post('/news', articleData),
     approve: (id) => patch(`/news/${id}/approve`),
-    reject: (id) => del(`/news/${id}`)
+    reject: (id) => del(`/news/${id}`),
+    // POST /news/:id/react — { value: 'LIKE' | 'DISLIKE' }. Renvoie les compteurs
+    // à jour { likeCount, dislikeCount, myReaction }.
+    react: (id, value) => post(`/news/${id}/react`, { value }),
   },
 
   // ── 8b. PUBLICATIONS SCIENTIFIQUES ─────────────────────────────────────────

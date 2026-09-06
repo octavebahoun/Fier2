@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
-import { ArrowLeft, Share2, Calendar, User, Tag, Check } from 'lucide-react'
+import { ArrowLeft, Share2, Calendar, User, Tag, Check, Heart, ThumbsDown } from 'lucide-react'
 import { api } from '../services/api.js'
 import { useToast } from '../components/ui/Toast.jsx'
 
@@ -11,6 +11,7 @@ export default function NewsDetail({ navigate, newsId }) {
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState(null)
   const [copied, setCopied] = useState(false)
+  const [reacting, setReacting] = useState(false)
 
   useEffect(() => {
     let active = true
@@ -54,6 +55,26 @@ export default function NewsDetail({ navigate, newsId }) {
       setTimeout(() => setCopied(false), 2000)
     } catch {
       notify("Le lien n'a pas pu être copié. Copiez-le depuis la barre d'adresse.", 'warning')
+    }
+  }
+
+  // Réaction J'adore / J'aime pas : bascule côté serveur, on remonte les
+  // compteurs renvoyés dans l'article affiché.
+  const handleReact = async (value) => {
+    if (reacting) return
+    setReacting(true)
+    try {
+      const res = await api.news.react(newsId, value)
+      if (!res?.success) throw new Error(res?.message)
+      setArticle((a) => ({ ...a, ...res.data }))
+    } catch (err) {
+      if (err?.status === 401) {
+        notify('Connectez-vous pour réagir à cet article.', 'info')
+      } else {
+        notify(err?.serverMessage || err?.message || "Votre réaction n'a pas pu être enregistrée.", 'error')
+      }
+    } finally {
+      setReacting(false)
     }
   }
 
@@ -108,6 +129,40 @@ export default function NewsDetail({ navigate, newsId }) {
           {article.date && <span className="inline-flex items-center gap-1.5"><Calendar className="w-3.5 h-3.5" /> {article.date}</span>}
           <button onClick={handleShare} className="ml-auto inline-flex items-center gap-1.5 text-engine hover:underline">
             {copied ? <><Check className="w-3.5 h-3.5" /> Lien copié</> : <><Share2 className="w-3.5 h-3.5" /> Partager</>}
+          </button>
+        </div>
+
+        {/* Réactions à l'article — retour client : J'adore / J'aime pas. */}
+        <div className="flex items-center gap-3">
+          <button
+            type="button"
+            onClick={() => handleReact('LIKE')}
+            disabled={reacting}
+            aria-pressed={article.myReaction === 'LIKE'}
+            className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-sm font-bold transition-colors disabled:opacity-50 ${
+              article.myReaction === 'LIKE'
+                ? 'border-danger bg-danger-wash text-danger'
+                : 'border-border-subtle text-text-secondary hover:border-danger hover:text-danger'
+            }`}
+          >
+            <Heart className={`w-4 h-4 ${article.myReaction === 'LIKE' ? 'fill-current' : ''}`} aria-hidden="true" />
+            J'adore
+            <span className="tabular-nums">{article.likeCount ?? 0}</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => handleReact('DISLIKE')}
+            disabled={reacting}
+            aria-pressed={article.myReaction === 'DISLIKE'}
+            className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-sm font-bold transition-colors disabled:opacity-50 ${
+              article.myReaction === 'DISLIKE'
+                ? 'border-text-secondary bg-bg-tertiary text-text-primary'
+                : 'border-border-subtle text-text-secondary hover:border-text-secondary hover:text-text-primary'
+            }`}
+          >
+            <ThumbsDown className={`w-4 h-4 ${article.myReaction === 'DISLIKE' ? 'fill-current' : ''}`} aria-hidden="true" />
+            J'aime pas
+            <span className="tabular-nums">{article.dislikeCount ?? 0}</span>
           </button>
         </div>
       </header>
