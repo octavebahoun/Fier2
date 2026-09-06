@@ -398,6 +398,27 @@ export const api = {
         throw err;
       }
       return res.json();
+    },
+
+    // POST /uploads/document (multipart, champ 'document') — membre connecté.
+    // PDF/DOC/DOCX. Renvoie une adresse stable servie par GET /files/documents/:nom.
+    document: async (file) => {
+      const token = localStorage.getItem('fieri_auth_token');
+      const form = new FormData();
+      form.append('document', file);
+      const res = await fetch(`${BASE_URL}/uploads/document`, {
+        method: 'POST',
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
+        body: form,
+      });
+      if (!res.ok) {
+        const b = await res.clone().json().catch(() => ({}));
+        const err = new Error(b?.message || `HTTP Error: ${res.status}`);
+        err.status = res.status;
+        err.serverMessage = b?.message;
+        throw err;
+      }
+      return res.json();
     }
   },
 
