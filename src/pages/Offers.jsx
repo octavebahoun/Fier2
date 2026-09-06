@@ -1,9 +1,9 @@
 import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-  Search, Sparkles, Plus,   
+  Search, Sparkles, Plus,
   User, Mail, FileText, CheckCircle2, X, ShieldAlert,
-  ArrowRight, Briefcase
+  ArrowRight, Briefcase, Loader2
 } from 'lucide-react';
 import { api } from '../services/api';
 import { useAuth } from '../context/AuthContext.jsx';
@@ -23,7 +23,9 @@ export default function Offers({ navigate }) {
 
   // Application Modal state
   const [selectedOpportunity, setSelectedOpportunity] = useState(null);
-  const [applyForm, setApplyForm] = useState({ name: '', email: '', achievements: '' });
+  const [applyForm, setApplyForm] = useState({ name: '', email: '', achievements: '', cvUrl: '' });
+  const [cvUploading, setCvUploading] = useState(false);
+  const [cvNom, setCvNom] = useState('');
   const [applyError, setApplyError] = useState('');
 
   // Publication Modal state (for researchers/partners)
@@ -149,11 +151,31 @@ export default function Offers({ navigate }) {
     applyTriggerRef.current = document.activeElement;
     setSelectedOpportunity(opt);
     setApplyError('');
+    setCvNom('');
     setApplyForm({
       name: user.firstName && user.lastName ? `${user.firstName} ${user.lastName}` : (user.name || ''),
       email: user.email || '',
-      achievements: ''
+      achievements: '',
+      cvUrl: ''
     });
+  };
+
+  // Dépôt du CV en pièce jointe (PDF/DOC/DOCX) — retour client. On envoie le
+  // fichier au stockage et on garde l'URL stable renvoyée, jointe à la candidature.
+  const handleCvUpload = async (file) => {
+    if (!file) return;
+    setApplyError('');
+    setCvUploading(true);
+    try {
+      const res = await api.uploads.document(file);
+      if (!res?.success || !res.data?.url) throw new Error(res?.message);
+      setApplyForm((f) => ({ ...f, cvUrl: res.data.url }));
+      setCvNom(file.name);
+    } catch (err) {
+      setApplyError(err?.serverMessage || err?.message || "Le CV n'a pas pu être envoyé.");
+    } finally {
+      setCvUploading(false);
+    }
   };
 
   const handleApplySubmit = async (e) => {
@@ -166,10 +188,8 @@ export default function Offers({ navigate }) {
       const res = await api.applications.submit({
         opportunityId: selectedOpportunity.id,
         coverLetter: applyForm.achievements,
-        // Pas de pièce jointe : la plateforme ne sait pas encore en recevoir.
-        // La colonne `cvUrl` n'accepte pas null — chaîne vide, que l'écran
-        // d'examen des candidatures affiche « aucun document ».
-        cvUrl: '',
+        // CV facultatif, joint en fichier via /uploads/document (URL stable).
+        cvUrl: applyForm.cvUrl || '',
       });
 
       if (res.success) {
@@ -525,12 +545,32 @@ export default function Offers({ navigate }) {
                   />
                 </div>
 
-                <div className="flex items-start gap-3 border border-border-strong bg-bg-secondary p-4">
-                  <FileText className="mt-0.5 h-5 w-5 shrink-0 text-ember" aria-hidden="true" />
-                  <p className="text-sm leading-relaxed text-text-secondary">
-                    Aucune pièce jointe à ce stade : si un document est nécessaire, il vous
-                    sera demandé par e-mail après examen de votre candidature.
-                  </p>
+                <div>
+                  <label htmlFor="apply-cv" className="mb-1.5 block text-xs font-bold text-text-secondary">
+                    CV / pièce jointe (PDF, DOC, DOCX — facultatif)
+                  </label>
+                  <label
+                    htmlFor="apply-cv"
+                    className="flex cursor-pointer items-center gap-3 border border-border-strong bg-bg-secondary p-4 hover:bg-bg-tertiary transition-colors"
+                  >
+                    {cvUploading
+                      ? <Loader2 className="h-5 w-5 shrink-0 animate-spin text-ember" aria-hidden="true" />
+                      : <FileText className="h-5 w-5 shrink-0 text-ember" aria-hidden="true" />}
+                    <span className="text-sm leading-relaxed text-text-secondary">
+                      {cvUploading
+                        ? 'Envoi du document…'
+                        : cvNom
+                          ? `Joint : ${cvNom} — cliquer pour remplacer`
+                          : 'Choisir un document depuis votre appareil'}
+                    </span>
+                    <input
+                      id="apply-cv"
+                      type="file"
+                      accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                      className="sr-only"
+                      onChange={(e) => handleCvUpload(e.target.files?.[0])}
+                    />
+                  </label>
                 </div>
 
                 <div className="flex gap-4 pt-4 border-t border-border-subtle">
