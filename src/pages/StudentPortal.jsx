@@ -185,7 +185,7 @@ export default function StudentPortal({ navigate }) {
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: 0.1 * i }}
                       className="bg-bg-secondary border border-border-subtle chamfer-sm p-5 flex items-center gap-4 group hover:bg-bg-tertiary transition-all cursor-pointer"
-                      onClick={() => navigate('clubs')}
+                      onClick={() => navigate('club-detail', { clubId: club.id })}
                     >
                       <div
                         className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 border border-engine bg-engine-wash"
@@ -203,6 +203,10 @@ export default function StudentPortal({ navigate }) {
           </div>
         )}
 
+        {/* CTA de conversion : n'a de sens que pour un visiteur non connecté.
+            Affiché à un membre déjà authentifié, « Commencer » le renvoyait à
+            l'écran de connexion — le retour client. On le masque une fois connecté. */}
+        {!user && (
         <div className="mt-12 glass-panel chamfer p-8 border border-border-subtle flex flex-col md:flex-row items-center justify-between gap-6 relative overflow-hidden">
           <div className="relative z-10 flex flex-col gap-2">
             <h3 className="text-lg font-extrabold text-text-primary flex items-center gap-2">
@@ -220,6 +224,7 @@ export default function StudentPortal({ navigate }) {
             Commencer
           </button>
         </div>
+        )}
       </div>
     </div>
   )

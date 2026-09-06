@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
-import { Settings2, UserMinus, Users, Loader2, Save, X } from 'lucide-react'
+import { Settings2, UserMinus, UserCheck, Users, Loader2, Save, X } from 'lucide-react'
 import api from '../../services/api.js'
 import PageHeader from '../../components/ui/PageHeader.jsx'
 import SectionCard from '../../components/ui/SectionCard.jsx'
@@ -29,11 +29,13 @@ import { ClubPicker, champ, etiquette, boutonPrimaire, memberBadge, nomComplet }
  */
 export default function GestionClub() {
   const { notify } = useToast()
-  const { can } = useAuth()
+  const { can, isAdmin } = useAuth()
   const { clubs, clubsLoading, clubsError, clubId, club, setClubId, canSupervise } = useClubSpace()
 
   const peutEditer = can('club:edit', { clubId })
   const peutRetirer = can('membership:remove', { clubId })
+  // Nommer le responsable d'un club est une décision d'ADMIN global (retour client).
+  const peutNommer = isAdmin()
 
   const [fiche, setFiche] = useState({ name: '', discipline: '', description: '' })
   const [enregistrement, setEnregistrement] = useState(false)
@@ -43,6 +45,7 @@ export default function GestionClub() {
   const [membersError, setMembersError] = useState(null)
   const [aConfirmer, setAConfirmer] = useState(null)
   const [retraitEnCours, setRetraitEnCours] = useState(null)
+  const [nominationEnCours, setNominationEnCours] = useState(null)
 
   // La fiche se recharge quand le club change : on n'édite jamais un formulaire
   // rempli avec les valeurs d'un autre club.
@@ -94,6 +97,22 @@ export default function GestionClub() {
       notify(err?.serverMessage || err?.message || "La fiche n'a pas pu être enregistrée.", 'error')
     } finally {
       setEnregistrement(false)
+    }
+  }
+
+  const nommerResponsable = async (membre) => {
+    const memberId = membre.memberId ?? membre.id
+    if (nominationEnCours || !memberId || !clubId) return
+    setNominationEnCours(memberId)
+    try {
+      const res = await api.clubs.setResponsible(clubId, memberId)
+      if (!res?.success) throw new Error(res?.message)
+      notify(res.message || `${nomComplet(membre)} est désormais responsable du club.`, 'success')
+      await chargerMembres()
+    } catch (err) {
+      notify(err?.serverMessage || err?.message || "La nomination n'a pas pu être effectuée.", 'error')
+    } finally {
+      setNominationEnCours(null)
     }
   }
 
@@ -247,6 +266,19 @@ export default function GestionClub() {
                         <span className={`border px-2 py-0.5 text-xs font-bold ${badge.className}`}>
                           {badge.label}
                         </span>
+                        {peutNommer && club?.responsibleId !== memberId && (
+                          <button
+                            type="button"
+                            onClick={() => nommerResponsable(m)}
+                            disabled={nominationEnCours === memberId}
+                            className="inline-flex min-h-11 cursor-pointer items-center gap-1.5 border border-border-strong px-3 text-sm font-semibold text-text-secondary transition-colors hover:border-engine hover:text-engine disabled:opacity-50"
+                          >
+                            {nominationEnCours === memberId
+                              ? <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
+                              : <UserCheck className="h-4 w-4" aria-hidden="true" />}
+                            <span className="sr-only sm:not-sr-only">Nommer responsable</span>
+                          </button>
+                        )}
                         {peutRetirer && (
                           <button
                             type="button"

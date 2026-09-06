@@ -693,7 +693,7 @@ export default function ResearcherProfile({ navigate, researcherId }) {
                         </div>
                         <span className="text-xs font-bold text-text-secondary">Votes de confiance</span>
                       </div>
-                      <span className="text-base font-extrabold text-text-primary">{researcher.stars || 42}</span>
+                      <span className="text-base font-extrabold text-text-primary">{researcher.stars ?? 0}</span>
                     </div>
                   </div>
                 </div>
