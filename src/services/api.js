@@ -205,6 +205,9 @@ export const api = {
     // PUT /clubs/:id — responsable DU club, ou ADMIN (ClubManagerGuard).
     update: (id, data) => put(`/clubs/${id}`, data),
 
+    // PATCH /clubs/:id/responsible — ADMIN global : nomme le responsable du club.
+    setResponsible: (id, memberId) => patch(`/clubs/${id}/responsible`, { memberId }),
+
     join: (id) => post(`/clubs/${id}/join`),
 
     // DELETE /clubs/:id/join — QUITTER de son propre chef. Toute personne

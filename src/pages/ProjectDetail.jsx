@@ -253,9 +253,22 @@ export default function ProjectDetail({ navigate, projectId }) {
             {/* Header info */}
             <div className="glass-panel chamfer p-8 flex flex-col gap-6">
               <div className="flex justify-between items-start gap-4">
-                <span className="text-xs font-extrabold uppercase tracking-wider text-success bg-success-wash border border-success px-3 py-1 rounded-md">
-                  {project.status}
-                </span>
+                {/* Badge de statut : masqué si absent (évitait un rectangle vert
+                    vide — retour client) et grisé pour un projet terminé plutôt
+                    que toujours vert. */}
+                {project.status?.trim() ? (
+                  <span
+                    className={`text-xs font-extrabold uppercase tracking-wider px-3 py-1 rounded-md border ${
+                      /termin|clôtur|clotur|archiv|abandon/i.test(project.status)
+                        ? 'text-text-muted bg-bg-tertiary border-border-subtle'
+                        : 'text-success bg-success-wash border-success'
+                    }`}
+                  >
+                    {project.status}
+                  </span>
+                ) : (
+                  <span />
+                )}
                 <span className="text-xs font-bold text-text-muted bg-bg-tertiary border border-border-subtle px-3 py-1 rounded-md">
                   ID: {project.id}
                 </span>
