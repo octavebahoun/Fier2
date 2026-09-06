@@ -260,13 +260,33 @@ export default function AppLayout({
 
               <hr className="border-border-subtle" />
 
-              {/* Footer bottom */}
-              <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+              {/* Footer bottom — coordonnées RÉELLES et cliquables (avant : un
+                  faux lien « Politique de confidentialité » sans action). */}
+              <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <span className="text-xs text-text-muted">
                   © {new Date().getFullYear()} FIERI Research. Tous droits réservés.
                 </span>
-                <div className="flex gap-4">
-                  <span className="text-xs text-text-muted hover:text-text-secondary cursor-pointer transition-colors">Politique de Confidentialité</span>
+                <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
+                  <a
+                    href="mailto:fieri0024@gmail.com"
+                    className="text-xs font-medium text-text-secondary transition-colors hover:text-engine"
+                  >
+                    fieri0024@gmail.com
+                  </a>
+                  <a
+                    href="tel:+22941642355"
+                    className="text-xs font-medium text-text-secondary transition-colors hover:text-engine"
+                  >
+                    +229 41 64 23 55
+                  </a>
+                  <a
+                    href="https://wa.me/22941642355?text=Bonjour%2C%20FIERI"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-xs font-medium text-text-secondary transition-colors hover:text-engine"
+                  >
+                    WhatsApp
+                  </a>
                 </div>
               </div>
             </div>

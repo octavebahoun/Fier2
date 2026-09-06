@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { X, Sun, Moon, LogOut, Search, ArrowUpRight } from 'lucide-react'
+import { Menu, X, Sun, Moon, LogOut, Search, ArrowUpRight } from 'lucide-react'
 import Logo from '../Logo.jsx'
 import RoleBadge from '../RoleBadge.jsx'
 import { useTheme } from '../../context/useTheme.js'
@@ -181,7 +181,12 @@ export default function Navbar({
             aria-label={mobileMenuOpen ? 'Fermer le menu principal' : 'Ouvrir le menu principal'}
             className="lg:hidden w-9 h-9 flex items-center justify-center rounded-lg border border-border-subtle text-text-secondary hover:text-text-primary hover:bg-bg-tertiary transition-all cursor-pointer"
           >
-            <X className={`w-4 h-4 transition-transform ${mobileMenuOpen ? 'rotate-90' : 'rotate-0'}`} aria-hidden="true" />
+            {/* Fermé : les trois barres (une icône que tout le monde reconnaît
+                comme un menu). Ouvert : la croix. Avant, un X restait affiché
+                même fermé — « ça ne fait pas menu » (retour client). */}
+            {mobileMenuOpen
+              ? <X className="w-5 h-5" aria-hidden="true" />
+              : <Menu className="w-5 h-5" aria-hidden="true" />}
           </button>
         </div>
       </div>
