@@ -8,12 +8,14 @@ import { AppSidebar } from '../app-sidebar.jsx'
 import { SidebarInset, SidebarProvider, useSidebar } from '../ui/sidebar.jsx'
 import { TooltipProvider } from '../ui/tooltip.jsx'
 import { ToastProvider } from '../ui/Toast.jsx'
+import api from '../../services/api.js'
+import NewsletterInvite from './NewsletterInvite.jsx'
 
 // ─── Pages « vitrine » : elles gardent la navbar marketing + le footer MÊME
 // connecté. Ce sont des pages pleine largeur avec leur propre mise en page
 // (hero, sections full-bleed, écran de login) : les enfermer dans le shell
 // applicatif donnerait une landing page encadrée par un tableau de bord.
-const MARKETING_PAGES = new Set(['home', 'auth', 'paf'])
+const MARKETING_PAGES = new Set(['home', 'auth', 'programmes'])
 
 // Referme le tiroir mobile de la sidebar à chaque navigation (le clic sur un
 // lien dans le Sheet ne le fait pas fermer tout seul).
@@ -51,6 +53,13 @@ export default function AppLayout({
   const [newsletterSubscribed, setNewsletterSubscribed] = useState(false)
   const [newsletterError, setNewsletterError] = useState(null)
 
+  const [newsletterSending, setNewsletterSending] = useState(false)
+
+  /*
+   * Ce formulaire ne faisait rien : il attendait 800 ms, annonçait « Abonnement
+   * validé » et jetait l'adresse. Elle part maintenant vers le serveur, qui la
+   * garde — et un échec se voit, au lieu d'être toujours un succès.
+   */
   const handleNewsletterSubmit = async (e) => {
     e.preventDefault()
     setNewsletterError(null)
@@ -58,13 +67,19 @@ export default function AppLayout({
       setNewsletterError('Veuillez entrer une adresse e-mail valide.')
       return
     }
+    setNewsletterSending(true)
     try {
-      await new Promise((resolve) => setTimeout(resolve, 800))
+      const res = await api.newsletter.subscribe(newsletterEmail.trim(), 'footer')
+      if (!res?.success) throw new Error(res?.message)
       setNewsletterSubscribed(true)
       setNewsletterEmail('')
       setTimeout(() => setNewsletterSubscribed(false), 4500)
-    } catch {
-      setNewsletterError("Erreur lors de l'inscription. Veuillez réessayer.")
+    } catch (err) {
+      setNewsletterError(
+        err?.serverMessage || err?.message || "L'abonnement n'a pas pu être enregistré.",
+      )
+    } finally {
+      setNewsletterSending(false)
     }
   }
 
@@ -128,6 +143,7 @@ export default function AppLayout({
     <div className="min-h-screen flex flex-col relative bg-bg-primary text-text-primary selection:bg-engine selection:text-on-accent">
       {skipLink}
       <CommandPalette navigate={navigate} />
+      <NewsletterInvite user={user} />
       <Navbar
         currentPage={currentPage}
         navigate={navigate}
@@ -166,8 +182,13 @@ export default function AppLayout({
                     <label htmlFor="footer-newsletter-email" className="eyebrow">
                       Newsletter
                     </label>
+                    <p className="text-sm text-text-secondary leading-relaxed">
+                      Une lettre par mois : les projets qui aboutissent, les appels à
+                      participation et les prochaines formations. C’est le moyen le plus
+                      simple de ne rien manquer quand on n’est pas encore membre.
+                    </p>
                     {newsletterSubscribed ? (
-                      <div className="text-sm text-ember bg-ember-wash border border-ember/25 p-2.5 rounded-lg font-medium" role="status" aria-live="polite">
+                      <div className="text-sm text-ember bg-ember-wash border border-ember p-2.5 rounded-lg font-medium" role="status" aria-live="polite">
                         ✓ Abonnement validé avec succès !
                       </div>
                     ) : (
@@ -189,9 +210,10 @@ export default function AppLayout({
                           />
                           <button
                             type="submit"
-                            className="min-h-11 min-w-11 bg-engine hover:bg-engine-deep text-on-accent px-4 rounded-lg text-sm font-bold transition-colors cursor-pointer shrink-0"
+                            disabled={newsletterSending}
+                            className="min-h-11 min-w-11 bg-engine hover:bg-engine-deep text-on-accent px-4 rounded-lg text-sm font-bold transition-colors cursor-pointer shrink-0 disabled:opacity-50"
                           >
-                            OK
+                            {newsletterSending ? '…' : 'OK'}
                           </button>
                         </div>
                         {newsletterError && (
@@ -208,6 +230,7 @@ export default function AppLayout({
                   <ul className="flex flex-col gap-2">
                     <li><button onClick={() => navigate('home')} className="text-sm text-text-secondary hover:text-text-primary transition-colors text-left cursor-pointer">Accueil Général</button></li>
                     <li><button onClick={() => navigate('student-portal')} className="text-sm text-text-secondary hover:text-text-primary transition-colors text-left cursor-pointer">Portail Étudiant</button></li>
+                    <li><button onClick={() => navigate('programmes')} className="text-sm text-text-secondary hover:text-text-primary transition-colors text-left cursor-pointer">Nos Programmes</button></li>
                     <li><button onClick={() => navigate('projects')} className="text-sm text-text-secondary hover:text-text-primary transition-colors text-left cursor-pointer">Projets & Brevets</button></li>
                     <li><button onClick={() => navigate('opportunities')} className="text-sm text-text-secondary hover:text-text-primary transition-colors text-left cursor-pointer">Annonces Recherche</button></li>
                   </ul>
@@ -244,8 +267,6 @@ export default function AppLayout({
                 </span>
                 <div className="flex gap-4">
                   <span className="text-xs text-text-muted hover:text-text-secondary cursor-pointer transition-colors">Politique de Confidentialité</span>
-                  <span className="text-xs text-text-muted">•</span>
-                  <span className="text-xs text-text-muted hover:text-text-secondary cursor-pointer transition-colors">Charte Graphique v2</span>
                 </div>
               </div>
             </div>

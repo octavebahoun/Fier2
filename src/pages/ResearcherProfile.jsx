@@ -23,7 +23,9 @@ import {
   Save,
   Check,
   Zap,
-  FileText
+  FileText,
+  Upload,
+  Loader2
 } from 'lucide-react'
 import { useAuth } from '../context/AuthContext.jsx'
 import { useAuthGate } from '../context/AuthGateContext.jsx'
@@ -44,7 +46,6 @@ function getRoleBadgeConfig(researcher, currentUser) {
       category: 'ADMINISTRATION FIERI',
       title: 'SUPER ADMINISTRATEUR & BUREAU EXÉCUTIF',
       badgeClass: 'bg-warning-wash border-warning text-warning',
-      gradientGlow: 'from-warning via-engine to-engine/20',
       icon: ShieldCheck,
       iconColor: 'text-warning',
       responsibilities: [
@@ -67,7 +68,6 @@ function getRoleBadgeConfig(researcher, currentUser) {
       category: 'GOUVERNANCE LOCALE',
       title: 'CHEF D\'ÉTABLISSEMENT UNIVERSITAIRE',
       badgeClass: 'bg-engine-wash border-engine text-engine',
-      gradientGlow: 'from-engine via-engine to-engine/20',
       icon: GraduationCap,
       iconColor: 'text-engine',
       responsibilities: [
@@ -90,7 +90,6 @@ function getRoleBadgeConfig(researcher, currentUser) {
       category: 'DIRECTION TECHNIQUE',
       title: 'RESPONSABLE DE PÔLE DE RECHERCHE & CLUB',
       badgeClass: 'bg-success-wash border-success text-success',
-      gradientGlow: 'from-success via-success/15 to-engine/20',
       icon: Award,
       iconColor: 'text-success',
       responsibilities: [
@@ -113,7 +112,6 @@ function getRoleBadgeConfig(researcher, currentUser) {
       category: 'RECHERCHE APPLIQUÉE',
       title: 'ÉTIUDIANT CHERCHEUR ACCRÉDITÉ R&D',
       badgeClass: 'bg-engine-wash border-engine text-engine',
-      gradientGlow: 'from-engine/20 via-engine/10 to-engine/20',
       icon: Microscope,
       iconColor: 'text-engine',
       responsibilities: [
@@ -136,7 +134,6 @@ function getRoleBadgeConfig(researcher, currentUser) {
     category: 'COMMUNAUTÉ ÉTUDIANTE',
     title: 'MEMBRE ÉTUDIANT ACADÉMIQUE',
     badgeClass: 'bg-engine-wash border-engine text-engine',
-    gradientGlow: 'from-engine/20 via-engine to-engine/20',
     icon: UserCheck,
     iconColor: 'text-engine',
     responsibilities: [
@@ -218,6 +215,30 @@ export default function ResearcherProfile({ navigate, researcherId }) {
     portfolioUrl: '',
     cvUrl: ''
   })
+  const [envoiAvatar, setEnvoiAvatar] = useState(false)
+
+  /**
+   * Depose la photo de profil et retient son adresse.
+   *
+   * Le champ demandait l'URL d'une image deja en ligne — autant demander a
+   * quelqu'un d'heberger sa photo avant de pouvoir la montrer. L'enregistrement
+   * du profil reste une action explicite : on prepare l'apercu, la personne
+   * valide.
+   */
+  const envoyerAvatar = async (fichier) => {
+    if (!fichier || envoiAvatar) return
+    setEnvoiAvatar(true)
+    try {
+      const res = await api.uploads.image(fichier)
+      if (!res?.success || !res.data?.url) throw new Error(res?.message)
+      setEditValues((v) => ({ ...v, avatar: res.data.url }))
+      notify('Photo prête. Enregistrez pour la conserver.', 'success')
+    } catch (err) {
+      notify(err?.serverMessage || err?.message || "La photo n'a pas pu être envoyée.", 'error')
+    } finally {
+      setEnvoiAvatar(false)
+    }
+  }
 
   // Fetch researcher details
   useEffect(() => {
@@ -445,7 +466,6 @@ export default function ResearcherProfile({ navigate, researcherId }) {
                 {/* 1. Header Identity Bento Cell with Custom Role Glow */}
                 <div className="glass-panel chamfer chamfer-shadow p-8 md:p-10 flex flex-col md:flex-row gap-8 items-center md:items-start relative overflow-hidden border border-border-subtle group">
                   {/* Custom Background Radial Glow according to Role */}
-                  <div className={`absolute -inset-px bg-gradient-to-r ${roleConfig.gradientGlow} opacity-60 group-hover:opacity-100 transition-opacity duration-500 chamfer pointer-events-none`} />
 
                   {/* Photo Avatar */}
                   <div className="relative shrink-0 z-10">
@@ -592,7 +612,7 @@ export default function ResearcherProfile({ navigate, researcherId }) {
                     {isOwnProfile ? (
                       <button
                         onClick={() => setIsEditModalOpen(true)}
-                        className="w-full py-3.5 chamfer-sm chamfer-shadow text-xs font-bold bg-engine-wash border border-engine/30 text-on-accent hover:bg-engine hover:text-on-accent transition-all flex items-center justify-center gap-2 cursor-pointer "
+                        className="w-full py-3.5 chamfer-sm chamfer-shadow text-xs font-bold bg-engine-wash border border-engine text-on-accent hover:bg-engine hover:text-on-accent transition-all flex items-center justify-center gap-2 cursor-pointer "
                       >
                         <Edit3 className="w-4 h-4" />
                         Gérer mon profil
@@ -738,11 +758,11 @@ export default function ResearcherProfile({ navigate, researcherId }) {
                   {publications.map((pub, idx) => (
                     <div
                       key={idx}
-                      className="bg-bg-secondary hover:bg-bg-tertiary border border-border-subtle hover:border-engine/20 p-5 chamfer-sm chamfer-shadow flex flex-col justify-between gap-5 transition-all group/card "
+                      className="bg-bg-secondary hover:bg-bg-tertiary border border-border-subtle hover:border-engine p-5 chamfer-sm chamfer-shadow flex flex-col justify-between gap-5 transition-all group/card "
                     >
                       <div className="space-y-2">
                         <div className="flex justify-between items-start gap-2">
-                          <span className="text-xs font-extrabold uppercase tracking-wider text-engine bg-engine-wash px-2 py-0.5 rounded-md border border-engine/10">
+                          <span className="text-xs font-extrabold uppercase tracking-wider text-engine bg-engine-wash px-2 py-0.5 rounded-md border border-engine">
                             {pub.year}
                           </span>
                           <span className="text-xs font-bold text-text-muted">
@@ -798,7 +818,7 @@ export default function ResearcherProfile({ navigate, researcherId }) {
               {/* Header */}
               <div className="flex items-center justify-between border-b border-border-subtle pb-4 mb-6">
                 <div className="flex items-center gap-3">
-                  <div className="p-2.5 rounded-xl bg-engine-wash border border-engine/30 text-engine">
+                  <div className="p-2.5 rounded-xl bg-engine-wash border border-engine text-engine">
                     <Edit3 className="w-5 h-5" />
                   </div>
                   <div>
@@ -874,24 +894,39 @@ export default function ResearcherProfile({ navigate, researcherId }) {
 
                 </div>
 
-                {/* Photo de profil avec Preview */}
+                {/* Photo de profil : un fichier, pas une adresse a trouver.
+                    Le champ reclamait « https://images.unsplash.com/... » —
+                    personne n'a l'URL de sa propre photo, et le client a
+                    signale qu'on n'arrivait pas a la mettre a jour. */}
                 <div className="space-y-2">
-                  <label htmlFor="edit-avatar" className="text-xs font-bold text-text-secondary">Photo de profil (URL d'image)</label>
+                  <span className="text-xs font-bold text-text-secondary">Photo de profil</span>
                   <div className="flex items-center gap-4">
                     <img
                       src={editValues.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80'}
                       alt="Aperçu"
                       className="w-14 h-14 chamfer-sm object-cover border border-border-subtle shrink-0"
                     />
+                    <label
+                      htmlFor="edit-avatar"
+                      className="inline-flex min-h-11 flex-1 cursor-pointer items-center justify-center gap-2 chamfer-sm border border-border-subtle bg-bg-tertiary px-4 text-sm font-bold text-text-primary transition-colors hover:border-engine"
+                    >
+                      {envoiAvatar
+                        ? <Loader2 className="w-4 h-4 animate-spin" aria-hidden="true" />
+                        : <Upload className="w-4 h-4 text-engine" aria-hidden="true" />}
+                      {envoiAvatar ? 'Envoi…' : 'Choisir une photo'}
+                    </label>
                     <input
                       id="edit-avatar"
-                      type="url"
-                      value={editValues.avatar}
-                      onChange={(e) => setEditValues(v => ({ ...v, avatar: e.target.value }))}
-                      className="w-full px-4 py-3 chamfer-sm bg-bg-tertiary border border-border-subtle text-sm text-text-primary focus:outline-none focus:border-engine"
-                      placeholder="https://images.unsplash.com/..."
+                      type="file"
+                      accept="image/png,image/jpeg,image/webp,image/gif"
+                      disabled={envoiAvatar}
+                      onChange={(e) => envoyerAvatar(e.target.files?.[0])}
+                      className="sr-only"
                     />
                   </div>
+                  <p className="text-xs text-text-secondary">
+                    Depuis votre appareil. PNG, JPG, WEBP ou GIF, 3 Mo maximum.
+                  </p>
                 </div>
 
                 {/* Spécialités */}

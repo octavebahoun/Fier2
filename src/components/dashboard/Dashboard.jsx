@@ -3,6 +3,7 @@ import {
   Users, BookOpen, ArrowRight, Award, Bell,
   Shield, ShieldCheck, Briefcase, PenSquare, UserCog, Lock, FolderGit2,
   GraduationCap, LayoutList, Wallet, Calendar, ListChecks, Inbox,
+  FolderPlus, FilePlus2, Settings2, ClipboardCheck, Globe2,
 } from 'lucide-react'
 import { api } from '../../services/api.js'
 import { useAuth, getRolePresentation, getPostPresentation } from '../../context/AuthContext.jsx'
@@ -87,13 +88,19 @@ export default function Dashboard({ navigate }) {
     { cap: 'admin:access',       label: 'Console d’administration', desc: 'Membres, rôles et postes de gouvernance', icon: Shield,      page: 'admin' },
     { cap: 'news:moderate',      label: 'Modérer les actualités',   desc: 'Approuver ou rejeter les articles',       icon: PenSquare,   page: 'news' },
     { cap: 'certificate:issue',  label: 'Émettre une attestation',  desc: 'Document officiel signé de l’université', icon: ShieldCheck, page: 'gouvernance' },
+    { cap: 'census:read',        label: 'Recensements',             desc: 'Effectifs déclarés par les clubs',        icon: ClipboardCheck, page: 'gouvernance-recensements' },
+    { cap: 'country:govern',     label: 'Universités du pays',      desc: 'Le périmètre national',                   icon: Globe2,      page: 'gouvernance-pays' },
     { cap: 'treasury:read',      label: 'Trésorerie',               desc: 'Grand livre et opérations',               icon: Wallet,      page: 'tresorerie' },
     { cap: 'report:read',        label: 'Rapports des clubs',       desc: 'Suivi d’activité de l’université',        icon: LayoutList,  page: 'cite-rapports' },
     { cap: 'report:submit',      label: 'Rapport de mon club',      desc: 'Recensement et activité mensuelle',       icon: LayoutList,  page: 'cite-rapports' },
     { cap: 'membership:review',  label: 'Valider les adhésions',    desc: 'Candidatures en attente de votre club',   icon: Users,       page: 'cite-adhesions' },
     { cap: 'task:manage',        label: 'Tâches de projet',         desc: 'Répartir le travail et suivre l’avancement', icon: ListChecks, page: 'projet-taches' },
     { cap: 'application:review', label: 'Candidatures reçues',      desc: 'Examiner et décider',                     icon: Inbox,       page: 'candidatures' },
-    { cap: 'badge:award',        label: 'Attribuer un badge',       desc: 'Distinguer un membre encadré',            icon: Award,       page: 'challenges' },
+    { cap: 'badge:award',        label: 'Badges d’honneur',         desc: 'Distinguer un membre, ou retirer un badge', icon: Award,     page: 'badges' },
+    { cap: 'club:edit',          label: 'Gérer mon club',           desc: 'Fiche du club et composition',            icon: Settings2,   page: 'cite-gestion' },
+    { cap: 'project:create',     label: 'Créer un projet R&D',      desc: 'Ouvrir un projet de recherche',           icon: FolderPlus,  page: 'projet-nouveau' },
+    { cap: 'publication:create', label: 'Déposer une publication',  desc: 'Verser un travail au fonds scientifique', icon: FilePlus2,   page: 'publication-nouvelle' },
+    { cap: 'formation:create',   label: 'Créer une formation',      desc: 'Ouvrir une session de l’Académie',        icon: GraduationCap, page: 'formation-nouvelle' },
     { cap: 'opportunity:create', label: 'Publier une opportunité',  desc: 'Diffuser une offre R&D',                  icon: Briefcase,   page: 'opportunities' },
     { cap: 'news:submit',        label: 'Rédiger un article',       desc: 'Soumettre au journal scientifique',       icon: PenSquare,   page: 'news' },
     { cap: 'profile:editOwn',    label: 'Modifier mon profil',      desc: 'Bio, spécialités, portfolio',             icon: UserCog,     page: 'researcher-profile-edit' },

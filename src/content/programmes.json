@@ -1,0 +1,70 @@
+{
+  "tag": "Nos programmes",
+  "title": "Quatre programmes, quatre sorties concrètes",
+  "description": "Excellence, représentation, coopération, entrepreneuriat : chaque programme mène quelque part.",
+  "items": [
+    {
+      "id": "pef",
+      "code": "PEF",
+      "name": "Programme d’Excellence FIERI",
+      "icon": "award",
+      "description": "Le PEF distingue les talents, les parcours académiques, les Cités FIERI et les initiatives qui se démarquent par leur excellence et leur innovation.",
+      "volets": [
+        {
+          "titre": "Excellence académique",
+          "points": [
+            "Les meilleurs aux examens nationaux",
+            "Les meilleurs parcours universitaires",
+            "La distinction des lauréats"
+          ]
+        },
+        {
+          "titre": "Excellence institutionnelle des Cités FIERI",
+          "intro": "Un système de labellisation distingue les Cités sur la qualité de leur animation, de leurs projets et de leur gouvernance.",
+          "labels": [
+            {
+              "niveau": "Or",
+              "detail": "Cité FIERI Excellence Or"
+            },
+            {
+              "niveau": "Argent",
+              "detail": "Cité FIERI Excellence Argent"
+            },
+            {
+              "niveau": "Bronze",
+              "detail": "Cité FIERI Excellence Bronze"
+            }
+          ]
+        },
+        {
+          "titre": "Excellence dans l’innovation",
+          "points": [
+            "Valorisation des participants et lauréats du Forum National des Innovateurs",
+            "Reconnaissance des meilleurs projets issus des Cités"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "paf",
+      "code": "PAF",
+      "name": "Programme Ambassadeur FIERI",
+      "icon": "megaphone",
+      "description": "Le PAF mobilise ambassadeurs, bénévoles, mentors et alumni pour représenter la FIERI, partager ses valeurs et contribuer à son rayonnement au sein des communautés."
+    },
+    {
+      "id": "peci",
+      "code": "PECI",
+      "name": "Programme des Échanges et de la Coopération Internationale",
+      "icon": "network",
+      "description": "Le PECI développe les échanges, collaborations et partenariats avec des acteurs nationaux et internationaux pour favoriser le partage des connaissances et les initiatives communes."
+    },
+    {
+      "id": "pei",
+      "code": "PEI",
+      "name": "Programme Entrepreneuriat et Incubation",
+      "icon": "rocket",
+      "description": "Le PEI accompagne les jeunes talents dans la création et le développement de startups innovantes, de l’idée à la structuration et à la croissance de leur entreprise."
+    }
+  ]
+}

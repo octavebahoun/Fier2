@@ -80,7 +80,7 @@ function WorkshopCard({ workshop, club, user, onToggleRegister, isToggling, navi
                 Complet (Waitlist Active)
               </span>
             ) : (
-              <span className="text-xs text-ember font-medium bg-ember-wash border border-ember/20 px-2 py-0.5 rounded-full">
+              <span className="text-xs text-ember font-medium bg-ember-wash border border-ember px-2 py-0.5 rounded-full">
                 {workshop.placesLeft} places restantes
               </span>
             )}
@@ -382,7 +382,7 @@ export default function Workshops({ navigate }) {
         {/* ── Connect Banner for Guest Visitors ── */}
         {!user && (
           <FadeInWhenVisible direction="up" delay={0.05}>
-            <div className="mb-10 flex items-center gap-4 p-4.5 chamfer-sm bg-engine-wash border border-engine/20 text-sm">
+            <div className="mb-10 flex items-center gap-4 p-4.5 chamfer-sm bg-engine-wash border border-engine text-sm">
               <Lock className="w-5 h-5 text-engine shrink-0" />
               <p className="text-text-secondary flex-1">
                 <span className="text-text-primary font-semibold">Une session active est requise</span> pour vous inscrire aux ateliers, réserver vos places et participer aux bootcamps.

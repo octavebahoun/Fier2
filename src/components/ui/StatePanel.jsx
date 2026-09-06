@@ -27,7 +27,7 @@ export default function StatePanel({ state = 'loading', message, onRetry, icon: 
   const ErrorIcon = Icon || AlertTriangle;
   return (
     <div className={`flex flex-col items-center justify-center py-16 gap-4 ${className}`} role="alert">
-      <div className="w-14 h-14 chamfer-sm bg-ember-wash border border-ember/30 flex items-center justify-center">
+      <div className="w-14 h-14 chamfer-sm bg-ember-wash border border-ember flex items-center justify-center">
         <ErrorIcon className="w-6 h-6 text-ember" />
       </div>
       <p className="text-sm text-text-secondary font-light max-w-sm text-center">
@@ -36,7 +36,7 @@ export default function StatePanel({ state = 'loading', message, onRetry, icon: 
       {onRetry && (
         <button
           onClick={onRetry}
-          className="inline-flex items-center gap-2 text-xs uppercase tracking-widest font-bold bg-engine-wash border border-engine/30 text-engine px-5 py-2.5 chamfer-xs hover:bg-engine-wash transition-all cursor-pointer"
+          className="inline-flex items-center gap-2 text-xs uppercase tracking-widest font-bold bg-engine-wash border border-engine text-engine px-5 py-2.5 chamfer-xs hover:bg-engine-wash transition-all cursor-pointer"
         >
           <RefreshCw className="w-3.5 h-3.5" />
           Réessayer

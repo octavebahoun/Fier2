@@ -10,71 +10,10 @@ import { useAuth } from '../context/AuthContext.jsx';
 import FadeInWhenVisible from '../components/home/FadeInWhenVisible.jsx';
 import PageHeader from '../components/ui/PageHeader.jsx';
 import { useToast } from '../components/ui/Toast.jsx'
+import DemandeAdhesionModal from '../components/clubs/DemandeAdhesionModal.jsx'
 
 
 // ────────────────────────────── Join Confirm Modal ────────────────────────────
-function JoinConfirmModal({ club, onConfirm, onCancel }) {
-  const Icon = CLUB_ICONS[club?.id] || Star;
-  if (!club) return null;
-  return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-scrim backdrop-blur-sm"
-      onClick={onCancel}
-    >
-      <motion.div
-        initial={{ opacity: 0, scale: 0.92, y: 20 }}
-        animate={{ opacity: 1, scale: 1, y: 0 }}
-        exit={{ opacity: 0, scale: 0.92, y: 20 }}
-        transition={{ type: 'spring', stiffness: 380, damping: 28 }}
-        onClick={(e) => e.stopPropagation()}
-        className="relative w-full max-w-md chamfer chamfer-shadow border border-border-strong bg-bg-secondary p-8"
-      >
-
-        {/* Icone + titre */}
-        <div className="flex items-center gap-4 mb-6 relative z-10">
-          <div className="w-14 h-14 chamfer-sm flex items-center justify-center shrink-0 border border-engine bg-engine-wash">
-            <Icon className="w-7 h-7 text-engine" />
-          </div>
-          <div>
-            <p className="text-xs font-bold uppercase tracking-widest text-engine">
-              Rejoindre
-            </p>
-            <h2 className="text-lg font-extrabold text-text-primary leading-snug">{club.kicker}</h2>
-          </div>
-        </div>
-
-        {/* Charte */}
-        <div className="p-4 rounded-xl text-xs text-text-secondary leading-relaxed mb-6 relative z-10 border border-border-strong bg-bg-tertiary">
-<p className="font-bold text-text-primary mb-1.5">En demandant votre adhésion, vous vous engagez à&nbsp;:</p>
-          <ul className="list-disc pl-4 space-y-1">
-            <li>Participer activement aux activités et réunions du club.</li>
-            <li>Respecter les membres et le règlement intérieur.</li>
-            <li>Votre demande sera validée sous 48h par le Responsable.</li>
-          </ul>
-        </div>
-
-        {/* Boutons */}
-        <div className="flex gap-3 relative z-10">
-          <button
-            onClick={onCancel}
-            className="flex-1 py-3 rounded-xl text-xs font-bold text-text-secondary bg-bg-secondary border border-border-subtle hover:bg-bg-tertiary transition-all"
-          >
-            Annuler
-          </button>
-          <button
-            onClick={onConfirm}
-            className="flex-1 min-h-11 rounded-xl text-xs font-bold bg-engine text-on-accent hover:bg-engine-deep transition-colors cursor-pointer"
-          >
-            Soumettre la demande
-          </button>
-        </div>
-      </motion.div>
-    </motion.div>
-  );
-}
 
 // ─────────────────────────── Club Icon Map ───────────────────────────
 const CLUB_ICONS = {
@@ -101,15 +40,6 @@ function ClubCard({ club, user, navigate, onJoin, onLeave, isPending, joiningId,
       <div className="flex items-center gap-4 px-6 pt-6 pb-4 border-b border-border-subtle">
         <div className="flex items-center justify-center w-12 h-12 rounded-xl shrink-0 border border-engine bg-engine-wash">
           <Icon className="w-6 h-6 text-engine" />
-        </div>
-        <div className="flex-1 min-w-0">
-          <span className="inline-block text-xs font-bold uppercase tracking-widest rounded-full px-2.5 py-0.5 mb-1 border border-engine bg-engine-wash text-engine">
-            {club.kicker}
-          </span>
-          <div className="flex items-center gap-1.5 text-text-secondary text-xs">
-            <Users className="w-3.5 h-3.5" />
-            <span>{club.membersCount.toLocaleString('fr-FR')} membres</span>
-          </div>
         </div>
       </div>
 
@@ -291,6 +221,7 @@ export default function ResearchClubs({ navigate }) {
   const { user, can } = useAuth();
   const userId = user?.id ?? null;
   const [clubs, setClubs] = useState([]);
+  const [chargement, setChargement] = useState(true);
   const [myRequests, setMyRequests] = useState([]);
   const [pendingRequests, setPendingRequests] = useState({});
   const { notify } = useToast()
@@ -321,13 +252,48 @@ export default function ResearchClubs({ navigate }) {
     : clubs;
 
   const joinedCount = displayClubs.filter((c) => c.joined).length;
-  const totalMembers = displayClubs.reduce((acc, c) => acc + c.membersCount, 0);
+
+  /**
+   * Le nombre de poles annonce.
+   *
+   * Il etait ecrit « 6 » en toutes lettres, a deux endroits, au-dessus d'une
+   * liste chargee depuis l'API : creer un club de plus ne changeait rien au
+   * titre. Le compteur compte donc ce que la page montre reellement, et se
+   * tait tant qu'il n'a rien a compter — annoncer « 0 pole » pendant le
+   * chargement serait un mensonge de plus, juste plus court.
+   */
+  const nombrePoles = displayClubs.length;
+  const compteurLisible = chargement || nombrePoles === 0 ? null : nombrePoles;
+
+  /**
+   * L'amorce du sous-titre. Trois cas, parce que le francais en a trois.
+   *
+   * « Rejoignez l'une de nos 1 communaute thematique » : le compteur branche
+   * sur la vraie liste avait rendu la faute visible, mais elle etait deja dans
+   * la phrase — « l'une de nos » ne se decline pas au singulier. Un club
+   * unique se dit « notre », et on ne choisit pas parmi un seul.
+   */
+  const amorce = (() => {
+    if (!compteurLisible) return <>Rejoignez une communauté thématique</>;
+    if (compteurLisible === 1) {
+      return <>Rejoignez <span className="text-text-primary font-semibold">notre communauté thématique</span></>;
+    }
+    return (
+      <>
+        Rejoignez l’une de nos{' '}
+        <span className="text-text-primary font-semibold">
+          {compteurLisible} communautés thématiques
+        </span>
+      </>
+    );
+  })();
 
   // Charger toutes les données (clubs, demandes de l'utilisateur connecté, et demandes en attente pour les managers)
   const loadData = async () => {
     const clubsRes = await api.clubs.getAll();
     const allClubs = clubsRes.success ? clubsRes.data : [];
     setClubs(allClubs);
+    setChargement(false);
 
     if (userId) {
       const res = await api.memberships.getUserRequests(userId);
@@ -372,7 +338,10 @@ export default function ResearchClubs({ navigate }) {
   const handleLeaveClick = async (clubId) => {
     if (!user || !userId || joiningId) return;
     setJoiningId(clubId);
-    const res = await api.memberships.leave(clubId, userId);
+    // `memberships.remove` est reserve au responsable du club : un membre qui
+    // s'en servait pour partir se prenait un 403. La sortie volontaire, c'est
+    // DELETE /clubs/:id/join, ouverte a toute personne connectee.
+    const res = await api.clubs.leave(clubId);
     if (res.success) {
       notify(res.message, 'info');
       loadData();
@@ -383,14 +352,16 @@ export default function ResearchClubs({ navigate }) {
   };
 
   // Exécuter l'adhésion (création demande) après confirmation
-  const handleJoinConfirm = async () => {
+  const handleJoinConfirm = async (valeurs) => {
     const clubId = confirmClub?.id;
     if (!clubId || !user || joiningId) return;
-    setConfirmClub(null);
     setJoiningId(clubId);
 
-    const res = await api.memberships.requestJoin(clubId, user);
+    // La modale reste ouverte pendant l'envoi : si le serveur refuse, la
+    // motivation qu'on vient d'ecrire n'est pas perdue.
+    const res = await api.memberships.requestJoin(clubId, valeurs);
     if (res.success) {
+      setConfirmClub(null);
       notify(res.message, 'success');
       loadData();
     } else {
@@ -429,29 +400,21 @@ export default function ResearchClubs({ navigate }) {
         {/* ── Hero Section ── */}
         <PageHeader
           align="center"
-          tag="Student Hub · Epic 4"
           icon={Zap}
           title="CITE de Recherche"
-          description={<>Rejoignez l'une de nos <span className="text-text-primary font-semibold">6 communautés thématiques</span> et collaborez avec les meilleurs chercheurs et ingénieurs de la plateforme FIERI.</>}
+          description={<>{amorce} et collaborez avec les meilleurs chercheurs et ingénieurs de la plateforme FIERI.</>}
         >
           {/* Stats rapides */}
           <div className="flex items-center justify-center flex-wrap gap-6 pt-2">
-              <div className="flex items-center gap-2 text-sm text-text-secondary">
-                <Users className="w-4 h-4 text-engine" />
-                <span>
-                  <strong className="text-text-primary font-bold">
-                    {totalMembers.toLocaleString('fr-FR')}
-                  </strong>{' '}
-                  membres actifs
-                </span>
-              </div>
-              <div className="w-px h-4 bg-border-subtle hidden sm:block" />
-              <div className="flex items-center gap-2 text-sm text-text-secondary">
-                <Star className="w-4 h-4 text-ember" />
-                <span>
-                  <strong className="text-text-primary font-bold">6</strong> pôles scientifiques
-                </span>
-              </div>
+              {compteurLisible && (
+                <div className="flex items-center gap-2 text-sm text-text-secondary">
+                  <Star className="w-4 h-4 text-ember" />
+                  <span>
+                    <strong className="text-text-primary font-bold">{compteurLisible}</strong>
+                    {' '}pôle{compteurLisible > 1 ? 's' : ''} scientifique{compteurLisible > 1 ? 's' : ''}
+                  </span>
+                </div>
+              )}
               {user && joinedCount > 0 && (
                 <>
                   <div className="w-px h-4 bg-border-subtle hidden sm:block" />
@@ -470,7 +433,7 @@ export default function ResearchClubs({ navigate }) {
         {/* ── Bandeau invitation connexion (visiteur) ── */}
         {!user && (
           <FadeInWhenVisible direction="up" delay={0.1}>
-            <div className="mb-10 flex items-center gap-4 p-4 chamfer-sm bg-engine-wash border border-engine/20 text-sm">
+            <div className="mb-10 flex items-center gap-4 p-4 chamfer-sm bg-engine-wash border border-engine text-sm">
               <Lock className="w-5 h-5 text-engine shrink-0" />
               <p className="text-text-secondary">
                 <span className="text-text-primary font-semibold">Connectez-vous</span> pour rejoindre
@@ -546,9 +509,11 @@ export default function ResearchClubs({ navigate }) {
       {/* ── Modale de confirmation d'adhésion ── */}
       <AnimatePresence>
         {confirmClub && (
-          <JoinConfirmModal
+          <DemandeAdhesionModal
             club={confirmClub}
-            onConfirm={() => handleJoinConfirm()}
+            icon={CLUB_ICONS[confirmClub.id] || Star}
+            envoi={joiningId === confirmClub.id}
+            onSubmit={handleJoinConfirm}
             onCancel={() => setConfirmClub(null)}
           />
         )}

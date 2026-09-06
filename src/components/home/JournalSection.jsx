@@ -14,9 +14,11 @@ export default function JournalSection({ journal, navigate }) {
             <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight mt-4 font-display">
               {journal?.title || 'Le Journal FIERI'}
             </h2>
-            <p className="text-text-secondary text-sm font-light mt-3 max-w-xl">
-              Bootcamps, ateliers, opportunités, appels et actualités — retrouvez tout le dynamisme de la communauté académique.
-            </p>
+            {journal?.description && (
+              <p className="text-text-secondary text-sm font-light mt-3 max-w-xl">
+                {journal.description}
+              </p>
+            )}
           </FadeInWhenVisible>
         </div>
 

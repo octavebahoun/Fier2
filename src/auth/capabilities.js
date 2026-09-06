@@ -202,7 +202,7 @@ export const CAPABILITIES = {
     label: 'Valider ou refuser les adhésions',
     roles: [ROLES.RESPONSABLE],
     scope: SCOPE.CLUB,
-    route: 'PATCH /memberships/requests/:id/approve',
+    route: 'PATCH /memberships/requests/:requestId/approve',
   },
   'membership:remove': {
     label: 'Retirer un membre du club',
@@ -304,13 +304,13 @@ export const CAPABILITIES = {
     label: 'Désigner une figure emblématique',
     universityPosts: [UNIVERSITY_POSTS.CHEF_UNIVERSITAIRE],
     scope: SCOPE.UNIVERSITY,
-    route: 'POST /governance/members/:id/toggle-emblematic',
+    route: 'POST /members/:id/toggle-emblematic',
   },
   'signature:upload': {
     label: 'Téléverser sa griffe officielle',
     universityPosts: [UNIVERSITY_POSTS.CHEF_UNIVERSITAIRE],
     scope: SCOPE.UNIVERSITY,
-    route: 'POST /governance/members/upload-signature',
+    route: 'POST /members/upload-signature',
   },
 
   // ── Communication d'université — poste RESP_COMMUNICATION ────────────────
@@ -374,17 +374,11 @@ export const CAPABILITY_LIST = Object.keys(CAPABILITIES)
  * capacités non utilisées : elle ne peut donc pas grossir en silence, et toute
  * capacité qu'on branche à un écran doit en être retirée.
  *
- * C'est le carnet de dette du chantier 02.
+ * ── La liste est vide, et c'est le but ────────────────────────────────────
+ * Elle a compté jusqu'à neuf entrées. Chacune a désormais son écran : les
+ * trente-sept capacités de la table sont toutes atteignables depuis
+ * l'interface. La liste reste ici parce que le mécanisme sert encore : une
+ * capacité ajoutée sans écran fera échouer le test tant qu'elle n'est pas soit
+ * branchée, soit inscrite ici — explicitement, en connaissance de cause.
  */
-export const PENDING_UI = [
-  'badge:revoke',         // MENTOR — retrait de badge absent de l'interface
-  'census:read',          // historique des recensements jamais affiché
-  'club:edit',            // édition de la fiche club absente
-  'country:govern',       // GOUVERNANT_PAYS — aucun écran national
-  'event:manage',         // création/édition d'événement absente du front
-  'formation:create',     // création de formation absente
-  'membership:remove',    // retrait d'un membre absent de l'espace club
-  'org:manage',           // pays / universités / filières / clubs : aucun écran
-  'project:create',       // création de projet absente
-  'publication:create',   // dépôt de publication absent
-]
+export const PENDING_UI = []

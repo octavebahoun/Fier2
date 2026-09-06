@@ -137,7 +137,20 @@ export const api = {
     getCountries: () => get('/countries'),
     getCountryById: (id) => get(`/countries/${id}`),
     getUniversities: (countryId) => get(`/countries/${countryId}/universities`),
-    getBranches: (universityId) => get(`/universities/${universityId}/branches`)
+    getBranches: (universityId) => get(`/universities/${universityId}/branches`),
+
+    // ── Creation : ADMIN uniquement (RolesGuard @Roles('ADMIN')) ────────────
+    // POST /countries — body { name }.
+    createCountry: (name) => post('/countries', { name }),
+
+    // POST /universities — body { name, countryId }. `countryId` passe par un
+    // ParseIntPipe cote serveur : on envoie un nombre, pas une chaine.
+    createUniversity: (name, countryId) =>
+      post('/universities', { name, countryId: Number(countryId) }),
+
+    // POST /branches — body { name, universityId }. Meme remarque.
+    createBranch: (name, universityId) =>
+      post('/branches', { name, universityId: Number(universityId) })
   },
 
   // ── 3. PROJETS DE RECHERCHE R&D ────────────────────────────────────────────
@@ -153,6 +166,11 @@ export const api = {
       const r = await get(`/projects/${id}`)
       return { ...r, data: normalizeProject(r.data) }
     },
+
+    // POST /projects — CHERCHEUR / RESPONSABLE / ADMIN.
+    // `clubId` est facultatif ; s'il est fourni, le serveur vérifie que le
+    // compte appartient bien à ce club (ProjectClubMemberGuard).
+    create: (data) => post('/projects', data),
 
     // POST /projects/:id/follow — bascule favori. Renvoie { starred }.
     toggleFollow: async (id) => {
@@ -181,7 +199,17 @@ export const api = {
       const r = await get(`/clubs/${id}`)
       return { ...r, data: normalizeClub(r.data) }
     },
+    // POST /clubs — ADMIN. Body { name, discipline, description? }.
+    create: (data) => post('/clubs', data),
+
+    // PUT /clubs/:id — responsable DU club, ou ADMIN (ClubManagerGuard).
+    update: (id, data) => put(`/clubs/${id}`, data),
+
     join: (id) => post(`/clubs/${id}/join`),
+
+    // DELETE /clubs/:id/join — QUITTER de son propre chef. Toute personne
+    // connectée le peut, pour elle-même. À ne pas confondre avec
+    // `memberships.remove`, qui est l'exclusion prononcée par un responsable.
     leave: (id) => del(`/clubs/${id}/join`)
   },
 
@@ -191,6 +219,14 @@ export const api = {
       const r = await get('/workshops')
       return { ...r, data: Array.isArray(r.data) ? r.data.map(normalizeWorkshop) : r.data }
     },
+
+    // POST /formations — CHERCHEUR / ADMIN. La formation créée ici apparaît
+    // dans GET /workshops : les deux routes lisent la même table.
+    create: ({ title, instructor, capacity }) =>
+      post('/formations', { title, instructor, capacity }),
+
+    // PUT /formations/:id — CHERCHEUR / ADMIN.
+    update: (id, data) => put(`/formations/${id}`, data),
 
     // POST /workshops/:id/register (body userFullName) → { action, position, ... }
     register: (id, userFullName) => post(`/workshops/${id}/register`, { userFullName }),
@@ -216,6 +252,14 @@ export const api = {
       const r = await get(`/events/history${qs({ universityId: filters.universityId, clubId: filters.clubId })}`)
       return { ...r, data: Array.isArray(r.data) ? r.data.map(normalizeEvent) : r.data }
     },
+
+    // POST /events — ADMIN / RESPONSABLE. `streamUrl` non vide = evenement en
+    // ligne ; `isLive` dit que la diffusion est EN COURS, pas qu'elle aura lieu.
+    create: (dto) => post('/events', dto),
+
+    // PUT /events/:id — ADMIN / RESPONSABLE. Sert aussi a ouvrir et fermer la
+    // diffusion d'un webinaire, en basculant `isLive`.
+    update: (id, dto) => put(`/events/${id}`, dto),
 
     register: (id) => post(`/events/${id}/register`),
 
@@ -276,11 +320,82 @@ export const api = {
     reject: (id) => del(`/news/${id}`)
   },
 
+  // ── 8b. PUBLICATIONS SCIENTIFIQUES ─────────────────────────────────────────
+  // `POST /publications` existait depuis le début, ouvert au CHERCHEUR, sans
+  // aucune interface pour l'appeler.
+  publications: {
+    // GET /publications — public. Filtres : authorId, clubId, projectId.
+    getAll: (filters = {}) =>
+      get(`/publications${qs({
+        authorId: filters.authorId,
+        clubId: filters.clubId,
+        projectId: filters.projectId,
+        page: filters.page,
+        limit: filters.limit,
+      })}`),
+
+    // GET /publications/:id — public.
+    getById: (id) => get(`/publications/${id}`),
+
+    // POST /publications — CHERCHEUR / ADMIN. L'auteur vient du jeton.
+    create: ({ title, content, category, projectId, clubId }) =>
+      post('/publications', {
+        title,
+        content,
+        category,
+        ...(projectId ? { projectId } : {}),
+        ...(clubId ? { clubId } : {}),
+      }),
+  },
+
   // ── 9. TABLEAU DE BORD & NOTIFICATIONS ─────────────────────────────────────
   dashboard: {
     getStats: () => get('/dashboard/me'),
     getNotifications: () => get('/notifications'),
     markNotificationAsRead: (id) => put(`/notifications/${id}/read`)
+  },
+
+  // ── 9b. LETTRE D'INFORMATION ───────────────────────────────────────────────
+  // Le formulaire du pied de page n'envoyait rien : il attendait 800 ms puis
+  // annonçait « Abonnement validé ». Les adresses atterrissent maintenant dans
+  // `NewsletterSubscriber`, et un ADMIN les relit par GET /newsletter/subscribers.
+  newsletter: {
+    // POST /newsletter/subscribe — public. `source` : footer | inscription | banniere.
+    subscribe: (email, source = 'footer') =>
+      post('/newsletter/subscribe', { email, source }),
+
+    // POST /newsletter/unsubscribe — public.
+    unsubscribe: (email) => post('/newsletter/unsubscribe', { email }),
+
+    // GET /newsletter/subscribers — ADMIN. L'export des abonnés actifs.
+    list: () => get('/newsletter/subscribers')
+  },
+
+  // ── 9c. DEPOT D'IMAGES ─────────────────────────────────────────────────────
+  // Les deux champs d'illustration du site — celui d'un article, celui d'une
+  // photo de profil — reclamaient l'URL d'une image deja en ligne. Personne
+  // n'a d'URL pour la photo qu'il vient de prendre : on envoie le fichier.
+  uploads: {
+    // POST /uploads/image (multipart, champ 'image') — toute personne
+    // connectee. Renvoie une adresse stable, servie par GET /files/images/:nom.
+    image: async (file) => {
+      const token = localStorage.getItem('fieri_auth_token');
+      const form = new FormData();
+      form.append('image', file);
+      const res = await fetch(`${BASE_URL}/uploads/image`, {
+        method: 'POST',
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
+        body: form,
+      });
+      if (!res.ok) {
+        const b = await res.clone().json().catch(() => ({}));
+        const err = new Error(b?.message || `HTTP Error: ${res.status}`);
+        err.status = res.status;
+        err.serverMessage = b?.message;
+        throw err;
+      }
+      return res.json();
+    }
   },
 
   // ── 10. FORMULAIRE DE CONTACT ──────────────────────────────────────────────
@@ -309,13 +424,20 @@ export const api = {
 
   // ── 13. ADHÉSIONS DE CLUBS AVEC VALIDATION ─────────────────────────────────
   memberships: {
-    requestJoin: (clubId, user) => post('/memberships/requests', { clubId, user }),
+    // POST /memberships/requests — l'identite vient du jeton ; le `user` qu'on
+    // envoyait etait ignore par le serveur. La motivation et le moyen de
+    // contact, eux, sont ce sur quoi le responsable decide.
+    requestJoin: (clubId, { motivation, contact } = {}) =>
+      post('/memberships/requests', { clubId, motivation, contact }),
     getPendingRequests: (clubId) => get(`/memberships/requests/pending/${clubId}`),
     getAllRequests: (clubId) => get(`/memberships/requests/club/${clubId}`),
     getUserRequests: (userId) => get(`/memberships/requests/user/${userId}`),
     approve: (requestId) => patch(`/memberships/requests/${requestId}/approve`),
     reject: (requestId, reason = '') => patch(`/memberships/requests/${requestId}/reject`, { reason }),
-    leave: (clubId, userId) => del(`/memberships/${clubId}/user/${userId}`)
+    // DELETE /memberships/:clubId/user/:userId — RETRAIT prononcé par le
+    // responsable du club (@Roles('RESPONSABLE') + ClubManagerGuard). Ce n'est
+    // pas la porte de sortie d'un membre : voir `clubs.leave`.
+    remove: (clubId, userId) => del(`/memberships/${clubId}/user/${userId}`)
   },
 
   // ── OPPORTUNITÉS ───────────────────────────────────────────────────────────
@@ -365,7 +487,14 @@ export const api = {
       post(`/members/${memberId}/toggle-emblematic`, { isEmblematic }),
 
     // GET /emblematic-figures — Figures emblématiques de la communauté.
-    getEmblematicFigures: () => get('/emblematic-figures')
+    getEmblematicFigures: () => get('/emblematic-figures'),
+
+    // GET /governance/leaders — annuaire PUBLIC des responsables : postes
+    // d'université, postes de pays, responsables de club et figures
+    // emblématiques. Sans adresse e-mail. C'est ce que lit la page
+    // « Organisation CITE », qui passait jusqu'ici par GET /members — réservé
+    // à l'ADMIN, donc vide pour tout le monde d'autre.
+    getLeaders: () => get('/governance/leaders')
   },
 
   // ── 16. ATTESTATIONS & CERTIFICATS ───────────────────────────────────────

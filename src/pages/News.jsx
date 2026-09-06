@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
   BookOpen, Calendar, User, Search, PlusCircle, X,
   Clock, ArrowRight, BookMarked, Layers, FileText, Image,
-  Newspaper, CalendarDays
+  Newspaper, CalendarDays, Upload, Loader2
 } from 'lucide-react';
 import Events from './Events.jsx';
 import { api } from '../services/api';
@@ -15,16 +15,31 @@ import StatePanel from '../components/ui/StatePanel.jsx';
 
 // ─────────────────────────── Category Color Mapping ───────────────────────────
 const CATEGORY_COLORS = {
-  "Intelligence Artificielle": "from-engine/20 to-engine-deep/20 border-engine/30 text-engine",
+  "Intelligence Artificielle": "bg-engine-wash border-engine text-engine",
   "Lancement R&D": "from-warning to-ember border-warning text-warning",
-  "Éco-énergie": "from-success to-success/20 border-success text-success",
-  "Bio-Tech": "from-ember/20 to-ember-soft/20 border-ember/30 text-ember",
-  "Robotique": "from-ember/20 to-ember-soft/20 border-ember/30 text-ember"
+  "Éco-énergie": "bg-success-wash border-success text-success",
+  "Bio-Tech": "bg-ember-wash border-ember text-ember",
+  "Robotique": "bg-ember-wash border-ember text-ember"
 };
 
 const getCategoryClass = (cat) => {
   return CATEGORY_COLORS[cat] || "from-slate-500/20 to-zinc-500/20 border-slate-500/30 text-slate-400";
 };
+
+/**
+ * Thematiques deja employees sur la plateforme. Ce sont des SUGGESTIONS, pas
+ * une liste fermee : le serveur stocke une chaine libre, et le client l'a
+ * demande — « il pouvait avoir autre non prevu, laissez le champ libre de
+ * saisir ». Une liste fermee obligeait a ranger un article sur l'hydrologie
+ * dans « Bio-Tech ».
+ */
+const THEMATIQUES = [
+  'Intelligence Artificielle',
+  'Lancement R&D',
+  'Éco-énergie',
+  'Bio-Tech',
+  'Robotique',
+];
 
 // Preset images for science publications
 const IMAGE_PRESETS = [
@@ -66,6 +81,30 @@ export default function News({ navigate }) {
     content: ''
   });
 
+  const [envoiImage, setEnvoiImage] = useState(false);
+
+  /**
+   * Depose l'illustration et retient son adresse.
+   *
+   * Le champ demandait « URL de l'image ». Personne n'a l'URL de la photo qu'il
+   * vient de prendre : il fallait d'abord trouver un hebergeur. On envoie
+   * maintenant le fichier, et le serveur renvoie l'adresse.
+   */
+  const envoyerIllustration = async (fichier) => {
+    if (!fichier || envoiImage) return;
+    setEnvoiImage(true);
+    try {
+      const res = await api.uploads.image(fichier);
+      if (!res?.success || !res.data?.url) throw new Error(res?.message);
+      setNewArticle((a) => ({ ...a, image: res.data.url }));
+      notify('Illustration ajoutée.', 'success');
+    } catch (err) {
+      notify(err?.serverMessage || err?.message || "L'image n'a pas pu être envoyée.", 'error');
+    } finally {
+      setEnvoiImage(false);
+    }
+  };
+
   // Reading modal state
   const [readingArticle, setReadingArticle] = useState(null);
   const { notify } = useToast()
@@ -100,10 +139,13 @@ export default function News({ navigate }) {
     setSubmitting(true);
     try {
       const authorName = user?.name || "Chercheur FIERI";
-      const { categorie, ...rest } = newArticle;
+      const { categorie, image, ...rest } = newArticle;
       const payload = {
         ...rest,
         category: categorie,
+        // Le serveur range l'illustration sous `imageUrl`. Le formulaire
+        // envoyait `image`, que rien ne lisait : le choix etait perdu.
+        imageUrl: image,
         author: authorName,
       };
 
@@ -154,7 +196,7 @@ export default function News({ navigate }) {
             onClick={() => setActiveTab('actualites')}
             className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
               activeTab === 'actualites'
-                ? 'bg-engine-wash border border-engine/30 text-engine shadow-sm'
+                ? 'bg-engine-wash border border-engine text-engine shadow-sm'
                 : 'text-text-secondary hover:text-text-primary border border-transparent'
             }`}
           >
@@ -165,7 +207,7 @@ export default function News({ navigate }) {
             onClick={() => setActiveTab('evenements')}
             className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
               activeTab === 'evenements'
-                ? 'bg-engine-wash border border-engine/30 text-engine shadow-sm'
+                ? 'bg-engine-wash border border-engine text-engine shadow-sm'
                 : 'text-text-secondary hover:text-text-primary border border-transparent'
             }`}
           >
@@ -220,7 +262,7 @@ export default function News({ navigate }) {
               onClick={() => setSelectedCategory(cat)}
               className={`px-4 py-2 rounded-xl text-xs font-bold border transition-all whitespace-nowrap cursor-pointer ${
                 selectedCategory === cat
-                  ? 'bg-engine-wash border-engine/30 text-engine'
+                  ? 'bg-engine-wash border-engine text-engine'
                   : 'bg-bg-secondary border-border-subtle text-text-secondary hover:text-text-primary'
               }`}
             >
@@ -237,7 +279,7 @@ export default function News({ navigate }) {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Rechercher par titre, résumé ou chercheur..."
-            className="w-full pl-11 pr-4 py-3 rounded-xl border border-border-subtle bg-bg-secondary text-xs text-text-primary placeholder:text-text-secondary focus:outline-none focus:border-engine/60 focus:bg-bg-secondary transition-all"
+            className="w-full pl-11 pr-4 py-3 rounded-xl border border-border-subtle bg-bg-secondary text-xs text-text-primary placeholder:text-text-secondary focus:outline-none focus:border-engine focus:bg-bg-secondary transition-all"
           />
           {searchQuery && (
             <button
@@ -331,7 +373,7 @@ export default function News({ navigate }) {
                 <div className="px-6 pb-6 pt-4">
                   <button
                     onClick={() => navigate?.('news-detail', { newsId: item.id })}
-                    className="w-full flex items-center justify-center gap-2 py-3 rounded-xl border border-border-subtle hover:border-engine/40 bg-bg-tertiary hover:bg-engine-wash text-xs font-bold text-text-primary hover:text-engine transition-all cursor-pointer"
+                    className="w-full flex items-center justify-center gap-2 py-3 rounded-xl border border-border-subtle hover:border-engine bg-bg-tertiary hover:bg-engine-wash text-xs font-bold text-text-primary hover:text-engine transition-all cursor-pointer"
                   >
                     <span>Consulter la publication</span>
                     <ArrowRight className="w-4 h-4" />
@@ -392,7 +434,7 @@ export default function News({ navigate }) {
                 {/* Metadata details */}
                 <div className="flex flex-wrap items-center gap-6 text-xs text-text-secondary border-b border-border-subtle pb-4 mb-6">
                   <div className="flex items-center gap-2">
-                    <div className="w-8 h-8 rounded-full bg-engine-wash border border-engine/30 flex items-center justify-center text-xs text-engine font-bold uppercase shadow-sm">
+                    <div className="w-8 h-8 rounded-full bg-engine-wash border border-engine flex items-center justify-center text-xs text-engine font-bold uppercase shadow-sm">
                       {readingArticle.author.substring(0, 2)}
                     </div>
                     <div>
@@ -419,7 +461,7 @@ export default function News({ navigate }) {
                 </div>
 
                 {/* Excerpt Section */}
-                <div className="bg-engine-wash border-l-2 border-engine/50 p-4 rounded-r-xl text-xs font-semibold text-text-primary/90 italic mb-6">
+                <div className="bg-engine-wash border-l-2 border-engine p-4 rounded-r-xl text-xs font-semibold text-text-primary/90 italic mb-6">
                   {readingArticle.excerpt}
                 </div>
 
@@ -482,7 +524,7 @@ export default function News({ navigate }) {
               <form onSubmit={handleCreateArticle} className="p-6 overflow-y-auto flex-1 space-y-5 scrollbar-thin scrollbar-thumb-border-subtle">
                 
                 {/* Notice Board */}
-                <div className="p-4 chamfer-xs bg-engine-wash border border-engine/20 text-xs text-engine flex items-start gap-3">
+                <div className="p-4 chamfer-xs bg-engine-wash border border-engine text-xs text-engine flex items-start gap-3">
                   <Layers className="w-4 h-4 shrink-0 mt-0.5" />
                   <div>
                     <span className="font-bold">Circuit de relecture scientifique (Peer-review) :</span> Votre article sera soumis pour validation au comité de lecture. Il sera automatiquement marqué avec le statut <span className="font-bold text-engine bg-engine-wash px-1.5 py-0.5 rounded">PENDING</span> et ne sera visible publiquement qu'après approbation par un administrateur.
@@ -498,7 +540,7 @@ export default function News({ navigate }) {
                     value={newArticle.title}
                     onChange={(e) => setNewArticle({ ...newArticle, title: e.target.value })}
                     placeholder="ex: Modélisation d'un réseau maillé LoRaWAN résilient"
-                    className="w-full px-4 py-3 rounded-xl border border-border-subtle bg-bg-secondary text-xs text-text-primary focus:outline-none focus:border-engine/60 focus:bg-bg-secondary transition-all"
+                    className="w-full px-4 py-3 rounded-xl border border-border-subtle bg-bg-secondary text-xs text-text-primary focus:outline-none focus:border-engine focus:bg-bg-secondary transition-all"
                   />
                 </div>
 
@@ -506,31 +548,49 @@ export default function News({ navigate }) {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-1.5">
                     <label className="text-xs font-bold text-text-secondary uppercase tracking-wider" htmlFor="news-thematique-scientifique">Thématique scientifique *</label>
-                    <select id="news-thematique-scientifique"
+                    <input id="news-thematique-scientifique"
+                      type="text"
+                      required
+                      list="news-thematiques"
                       value={newArticle.categorie}
                       onChange={(e) => setNewArticle({ ...newArticle, categorie: e.target.value })}
-                      className="w-full px-4 py-3 rounded-xl border border-border-subtle bg-bg-secondary text-xs text-text-primary focus:outline-none focus:border-engine/60 focus:bg-bg-secondary transition-all"
-                    >
-                      <option value="Intelligence Artificielle">Intelligence Artificielle</option>
-                      <option value="Lancement R&D">Lancement R&D</option>
-                      <option value="Éco-énergie">Éco-énergie</option>
-                      <option value="Bio-Tech">Bio-Tech</option>
-                      <option value="Robotique">Robotique</option>
-                    </select>
+                      placeholder="Choisissez, ou saisissez la vôtre"
+                      className="w-full px-4 py-3 rounded-xl border border-border-subtle bg-bg-secondary text-xs text-text-primary placeholder:text-text-secondary/60 focus:outline-none focus:border-engine focus:bg-bg-secondary transition-all"
+                    />
+                    <datalist id="news-thematiques">
+                      {THEMATIQUES.map((t) => <option key={t} value={t} />)}
+                    </datalist>
                   </div>
 
                   <div className="space-y-1.5">
-                    <label htmlFor="news-illustration" className="text-xs font-bold text-text-secondary uppercase tracking-wider">Illustration / Image</label>
-                    <div className="flex items-center gap-2">
+                    <label htmlFor="news-illustration" className="text-xs font-bold text-text-secondary uppercase tracking-wider">Illustration de l’article</label>
+                    <div className="flex items-center gap-3">
+                      <img
+                        src={newArticle.image}
+                        alt=""
+                        className="h-12 w-16 shrink-0 rounded-lg border border-border-subtle object-cover"
+                      />
+                      <label
+                        htmlFor="news-illustration"
+                        className="inline-flex min-h-11 flex-1 cursor-pointer items-center justify-center gap-2 rounded-xl border border-border-subtle bg-bg-secondary px-4 text-xs font-bold text-text-primary transition-all hover:border-engine"
+                      >
+                        {envoiImage
+                          ? <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
+                          : <Upload className="h-4 w-4 text-engine" aria-hidden="true" />}
+                        {envoiImage ? 'Envoi…' : 'Choisir une image'}
+                      </label>
                       <input
                         id="news-illustration"
-                        type="text"
-                        value={newArticle.image}
-                        onChange={(e) => setNewArticle({ ...newArticle, image: e.target.value })}
-                        placeholder="URL de l'image..."
-                        className="w-full px-4 py-3 rounded-xl border border-border-subtle bg-bg-secondary text-xs text-text-primary focus:outline-none focus:border-engine/60 focus:bg-bg-secondary transition-all"
+                        type="file"
+                        accept="image/png,image/jpeg,image/webp,image/gif"
+                        disabled={envoiImage}
+                        onChange={(e) => envoyerIllustration(e.target.files?.[0])}
+                        className="sr-only"
                       />
                     </div>
+                    <p className="text-xs text-text-secondary">
+                      Depuis votre appareil. PNG, JPG, WEBP ou GIF, 3 Mo maximum.
+                    </p>
                   </div>
                 </div>
 
@@ -570,7 +630,7 @@ export default function News({ navigate }) {
                     value={newArticle.excerpt}
                     onChange={(e) => setNewArticle({ ...newArticle, excerpt: e.target.value })}
                     placeholder="Synthèse courte de vos travaux pour la carte de prévisualisation (max. 150 caractères)..."
-                    className="w-full px-4 py-3 rounded-xl border border-border-subtle bg-bg-secondary text-xs text-text-primary placeholder:text-text-secondary/60 focus:outline-none focus:border-engine/60 focus:bg-bg-secondary transition-all resize-none"
+                    className="w-full px-4 py-3 rounded-xl border border-border-subtle bg-bg-secondary text-xs text-text-primary placeholder:text-text-secondary/60 focus:outline-none focus:border-engine focus:bg-bg-secondary transition-all resize-none"
                   />
                 </div>
 
@@ -583,7 +643,7 @@ export default function News({ navigate }) {
                     value={newArticle.content}
                     onChange={(e) => setNewArticle({ ...newArticle, content: e.target.value })}
                     placeholder="Détail complet de la publication : méthodologie, protocoles expérimentaux, conclusions de recherche..."
-                    className="w-full px-4 py-3 rounded-xl border border-border-subtle bg-bg-secondary text-xs text-text-primary placeholder:text-text-secondary/60 focus:outline-none focus:border-engine/60 focus:bg-bg-secondary transition-all"
+                    className="w-full px-4 py-3 rounded-xl border border-border-subtle bg-bg-secondary text-xs text-text-primary placeholder:text-text-secondary/60 focus:outline-none focus:border-engine focus:bg-bg-secondary transition-all"
                   />
                 </div>
 

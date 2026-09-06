@@ -122,7 +122,7 @@ export default function Projects({ navigate }) {
             placeholder="Rechercher un projet, une technologie..." 
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full bg-bg-secondary border border-border-subtle focus:border-engine/40 rounded-xl py-2.5 pl-11 pr-4 text-xs text-text-primary placeholder:text-text-muted focus:outline-none transition-all"
+            className="w-full bg-bg-secondary border border-border-subtle focus:border-engine rounded-xl py-2.5 pl-11 pr-4 text-xs text-text-primary placeholder:text-text-muted focus:outline-none transition-all"
           />
         </div>
 
@@ -195,9 +195,6 @@ export default function Projects({ navigate }) {
                   transition={{ duration: 0.2, ease: "easeOut" }}
                   onClick={() => navigate('project-detail', { projectId: p.id })}
                 >
-                  {/* Radial accent glow visible on card hover */}
-                  <div className="absolute inset-0 bg-gradient-to-br from-engine/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
-                  
                   {/* Card Cover Image */}
                   <div className={`relative overflow-hidden border-border-subtle shrink-0 ${
                     isFeatured 
@@ -234,7 +231,7 @@ export default function Projects({ navigate }) {
                             {p.status}
                           </span>
                           {isFeatured && (
-                            <span className="text-xs font-extrabold uppercase tracking-wider px-2.5 py-0.5 rounded-md text-engine bg-engine-wash border-engine/10 flex items-center gap-1">
+                            <span className="text-xs font-extrabold uppercase tracking-wider px-2.5 py-0.5 rounded-md text-engine bg-engine-wash border-engine flex items-center gap-1">
                               <Award className="w-2.5 h-2.5 animate-bounce" />
                               À la Une
                             </span>
@@ -267,7 +264,7 @@ export default function Projects({ navigate }) {
                           </span>
                         ))}
                         {p.technologies.length > (isFeatured ? 7 : 4) && (
-                          <span className="text-xs font-extrabold text-engine bg-engine-wash border border-engine/10 px-2 py-0.5 rounded-md">
+                          <span className="text-xs font-extrabold text-engine bg-engine-wash border border-engine px-2 py-0.5 rounded-md">
                             +{p.technologies.length - (isFeatured ? 7 : 4)}
                           </span>
                         )}

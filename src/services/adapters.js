@@ -112,8 +112,10 @@ export function normalizeNews(a) {
     excerpt: a.excerpt ?? a.content ?? '',
     author: authorName(a.author),
     authorId: authorId(a.author),
-    image: a.image ?? null,
-    date: a.date ?? '',
+    // Le serveur renvoie desormais `imageUrl` : l'illustration deposee avec
+    // l'article. `image` reste accepte pour les appelants qui le posaient.
+    image: a.imageUrl ?? a.image ?? null,
+    date: a.date ?? a.createdAt ?? '',
     status: a.status ?? 'APPROVED'
   }
 }

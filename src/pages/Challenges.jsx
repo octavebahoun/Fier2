@@ -97,7 +97,7 @@ function CreateChallengeModal({ clubId, onClose, onCreated }) {
         className="relative w-full max-w-lg chamfer chamfer-shadow border border-border-subtle p-7 bg-bg-secondary max-h-[90vh] overflow-y-auto"
       >
         <div className="flex items-center gap-3 mb-5">
-          <div className="w-11 h-11 rounded-xl flex items-center justify-center bg-engine-wash border border-engine/30">
+          <div className="w-11 h-11 rounded-xl flex items-center justify-center bg-engine-wash border border-engine">
             <FlaskConical className="w-5 h-5 text-engine" />
           </div>
           <div>
@@ -212,7 +212,7 @@ function ChallengeCard({ challenge, onOpen, index }) {
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.05 }}
       whileHover={{ y: -4, transition: { duration: 0.2 } }}
-      className="relative text-left chamfer-sm chamfer-shadow overflow-hidden border border-border-subtle bg-bg-secondary hover:border-engine/30 transition-colors"
+      className="relative text-left chamfer-sm chamfer-shadow overflow-hidden border border-border-subtle bg-bg-secondary hover:border-engine transition-colors"
     >
       <div className="absolute inset-0 pointer-events-none opacity-0 hover:opacity-100 transition-opacity duration-300"
         style={{ background: 'radial-gradient(ellipse at 50% 0%, rgba(108,76,241,0.12) 0%, transparent 70%)' }} />
@@ -301,7 +301,7 @@ function SubmissionRow({ submission, isManager, onEvaluate, onToggleWinner, isWi
         <div className="flex flex-wrap items-center gap-2 pt-1">
           <button
             onClick={() => setShowEval((s) => !s)}
-            className="text-xs font-bold px-3 py-1.5 rounded-lg bg-engine-wash text-engine border border-engine/30 hover:bg-engine-wash transition-all"
+            className="text-xs font-bold px-3 py-1.5 rounded-lg bg-engine-wash text-engine border border-engine hover:bg-engine-wash transition-all"
           >
             Évaluer
           </button>
@@ -561,7 +561,7 @@ export default function Challenges() {
 
       <div className="relative z-10 max-w-[92rem] mx-auto w-full py-16 px-6 md:px-12 lg:px-12">
         <div className="mb-10 space-y-4">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest bg-engine-wash text-engine border border-engine/25">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest bg-engine-wash text-engine border border-engine">
             <Trophy className="w-3.5 h-3.5" />
             Compétitions & Défis
           </div>
@@ -660,7 +660,7 @@ export default function Challenges() {
               </div>
 
               {selectedChallenge.rules && (
-                <div className="p-4 rounded-xl bg-engine/[0.06] border border-engine/20 mb-6">
+                <div className="p-4 rounded-xl bg-engine/[0.06] border border-engine mb-6">
                   <p className="text-xs font-bold uppercase tracking-wider text-engine mb-1.5">Règles & consignes</p>
                   <p className="text-text-secondary text-sm leading-relaxed whitespace-pre-line">{selectedChallenge.rules}</p>
                 </div>

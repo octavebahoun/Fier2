@@ -63,8 +63,15 @@ export const DESTINATIONS = [
     inNav: false, inPalette: false,
   },
   {
-    id: 'paf', path: '/paf', label: 'PAF',
-    section: SECTIONS.PUBLIC.id, access: PUBLIC, inNav: false, inPalette: false,
+    // Les quatre programmes vivent sur une seule page, un onglet chacun.
+    // `/paf` etait la page du seul programme qui en avait une : le chemin
+    // reste valide et mene desormais a son onglet.
+    id: 'programmes',
+    build: (p = {}) => (p.programme ? `/programmes?p=${p.programme}` : '/programmes'),
+    match: (path) => path === '/programmes' || path === '/paf',
+    label: 'Nos programmes',
+    aliases: ['/paf'], section: SECTIONS.PUBLIC.id, access: PUBLIC,
+    inNav: false, inPalette: true, icon: 'Sparkles',
   },
 
   // ── Mon espace ──────────────────────────────────────────────────────────
@@ -88,9 +95,11 @@ export const DESTINATIONS = [
     inNav: false, inPalette: false, parent: 'profile',
   },
   {
+    // Présentation d'entrée de jeu : elle a sa place dans le menu, pas
+    // seulement au fond de la palette.
     id: 'student-portal', path: '/students', label: 'Portail étudiant',
     aliases: ['/student-portal'], section: SECTIONS.ESPACE.id, access: PUBLIC,
-    inNav: false, inPalette: true, icon: 'GraduationCap',
+    inNav: true, inPalette: true, icon: 'Compass',
   },
 
   // ── Espace CITE ─────────────────────────────────────────────────────────
@@ -111,6 +120,14 @@ export const DESTINATIONS = [
     id: 'cite-activites', path: '/espace-cite/activites', label: 'Activités',
     section: SECTIONS.CITE.id, access: { capability: 'activity:assign' },
     inNav: true, inPalette: true, icon: 'ClipboardList', parent: 'espace-cite',
+  },
+  {
+    // `PUT /clubs/:id` et `DELETE /memberships/:clubId/user/:userId` etaient
+    // ouverts au responsable du club sans aucun ecran pour les appeler.
+    id: 'cite-gestion', path: '/espace-cite/gestion', label: 'Gérer le club',
+    section: SECTIONS.CITE.id,
+    access: { anyOf: ['club:edit', 'membership:remove'] },
+    inNav: true, inPalette: true, icon: 'Settings2', parent: 'espace-cite',
   },
   {
     id: 'cite-rapports', path: '/espace-cite/rapports', label: 'Rapports',
@@ -142,6 +159,23 @@ export const DESTINATIONS = [
     id: 'gouvernance-figures', path: '/gouvernance/figures', label: 'Figures emblématiques',
     section: SECTIONS.GOUVERNANCE.id, access: { capability: 'member:toggleEmblematic' },
     inNav: true, inPalette: true, icon: 'Star', parent: 'gouvernance',
+  },
+  {
+    // `GET /universities/:id/census-history` n'etait affiche nulle part : les
+    // clubs declaraient leurs effectifs dans le vide, et `census:validate`
+    // n'avait aucun bouton.
+    // Sans `parent` : la destination `gouvernance` s'appelle « Attestations »,
+    // et un fil d'Ariane « Gouvernance > Attestations > Recensements » ferait
+    // passer cet ecran pour une sous-page de l'emission d'attestations.
+    id: 'gouvernance-recensements', path: '/gouvernance/recensements', label: 'Recensements',
+    section: SECTIONS.GOUVERNANCE.id, access: { capability: 'census:read' },
+    inNav: true, inPalette: true, icon: 'ClipboardCheck',
+  },
+  {
+    // Le poste GOUVERNANT_PAYS existait sans le moindre ecran national.
+    id: 'gouvernance-pays', path: '/gouvernance/pays', label: 'Universités du pays',
+    section: SECTIONS.GOUVERNANCE.id, access: { capability: 'country:govern' },
+    inNav: true, inPalette: true, icon: 'Globe2',
   },
   {
     id: 'tresorerie', path: '/tresorerie', label: 'Trésorerie',
@@ -177,9 +211,32 @@ export const DESTINATIONS = [
     inNav: false, inPalette: false, parent: 'projects',
   },
   {
+    // `POST /projects` etait ouvert au CHERCHEUR et au RESPONSABLE depuis le
+    // debut, sans aucun ecran pour l'appeler.
+    id: 'projet-nouveau', path: '/projects/nouveau', label: 'Créer un projet',
+    section: SECTIONS.RECHERCHE.id, access: { capability: 'project:create' },
+    inNav: true, inPalette: true, icon: 'FolderPlus', parent: 'projects',
+  },
+  {
+    // Le fonds scientifique : `POST /publications` n'avait pas d'ecran, et
+    // `GET /publications` n'etait lu nulle part.
+    // Sans `parent` : une publication n'est pas une sous-page du catalogue de
+    // projets, et le fil d'Ariane ne doit pas le laisser croire.
+    id: 'publication-nouvelle', path: '/publications/nouvelle', label: 'Déposer une publication',
+    section: SECTIONS.RECHERCHE.id, access: { capability: 'publication:create' },
+    inNav: true, inPalette: true, icon: 'FilePlus2',
+  },
+  {
     id: 'workshops', path: '/formations', label: 'Formations',
     aliases: ['/workshops'], section: SECTIONS.RECHERCHE.id, access: PUBLIC,
     inNav: true, inPalette: true, icon: 'GraduationCap',
+  },
+  {
+    // `POST /formations` : le catalogue de l'Academie ne pouvait grandir que
+    // par la base de donnees.
+    id: 'formation-nouvelle', path: '/formations/nouvelle', label: 'Créer une formation',
+    section: SECTIONS.RECHERCHE.id, access: { capability: 'formation:create' },
+    inNav: true, inPalette: true, icon: 'GraduationCap', parent: 'workshops',
   },
   {
     id: 'opportunities', path: '/opportunities', label: 'Opportunités',
@@ -190,6 +247,15 @@ export const DESTINATIONS = [
     id: 'projet-taches', path: '/projets/taches', label: 'Tâches de projet',
     section: SECTIONS.RECHERCHE.id, access: { capability: 'task:manage' },
     inNav: true, inPalette: true, icon: 'ListChecks',
+  },
+  {
+    // Le vrai droit du MENTOR : `POST /badges/award` et `DELETE /badges/:id`
+    // n'etaient appeles nulle part, et le raccourci du tableau de bord menait
+    // aux Challenges, qui ne distribuent aucun badge.
+    id: 'badges', path: '/badges', label: 'Badges d’honneur',
+    section: SECTIONS.COMMUNAUTE.id,
+    access: { anyOf: ['badge:award', 'badge:revoke'] },
+    inNav: true, inPalette: true, icon: 'Award',
   },
   {
     id: 'candidatures', path: '/candidatures', label: 'Candidatures reçues',
@@ -228,6 +294,13 @@ export const DESTINATIONS = [
     inNav: true, inPalette: true, icon: 'CalendarDays',
   },
   {
+    // `POST /events` et `PUT /events/:id` existaient depuis le debut, ouverts
+    // au RESPONSABLE et a l'ADMIN, sans aucune interface pour les appeler.
+    id: 'evenement-nouveau', path: '/evenements/nouveau', label: 'Créer un événement',
+    section: SECTIONS.COMMUNAUTE.id, access: { capability: 'event:manage' },
+    inNav: true, inPalette: true, icon: 'CalendarPlus', parent: 'events',
+  },
+  {
     id: 'challenges', path: '/challenges', label: 'Challenges',
     section: SECTIONS.COMMUNAUTE.id, access: PUBLIC,
     inNav: true, inPalette: true, icon: 'Trophy',
@@ -238,9 +311,14 @@ export const DESTINATIONS = [
     inNav: true, inPalette: true, icon: 'Contact',
   },
   {
+    // C'est ici que se lisent les responsables — postes de gouvernance de
+    // l'université et responsables de club. La page est publique, mais elle
+    // n'était dans AUCUN menu de l'espace connecté : la barre latérale
+    // remplace la navbar dès la connexion, et l'entrée disparaissait avec
+    // elle. On la voyait donc en visiteur, plus du tout en membre.
     id: 'cite', path: '/cite', label: 'Organisation CITE',
     aliases: ['/cite-integration'], section: SECTIONS.COMMUNAUTE.id, access: PUBLIC,
-    inNav: false, inPalette: true, icon: 'Layers',
+    inNav: true, inPalette: true, icon: 'Layers',
   },
 
   // ── Support ─────────────────────────────────────────────────────────────
@@ -256,6 +334,7 @@ export const DESTINATION_BY_ID = Object.fromEntries(DESTINATIONS.map((d) => [d.i
 
 /** Alias historiques : `navigate('formations')` continue de fonctionner. */
 export const ID_ALIASES = {
+  paf: 'programmes',
   'cite-integration': 'cite',
   formations: 'workshops',
   students: 'student-portal',

@@ -287,7 +287,7 @@ export default function Opportunities({ navigate }) {
           }}
           className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
             activeTab === 'research'
-              ? 'bg-engine-wash border border-engine/30 text-engine shadow-sm'
+              ? 'bg-engine-wash border border-engine text-engine shadow-sm'
               : 'text-text-secondary hover:text-text-primary border border-transparent'
           }`}
         >
@@ -339,7 +339,7 @@ export default function Opportunities({ navigate }) {
                 placeholder="Rechercher par discipline, mot clé, superviseur..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full bg-bg-secondary border border-border-subtle focus:border-engine/40 rounded-xl py-2.5 pl-11 pr-4 text-xs text-text-primary focus:outline-none transition-all"
+                className="w-full bg-bg-secondary border border-border-subtle focus:border-engine rounded-xl py-2.5 pl-11 pr-4 text-xs text-text-primary focus:outline-none transition-all"
               />
             </div>
 
@@ -389,9 +389,9 @@ export default function Opportunities({ navigate }) {
                       <div className="flex justify-between items-center gap-4">
                         <span className={`text-xs font-extrabold uppercase tracking-wider px-2.5 py-0.5 rounded-md border ${
                           opt.type === 'CDD R&D'
-                            ? 'text-engine bg-engine-wash border-engine/10'
+                            ? 'text-engine bg-engine-wash border-engine'
                             : opt.type === 'Doctorat'
-                              ? 'text-engine bg-engine-wash border-engine/10'
+                              ? 'text-engine bg-engine-wash border-engine'
                               : 'text-warning bg-warning-wash border-warning'
                         }`}>
                           {opt.type}
@@ -531,7 +531,7 @@ export default function Opportunities({ navigate }) {
                             required
                             value={applyForm.name}
                             onChange={(e) => setApplyForm({ ...applyForm, name: e.target.value })}
-                            className="w-full bg-bg-secondary border border-border-subtle rounded-xl py-2.5 pl-10 pr-4 text-xs font-semibold text-text-primary focus:outline-none focus:border-engine/40"
+                            className="w-full bg-bg-secondary border border-border-subtle rounded-xl py-2.5 pl-10 pr-4 text-xs font-semibold text-text-primary focus:outline-none focus:border-engine"
                           />
                         </div>
                       </div>
@@ -546,7 +546,7 @@ export default function Opportunities({ navigate }) {
                             required
                             value={applyForm.email}
                             onChange={(e) => setApplyForm({ ...applyForm, email: e.target.value })}
-                            className="w-full bg-bg-secondary border border-border-subtle rounded-xl py-2.5 pl-10 pr-4 text-xs font-semibold text-text-primary focus:outline-none focus:border-engine/40"
+                            className="w-full bg-bg-secondary border border-border-subtle rounded-xl py-2.5 pl-10 pr-4 text-xs font-semibold text-text-primary focus:outline-none focus:border-engine"
                           />
                         </div>
                       </div>
@@ -563,7 +563,7 @@ export default function Opportunities({ navigate }) {
                         placeholder="Décrivez vos projets académiques, contributions open source ou publications en lien avec cette discipline."
                         value={applyForm.achievements}
                         onChange={(e) => setApplyForm({ ...applyForm, achievements: e.target.value })}
-                        className="w-full bg-bg-secondary border border-border-subtle rounded-xl p-3 text-xs font-semibold text-text-primary focus:outline-none focus:border-engine/40 placeholder:text-text-muted"
+                        className="w-full bg-bg-secondary border border-border-subtle rounded-xl p-3 text-xs font-semibold text-text-primary focus:outline-none focus:border-engine placeholder:text-text-muted"
                       />
                     </div>
 
@@ -653,7 +653,7 @@ export default function Opportunities({ navigate }) {
                           placeholder="ex. Doctorat en Edge Computing"
                           value={publishForm.title}
                           onChange={(e) => setPublishForm({ ...publishForm, title: e.target.value })}
-                          className="w-full bg-bg-secondary border border-border-subtle rounded-xl py-2.5 px-4 text-xs font-semibold text-text-primary focus:outline-none focus:border-engine/40"
+                          className="w-full bg-bg-secondary border border-border-subtle rounded-xl py-2.5 px-4 text-xs font-semibold text-text-primary focus:outline-none focus:border-engine"
                         />
                       </div>
 
@@ -663,7 +663,7 @@ export default function Opportunities({ navigate }) {
                           id="publish-type"
                           value={publishForm.type}
                           onChange={(e) => setPublishForm({ ...publishForm, type: e.target.value })}
-                          className="w-full bg-bg-secondary border border-border-subtle rounded-xl py-2.5 px-4 text-xs font-semibold text-text-primary focus:outline-none focus:border-engine/40"
+                          className="w-full bg-bg-secondary border border-border-subtle rounded-xl py-2.5 px-4 text-xs font-semibold text-text-primary focus:outline-none focus:border-engine"
                         >
                           <option value="CDD R&D">CDD R&D</option>
                           <option value="Doctorat">Doctorat</option>
@@ -682,7 +682,7 @@ export default function Opportunities({ navigate }) {
                           placeholder="ex. Vision / Robotique"
                           value={publishForm.discipline}
                           onChange={(e) => setPublishForm({ ...publishForm, discipline: e.target.value })}
-                          className="w-full bg-bg-secondary border border-border-subtle rounded-xl py-2.5 px-4 text-xs font-semibold text-text-primary focus:outline-none focus:border-engine/40"
+                          className="w-full bg-bg-secondary border border-border-subtle rounded-xl py-2.5 px-4 text-xs font-semibold text-text-primary focus:outline-none focus:border-engine"
                         />
                       </div>
 
@@ -698,7 +698,7 @@ export default function Opportunities({ navigate }) {
                             placeholder="2400"
                             value={publishForm.salary}
                             onChange={(e) => setPublishForm({ ...publishForm, salary: e.target.value })}
-                            className="w-full bg-bg-secondary border border-border-subtle rounded-xl py-2.5 pl-8 pr-4 text-xs font-semibold text-text-primary focus:outline-none focus:border-engine/40"
+                            className="w-full bg-bg-secondary border border-border-subtle rounded-xl py-2.5 pl-8 pr-4 text-xs font-semibold text-text-primary focus:outline-none focus:border-engine"
                           />
                         </div>
                       </div>
@@ -713,7 +713,7 @@ export default function Opportunities({ navigate }) {
                         placeholder="Décrivez précisément les problématiques scientifiques que le candidat devra aborder."
                         value={publishForm.description}
                         onChange={(e) => setPublishForm({ ...publishForm, description: e.target.value })}
-                        className="w-full bg-bg-secondary border border-border-subtle rounded-xl p-3 text-xs font-semibold text-text-primary focus:outline-none focus:border-engine/40"
+                        className="w-full bg-bg-secondary border border-border-subtle rounded-xl p-3 text-xs font-semibold text-text-primary focus:outline-none focus:border-engine"
                       />
                     </div>
 
@@ -726,7 +726,7 @@ export default function Opportunities({ navigate }) {
                         placeholder="Compétences recherchées, langages, frameworks et expérience demandée."
                         value={publishForm.requirements}
                         onChange={(e) => setPublishForm({ ...publishForm, requirements: e.target.value })}
-                        className="w-full bg-bg-secondary border border-border-subtle rounded-xl p-3 text-xs font-semibold text-text-primary focus:outline-none focus:border-engine/40"
+                        className="w-full bg-bg-secondary border border-border-subtle rounded-xl p-3 text-xs font-semibold text-text-primary focus:outline-none focus:border-engine"
                       />
                     </div>
 

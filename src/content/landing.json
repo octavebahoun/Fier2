@@ -1,22 +1,23 @@
 {
   "hero": {
-    "eyebrow": "FIERI — Recherche appliquée · Lab → Market",
-    "title": "Vos idées sortent du labo.",
-    "description": "FIERI réunit étudiants-ingénieurs et chercheurs pour transformer des concepts ambitieux en prototypes, brevets et startups industrielles. Ici, une idée ne reste pas une idée.",
-    "badge": "Pôle d'excellence actif — 6 CITE universitaires",
+    "title": "Rejoignez le Front des Étudiants et Chercheurs",
+    "description": "Nous formons, connectons et accompagnons les talents pour transformer la connaissance en recherche, en innovation et en impact.",
     "ctaPrimary": "Rejoindre une CITE",
     "ctaSecondary": "Voir les projets en cours"
   },
   "decouvrir": {
-    "tag": "01 — NOUS DÉCOUVRIR",
-    "title": "La CITE de l'excellence scientifique et de la R&D appliquée",
-    "description": "Le Front International des Étudiants et Chercheurs (FIERI) est un écosystème d'innovation ouvert aux esprits brillants. Notre ambition est de fédérer les compétences en ingénierie et en recherche pour faire émerger des innovations technologiques, physiques et logicielles de premier plan.",
-    "cta": "Découvrir la CITE"
+    "tag": "FIERI",
+    "title": "Nous découvrir",
+    "paragraphes": [
+      "La FIERI est un écosystème international qui rassemble étudiants, chercheurs et jeunes talents autour d’une ambition commune : faire émerger une génération capable d’innover et d’agir face aux défis de son environnement.",
+      "À travers ses formations, ses communautés de recherche, ses projets collaboratifs et ses initiatives entrepreneuriales, la FIERI offre aux talents un cadre pour apprendre, expérimenter, collaborer et concrétiser leurs idées.",
+      "Présente au sein des universités, centres de formation, instituts de recherche et laboratoires, elle crée des passerelles entre science, technologie, innovation, entrepreneuriat et monde socio-économique."
+    ]
   },
   "organisation": {
-    "tag": "01 — Le parcours",
-    "title": "Trois entités, un seul objectif : voir vos projets aboutir",
-    "subtitle": "Chaque étape a une mission précise, de la première soudure au contrat industriel.",
+    "tag": "FIERI",
+    "title": "Notre organisation",
+    "subtitle": "La FIERI s’appuie sur trois espaces complémentaires pour révéler et accompagner les talents.",
     "entities": [
       {
         "id": "CF_01",
@@ -36,48 +37,34 @@
     ]
   },
   "mission": {
-    "tag": "02 — Nos piliers",
-    "title": "Quatre engagements concrets envers nos membres",
+    "tag": "FIERI",
+    "title": "Nos missions",
     "pillars": [
       {
         "title": "Inspiration scientifique",
-        "desc": "De la rigueur et de l'audace technique, cultivées par une pratique concrète — pas par la théorie pour la théorie."
+        "desc": "Développer une culture scientifique forte en stimulant la curiosité, l’expérimentation et l’esprit critique chez les jeunes talents."
       },
       {
         "title": "Innovation pratique",
-        "desc": "Des découvertes traduites en prototypes physiques qui répondent aux besoins réels de nos communautés."
+        "desc": "Transformer les idées en solutions concrètes à travers des projets innovants adaptés aux réalités locales et globales."
       },
       {
         "title": "Réseau collaboratif",
-        "desc": "Une communauté intercontinentale d'étudiants, chercheurs, ingénieurs et industriels qui s'entraident."
+        "desc": "Construire un écosystème dynamique reliant étudiants, chercheurs et professionnels pour favoriser le partage de connaissances et les collaborations."
       },
       {
-        "title": "Accompagnement d'élite",
-        "desc": "Chaque projet d'excellence est suivi de l'idée brute jusqu'au déploiement commercial."
+        "title": "Accompagnement",
+        "desc": "Encadrer et soutenir les porteurs de projets innovants à chaque étape, de l’idée à la mise en œuvre."
       }
     ]
   },
   "vision": {
-    "tag": "03 — La vision",
-    "title": "Bâtir notre souveraineté technologique, une invention à la fois",
-    "text": "L'avenir industriel du continent repose sur la capacité de ses talents à concevoir et breveter leurs propres solutions. Le FIERI forme cette génération de leaders scientifiques — ceux qui mèneront la transition industrielle au lieu de la subir.",
-    "highlights": [
-      {
-        "title": "Souveraineté",
-        "desc": "Concevoir nos propres infrastructures cyber-physiques pour ne plus dépendre de l'extérieur."
-      },
-      {
-        "title": "Impact local",
-        "desc": "Résoudre les défis de nos communautés par des innovations locales : agriculture, énergie, robotique."
-      },
-      {
-        "title": "Lab-to-Market",
-        "desc": "Transformer l'excellence académique en succès industriel, jusqu'à la création de startups."
-      }
-    ]
+    "tag": "Notre vision",
+    "title": "Bâtir notre souveraineté, une innovation à la fois.",
+    "text": "Nous sommes convaincus que chaque étudiant, chercheur et jeune talent peut devenir un acteur du changement lorsqu’il dispose des compétences, des opportunités et d’un environnement favorable. Nous aspirons ainsi à bâtir une génération capable d’innover, d’entreprendre et de transformer les défis de son environnement en solutions durables, au service du progrès de ses communautés et du monde."
   },
   "stats": {
-    "tag": "Les preuves",
+    "tag": "Nos chiffres clés",
     "title": "Une dynamique mesurable, pas des promesses",
     "items": [
       {
@@ -93,13 +80,13 @@
         "value": "120+"
       },
       {
-        "label": "Partenaires industriels",
+        "label": "Partenaires",
         "value": "30+"
       }
     ]
   },
   "clubs": {
-    "tag": "Les CITE",
+    "tag": "Nos ateliers",
     "title": "Choisissez votre atelier de recherche",
     "items": [
       {
@@ -171,83 +158,86 @@
     ]
   },
   "journal": {
-    "tag": "08 — JOURNAL FIERI",
-    "title": "Le Journal : bootcamps, ateliers & offres",
-    "cards": []
-  },
-  "programmes": {
-    "tag": "Nos programmes",
-    "title": "Des programmes pour avancer, pas pour remplir un CV",
-    "description": "Chaque programme a une sortie concrète : un réseau, une compétence, un financement.",
-    "items": [
-      {
-        "icon": "megaphone",
-        "title": "Ambassadeurs FIERI",
-        "desc": "Représentez la recherche FIERI sur votre campus, organisez des événements et développez votre réseau.",
-        "cta": "Devenir ambassadeur",
-        "route": "contact"
-      },
-      {
-        "icon": "hand-heart",
-        "title": "Bénévolat technique",
-        "desc": "Encadrez de jeunes chercheurs, animez des ateliers et contribuez aux projets qui comptent.",
-        "cta": "Proposer mon aide",
-        "route": "contact"
-      },
-      {
-        "icon": "user-check",
-        "title": "Mentorat R&D",
-        "desc": "Un mentor industriel suit votre projet pendant 6 mois : revues techniques, orientation, réseau.",
-        "cta": "Trouver un mentor",
-        "route": "contact"
-      }
-    ]
+    "tag": "JOURNAL FIERI",
+    "title": "Le Journal : actualités, ateliers, appels & offres",
+    "cards": [],
+    "description": "Le résumé de tout ce qui bouge à la FIERI : les actualités de la communauté, les ateliers et bootcamps à venir, les appels à participation et les offres."
   },
   "partenaires": {
-    "tag": "09 — PARTENAIRES COMMERCIAUX",
-    "title": "Ils soutiennent l'excellence scientifique du FIERI",
+    "tag": "Nos partenaires",
+    "title": "Ils soutiennent l’excellence scientifique de la FIERI",
     "logos": [
       {
         "name": "Université d'Abomey-Calavi",
-        "type": "Université partenaire"
+        "type": "Université partenaire",
+        "description": "Première université publique du Bénin, elle accueille plusieurs des CITE du réseau FIERI sur ses campus.",
+        "apport": "Locaux, encadrement académique et accès aux laboratoires pour les équipes de recherche étudiantes."
       },
       {
         "name": "Valkyrie R&D Labs",
-        "type": "Partenaire technologique"
+        "type": "Partenaire technologique",
+        "description": "Laboratoire privé de recherche appliquée, spécialisé en systèmes embarqués et en intelligence artificielle.",
+        "apport": "Revues techniques, mentorat industriel et bancs d'essai pour les prototypes issus des CITE."
       },
       {
         "name": "EcoGrid Africa",
-        "type": "Partenaire industriel"
+        "type": "Partenaire industriel",
+        "description": "Opérateur de micro-réseaux électriques déployés dans les zones non desservies par le réseau national.",
+        "apport": "Terrains d'expérimentation réels et données de terrain pour les projets énergie du réseau."
       },
       {
         "name": "Ministère de la Recherche",
-        "type": "Soutien institutionnel"
+        "type": "Soutien institutionnel",
+        "description": "Tutelle publique de la recherche scientifique et de l'innovation.",
+        "apport": "Reconnaissance officielle des programmes FIERI et appui institutionnel aux dépôts de brevets."
       },
       {
         "name": "African Tech Fund",
-        "type": "Soutien financier"
+        "type": "Soutien financier",
+        "description": "Fonds d'investissement dédié aux jeunes entreprises technologiques du continent.",
+        "apport": "Financement d'amorçage et accompagnement des projets FIERI qui passent au stade entrepreneurial."
       },
       {
         "name": "Soneb Innovation",
-        "type": "Partenaire d'expérimentation"
+        "type": "Partenaire d'expérimentation",
+        "description": "Cellule d'innovation d'un opérateur national, tournée vers la gestion de la ressource en eau.",
+        "apport": "Cas d'usage industriels et validation en conditions réelles des solutions développées par les CITE."
       }
-    ]
+    ],
+    "description": "Universités, laboratoires, industriels et institutions : chacun apporte quelque chose de différent, et son badge le dit."
   },
   "faq": {
     "tag": "FAQ",
     "title": "Les questions qu'on nous pose vraiment",
+    "description": "Étudiants, chercheurs, partenaires : voici les réponses aux questions qui reviennent le plus.",
     "questions": [
       {
-        "q": "Je suis étudiant en licence, puis-je rejoindre une CITE ?",
-        "a": "Oui. Les CITE sont ouvertes à tous les niveaux : licence, master et doctorat. Vous commencez par les ateliers d'initiation, puis vous intégrez une équipe de projet selon vos compétences."
+        "q": "Qu’est-ce que la FIERI m’apporte concrètement ?",
+        "a": "La FIERI vous offre un environnement pour développer vos compétences, accéder à des opportunités, rencontrer des personnes partageant les mêmes ambitions et participer à des projets concrets. Selon votre parcours et votre engagement, vous pouvez également bénéficier de formations, de mentorat, d’expériences collaboratives, de possibilités de recherche, d’innovation et d’entrepreneuriat, ainsi que d’une reconnaissance au sein du réseau."
       },
       {
-        "q": "J'ai une idée de projet. Par où commencer ?",
-        "a": "Présentez-la au responsable de la CITE de votre campus. Si elle est jugée pertinente, vous entrez dans le programme d'accompagnement : cadrage, équipe, budget, puis prototypage."
+        "q": "Qui peut rejoindre la FIERI ?",
+        "a": "La FIERI est ouverte aux étudiants, chercheurs, enseignants, professionnels, entrepreneurs, innovateurs et autres acteurs qui souhaitent contribuer à la recherche, à l’innovation, à l’entrepreneuriat ou aux initiatives de développement durable."
       },
       {
-        "q": "Qu'est-ce que le FIERI m'apporte concrètement ?",
-        "a": "Un atelier équipé, des mentors, des formations, des concours internationaux, un réseau d'industriels — et l'expérience de mener un vrai projet de A à Z. C'est ce que les recruteurs cherchent."
+        "q": "Comment rejoindre la FIERI ?",
+        "a": "Vous pouvez rejoindre la communauté à travers une CITE FIERI, participer à ses programmes, intégrer le réseau des ambassadeurs ou prendre part aux différentes initiatives proposées."
+      },
+      {
+        "q": "La FIERI s’intéresse-t-elle aux enjeux environnementaux ?",
+        "a": "Oui. La transition écologique et l’éco-innovation font partie des domaines d’action de la FIERI. À travers ses initiatives, elle encourage la conception de solutions innovantes face aux défis environnementaux et climatiques."
+      },
+      {
+        "q": "Puis-je proposer un projet ou une idée ?",
+        "a": "Oui. La FIERI encourage les initiatives dans des domaines variés, notamment la science, la technologie, l’innovation, l’entrepreneuriat et l’écologie."
+      },
+      {
+        "q": "La FIERI travaille-t-elle avec des entreprises et des institutions ?",
+        "a": "Oui. La FIERI développe des collaborations avec des universités, établissements d’enseignement, laboratoires, entreprises, institutions, organisations et autres acteurs aux niveaux national et international."
+      },
+      {
+        "q": "Comment devenir partenaire de la FIERI ?",
+        "a": "Les organisations intéressées peuvent nous contacter pour explorer des possibilités de partenariat, de recherche, de formation, d’innovation ou de développement de projets communs."
       }
     ]
   },

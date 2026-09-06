@@ -33,18 +33,26 @@ const Contact = lazy(() => import('./pages/Contact.jsx'))
 const Auth = lazy(() => import('./pages/Auth.jsx'))
 const Opportunities = lazy(() => import('./pages/Opportunities.jsx'))
 const Admin = lazy(() => import('./pages/Admin.jsx'))
-const PAF = lazy(() => import('./pages/PAF.jsx'))
+const Programmes = lazy(() => import('./pages/Programmes.jsx'))
 const MonClub = lazy(() => import('./pages/espace-cite/MonClub.jsx'))
 const Adhesions = lazy(() => import('./pages/espace-cite/Adhesions.jsx'))
 const Activites = lazy(() => import('./pages/espace-cite/Activites.jsx'))
 const Rapports = lazy(() => import('./pages/espace-cite/Rapports.jsx'))
 const Annuaire = lazy(() => import('./pages/espace-cite/Annuaire.jsx'))
+const GestionClub = lazy(() => import('./pages/espace-cite/Gestion.jsx'))
+const Badges = lazy(() => import('./pages/Badges.jsx'))
 const Attestations = lazy(() => import('./pages/gouvernance/Attestations.jsx'))
 const Exclusions = lazy(() => import('./pages/gouvernance/Exclusions.jsx'))
 const Figures = lazy(() => import('./pages/gouvernance/Figures.jsx'))
+const Recensements = lazy(() => import('./pages/gouvernance/Recensements.jsx'))
+const Pays = lazy(() => import('./pages/gouvernance/Pays.jsx'))
 const Tresorerie = lazy(() => import('./pages/Tresorerie.jsx'))
 const Taches = lazy(() => import('./pages/projets/Taches.jsx'))
 const Candidatures = lazy(() => import('./pages/projets/Candidatures.jsx'))
+const CreationEvenement = lazy(() => import('./pages/evenements/Creation.jsx'))
+const CreationProjet = lazy(() => import('./pages/projets/Creation.jsx'))
+const CreationPublication = lazy(() => import('./pages/publications/Creation.jsx'))
+const CreationFormation = lazy(() => import('./pages/formations/Creation.jsx'))
 const Challenges = lazy(() => import('./pages/Challenges.jsx'))
 const Soutiens = lazy(() => import('./pages/Soutiens.jsx'))
 
@@ -133,13 +141,24 @@ function App() {
         <Route path="/clubs" element={<ResearchClubs navigate={navigate} />} />
         <Route path="/clubs/:clubId" element={<ClubDetailRoute />} />
         <Route path="/projects" element={<Projects navigate={navigate} />} />
+        <Route path="/projects/nouveau" element={
+          <ProtectedRoute destination="projet-nouveau"><CreationProjet navigate={navigate} /></ProtectedRoute>
+        } />
         <Route path="/projects/:projectId" element={<ProjectDetailRoute />} />
         {/* Formations (ex-Ateliers) */}
+        <Route path="/formations/nouvelle" element={
+          <ProtectedRoute destination="formation-nouvelle"><CreationFormation /></ProtectedRoute>
+        } />
+        <Route path="/publications/nouvelle" element={
+          <ProtectedRoute destination="publication-nouvelle"><CreationPublication /></ProtectedRoute>
+        } />
         <Route path="/formations" element={<Workshops navigate={navigate} />} />
         <Route path="/workshops" element={<Workshops navigate={navigate} />} />
         <Route path="/events" element={<Events navigate={navigate} />} />
         <Route path="/opportunities" element={<Opportunities navigate={navigate} />} />
-        <Route path="/paf" element={<PAF navigate={navigate} />} />
+        <Route path="/programmes" element={<Programmes navigate={navigate} />} />
+        {/* L'ancien chemin du seul programme qui avait une page mene a son onglet. */}
+        <Route path="/paf" element={<Navigate to="/programmes?p=paf" replace />} />
 
         {/* ── Espace CITE : une intention par écran ── */}
         <Route path="/espace-cite" element={
@@ -153,6 +172,9 @@ function App() {
         } />
         <Route path="/espace-cite/rapports" element={
           <ProtectedRoute destination="cite-rapports"><Rapports /></ProtectedRoute>
+        } />
+        <Route path="/espace-cite/gestion" element={
+          <ProtectedRoute destination="cite-gestion"><GestionClub /></ProtectedRoute>
         } />
         <Route path="/espace-cite/annuaire" element={
           <ProtectedRoute destination="cite-annuaire"><Annuaire /></ProtectedRoute>
@@ -173,6 +195,12 @@ function App() {
         } />
 
         {/* ── Trésorerie : l'outil interne, séparé de la page de dons ── */}
+        <Route path="/gouvernance/recensements" element={
+          <ProtectedRoute destination="gouvernance-recensements"><Recensements /></ProtectedRoute>
+        } />
+        <Route path="/gouvernance/pays" element={
+          <ProtectedRoute destination="gouvernance-pays"><Pays /></ProtectedRoute>
+        } />
         <Route path="/tresorerie" element={
           <ProtectedRoute destination="tresorerie"><Tresorerie /></ProtectedRoute>
         } />
@@ -185,6 +213,14 @@ function App() {
           <ProtectedRoute destination="candidatures"><Candidatures /></ProtectedRoute>
         } />
 
+        {/* Responsable de club : annoncer une rencontre ou un webinaire. */}
+        <Route path="/evenements/nouveau" element={
+          <ProtectedRoute destination="evenement-nouveau"><CreationEvenement /></ProtectedRoute>
+        } />
+
+        <Route path="/badges" element={
+          <ProtectedRoute destination="badges"><Badges /></ProtectedRoute>
+        } />
         <Route path="/challenges" element={<Challenges navigate={navigate} />} />
         <Route path="/soutiens" element={<Soutiens navigate={navigate} />} />
         <Route path="/help" element={<Contact navigate={navigate} />} />

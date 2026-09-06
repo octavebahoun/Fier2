@@ -126,7 +126,7 @@ function FinancialForm({ universityId, setUniversityId, universities, user, noti
       className="glass-panel chamfer p-7 space-y-5"
     >
       <div className="flex items-center gap-3 mb-1">
-        <div className="w-11 h-11 rounded-xl flex items-center justify-center bg-engine-wash border border-engine/30">
+        <div className="w-11 h-11 rounded-xl flex items-center justify-center bg-engine-wash border border-engine">
           <Wallet className="w-5 h-5 text-engine" />
         </div>
         <div>
@@ -296,7 +296,7 @@ function PhysicalForm({ universityId, setUniversityId, universities, user, notif
       className="glass-panel chamfer p-7 space-y-5"
     >
       <div className="flex items-center gap-3 mb-1">
-        <div className="w-11 h-11 rounded-xl flex items-center justify-center bg-ember-wash border border-ember/30">
+        <div className="w-11 h-11 rounded-xl flex items-center justify-center bg-ember-wash border border-ember">
           <HeartHandshake className="w-5 h-5 text-ember" />
         </div>
         <div>
@@ -370,7 +370,7 @@ function PhysicalForm({ universityId, setUniversityId, universities, user, notif
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="p-5 chamfer-sm bg-engine-wash border border-engine/20 text-center space-y-4"
+            className="p-5 chamfer-sm bg-engine-wash border border-engine text-center space-y-4"
           >
             <p className="text-xs text-text-secondary">
               Offre <span className="font-mono text-text-primary">#{offerId}</span> enregistrée — dernière étape : signature par empreinte digitale.
@@ -381,7 +381,7 @@ function PhysicalForm({ universityId, setUniversityId, universities, user, notif
                 animate={signing && !signed ? { scale: [1, 1.08, 1], opacity: [1, 0.6, 1] } : {}}
                 transition={signing && !signed ? { repeat: Infinity, duration: 1.1 } : {}}
                 className={`w-20 h-20 chamfer-sm flex items-center justify-center border ${
-                  signed ? 'bg-success-wash border-success' : 'bg-engine-wash border-engine/30'
+                  signed ? 'bg-success-wash border-success' : 'bg-engine-wash border-engine'
                 }`}
               >
                 <Fingerprint className={`w-10 h-10 ${signed ? 'text-success' : 'text-engine'}`} />
@@ -474,7 +474,7 @@ export default function Soutiens() {
       <div className="relative z-10 max-w-5xl mx-auto w-full py-16 px-6 md:px-12">
         {/* Hero */}
         <div className="text-center mb-12 space-y-4">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest bg-engine-wash text-engine border border-engine/25">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest bg-engine-wash text-engine border border-engine">
             <HeartHandshake className="w-3.5 h-3.5" />
             Engagement & Mécénat
           </div>

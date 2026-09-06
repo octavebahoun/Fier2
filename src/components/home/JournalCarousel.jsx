@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from 'react'
+import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   ChevronLeft,
@@ -12,36 +12,40 @@ import {
 
 } from 'lucide-react';
 import api from '../../services/api.js';
+import { useCarrousel, PISTE } from './useCarrousel.js';
 
-// Configuration des badges & catégories du Journal
+/**
+ * Les catégories du Journal — UNE seule table.
+ *
+ * Il y en avait deux : la liste des onglets et la table des badges. Les
+ * actualités ne figuraient que dans la seconde — elles étaient donc chargées,
+ * fusionnées, affichées sous « Tout »… et impossibles à filtrer, faute
+ * d'onglet. Deux tables qui décrivent la même chose finissent toujours par
+ * diverger ; la table des badges se déduit maintenant de celle des onglets.
+ *
+ * Le Journal est le résumé de tout ce que fait la communauté : les actualités
+ * y viennent en tête, juste après « Tout ».
+ */
 export const JOURNAL_CATEGORIES = [
   { id: 'all', label: 'Tout', color: 'var(--color-engine)' },
+  { id: 'actu', label: 'Actualités', color: 'var(--color-ember)', icon: Newspaper, badgeLabel: 'ACTUALITÉ' },
   { id: 'atelier', label: 'Ateliers', color: 'var(--color-engine)', icon: GraduationCap, badgeLabel: 'ATELIER' },
   { id: 'appel', label: 'Appels', color: 'var(--color-ember)', icon: Megaphone, badgeLabel: 'APPEL À PARTICIPATION' },
   { id: 'bootcamp', label: 'Bootcamps', color: 'var(--color-engine-deep)', icon: Rocket, badgeLabel: 'BOOTCAMP' },
   { id: 'offre', label: 'Offres', color: 'var(--color-success)', icon: Tag, badgeLabel: 'OFFRE SPÉCIALE' }
 ];
 
-const CATEGORY_MAP = {
-  atelier: { color: 'var(--color-engine)', icon: GraduationCap, badgeLabel: 'ATELIER' },
-  appel: { color: 'var(--color-ember)', icon: Megaphone, badgeLabel: 'APPEL À PARTICIPATION' },
-  bootcamp: { color: 'var(--color-engine-deep)', icon: Rocket, badgeLabel: 'BOOTCAMP' },
-  offre: { color: 'var(--color-success)', icon: Tag, badgeLabel: 'OFFRE SPÉCIALE' },
-  actu: { color: 'var(--color-ember)', icon: Newspaper, badgeLabel: 'ACTUALITÉ' }
-};
+const CATEGORY_MAP = Object.fromEntries(
+  JOURNAL_CATEGORIES.filter((c) => c.icon).map((c) => [c.id, c])
+);
 
 export default function JournalCarousel({ navigate }) {
   const [activeTab, setActiveTab] = useState('all');
   const [cards, setCards] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [perView, setPerView] = useState(3);
 
-  const trackRef = useRef(null);
-  const isDown = useRef(false);
-  const startX = useRef(0);
-  const scrollStart = useRef(0);
-  const moved = useRef(false);
+  const { pisteRef, largeurCarte, defiler, liaisons, aBouge } = useCarrousel();
 
   // Charger et assembler les flux du Journal (Workshops, Opportunités, News)
   useEffect(() => {
@@ -106,54 +110,13 @@ export default function JournalCarousel({ navigate }) {
     return () => { active = false; };
   }, []);
 
-  // Détection réactive de la taille de l'écran
-  useEffect(() => {
-    const calc = () => {
-      const w = window.innerWidth;
-      setPerView(w < 640 ? 1 : w < 1024 ? 2 : 3);
-    };
-    calc();
-    window.addEventListener('resize', calc);
-    return () => window.removeEventListener('resize', calc);
-  }, []);
-
   const filteredCards = cards.filter((card) => {
     if (activeTab === 'all') return true;
     return card.kind === activeTab;
   });
 
-  const cardWidth = `calc((100% - ${(perView - 1) * 1.5}rem) / ${perView})`;
-
-  const scrollByStep = useCallback((dir) => {
-    const el = trackRef.current;
-    if (!el) return;
-    const first = el.children[0];
-    const step = first ? first.offsetWidth + 24 : el.clientWidth;
-    el.scrollBy({ left: dir * step, behavior: 'smooth' });
-  }, []);
-
-  const onPointerDown = (e) => {
-    const el = trackRef.current;
-    if (!el) return;
-    isDown.current = true;
-    moved.current = false;
-    startX.current = e.clientX;
-    scrollStart.current = el.scrollLeft;
-    el.setPointerCapture?.(e.pointerId);
-  };
-
-  const onPointerMove = (e) => {
-    const el = trackRef.current;
-    if (!isDown.current || !el) return;
-    const walk = e.clientX - startX.current;
-    if (Math.abs(walk) > 4) moved.current = true;
-    el.scrollLeft = scrollStart.current - walk;
-  };
-
-  const endDrag = () => { isDown.current = false; };
-
   const safeNavigate = (route) => {
-    if (moved.current) return;
+    if (aBouge()) return;
     if (navigate) navigate(route);
   };
 
@@ -174,7 +137,12 @@ export default function JournalCarousel({ navigate }) {
                     : 'bg-bg-secondary/70 text-text-secondary border-border-subtle hover:text-text-primary hover:bg-bg-tertiary'
                 }`}
               >
-                {cat.icon && <cat.icon className="w-3.5 h-3.5" style={{ color: isActive ? '#fff' : cat.color }} />}
+                {cat.icon && (
+                  <cat.icon
+                    className="w-3.5 h-3.5"
+                    style={isActive ? undefined : { color: cat.color }}
+                  />
+                )}
                 {cat.label}
               </button>
             );
@@ -184,14 +152,14 @@ export default function JournalCarousel({ navigate }) {
         {/* Boutons de navigation manuelle */}
         <div className="flex items-center gap-2 shrink-0">
           <button
-            onClick={() => scrollByStep(-1)}
+            onClick={() => defiler(-1)}
             aria-label="Précédent"
             className="p-3 rounded-full bg-bg-secondary/80 border border-border-subtle text-text-secondary hover:text-text-primary hover:bg-bg-tertiary backdrop-blur-md transition-all cursor-pointer"
           >
             <ChevronLeft className="w-5 h-5" />
           </button>
           <button
-            onClick={() => scrollByStep(1)}
+            onClick={() => defiler(1)}
             aria-label="Suivant"
             className="p-3 rounded-full bg-bg-secondary/80 border border-border-subtle text-text-secondary hover:text-text-primary hover:bg-bg-tertiary backdrop-blur-md transition-all cursor-pointer"
           >
@@ -206,38 +174,48 @@ export default function JournalCarousel({ navigate }) {
           {[1, 2, 3].map((n) => (
             <div
               key={n}
-              className="glass-panel h-72 rounded-2xl animate-pulse bg-bg-secondary/40 border border-border-subtle/60 shrink-0"
-              style={{ width: cardWidth }}
+              className="glass-panel h-72 rounded-2xl animate-pulse bg-bg-secondary/40 border border-border-subtle shrink-0"
+              style={{ width: largeurCarte }}
             />
           ))}
         </div>
       ) : error ? (
         <div className="text-center py-16">
-          <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-engine-wash border border-engine/20 mb-4">
+          <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-engine-wash border border-engine mb-4">
             <Newspaper className="w-6 h-6 text-engine" />
           </div>
           <p className="text-text-secondary text-sm font-light mb-4">{error}</p>
           <button
             onClick={() => window.location.reload()}
-            className="inline-flex items-center gap-2 text-xs uppercase tracking-widest font-bold bg-engine-wash border border-engine/30 text-engine px-5 py-2.5 chamfer-xs hover:bg-engine-wash transition-all cursor-pointer"
+            className="inline-flex items-center gap-2 text-xs uppercase tracking-widest font-bold bg-engine-wash border border-engine text-engine px-5 py-2.5 chamfer-xs hover:bg-engine-wash transition-all cursor-pointer"
           >
             Réessayer
           </button>
         </div>
       ) : filteredCards.length === 0 ? (
-        <div className="text-center py-16 glass-panel rounded-2xl border border-border-subtle/60 bg-bg-secondary/30">
-          <p className="text-text-secondary text-sm font-light">Aucun contenu trouvé dans cette catégorie.</p>
+        <div className="glass-panel rounded-2xl border border-border-subtle bg-bg-secondary py-16 text-center">
+          {cards.length === 0 ? (
+            <p className="text-sm font-light text-text-secondary">
+              Le Journal n’a encore rien à montrer : ateliers, appels et actualités
+              y apparaîtront dès leur publication.
+            </p>
+          ) : (
+            <>
+              <p className="text-sm font-light text-text-secondary">
+                Rien dans « {JOURNAL_CATEGORIES.find((c) => c.id === activeTab)?.label} » pour l’instant.
+              </p>
+              <button
+                type="button"
+                onClick={() => setActiveTab('all')}
+                className="mt-4 inline-flex min-h-11 cursor-pointer items-center gap-2 border border-border-strong px-5 text-xs font-bold uppercase tracking-widest text-text-primary transition-colors hover:bg-bg-tertiary"
+              >
+                Voir tout le Journal
+              </button>
+            </>
+          )}
         </div>
       ) : (
-        <div
-          ref={trackRef}
-          onPointerDown={onPointerDown}
-          onPointerMove={onPointerMove}
-          onPointerUp={endDrag}
-          onPointerLeave={endDrag}
-          className="flex gap-6 overflow-x-auto snap-x snap-mandatory scroll-smooth pb-4 cursor-grab active:cursor-grabbing [scrollbar-width:none]"
-          style={{ scrollbarWidth: 'none' }}
-        >
+        <div ref={pisteRef} {...liaisons} className={PISTE}>
           <AnimatePresence mode="popLayout">
             {filteredCards.map((card, i) => {
               const meta = CATEGORY_MAP[card.kind] || CATEGORY_MAP.actu;
@@ -252,17 +230,20 @@ export default function JournalCarousel({ navigate }) {
                   onClick={() => safeNavigate(card.route)}
                   whileHover={{ y: -6 }}
                   className="glass-panel group relative shrink-0 snap-center rounded-2xl border border-border-subtle bg-bg-secondary p-7 flex flex-col justify-between overflow-hidden transition-colors hover:border-border-strong cursor-pointer select-none"
-                  style={{ width: cardWidth }}
+                  style={{ width: largeurCarte }}
                 >
                   <div>
                     <div className="flex items-center justify-between mb-5">
                       <span
-                        className="text-xs font-bold uppercase tracking-widest px-2.5 py-0.5 rounded-sm border border-engine bg-engine-wash"
-                        style={{ color: meta.color }}
+                        className="chamfer-xs border bg-bg-primary px-2.5 py-0.5 text-xs font-bold uppercase tracking-widest"
+                        style={{ color: meta.color, borderColor: meta.color }}
                       >
                         {meta.badgeLabel}
                       </span>
-                      <div className="w-9 h-9 rounded-lg flex items-center justify-center border border-engine bg-engine-wash">
+                      <div
+                        className="chamfer-xs flex h-9 w-9 items-center justify-center border bg-bg-primary"
+                        style={{ borderColor: meta.color }}
+                      >
                         <Icon className="w-4 h-4" style={{ color: meta.color }} />
                       </div>
                     </div>
@@ -276,7 +257,7 @@ export default function JournalCarousel({ navigate }) {
                     </p>
                   </div>
 
-                  <div className="border-t border-border-subtle/50 pt-4 mt-auto flex items-center justify-between">
+                  <div className="border-t border-border-subtle pt-4 mt-auto flex items-center justify-between">
                     <span className="text-xs font-mono uppercase text-text-muted truncate pr-2">
                       {card.meta || 'FIERI Community'}
                     </span>

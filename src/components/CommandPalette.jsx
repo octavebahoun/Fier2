@@ -1,9 +1,9 @@
 import { useState, useEffect, useRef, useMemo } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
-  Search, Sun, Moon, Compass,
+  Search, Sun, Moon, Compass, Sparkles,
   LayoutDashboard, UserRound, FolderGit2, Users, GraduationCap, Briefcase,
-  Newspaper, CalendarDays, Contact, Shield, Trophy, HeartHandshake, ShieldCheck,
+  Newspaper, CalendarDays, CalendarPlus, FolderPlus, FilePlus2, Settings2, ClipboardCheck, Globe2, Contact, Shield, Trophy, HeartHandshake, ShieldCheck,
   LayoutList, LifeBuoy, Layers, UserPlus, ClipboardList, FileText, Award,
   UserX, Star, Wallet,
 } from 'lucide-react'
@@ -12,7 +12,7 @@ import { useAuth } from '../context/AuthContext.jsx'
 import { DESTINATIONS, SECTIONS, navAccessOf } from '../navigation/destinations.js'
 
 const ICONS = {
-  LayoutDashboard, UserRound, FolderGit2, Users, GraduationCap, Briefcase,
+  Sparkles, CalendarPlus, FolderPlus, FilePlus2, Settings2, ClipboardCheck, Globe2, LayoutDashboard, UserRound, FolderGit2, Users, GraduationCap, Briefcase,
   Newspaper, CalendarDays, Contact, Shield, Trophy, HeartHandshake, ShieldCheck,
   LayoutList, LifeBuoy, Layers, UserPlus, ClipboardList, FileText, Award,
   UserX, Star, Wallet,
@@ -213,14 +213,14 @@ export default function CommandPalette({ navigate }) {
                             onClick={cmd.action}
                             className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-left text-sm transition-all cursor-pointer ${
                               isSelected
-                                ? 'bg-engine-wash text-text-primary font-semibold border border-engine/25'
+                                ? 'bg-engine-wash text-text-primary font-semibold border border-engine'
                                 : 'bg-transparent text-text-secondary border border-transparent hover:text-text-primary hover:bg-bg-tertiary'
                             }`}
                           >
                             <div className="flex items-center gap-3">
                               <div className={`p-1.5 rounded-lg border transition-colors ${
                                 isSelected
-                                  ? 'bg-engine-wash border-engine/30 text-engine'
+                                  ? 'bg-engine-wash border-engine text-engine'
                                   : 'bg-bg-tertiary border-border-subtle text-text-muted'
                               }`}>
                                 <Icon className="w-3.5 h-3.5" />

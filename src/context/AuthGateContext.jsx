@@ -37,7 +37,7 @@ export function AuthGateProvider({ children }) {
               <button onClick={close} className="absolute top-4 right-4 text-text-muted hover:text-text-primary transition-colors" aria-label="Fermer">
                 <X className="w-4 h-4" />
               </button>
-              <div className="w-12 h-12 rounded-2xl bg-engine-wash border border-engine/25 flex items-center justify-center">
+              <div className="w-12 h-12 rounded-2xl bg-engine-wash border border-engine flex items-center justify-center">
                 <Lock className="w-5 h-5 text-engine" />
               </div>
               <div>

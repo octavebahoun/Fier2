@@ -22,7 +22,7 @@ export default function FAQSection({ faq }) {
                 {faq.title}
               </h2>
               <p className="text-text-secondary text-sm font-light leading-relaxed max-w-md">
-                Vous hésitez encore ? Voici les réponses aux questions que les étudiants nous posent le plus souvent.
+                {faq.description}
               </p>
             </FadeInWhenVisible>
           </div>
@@ -58,9 +58,9 @@ export default function FAQSection({ faq }) {
                             animate={{ height: 'auto', opacity: 1 }}
                             exit={{ height: 0, opacity: 0 }}
                             transition={{ duration: 0.25, ease: 'easeInOut' }}
-                            className="border-t border-border-subtle bg-bg-tertiary/40"
+                            className="border-t border-border-subtle bg-bg-tertiary"
                           >
-                            <p className="p-5 text-sm text-text-secondary leading-relaxed">
+                            <p className="texte-justifie p-5 text-sm text-text-secondary leading-relaxed">
                               {item.a}
                             </p>
                           </motion.div>

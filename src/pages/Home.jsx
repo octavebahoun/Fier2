@@ -6,6 +6,7 @@ import landingData from '../content/landing.json';
 // Modular Home Sections
 import HeroSection from '../components/home/HeroSection.jsx';
 import StatsSection from '../components/home/StatsSection.jsx';
+import DecouvrirSection from '../components/home/DecouvrirSection.jsx';
 import OrgSection from '../components/home/OrgSection.jsx';
 import MissionsSection from '../components/home/MissionsSection.jsx';
 import VisionSection from '../components/home/VisionSection.jsx';
@@ -46,13 +47,13 @@ function ScrollToTop() {
 export default function Home({ navigate }) {
   const {
     hero,
+    decouvrir,
     stats,
     organisation,
     mission,
     vision,
     clubs,
     journal,
-    programmes,
     partenaires,
     faq,
     contact
@@ -63,10 +64,10 @@ export default function Home({ navigate }) {
       {/* 1. HERO — la thèse */}
       <HeroSection hero={hero} navigate={navigate} />
 
-      {/* 2. STATS — la preuve immédiate */}
-      <StatsSection stats={stats} />
+      {/* 2. NOUS DÉCOUVRIR — ce qu'est la FIERI */}
+      <DecouvrirSection decouvrir={decouvrir} />
 
-      {/* 3. ORGANISATION — le parcours en 3 étapes */}
+      {/* 3. ORGANISATION — les trois espaces */}
       <OrgSection organisation={organisation} navigate={navigate} />
 
       {/* 4. MISSIONS — les piliers */}
@@ -82,15 +83,18 @@ export default function Home({ navigate }) {
       <JournalSection journal={journal} navigate={navigate} />
 
       {/* 8. PROGRAMMES */}
-      <ProgrammesSection programmes={programmes} navigate={navigate} />
+      <ProgrammesSection navigate={navigate} />
 
-      {/* 9. PARTENAIRES */}
+      {/* 9. PARTENAIRES — après les programmes, avant les chiffres. */}
       <PartnersSection partenaires={partenaires} />
 
-      {/* 10. FAQ */}
+      {/* 10. CHIFFRES CLÉS — la preuve, une fois le propos posé */}
+      <StatsSection stats={stats} />
+
+      {/* 11. FAQ */}
       <FAQSection faq={faq} />
 
-      {/* 11. CONTACT — CTA final */}
+      {/* 12. CONTACT — CTA final */}
       <ContactSection contact={contact} />
 
       <ScrollToTop />
