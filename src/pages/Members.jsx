@@ -177,6 +177,7 @@ export default function Members({ navigate }) {
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-5 text-text-muted" />
             <input
               type="text"
+              aria-label="Rechercher un chercheur par nom"
               placeholder="Rechercher un chercheur par nom..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}

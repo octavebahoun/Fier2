@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, lazy, Suspense } from 'react'
 import { Routes, Route, Navigate, useLocation, useParams } from 'react-router-dom'
 import AppLayout from './components/layout/AppLayout.jsx'
 import ProtectedRoute from './components/ProtectedRoute.jsx'
@@ -6,40 +6,61 @@ import { useAuth } from './context/AuthContext.jsx'
 import { AuthGateProvider } from './context/AuthGateContext.jsx'
 import { useAppNavigate, pathToPageName } from './navigation.js'
 
-// Pages
+// ─── Pages ───────────────────────────────────────────────────────────────────
+// La page d'accueil reste chargée d'emblée (point d'entrée le plus fréquent :
+// aucun écran d'attente au premier rendu). Toutes les autres pages sont
+// découpées en fragments chargés à la demande via `lazy()` : le bundle initial
+// ne portait plus qu'un seul fichier de ~1,15 Mo pour TOUTE l'application, ce
+// qui ralentissait le premier écran. Chaque route devient désormais son propre
+// fragment, téléchargé seulement quand on y navigue.
 import Home from './pages/Home.jsx'
-import OrganisationCite from './pages/cite/OrganisationCite.jsx'
-import StudentPortal from './pages/StudentPortal.jsx'
-import News from './pages/News.jsx'
-import NewsDetail from './pages/NewsDetail.jsx'
-import ResearchClubs from './pages/ResearchClubs.jsx'
-import ClubDetail from './pages/ClubDetail.jsx'
-import Projects from './pages/Projects.jsx'
-import ProjectDetail from './pages/ProjectDetail.jsx'
-import Workshops from './pages/Workshops.jsx'
-import Events from './pages/Events.jsx'
-import Members from './pages/Members.jsx'
-import Dashboard from './pages/Dashboard.jsx'
-import ResearcherProfile from './pages/ResearcherProfile.jsx'
-import ResearcherProfileEdit from './pages/ResearcherProfileEdit.jsx'
-import Contact from './pages/Contact.jsx'
-import Auth from './pages/Auth.jsx'
-import Opportunities from './pages/Opportunities.jsx'
-import Admin from './pages/Admin.jsx'
-import PAF from './pages/PAF.jsx'
-import MonClub from './pages/espace-cite/MonClub.jsx'
-import Adhesions from './pages/espace-cite/Adhesions.jsx'
-import Activites from './pages/espace-cite/Activites.jsx'
-import Rapports from './pages/espace-cite/Rapports.jsx'
-import Annuaire from './pages/espace-cite/Annuaire.jsx'
-import Attestations from './pages/gouvernance/Attestations.jsx'
-import Exclusions from './pages/gouvernance/Exclusions.jsx'
-import Figures from './pages/gouvernance/Figures.jsx'
-import Tresorerie from './pages/Tresorerie.jsx'
-import Taches from './pages/projets/Taches.jsx'
-import Candidatures from './pages/projets/Candidatures.jsx'
-import Challenges from './pages/Challenges.jsx'
-import Soutiens from './pages/Soutiens.jsx'
+
+const OrganisationCite = lazy(() => import('./pages/cite/OrganisationCite.jsx'))
+const StudentPortal = lazy(() => import('./pages/StudentPortal.jsx'))
+const News = lazy(() => import('./pages/News.jsx'))
+const NewsDetail = lazy(() => import('./pages/NewsDetail.jsx'))
+const ResearchClubs = lazy(() => import('./pages/ResearchClubs.jsx'))
+const ClubDetail = lazy(() => import('./pages/ClubDetail.jsx'))
+const Projects = lazy(() => import('./pages/Projects.jsx'))
+const ProjectDetail = lazy(() => import('./pages/ProjectDetail.jsx'))
+const Workshops = lazy(() => import('./pages/Workshops.jsx'))
+const Events = lazy(() => import('./pages/Events.jsx'))
+const Members = lazy(() => import('./pages/Members.jsx'))
+const Dashboard = lazy(() => import('./pages/Dashboard.jsx'))
+const ResearcherProfile = lazy(() => import('./pages/ResearcherProfile.jsx'))
+const ResearcherProfileEdit = lazy(() => import('./pages/ResearcherProfileEdit.jsx'))
+const Contact = lazy(() => import('./pages/Contact.jsx'))
+const Auth = lazy(() => import('./pages/Auth.jsx'))
+const Opportunities = lazy(() => import('./pages/Opportunities.jsx'))
+const Admin = lazy(() => import('./pages/Admin.jsx'))
+const PAF = lazy(() => import('./pages/PAF.jsx'))
+const MonClub = lazy(() => import('./pages/espace-cite/MonClub.jsx'))
+const Adhesions = lazy(() => import('./pages/espace-cite/Adhesions.jsx'))
+const Activites = lazy(() => import('./pages/espace-cite/Activites.jsx'))
+const Rapports = lazy(() => import('./pages/espace-cite/Rapports.jsx'))
+const Annuaire = lazy(() => import('./pages/espace-cite/Annuaire.jsx'))
+const Attestations = lazy(() => import('./pages/gouvernance/Attestations.jsx'))
+const Exclusions = lazy(() => import('./pages/gouvernance/Exclusions.jsx'))
+const Figures = lazy(() => import('./pages/gouvernance/Figures.jsx'))
+const Tresorerie = lazy(() => import('./pages/Tresorerie.jsx'))
+const Taches = lazy(() => import('./pages/projets/Taches.jsx'))
+const Candidatures = lazy(() => import('./pages/projets/Candidatures.jsx'))
+const Challenges = lazy(() => import('./pages/Challenges.jsx'))
+const Soutiens = lazy(() => import('./pages/Soutiens.jsx'))
+
+/** Écran d'attente pendant le téléchargement d'un fragment de page. */
+function PageFallback() {
+  return (
+    <div
+      className="flex min-h-[60vh] items-center justify-center"
+      role="status"
+      aria-live="polite"
+    >
+      <span className="h-8 w-8 animate-spin rounded-full border-2 border-border-subtle border-t-engine" />
+      <span className="sr-only">Chargement…</span>
+    </div>
+  )
+}
 
 // ─── Route-wrappers : injectent les paramètres d'URL dans les pages qui en ont
 // besoin, sans modifier les pages elles-mêmes. ────────────────────────────────
@@ -100,6 +121,7 @@ function App() {
       mobileMenuOpen={mobileMenuOpen}
       setMobileMenuOpen={setMobileMenuOpen}
     >
+      <Suspense fallback={<PageFallback />}>
       <Routes>
         <Route path="/" element={<Home navigate={navigate} />} />
         <Route path="/cite" element={<OrganisationCite navigate={navigate} />} />
@@ -216,6 +238,7 @@ function App() {
         {/* Fallback */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
+      </Suspense>
     </AppLayout>
     </AuthGateProvider>
   )

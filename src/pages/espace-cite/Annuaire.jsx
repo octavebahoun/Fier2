@@ -94,6 +94,7 @@ export default function Annuaire() {
             />
             <input
               type="search"
+              aria-label="Rechercher un membre par nom, club ou e-mail"
               value={recherche}
               onChange={(e) => setRecherche(e.target.value)}
               placeholder="Nom, club ou e-mail"
