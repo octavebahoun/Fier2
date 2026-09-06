@@ -104,7 +104,7 @@ function CreateChallengeModal({ clubId, onClose, onCreated }) {
             <p className="text-xs font-bold uppercase tracking-widest text-engine">Nouveau</p>
             <h2 className="text-lg font-extrabold text-text-primary">Créer un challenge</h2>
           </div>
-          <button onClick={onClose} className="ml-auto opacity-60 hover:opacity-100 transition-opacity">
+          <button aria-label="Fermer" onClick={onClose} className="ml-auto opacity-60 hover:opacity-100 transition-opacity">
             <X className="w-5 h-5 text-text-secondary" />
           </button>
         </div>

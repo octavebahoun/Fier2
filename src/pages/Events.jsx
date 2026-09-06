@@ -89,6 +89,7 @@ function LiveModal({ event, onClose }) {
               </div>
               <button
                 id="live-modal-close"
+                aria-label="Fermer"
                 onClick={onClose}
                 className="p-1.5 rounded-lg hover:bg-bg-tertiary text-text-secondary hover:text-text-primary
                   transition-colors cursor-pointer pointer-events-auto"
@@ -165,6 +166,7 @@ function RegistrantsModal({ state, onClose }) {
               </div>
               <button
                 id="registrants-modal-close"
+                aria-label="Fermer"
                 onClick={onClose}
                 className="p-1.5 rounded-lg hover:bg-bg-tertiary text-text-secondary hover:text-text-primary
                   transition-colors cursor-pointer pointer-events-auto"

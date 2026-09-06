@@ -167,6 +167,7 @@ export default function MembersManager() {
           </div>
           <button
             type="submit"
+            aria-label="Rechercher"
             className="p-2 rounded-xl border border-border-subtle text-text-secondary hover:text-text-primary hover:bg-bg-tertiary transition-all cursor-pointer"
             title="Rechercher"
           >
